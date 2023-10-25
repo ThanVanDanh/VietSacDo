@@ -1,0 +1,236 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Quản lý khách hàng</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../style/admin.css">
+    <link rel="stylesheet" href="../style/customers.css">
+    <link rel="stylesheet" href="../style/charts.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../scripts/admin.js"></script>
+</head>
+<body>
+<div class="admin-container">
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <a href="dashboard.jsp">
+                <img src="/image/logo.png" alt="Logo Việt Sắc Đỏ">
+            </a>
+            <h2>Trang Admin</h2>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li class="nav-item "><a href="dashboard.jsp"><i class="fas fa-tachometer-alt"></i> Tổng quan</a></li>
+                <li class="nav-item"><a href="product.jsp"><i class="fas fa-box-open"></i> Quản lý Sản phẩm</a></li>
+                <li class="nav-item"><a href="orders.jsp"><i class="fas fa-shopping-cart"></i> Quản lý Đơn hàng</a></li>
+                <li class="nav-item active"><a href="customers.html"><i class="fas fa-users"></i> Quản lý Khách hàng</a></li>
+                <li class="nav-item"><a href="contact-admin.jsp"><i class="fa-regular fa-address-book"></i> Quản lý Liên hệ</a></li>
+                <li class="nav-item"><a href="promotions.jsp"><i class="fas fa-tags"></i> Khuyến mãi</a></li>
+                <li class="nav-item">
+                    <a href="../index.jsp"><i class="fas fa-sign-out-alt"></i> Trở về Trang Chủ</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <main class="main-content">
+        <header class="admin-header">
+            <div class="header-actions">
+                <a href="../login.jsp" class="btn-logout"><i class="fas fa-user-circle"></i> Đăng xuất</a>
+            </div>
+        </header>
+        <h1>QUẢN LÝ KHÁCH HÀNG</h1>
+        <section class="overview-cards-customer">
+            <div class="stat-card-customer">
+                <div class="card-icon" style="background-color: #e0f7fa;">
+                    <i class="fas fa-users" style="color: #00796b;"></i>
+                </div>
+                <div class="card-info">
+                    <h4>Tổng số khách hàng</h4>
+                    <p>1,240</p>
+                </div>
+            </div>
+            <div class="stat-card-customer">
+                <div class="card-icon" style="background-color: #e8f5e9;">
+                    <i class="fas fa-user-plus" style="color: #388e3c;"></i>
+                </div>
+                <div class="card-info">
+                    <h4>Khách mới trong tuần</h4>
+                    <p>35</p>
+                </div>
+            </div>
+        </section>
+        <section class="chart-container">
+            <h3>Top khách hàng theo số đơn hàng</h3>
+            <canvas id="customerOrdersChart"></canvas>
+        </section>
+        <section class="table-container">
+            <div class="table-toolbar">
+                <div class="filters">
+                    <select name="filter-status" id="filter-status">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="active">Hoạt động</option>
+                        <option value="blocked">Bị khóa</option>
+                    </select>
+                    <input type="text" placeholder="Tìm theo tên hoặc email..." class="table-search">
+                </div>
+                <button class="btn-csv"><i class="fas fa-file-csv"></i> Xuất CSV</button>
+            </div>
+            <table class="table-general customer-table">
+                <thead>
+                <tr>
+                    <th>Tên</th>
+                    <th>Email</th>
+                    <th>Điện thoại</th>
+                    <th>Ngày đăng ký</th>
+                    <th>Số đơn hàng</th>
+                    <th>Trạng thái tài khoản</th>
+                    <th>Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Phùng Thị Minh Thư</td>
+                    <td>23130317@st.hcmuaf.edu.vn</td>
+                    <td>0338012575</td>
+                    <td>2024-10-25</td>
+                    <td>5</td>
+                    <td>
+                        <span class="status-badge status-active">Hoạt động</span>
+                        <span class="status-badge status-blocked" style="display: none;">Bị khóa</span>
+                    </td>
+                    <td class="table-actions">
+                        <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
+                        <button class="btn-action btn-block" title="Khóa"><i class="fas fa-ban"></i></button>
+                        <button class="btn-action btn-unlock" title="Mở khóa" style="display: none;"><i class="fas fa-check-circle"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Lại Thị Hoa</td>
+                    <td>23130111@st.hcmuaf.edu.vn</td>
+                    <td>0987654321</td>
+                    <td>2023-11-15</td>
+                    <td>2</td>
+                    <td>
+                        <span class="status-badge status-active">Hoạt động</span>
+                        <span class="status-badge status-blocked" style="display: none;">Bị khóa</span>
+                    </td>
+                    <td class="table-actions">
+                        <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
+                        <button class="btn-action btn-block" title="Khóa"><i class="fas fa-ban"></i></button>
+                        <button class="btn-action btn-unlock" title="Mở khóa" style="display: none;"><i class="fas fa-check-circle"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Thân Văn Danh</td>
+                    <td>23130043@st.hcmuaf.edu.vn</td>
+                    <td>0123456789</td>
+                    <td>2024-09-15</td>
+                    <td>0</td>
+                    <td>
+                        <span class="status-badge status-active">Hoạt động</span>
+                        <span class="status-badge status-blocked" style="display: none;">Bị khóa</span>
+                    </td>
+                    <td class="table-actions">
+                        <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
+                        <button class="btn-action btn-block" title="Khóa"><i class="fas fa-ban"></i></button>
+                        <button class="btn-action btn-unlock" title="Mở khóa" style="display: none;"><i class="fas fa-check-circle"></i></button>
+                    </td>
+                </tr>
+                <tr class="empty-state-row" style="display: none;">
+                    <td colspan="7" style="text-align: center; padding: 40px; color: #666;">Hiện tại không có khách hàng nào.</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <a href="#">Trước</a>
+                <a href="#" class="active">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">Sau</a>
+            </div>
+        </section>
+
+    </main>
+</div>
+<div id="customer-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2>Chi tiết khách hàng: Phùng Thị Minh Thư</h2>
+        <div class="modal-body">
+            <div class="modal-tabs">
+                <button class="tab-link active" data-tab="tab-info">Thông tin cá nhân</button>
+                <button class="tab-link" data-tab="tab-history">Lịch sử đơn hàng</button>
+                <button class="tab-link" data-tab="tab-log">Hoạt động tài khoản</button>
+            </div>
+            <div id="tab-info" class="tab-content active">
+                <h3>Thông tin cá nhân</h3>
+                <p><strong>Email:</strong> 23130317@st.hcmuaf.edu.vn</p>
+                <p><strong>Điện thoại:</strong> 0338012575</p>
+                <p><strong>Địa chỉ:</strong> 77/50, Phường Hiệp Phú, TP. HCM</p>
+                <p><strong>Ngày đăng ký:</strong> 2024-10-25</p>
+                <p><strong>Trạng thái tài khoản:</strong> Hoạt động</p>
+            </div>
+            <div id="tab-history" class="tab-content">
+                <h3>Lịch sử đơn hàng (5)</h3>
+                <ul>
+                    <li>Đơn hàng #1052 _ 2025-03-28 _ <strong class="status-complete">Hoàn tất</strong>
+                        <p>Áo dài truyền thống Phúc Hương - <strong>880,000₫</strong></p>
+                    </li>
+                    <li>Đơn hàng #1044 _ 2024-12-26 _ <strong class="status-cancel">Đã hủy</strong>
+                        <p>Hoa tai NK-185 hoa hồng phối trái mâm xôi rũ - <strong>80,750₫</strong></p>
+                    </li>
+                    <li>Đơn hàng #1032 _ 2024-11-15 _ <strong class="status-complete">Hoàn tất</strong>
+                        <p>Vòng tay VO-092 Phụng Nghi đỏ hoa xanh trắng vân vàng - 10mm - <strong>153,000₫</strong></p>
+                    </li>
+                    <li>Đơn hàng #1020 _ 2024-11-05 _ <strong class="status-complete">Hoàn tất</strong>
+                        <p>Mấn Trơn Hai Sợi Phối Dây Hạt Ngọc (Hạt to) - <strong>212,500₫</strong></p>
+                    </li>
+                    <li>Đơn hàng #1003 _ 2024-10-26 _ <strong class="status-cancel">Đã hủy</strong>
+                        <p>Guốc gỗ Đế cao bọc vải Phụng Lan - Đỏ - <strong>212,500₫</strong></p>
+                    </li>
+                </ul>
+            </div>
+            <div id="tab-log" class="tab-content">
+                <h3>Hoạt động tài khoản</h3>
+                <ul>
+                    <li>2025-03-28 20:00: Đặt đơn hàng #1052</li>
+                    <li>2024-12-26 22:20: Đặt đơn hàng #1044</li>
+                    <li>2024-11-15 10:40: Đặt đơn hàng #1032</li>
+                    <li>2024-11-05 08:30: Đặt đơn hàng #1020</li>
+                    <li>2024-10-26 15:20: Đặt đơn hàng #1003</li>
+                    <li>2024-10-25 09:15: Tạo tài khoản</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="delete-confirm-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2>Xác nhận xóa</h2>
+        <p>Bạn có chắc chắn muốn xóa khách hàng <strong id="customer-name-to-delete">Phùng Thị Minh Thư</strong> không?</p>
+        <p>Hành động này không thể hoàn tác.</p>
+
+        <div class="confirm-actions">
+            <button id="btn-cancel-delete" class="btn-secondary">Hủy bỏ</button>
+            <button id="btn-confirm-delete" class="btn-danger">Xác nhận Xóa</button>
+        </div>
+    </div>
+</div>
+<div id="block-confirm-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2>Xác nhận khóa tài khoản</h2>
+        <p>Bạn có chắc chắn muốn <strong>khóa</strong> khách hàng
+            <strong id="customer-name-to-block">Phùng Thị Minh Thư</strong> không?</p>
+
+        <div class="confirm-actions">
+            <button id="btn-cancel-block" class="btn-secondary">Hủy bỏ</button>
+            <button id="btn-confirm-block" class="btn-danger">Xác nhận Khóa</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
