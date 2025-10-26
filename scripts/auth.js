@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const loginForm = document.getElementById('login');
+    const signupForm = document.getElementById('signup');
 
     if (loginForm) {
         loginForm.addEventListener('submit', function (event) {
@@ -33,6 +34,50 @@ document.addEventListener('DOMContentLoaded', function () {
                 alert('Sai số điện thoại hoặc mật khẩu!');
             }
             //-----------------
+        });
+    }
+    if (signupForm) {
+        signupForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+            console.log('Form Đăng ký đã được submit');
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('customer_email').value;
+            const password = document.getElementById('customer_password').value;
+
+            if (name === '') {
+                alert('Vui lòng nhập đầy đủ Họ và Tên');
+                return;
+            }
+            if (phone === '') {
+                alert('Vui lòng nhập số điện thoại');
+                return;
+            }
+            if (email === '') {
+                alert('Vui lòng nhập Email');
+                return;
+            }
+            if (password.length < 6) {
+                alert('Mật khẩu phải có ít nhất 6 ký tự');
+                return;
+            }
+
+            // TODO (khi có database): Gửi 'userData' lên server
+
+            //--------------------------
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            const existingUser = users.find(user => user.phone === phone);
+            if (existingUser) {
+                alert('Số điện thoại này đã được sử dụng. Vui lòng chọn số điện thoại khác.');
+                return;
+            }
+            const userData = { name, phone, email, password };
+            users.push(userData);
+            localStorage.setItem('users', JSON.stringify(users));
+            console.log('Dữ liệu đăng ký hợp lệ và đã lưu:', userData);
+            alert('Đăng ký thành công! Bạn sẽ được chuyển đến trang đăng nhập.');
+            window.location.href = 'login.html';
+            //--------------------
         });
     }
 });
