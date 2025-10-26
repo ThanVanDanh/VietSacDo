@@ -95,3 +95,51 @@ body {
     cursor: pointer;
     text-decoration: none;
 }
+.product-showcase {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.signature-header {
+    text-align: center;
+    padding: 10px 0 10px 0;
+}
+
+.signature-header h1 {
+    font-size: 36px;
+    font-weight: normal;
+    letter-spacing: 5px;
+    margin: 0;
+}
+
+/* Nav Menu */
+.main-nav {
+    text-align: center;
+    padding-bottom: 30px;
+}
+
+.main-nav ul {
+    list-style: none;
+    padding: 10px;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    gap: 30px; /* Khoảng cách giữa các mục menu */
+}
+
+.main-nav li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    padding: 5px 10px;
+    transition: color 0.3s, border-bottom 0.3s;
+}
+.main-nav li a:not(.active):hover {
+    color: #000;
+    border-bottom: 1px solid #999;
+}
+.main-nav li a.active {
+    font-weight: bold;
+    border-bottom: 2px solid #000; /* Đường gạch chân khi active */
+}
