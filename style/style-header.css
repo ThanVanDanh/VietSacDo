@@ -1,0 +1,216 @@
+:root {
+    --color-primary: #640100;
+    --color-secondary: #320000;
+    --color-background: rgb(202, 183, 161);
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Mulish',sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-secondary);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+header {
+    background-color: var(--color-primary);
+    color: var(--color-background);
+    padding: 10px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100000;
+    height: 80px;
+    transition: background-color 0.3s ease;
+
+}
+.header{
+    max-width: 100%;
+    margin: 0 50px;
+    padding: 0 10px;
+    display: flex;
+}
+header .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+}
+
+header .logo img {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) scale(2.5);
+    height: 80px;
+    margin-top: 40px;
+}
+/*nav menu*/
+.header nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/*menu cấp 1*/
+header nav ul.menu {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+header nav ul.menu > li {
+    position: relative;
+    margin-left: 50px;
+    margin-top: 20px;
+}
+header nav ul.menu > li > a,
+.icons > a {
+    color: var(--color-background);
+    text-decoration: none;
+    font-weight: 200;
+    font-size: 16px;
+    transition: color 0.3s ease;
+    position: relative;
+    padding-bottom: 5px;
+    display: block;
+}
+/* Icon mũi tên */
+header nav ul.menu > li > a i {
+    padding-left: 5px;
+}
+header nav ul.menu > li > a::after,
+.icons > a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-40%);
+    width: 0;
+    height: 2px;
+    background-color: var(--color-background);
+    transition: width 0.2s ease;
+}
+header nav ul.menu > li > a:hover::after,
+.icons > a:hover::after {
+    width: 100%;
+}
+
+/*submenu*/
+header nav ul.menu > li > ul {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: var(--color-primary);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    list-style: none;
+    margin: 0;
+    min-width: 200px;
+    z-index: 10;
+}
+header nav ul.menu > li:hover > ul {
+    display: block;
+}
+header nav ul.menu > li > ul > li {
+    margin: 0;
+    margin-top: 0;
+}
+/* Link của sub-menu */
+header nav ul.menu > li > ul > li > a {
+    display: block;
+    padding: 10px 20px;
+    color: var(--color-background);
+    font-weight: 200;
+    font-size: 15px;
+    text-decoration: none;
+    position: static;
+    transition: color 0.3s ease;
+}
+
+header nav ul.menu > li > ul > li > a::after {
+    display: none;
+}
+header nav ul.menu > li > ul > li > a:hover {
+    color: #ffffff;
+}
+.header .icons{
+    margin-left: 25px;
+    margin-top: 20px;
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+.icons .user-menu > a {
+    color: var(--color-background);
+    text-decoration: none;
+    font-weight: 200;
+    font-size: 16px;
+    transition: color 0.3s ease;
+    position: relative;
+    padding-bottom: 5px;
+    display: block;
+}
+header nav ul.menu > li > a::after,
+.icons > a::after,
+.icons .user-menu > a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-40%);
+    width: 0;
+    height: 2px;
+    background-color: var(--color-background);
+    transition: width 0.2s ease;
+}
+header nav ul.menu > li > a:hover::after,
+.icons > a:hover::after,
+.icons .user-menu > a:hover::after {
+    width: 100%;
+}
+.header .icons .user-menu {
+    position: relative;
+}
+.header .icons .user {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--color-primary);
+    list-style: none;
+    min-width: 150px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    z-index: 10;
+}
+.header .icons .user-menu:hover .user {
+    display: block;
+}
+.header .icons .user li {
+    margin: 0;
+}
+
+.header .icons .user a {
+    display: block;
+    padding: 10px 20px;
+    color:var(--color-background);
+    font-weight: 200;
+    font-size: 15px;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.header .icons .user a:hover {
+    color: #ffffff;
+}
