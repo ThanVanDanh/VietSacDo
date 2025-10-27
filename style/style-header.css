@@ -49,7 +49,7 @@ header .header {
 header .logo img {
     position: absolute;
     top: 50%;
-    transform: translateY(-50%) scale(2.5);
+    transform: translateY(-100%) scale(1);
     height: 80px;
     margin-top: 40px;
 }

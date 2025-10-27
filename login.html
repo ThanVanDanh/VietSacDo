@@ -10,10 +10,23 @@
     <script src="scripts/auth.js"></script>
     <script src="scripts/header.js"></script>
     <link rel="stylesheet" href="style/style-header.css">
+    <link rel="stylesheet" href="style/footer.css">
+    <link rel="stylesheet" href="style/breadcrumb.css">
 </head>
 <body>
-<main>
+<header>
     <div id="header-placeholder"></div>
+</header>
+<!--breadcrumb-->
+<div class="breadcrumb-container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Trang Chủ</a></li>
+            <li class="breadcrumb-item"><a href="login.html">Tài khoản</a></li> <li class="breadcrumb-item active" aria-current="page">Đăng nhập</li>
+        </ol>
+    </nav>
+</div>
+<main>
     <section class="section">
         <div class="container">
             <div class="wrap_background" id="login_view">
@@ -89,5 +102,6 @@
         </div>
     </section>
 </main>
+<div id="footer-placeholder"></div>
 </body>
 </html>
