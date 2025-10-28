@@ -13,10 +13,9 @@
     <link rel="stylesheet" href="style/footer.css">
 </head>
 <body>
-<header>
-    <div id="header-placeholder"></div>
-</header>
 <main>
+<!--    phần header-->
+    <div id="header-placeholder"></div>
     <div class="pixfort_pix_slider pix_builder_bg" id="section_slider">
         <div class="container">
             <div class="sixteen columns">
@@ -40,19 +39,19 @@
             </div>
         </div><!-- /.container -->
     </div>
-    <section class="product-showcase">
-<!--        <header class="signature-header">-->
+    <section class="product-showcase tab-component">
+        <div class="signature-header">
             <h1>SIGNATURE</h1>
-<!--        </header>-->
+        </div>
 
         <nav class="main-nav">
             <ul>
-                <li><a href="#" class="active">Phương Hoa Xuân</a></li>
-                <li><a href="#">Cổ Sen Ấn Dung</a></li>
-                <li><a href="#">Voan 4 Tà</a></li>
+                <li><a href="#" class="tab-link active" data-target="phuonghoaxuan">Phương Hoa Xuân</a></li>
+                <li><a href="#" class="tab-link" data-target="cosenandung" >Cổ Sen Ấn Dung</a></li>
+                <li><a href="#" class="tab-link" data-target="voan4ta">Voan 4 Tà</a></li>
             </ul>
         </nav>
-        <div class="product-gallery">
+        <div id="phuonghoaxuan" class="product-gallery active-gallery tab-content">
             <div class="product-card">
                 <div class="product-image">
                     <img src="image/aodai1.png" alt="Áo dài Phương Hoa Xuân - Cam nhảnh hoa cam">
@@ -124,6 +123,363 @@
             <div class="product-card">
                 <div class="product-image">
                     <img src="image/aodai5.png" alt="Áo dài Phương Hoa Xuân - Xanh biển nhảnh hoa">
+                </div>
+                <div class="product-info">
+                    <p class="product-name">Áo dài Phương Hoa Xuân - Xanh biển nhảnh hoa</p>
+                    <div class="product-price">
+                        <span class="old-price">790,000₫</span>
+                        <span class="current-price">671,500₫</span>
+                        <span class="discount-tag">15%</span>
+                    </div>
+                </div>
+                <div class="product-options">
+                    <div class="color-option active"></div>
+                </div>
+            </div>
+        </div>
+        <div id="cosenandung" class="product-gallery hidden-gallery tab-content">
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/aodai1.png" alt="Áo dài Phương Hoa Xuân - Cam nhảnh hoa cam">
+                </div>
+                <div class="product-info">
+                    <p class="product-name">Áo dài Phương Hoa Xuân - Cam nhảnh hoa cam</p>
+                    <div class="product-price">
+                        <span class="old-price">790,000₫</span>
+                        <span class="current-price">671,500₫</span>
+                        <span class="discount-tag">15%</span>
+                    </div>
+                </div>
+                <div class="product-options">
+                    <div class="color-option active"></div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/aodai2.png" alt="Áo dài Phương Hoa Xuân - Hồng đầm nhảnh hoa">
+                </div>
+                <div class="product-info">
+                    <p class="product-name">Áo dài Phương Hoa Xuân - Hồng đầm nhảnh hoa</p>
+                    <div class="product-price">
+                        <span class="old-price">790,000₫</span>
+                        <span class="current-price">671,500₫</span>
+                        <span class="discount-tag">15%</span>
+                    </div>
+                </div>
+                <div class="product-options">
+                    <div class="color-option active"></div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/aodai3.png" alt="Áo dài Phương Hoa Xuân - Hồng nhảnh hoa hồng">
+                </div>
+                <div class="product-info">
+                    <p class="product-name">Áo dài Phương Hoa Xuân - Hồng nhảnh hoa hồng</p>
+                    <div class="product-price">
+                        <span class="old-price">790,000₫</span>
+                        <span class="current-price">671,500₫</span>
+                        <span class="discount-tag">15%</span>
+                    </div>
+                </div>
+                <div class="product-options">
+                    <div class="color-option active"></div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/aodai4.png" alt="Áo dài Phương Hoa Xuân - Kem nhảnh hoa tím">
+                </div>
+                <div class="product-info">
+                    <p class="product-name">Áo dài Phương Hoa Xuân - Kem nhảnh hoa tím</p>
+                    <div class="product-price">
+                        <span class="old-price">790,000₫</span>
+                        <span class="current-price">671,500₫</span>
+                        <span class="discount-tag">15%</span>
+                    </div>
+                </div>
+                <div class="product-options">
+                    <div class="color-option active"></div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/aodai5.png" alt="Áo dài Phương Hoa Xuân - Xanh biển nhảnh hoa">
+                </div>
+                <div class="product-info">
+                    <p class="product-name">Áo dài Phương Hoa Xuân - Xanh biển nhảnh hoa</p>
+                    <div class="product-price">
+                        <span class="old-price">790,000₫</span>
+                        <span class="current-price">671,500₫</span>
+                        <span class="discount-tag">15%</span>
+                    </div>
+                </div>
+                <div class="product-options">
+                    <div class="color-option active"></div>
+                </div>
+            </div>
+        </div>
+        <div id="voan4ta" class="product-gallery hidden-gallery tab-content">
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/aodai2.png" alt="Áo dài Phương Hoa Xuân - Cam nhảnh hoa cam">
+                </div>
+                <div class="product-info">
+                    <p class="product-name">Áo dài Phương Hoa Xuân - Cam nhảnh hoa cam</p>
+                    <div class="product-price">
+                        <span class="old-price">790,000₫</span>
+                        <span class="current-price">671,500₫</span>
+                        <span class="discount-tag">15%</span>
+                    </div>
+                </div>
+                <div class="product-options">
+                    <div class="color-option active"></div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/aodai2.png" alt="Áo dài Phương Hoa Xuân - Hồng đầm nhảnh hoa">
+                </div>
+                <div class="product-info">
+                    <p class="product-name">Áo dài Phương Hoa Xuân - Hồng đầm nhảnh hoa</p>
+                    <div class="product-price">
+                        <span class="old-price">790,000₫</span>
+                        <span class="current-price">671,500₫</span>
+                        <span class="discount-tag">15%</span>
+                    </div>
+                </div>
+                <div class="product-options">
+                    <div class="color-option active"></div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/aodai3.png" alt="Áo dài Phương Hoa Xuân - Hồng nhảnh hoa hồng">
+                </div>
+                <div class="product-info">
+                    <p class="product-name">Áo dài Phương Hoa Xuân - Hồng nhảnh hoa hồng</p>
+                    <div class="product-price">
+                        <span class="old-price">790,000₫</span>
+                        <span class="current-price">671,500₫</span>
+                        <span class="discount-tag">15%</span>
+                    </div>
+                </div>
+                <div class="product-options">
+                    <div class="color-option active"></div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/aodai4.png" alt="Áo dài Phương Hoa Xuân - Kem nhảnh hoa tím">
+                </div>
+                <div class="product-info">
+                    <p class="product-name">Áo dài Phương Hoa Xuân - Kem nhảnh hoa tím</p>
+                    <div class="product-price">
+                        <span class="old-price">790,000₫</span>
+                        <span class="current-price">671,500₫</span>
+                        <span class="discount-tag">15%</span>
+                    </div>
+                </div>
+                <div class="product-options">
+                    <div class="color-option active"></div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/aodai5.png" alt="Áo dài Phương Hoa Xuân - Xanh biển nhảnh hoa">
+                </div>
+                <div class="product-info">
+                    <p class="product-name">Áo dài Phương Hoa Xuân - Xanh biển nhảnh hoa</p>
+                    <div class="product-price">
+                        <span class="old-price">790,000₫</span>
+                        <span class="current-price">671,500₫</span>
+                        <span class="discount-tag">15%</span>
+                    </div>
+                </div>
+                <div class="product-options">
+                    <div class="color-option active"></div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <section class="product-showcase-top tab-component">
+        <div class="signature-header">
+            <h1>Trang phục Việt Nam</h1>
+        </div>
+
+        <nav class="main-nav">
+            <ul>
+                <li><a href="#" class="tab-link active" data-target="phuonglien">Phương Hoa Xuân</a></li>
+                <li><a href="#" class="tab-link" data-target="phuongloan" >Cổ Sen Ấn Dung</a></li>
+            </ul>
+        </nav>
+        <div id="phuonglien" class="product-gallery active-gallery tab-content">
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/aodai1.png" alt="Áo dài Phương Hoa Xuân - Cam nhảnh hoa cam">
+                </div>
+                <div class="product-info">
+                    <p class="product-name">Áo dài Phương Hoa Xuân - Cam nhảnh hoa cam</p>
+                    <div class="product-price">
+                        <span class="old-price">790,000₫</span>
+                        <span class="current-price">671,500₫</span>
+                        <span class="discount-tag">15%</span>
+                    </div>
+                </div>
+                <div class="product-options">
+                    <div class="color-option active"></div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/aodai2.png" alt="Áo dài Phương Hoa Xuân - Hồng đầm nhảnh hoa">
+                </div>
+                <div class="product-info">
+                    <p class="product-name">Áo dài Phương Hoa Xuân - Hồng đầm nhảnh hoa</p>
+                    <div class="product-price">
+                        <span class="old-price">790,000₫</span>
+                        <span class="current-price">671,500₫</span>
+                        <span class="discount-tag">15%</span>
+                    </div>
+                </div>
+                <div class="product-options">
+                    <div class="color-option active"></div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/aodai3.png" alt="Áo dài Phương Hoa Xuân - Hồng nhảnh hoa hồng">
+                </div>
+                <div class="product-info">
+                    <p class="product-name">Áo dài Phương Hoa Xuân - Hồng nhảnh hoa hồng</p>
+                    <div class="product-price">
+                        <span class="old-price">790,000₫</span>
+                        <span class="current-price">671,500₫</span>
+                        <span class="discount-tag">15%</span>
+                    </div>
+                </div>
+                <div class="product-options">
+                    <div class="color-option active"></div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/aodai4.png" alt="Áo dài Phương Hoa Xuân - Kem nhảnh hoa tím">
+                </div>
+                <div class="product-info">
+                    <p class="product-name">Áo dài Phương Hoa Xuân - Kem nhảnh hoa tím</p>
+                    <div class="product-price">
+                        <span class="old-price">790,000₫</span>
+                        <span class="current-price">671,500₫</span>
+                        <span class="discount-tag">15%</span>
+                    </div>
+                </div>
+                <div class="product-options">
+                    <div class="color-option active"></div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/aodai5.png" alt="Áo dài Phương Hoa Xuân - Xanh biển nhảnh hoa">
+                </div>
+                <div class="product-info">
+                    <p class="product-name">Áo dài Phương Hoa Xuân - Xanh biển nhảnh hoa</p>
+                    <div class="product-price">
+                        <span class="old-price">790,000₫</span>
+                        <span class="current-price">671,500₫</span>
+                        <span class="discount-tag">15%</span>
+                    </div>
+                </div>
+                <div class="product-options">
+                    <div class="color-option active"></div>
+                </div>
+            </div>
+        </div>
+        <div id="phuongloan" class="product-gallery hidden-gallery tab-content">
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/aodai1.png" alt="Áo dài Phương Hoa Xuân - Cam nhảnh hoa cam">
+                </div>
+                <div class="product-info">
+                    <p class="product-name">Áo dài Phương Hoa Xuân - Cam nhảnh hoa cam</p>
+                    <div class="product-price">
+                        <span class="old-price">790,000₫</span>
+                        <span class="current-price">671,500₫</span>
+                        <span class="discount-tag">15%</span>
+                    </div>
+                </div>
+                <div class="product-options">
+                    <div class="color-option active"></div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/aodai2.png" alt="Áo dài Phương Hoa Xuân - Hồng đầm nhảnh hoa">
+                </div>
+                <div class="product-info">
+                    <p class="product-name">Áo dài Phương Hoa Xuân - Hồng đầm nhảnh hoa</p>
+                    <div class="product-price">
+                        <span class="old-price">790,000₫</span>
+                        <span class="current-price">671,500₫</span>
+                        <span class="discount-tag">15%</span>
+                    </div>
+                </div>
+                <div class="product-options">
+                    <div class="color-option active"></div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/aodai3.png" alt="Áo dài Phương Hoa Xuân - Hồng nhảnh hoa hồng">
+                </div>
+                <div class="product-info">
+                    <p class="product-name">Áo dài Phương Hoa Xuân - Hồng nhảnh hoa hồng</p>
+                    <div class="product-price">
+                        <span class="old-price">790,000₫</span>
+                        <span class="current-price">671,500₫</span>
+                        <span class="discount-tag">15%</span>
+                    </div>
+                </div>
+                <div class="product-options">
+                    <div class="color-option active"></div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/aodai4.png" alt="Áo dài Phương Hoa Xuân - Kem nhảnh hoa tím">
+                </div>
+                <div class="product-info">
+                    <p class="product-name">Áo dài Phương Hoa Xuân - Kem nhảnh hoa tím</p>
+                    <div class="product-price">
+                        <span class="old-price">790,000₫</span>
+                        <span class="current-price">671,500₫</span>
+                        <span class="discount-tag">15%</span>
+                    </div>
+                </div>
+                <div class="product-options">
+                    <div class="color-option active"></div>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <img src="image/aodai2.png" alt="Áo dài Phương Hoa Xuân - Xanh biển nhảnh hoa">
                 </div>
                 <div class="product-info">
                     <p class="product-name">Áo dài Phương Hoa Xuân - Xanh biển nhảnh hoa</p>
