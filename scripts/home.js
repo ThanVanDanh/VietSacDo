@@ -88,3 +88,34 @@ document.addEventListener('DOMContentLoaded', function () {
     carousel.addEventListener('mouseleave', startAutoPlay);
     startAutoPlay();
 });
+document.addEventListener('DOMContentLoaded', () => {
+const tabLinks = document.querySelectorAll('.tab-link');
+
+tabLinks.forEach(link => {
+    link.addEventListener('click', function(event) {
+        event.preventDefault();
+
+        const currentComponent = this.closest('.tab-component');
+
+        const targetId = this.dataset.target;
+
+        if (!currentComponent) return;
+
+        const linksInComponent = currentComponent.querySelectorAll('.tab-link');
+        linksInComponent.forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+
+        const galleriesInComponent = currentComponent.querySelectorAll('.tab-content');
+        galleriesInComponent.forEach(gallery => {
+            gallery.classList.remove('active-gallery');
+            gallery.classList.add('hidden-gallery');
+        });
+
+        const targetGallery = document.getElementById(targetId);
+        if (targetGallery) {
+            targetGallery.classList.remove('hidden-gallery');
+            targetGallery.classList.add('active-gallery');
+        }
+    });
+});
+});
