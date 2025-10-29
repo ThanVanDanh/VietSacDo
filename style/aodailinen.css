@@ -28,6 +28,10 @@ section {
 .product-card {
     text-align: left;
 }
+.product-image-wrapper {
+    position: relative;
+    overflow: hidden;
+}
 
 .product-image img:hover {
     transform: scale(0.95);
@@ -40,7 +44,9 @@ section {
     transition: transform 0.3s ease;
     transform-origin: center;
 }
-
+.product-image-wrapper:hover .product-image img {
+    transform: scale(0.95);
+}
 .product-info {
     padding: 10px 5px;
 }
@@ -87,4 +93,47 @@ section {
     padding: 2px 5px;
     border-radius: 2px;
     font-weight: bold;
+}
+/*gio hang & xem nhanh*/
+.product-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 20px 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(100%);
+    transition: all 0.3s ease-in-out;
+    z-index: 3;
+}
+.product-image-wrapper:hover .product-overlay {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.icon-button {
+    background-color: white;
+    border: 1px solid #ddd;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    color: #333;
+    transition: background-color 0.5s ease;
+}
+
+.icon-button:hover {
+    background-color: #333;
+    color: white;
+}
+.product-image-wrapper a{
+    text-decoration: none;
 }
