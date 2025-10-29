@@ -269,7 +269,6 @@ body {
     width: 100%;
     margin:0 auto;
     max-width: 1400px;
-    padding: 20px;
     box-sizing: border-box;
 }
 .product-set-vietsacdo .product-showcase {
@@ -288,5 +287,190 @@ body {
 .product-set-vietsacdo .info{
     text-decoration: none;
 }
+.sumire-review-section {
+    max-width: 1400px;
+    margin: 40px auto; /* Căn giữa và tạo khoảng đệm */
+    padding: 20px;
+}
 
+.instagram-follow {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.follow-text {
+    font-size: 1.5em;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+.instagram-gallery {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 0 10px;
+}
+
+.gallery-item {
+    position: relative;
+    flex: 1 1 18%;
+    max-width: 280px;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.insta-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    text-decoration: none;
+}
+.insta-overlay i {
+    font-size: 2.5em;
+    color: white;
+
+    width: 50px;
+    height: 50px;
+    background-color: white;
+    color: black;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover .insta-overlay {
+    opacity: 1;
+}
+
+.gallery-item:hover img {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}
+
+.gallery-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.thank-you-message {
+    text-align: center;
+    margin: 60px 0 40px 0;
+}
+
+.thank-you-message p {
+    font-size: 1.4em;
+    font-weight: 500;
+    color: #333;
+}
+
+.customer-reviews {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    padding: 0 10px;
+}
+
+.review-card {
+    flex: 1 1 30%; /* Chia thành 3 cột */
+    max-width: 400px;
+    display: flex;
+    padding: 15px;
+    border: 1px solid #eee;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    border-radius: 5px;
+    min-height: 200px; /* Đảm bảo chiều cao tối thiểu */
+}
+
+.review-text-content {
+    flex-grow: 1;
+    padding-right: 15px;
+}
+
+.reviewer-name {
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+
+.stars {
+    color: gold; /* Màu vàng cho sao */
+    font-size: 1em;
+    margin-bottom: 10px;
+}
+
+.review-comment {
+    font-size: 0.95em;
+    color: #555;
+    line-height: 1.4;
+}
+
+.reviewer-image {
+    width: 100px; /* Chiều rộng cố định cho ảnh */
+    height: 100%;
+    align-self: flex-start; /* Giữ ảnh ở trên cùng */
+}
+
+.reviewer-image img {
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+@media (max-width: 1024px) {
+    .instagram-gallery {
+        flex-wrap: wrap;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+    .gallery-item {
+        flex: 1 1 30%;
+    }
+
+    .customer-reviews {
+        flex-direction: column;
+        align-items: center;
+    }
+    .review-card {
+        max-width: 90%;
+        width: 100%;
+        margin-bottom: 20px;
+        min-height: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .gallery-item {
+        flex: 1 1 45%;
+    }
+    .review-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .review-text-content {
+        padding: 10px 0;
+    }
+    .reviewer-image {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-top: 10px;
+    }
+}
 
