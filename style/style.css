@@ -203,7 +203,7 @@ body {
     font-size: 14px;
     margin: 0;
     line-height: 1.4;
-    color: #640100;
+    color: #320000;
     min-height: 36px;
 }
 
@@ -223,7 +223,7 @@ body {
 .current-price {
     font-size: 16px;
     font-weight: bold;
-    color: #320000;
+    color: #640100;
     margin-right: 10px;
 }
 
@@ -286,7 +286,17 @@ body {
 }
 .product-set-vietsacdo .info{
     text-decoration: none;
+    color: #320000;
+    font-weight: bold;
 }
+.product-set-vietsacdo .product-name{
+    font-size: 20px;
+    margin: 0;
+    line-height: 1.4;
+    color: #320000;
+    min-height: 36px;
+}
+
 .sumire-review-section {
     max-width: 1400px;
     margin: 40px auto; /* Căn giữa và tạo khoảng đệm */
