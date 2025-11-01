@@ -11,7 +11,7 @@
 
 body {
     font-family: 'Mulish',sans-serif;
-    background-color: var(--color-background);
+    /*background-color: var(--color-background);*/
     color: var(--color-secondary);
     line-height: 1.6;
 }
@@ -76,7 +76,7 @@ body {
 }
 
 #section_slider .item{
-    border-radius: 20px;
+    /*border-radius: 20px;*/
 }
 
 .carousel-control {
