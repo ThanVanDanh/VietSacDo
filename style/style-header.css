@@ -11,7 +11,7 @@
 
 body {
     font-family: 'Mulish',sans-serif;
-    background-color: var(--color-background);
+    /*background-color: var(--color-background);*/
     color: var(--color-secondary);
     line-height: 1.6;
 }
@@ -202,4 +202,55 @@ header nav ul.menu > li > a:hover::after,
 
 .header .icons .user a:hover {
     color: #ffffff;
+}
+.mega-menu-container {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-44.4%);
+    top: 100%;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.0);
+    justify-content: center;
+    z-index: 99;
+}
+.mega-menu-content {
+    display: flex;
+    gap: 40px;
+    width: 100%;
+    padding: 30px;
+    background-color:var(--color-primary);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    margin-top: 5px;
+}
+
+.category-column {
+    min-width: 300px;
+    line-height: 1.6;
+}
+
+.category-column h3 {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #FFFFFF;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+.category-column ul {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+.category-column li {
+    margin-bottom: 12px;
+}
+.category-column li a {
+    text-decoration: none;
+    color: var(--color-background);
+    font-size: 1rem;
+    transition: color 0.3s ease;
+    font-weight: 200;
+}
+
+.category-column li a:hover {
+    color: #FFFFFF;
 }
