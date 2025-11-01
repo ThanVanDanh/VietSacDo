@@ -11,8 +11,78 @@
     <link rel="stylesheet" href="style/style-header.css">
     <link rel="stylesheet" href="style/footer.css">
     <link rel="stylesheet" href="style/breadcrumb.css">
+    <script src="scripts/home.js"></script>
 </head>
 <body>
+<div class="search-overlay-container" id="searchOverlay">
+
+    <div class="search-overlay-header">
+        <div class="logo">
+            <img src="image/logo.png" alt="Logo Việt Sắc Đỏ">
+        </div>
+
+        <form class="search-overlay-form">
+            <input type="text" id="searchInput" placeholder="áo dài truyền thống, quần áo dài, vòng tay...">
+            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+
+        <div class="icons">
+            <div class="user-menu">
+                <a href="#"><i class="fa-regular fa-user"></i></a>
+                <ul class="user">
+                    <li><a href="login.html">Đăng nhập</a></li>
+                    <li><a href="signup.html">Đăng ký</a></li>
+                </ul>
+            </div>
+            <div class="mini-cart-menu">
+                <a href="giohang.html" title="Giỏ hàng">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="mini-count_item count_item_pr">3</span>
+                </a>
+                <div class="mini-cart-content">
+                    <ul class="mini-cart-items-list">
+                        <li> <img src="image/truyenthong1.png" alt="Áo dài truyền thống Quỳnh Hân">
+                            <div class="mini-item-info">
+                                <a href="" class="mini-item-name">Áo dài truyền thống Quỳnh Hân</a>
+                                <span class="mini-item-meta">Size A / Quỳnh Hân</span>
+                                <span class="mini-item-price">711,000₫</span>
+                                <span class="mini-quantity">x1</span>
+                            </div>
+                            <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
+                        </li>
+                        <li> <img src="image/truyenthong3.png" alt="Áo dài truyền thống Phúc Hương">
+                            <div class="mini-item-info">
+                                <a href="" class="mini-item-name">Áo dài truyền thống Phúc Hương</a>
+                                <span class="mini-item-meta">Size A / Phúc Hương</span>
+                                <span class="mini-item-price">880,000₫</span>
+                                <span class="mini-quantity">x1</span>
+                            </div>
+                            <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
+                        </li>
+                        <li> <img src="image/truyenthong4.png" alt="Áo dài truyền thống Quỳnh Châu">
+                            <div class="mini-item-info">
+                                <a href="" class="mini-item-name">Áo dài truyền thống Quỳnh Châu</a>
+                                <span class="mini-item-meta">Size A / Quỳnh Châu</span>
+                                <span class="mini-item-price">790,000₫</span>
+                                <span class="mini-quantity">x1</span>
+                            </div>
+                            <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
+                        </li>
+                    </ul>
+                    <div class="mini-cart-footer">
+                        <div class="mini-cart-total">
+                            <span >Tổng tiền tạm tính: <strong class="mini-total-price">2,281,000₫</strong></span>
+                        </div>
+                        <a href="giohang.html" class="btn-pay">Tiến hành thanh toán</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="search-overlay-close-area" id="searchCloseArea"></div>
+</div>
 <header>
     <div class="header">
         <div class="logo">
@@ -24,7 +94,7 @@
                 <li><a href="#">Áo dài<i class="fa-solid fa-chevron-down"></i></a>
                     <ul class="sub-menu">
                         <li><a href="aodaitruyenthong.html">Áo dài truyền thống</a></li>
-                        <li><a href="#">Áo dài thêu tay</a></li>
+                        <li><a href="aodaitheutay.html">Áo dài thêu tay</a></li>
                         <li><a href="aodailinen.html">Áo dài linen</a></li>
                     </ul>
                 </li>
@@ -40,7 +110,9 @@
             </ul>
         </nav>
         <div class="icons">
-            <a href=""><i class="fa-solid fa-magnifying-glass"></i></a>
+
+            <a href="#" id="searchTrigger"><i class="fa-solid fa-magnifying-glass"></i></a>
+
             <div class="user-menu">
                 <a href="#"><i class="fa-regular fa-user"></i></a>
                 <ul class="user">
