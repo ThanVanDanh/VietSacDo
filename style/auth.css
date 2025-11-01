@@ -100,7 +100,7 @@ small {
     color: #403e3e;
 }
 
-button{
+.page_auth button{
     width: 100%;
     background-color: var(--color-primary);
     color: #aa9280;
