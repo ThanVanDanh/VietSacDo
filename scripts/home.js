@@ -89,36 +89,37 @@ document.addEventListener('DOMContentLoaded', function () {
     startAutoPlay();
 });
 document.addEventListener('DOMContentLoaded', () => {
-const tabLinks = document.querySelectorAll('.tab-link');
+    const tabLinks = document.querySelectorAll('.tab-link');
 
-tabLinks.forEach(link => {
-    link.addEventListener('click', function(event) {
-        event.preventDefault();
+    tabLinks.forEach(link => {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
 
-        const currentComponent = this.closest('.tab-component');
+            const currentComponent = this.closest('.tab-component');
 
-        const targetId = this.dataset.target;
+            const targetId = this.dataset.target;
 
-        if (!currentComponent) return;
+            if (!currentComponent) return;
 
-        const linksInComponent = currentComponent.querySelectorAll('.tab-link');
-        linksInComponent.forEach(l => l.classList.remove('active'));
-        this.classList.add('active');
+            const linksInComponent = currentComponent.querySelectorAll('.tab-link');
+            linksInComponent.forEach(l => l.classList.remove('active'));
+            this.classList.add('active');
 
-        const galleriesInComponent = currentComponent.querySelectorAll('.tab-content');
-        galleriesInComponent.forEach(gallery => {
-            gallery.classList.remove('active-gallery');
-            gallery.classList.add('hidden-gallery');
+            const galleriesInComponent = currentComponent.querySelectorAll('.tab-content');
+            galleriesInComponent.forEach(gallery => {
+                gallery.classList.remove('active-gallery');
+                gallery.classList.add('hidden-gallery');
+            });
+
+            const targetGallery = document.getElementById(targetId);
+            if (targetGallery) {
+                targetGallery.classList.remove('hidden-gallery');
+                targetGallery.classList.add('active-gallery');
+            }
         });
-
-        const targetGallery = document.getElementById(targetId);
-        if (targetGallery) {
-            targetGallery.classList.remove('hidden-gallery');
-            targetGallery.classList.add('active-gallery');
-        }
     });
 });
-});
+
 document.addEventListener('DOMContentLoaded', function() {
 
     const searchTrigger = document.getElementById('searchTrigger');

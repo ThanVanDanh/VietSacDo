@@ -103,7 +103,7 @@ section.shopping-cart {
     gap: 15px;
     margin-left: auto;
 }
-input{
+.cart-items-list-sp input{
     max-width: 25px;
     text-align: center;
 }
@@ -166,10 +166,10 @@ input{
     align-items: center;
     flex: 0 0 320px;
     height: auto;
-    background-color: #b09e7e85;
-    border-radius: 10px;
+    background-color: #f7f7f7;
+    /*border-radius: 10px;*/
     padding: 25px 30px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    /*box-shadow: 0 2px 8px rgba(0,0,0,0.1);*/
 }
 .cart-price-sp .total-sp{
     display: flex;
