@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Áo dài Phượng Hoa Xuân</title>
+    <title>Chi tiết sản phẩm</title>
+    <link rel="icon" href="image/logoaodai.jpg" type="image/jpeg">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style/product-infomation.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -18,6 +19,75 @@
     <!--    <link rel="stylesheet" href="style/aodailinen.css">-->
 </head>
 <body>
+<div class="search-overlay-container" id="searchOverlay">
+
+    <div class="search-overlay-header">
+        <div class="logo">
+            <img src="image/logo.png" alt="Logo Việt Sắc Đỏ">
+        </div>
+
+        <form class="search-overlay-form">
+            <input type="text" id="searchInput" placeholder="áo dài truyền thống, quần áo dài, vòng tay...">
+            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+
+        <div class="icons">
+            <div class="user-menu">
+                <a href="#"><i class="fa-regular fa-user"></i></a>
+                <ul class="user">
+                    <li><a href="login.html">Đăng nhập</a></li>
+                    <li><a href="signup.html">Đăng ký</a></li>
+                </ul>
+            </div>
+            <div class="mini-cart-menu">
+                <a href="giohang.html" title="Giỏ hàng">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="mini-count_item count_item_pr">3</span>
+                </a>
+                <div class="mini-cart-content">
+                    <ul class="mini-cart-items-list">
+                        <li> <img src="image/truyenthong1.png" alt="Áo dài truyền thống Quỳnh Hân">
+                            <div class="mini-item-info">
+                                <a href="" class="mini-item-name">Áo dài truyền thống Quỳnh Hân</a>
+                                <span class="mini-item-meta">Size A / Quỳnh Hân</span>
+                                <span class="mini-item-price">711,000₫</span>
+                                <span class="mini-quantity">x1</span>
+                            </div>
+                            <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
+                        </li>
+                        <li> <img src="image/truyenthong3.png" alt="Áo dài truyền thống Phúc Hương">
+                            <div class="mini-item-info">
+                                <a href="" class="mini-item-name">Áo dài truyền thống Phúc Hương</a>
+                                <span class="mini-item-meta">Size A / Phúc Hương</span>
+                                <span class="mini-item-price">880,000₫</span>
+                                <span class="mini-quantity">x1</span>
+                            </div>
+                            <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
+                        </li>
+                        <li> <img src="image/truyenthong4.png" alt="Áo dài truyền thống Quỳnh Châu">
+                            <div class="mini-item-info">
+                                <a href="" class="mini-item-name">Áo dài truyền thống Quỳnh Châu</a>
+                                <span class="mini-item-meta">Size A / Quỳnh Châu</span>
+                                <span class="mini-item-price">790,000₫</span>
+                                <span class="mini-quantity">x1</span>
+                            </div>
+                            <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
+                        </li>
+                    </ul>
+                    <div class="mini-cart-footer">
+                        <div class="mini-cart-total">
+                            <span >Tổng tiền tạm tính: <strong class="mini-total-price">2,281,000₫</strong></span>
+                        </div>
+                        <a href="giohang.html" class="btn-pay">Tiến hành thanh toán</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="search-overlay-close-area" id="searchCloseArea"></div>
+</div>
 <header>
     <div class="header">
         <div class="logo">
@@ -29,7 +99,7 @@
                 <li><a href="#">Áo dài<i class="fa-solid fa-chevron-down"></i></a>
                     <ul class="sub-menu">
                         <li><a href="aodaitruyenthong.html">Áo dài truyền thống</a></li>
-                        <li><a href="#">Áo dài thêu tay</a></li>
+                        <li><a href="aodaitheutay.html">Áo dài thêu tay</a></li>
                         <li><a href="aodailinen.html">Áo dài linen</a></li>
                     </ul>
                 </li>
@@ -86,7 +156,9 @@
             </ul>
         </nav>
         <div class="icons">
-            <a href=""><i class="fa-solid fa-magnifying-glass"></i></a>
+
+            <a href="#" id="searchTrigger"><i class="fa-solid fa-magnifying-glass"></i></a>
+
             <div class="user-menu">
                 <a href="#"><i class="fa-regular fa-user"></i></a>
                 <ul class="user">
@@ -94,7 +166,50 @@
                     <li><a href="signup.html">Đăng ký</a></li>
                 </ul>
             </div>
-            <a href=""><i class="fa-solid fa-cart-shopping"></i></a>
+            <div class="mini-cart-menu">
+                <a href="giohang.html" title="Giỏ hàng">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="mini-count_item count_item_pr">3</span>
+                </a>
+                <div class="mini-cart-content">
+                    <ul class="mini-cart-items-list">
+                        <li> <img src="image/truyenthong1.png" alt="Áo dài truyền thống Quỳnh Hân">
+                            <div class="mini-item-info">
+                                <a href="" class="mini-item-name">Áo dài truyền thống Quỳnh Hân</a>
+                                <span class="mini-item-meta">Size A / Quỳnh Hân</span>
+                                <span class="mini-item-price">711,000₫</span>
+                                <span class="mini-quantity">x1</span>
+                            </div>
+                            <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
+                        </li>
+                        <li> <img src="image/truyenthong3.png" alt="Áo dài truyền thống Phúc Hương">
+                            <div class="mini-item-info">
+                                <a href="" class="mini-item-name">Áo dài truyền thống Phúc Hương</a>
+                                <span class="mini-item-meta">Size A / Phúc Hương</span>
+                                <span class="mini-item-price">880,000₫</span>
+                                <span class="mini-quantity">x1</span>
+                            </div>
+                            <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
+                        </li>
+                        <li> <img src="image/truyenthong4.png" alt="Áo dài truyền thống Quỳnh Châu">
+                            <div class="mini-item-info">
+                                <a href="" class="mini-item-name">Áo dài truyền thống Quỳnh Châu</a>
+                                <span class="mini-item-meta">Size A / Quỳnh Châu</span>
+                                <span class="mini-item-price">790,000₫</span>
+                                <span class="mini-quantity">x1</span>
+                            </div>
+                            <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
+                        </li>
+                    </ul>
+                    <div class="mini-cart-footer">
+                        <div class="mini-cart-total">
+                            <span >Tổng tiền tạm tính: <strong class="mini-total-price">2,281,000₫</strong></span>
+                        </div>
+                        <a href="giohang.html" class="btn-pay">Tiến hành thanh toán</a>
+                    </div>
+
+                </div>
+            </div>
         </div>
     </div>
 </header>
@@ -103,7 +218,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="index.html">Trang Chủ</a></li>
-            <li class="breadcrumb-item"><a href="login.html">Tài khoản</a></li> <li class="breadcrumb-item active" aria-current="page">Đăng nhập</li>
+            <li class="breadcrumb-item"><a href="all-product.html">Áo dài</a></li> <li class="breadcrumb-item active" aria-current="page">Chi tiết sản phẩm </li>
         </ol>
     </nav>
 </div>
@@ -142,21 +257,7 @@
                 <li>Hỏa tốc mọi ngày trong tuần</li>
             </ul>
         </fieldset>
-
-<!--        <div class="promotion-box">-->
-<!--            <div class="promotion-header">-->
-<!--                <span class="promo-icon">❗</span> KHUYẾN MÃI - ƯU ĐÃI-->
-<!--            </div>-->
-<!--            <ul>-->
-<!--                <li>Freeship toàn quốc khi mua hàng qua các kênh Web, FB, Insta (Không áp dụng cho đơn chỉ có phụ kiện dưới 350K)</li>-->
-<!--                <li>Hỏa tốc mọi ngày trong tuần</li>-->
-<!--            </ul>-->
-<!--        </div>-->
-
-
-
         <div class="section-title">Mã giảm giá</div>
-
         <div class="section-title">Kích thước: Size A</div>
         <div class="size-options">
             <button class="size-btn active">Size A</button>
@@ -164,9 +265,7 @@
             <button class="size-btn">Size C</button>
             <button class="size-btn">Size D</button>
         </div>
-
         <div class="section-title">Màu sắc: Hồng nhành hoa hồng</div>
-
         <div class="purchase-actions">
             <div class="quantity-control">
                 <button class="qty-btn">-</button>
@@ -176,11 +275,208 @@
             <button class="add-to-cart-btn">THÊM VÀO GIỎ</button>
         </div>
         <button class="buy-now-btn">MUA NGAY</button>
-        <p><span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Alias cum dolore, porro quas quo ratione tempora. Architecto deserunt fugiat ipsum necessitatibus quidem sit temporibus ut. Delectus magni nam odio recusandae!</span><span>Accusamus assumenda corporis delectus iusto maxime quidem reiciendis suscipit. Accusamus doloremque eius est ipsum nam, nisi quam quasi recusandae veniam! Cupiditate dolor dolore ducimus esse exercitationem, labore laboriosam quibusdam rem.</span><span>Blanditiis commodi delectus, distinctio eaque eveniet exercitationem facilis hic id illum laboriosam nisi numquam odio optio placeat quaerat quam quia, repellat sed sequi soluta, sunt tempore totam veritatis vero voluptate!</span><span>Aspernatur at aut dolorum error excepturi fuga id illo ipsam laboriosam maxime, nostrum officiis optio quas quasi quod, repellat veniam? Architecto doloremque eum harum nemo omnis pariatur quam repudiandae vel.</span><span>Accusantium adipisci architecto aspernatur at autem deleniti deserunt dolore eaque earum error, ex fugiat hic incidunt ipsa mollitia nam natus necessitatibus odio officiis quae sint sunt, suscipit veniam vitae voluptate?</span><span>Architecto eligendi et ipsam iusto labore natus praesentium sit? Consequatur ipsa itaque magni nobis praesentium quis! A ad dolore facere reiciendis, tenetur voluptatum. Ad dolor earum explicabo harum molestias, totam.</span><span>Ad consequatur cumque debitis eius error exercitationem, fuga ipsa ipsum itaque iusto laudantium minima modi nam nobis non numquam possimus quam quo repellendus repudiandae sed similique unde velit vero vitae?</span><span>Ab ad, amet aspernatur consectetur cupiditate eaque eius eligendi error est et expedita fuga hic illum iure iusto nemo neque, nesciunt officiis quibusdam quis rem sed tempore temporibus, velit vero?</span><span>Aspernatur atque consequuntur cumque deleniti dicta, distinctio facilis fugit illum libero maiores minima, nulla placeat quisquam rem repudiandae soluta tempora vel? Alias amet earum illo iste molestias mollitia quod soluta?</span><span>Ab alias animi commodi ducimus expedita explicabo, laboriosam! Accusamus autem inventore nam neque optio ut vitae? Aspernatur, culpa error eveniet natus nesciunt nisi numquam placeat provident ratione sed ut voluptatem?</span></p>
+        <hr class="dashed-line">
+        <div class="shipping">
+            <p><span><i class="fa-solid fa-truck-fast"></i></span><span>Giao hàng toàn quốc - quốc tế</span></p>
 
+        </div>
+        <details class="baohanh-details">
+            <summary>Xem thêm chi tiết</summary>
+            <div class="content-chitiet">
+                <h5>Thông tin sản phẩm</h5>
+                <p>Chất liệu: Vải Linen </p>
+                <p style="color: #880000; font-style: italic">Giá trên chưa bao gồm quần và phụ kiện. </p>
+                <p>Sản phẩm có sẵn sẽ được gửi đến khách hàng trong thời gian 3-4 ngày kể từ lúc thanh toán online.</p>
+            </div>
+            <div class="baohanh-img">
+                <img src="image/giaiphap.png" alt="Hướng dẫn sử dụng">
+
+            </div>
+        </details>
+        <hr class="dashed-line">
+        <details class="doitra-details">
+            <summary>Chính sách đổi trả</summary>
+            <hr>
+            <ol>
+                <li>
+                    <div class="content-chinhsach">
+                        <p>Sumire Store nhận đổi size, KHÔNG HỖ TRỢ ĐỔI MÀU HAY MẪU KHÁC. Chỉ được đổi size 1 lần với điều kiện cùng mẫu sản phẩm trong vòng 05 ngày kể từ ngày mua hàng. Khi đổi, sản phẩm phải còn hóa đơn, chưa giặt, chưa sử dụng, không có mùi lạ, không bị hư hỏng, còn nguyên nhãn tag.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="content-chinhsach">
+                        <p>Chỉ nhận trả hàng hoàn tiền trong trường hợp: hàng gửi đến khách là hàng lỗi, hoặc sai sản phẩm nhưng không có sản phẩm khác thay thế. Sau khi kiểm tra hàng trả còn nhãn tag, chưa qua sử dụng thì Sumire Store sẽ hoàn tiền cho khách hàng trong 1-2 ngày làm việc.</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="content-chinhsach">
+                        KHÁCH HÀNG VUI LÒNG BÁO TRƯỚC NẾU CÓ NHU CẦU ĐỔI/TRẢ ĐỂ ĐƯỢC HỖ TRỢ. Khách hàng vui lòng đến cửa hàng để đổi hoặc trả phí ship 2 chiều khi đổi hàng từ xa.
+                    </div>
+                </li>
+                <li>
+                    <div class="content-chinhsach">
+                        Không áp dụng các phương thức đổi/trả cho sản phẩm SALE.
+                    </div>
+                </li>
+                <li>
+                    <div class="content-chinhsach">
+                        Ngoài những vấn đề trên Sumire không nhận đổi/trả hàng trong mọi trường hợp khác.
+                    </div>
+                </li>
+                
+            </ol>
+           
+        </details>
     </div>
 
 </div>
+<section class="product-showcase-information tab-component">
+    <div class="title-h1-linen">
+        <h1>SẢN PHẨM CÙNG LOẠI</h1>
+    </div>
+    <div class="product-grid">
+        <div class="product-card">
+            <div class="product-image-wrapper">
+                <div class="product-image">
+                    <a href=""><img src="image/linen_5.png" alt="Áo dài linen hoa Ý Nhiên"></a>
+                </div>
+                <div class="product-overlay">
+                    <a href="#" class="icon-button" title="Thêm vào giỏ hàng">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </a>
+                    <a href="#" class="icon-button" title="Xem nhanh">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="product-info">
+                <a href=""><p class="product-name">Áo dài linen hoa Ý Nhiên</p></a>
+                <div class="product-price">
+                    <span class="current-price">720,000₫</span>
+                </div>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="product-image-wrapper">
+                <div class="product-image">
+                    <a href=""><img src="image/linen_6.png" alt="Áo dài linen hoa Ý Xuân"></a>
+                </div>
+                <div class="product-overlay">
+                    <a href="#" class="icon-button" title="Thêm vào giỏ hàng">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </a>
+                    <a href="#" class="icon-button" title="Xem nhanh">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="product-info">
+                <a href=""><p class="product-name">Áo dài linen hoa Ý Xuân</p></a>
+                <div class="product-price">
+                    <span class="current-price">790,000₫</span>
+                </div>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="product-image-wrapper">
+                <div class="product-image">
+                    <a href=""><img src="image/linen_7.jpg" alt="Áo dài linen Khả Lan cổ đứng"></a>
+                </div>
+                <div class="product-overlay">
+                    <a href="#" class="icon-button" title="Thêm vào giỏ hàng">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </a>
+                    <a href="#" class="icon-button" title="Xem nhanh">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="product-info">
+                <a href=""><p class="product-name">Áo dài linen Khả Lan cổ đứng</p></a>
+                <div class="product-price">
+                    <span class="old-price">790,000₫</span>
+                    <span class="current-price">671,500₫</span>
+                    <span class="discount-tag">15%</span>
+                </div>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="product-image-wrapper">
+                <div class="product-image">
+                    <a href=""><img src="image/linen_7.jpg" alt="Áo dài linen Khả Lan cổ đứng"></a>
+                </div>
+                <div class="product-overlay">
+                    <a href="#" class="icon-button" title="Thêm vào giỏ hàng">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </a>
+                    <a href="#" class="icon-button" title="Xem nhanh">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="product-info">
+                <a href=""><p class="product-name">Áo dài linen Khả Lan cổ đứng</p></a>
+                <div class="product-price">
+                    <span class="old-price">790,000₫</span>
+                    <span class="current-price">671,500₫</span>
+                    <span class="discount-tag">15%</span>
+                </div>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="product-image-wrapper">
+                <div class="product-image">
+                    <a href=""><img src="image/linen_7.jpg" alt="Áo dài linen Khả Lan cổ đứng"></a>
+                </div>
+                <div class="product-overlay">
+                    <a href="#" class="icon-button" title="Thêm vào giỏ hàng">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </a>
+                    <a href="#" class="icon-button" title="Xem nhanh">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="product-info">
+                <a href=""><p class="product-name">Áo dài linen Khả Lan cổ đứng</p></a>
+                <div class="product-price">
+                    <span class="old-price">790,000₫</span>
+                    <span class="current-price">671,500₫</span>
+                    <span class="discount-tag">15%</span>
+                </div>
+            </div>
+        </div>
+        <div class="product-card">
+            <div class="product-image-wrapper">
+                <div class="product-image">
+                    <a href=""><img src="image/linen_8.png" alt="Áo dài linen Mộc Lan cổ đứng"></a>
+                </div>
+                <div class="product-overlay">
+                    <a href="#" class="icon-button" title="Thêm vào giỏ hàng">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                    </a>
+                    <a href="#" class="icon-button" title="Xem nhanh">
+                        <i class="fa-solid fa-eye"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="product-info">
+                <a href=""><p class="product-name">Áo dài linen Mộc Lan cổ đứng</p></a>
+                <div class="product-price">
+                    <span class="old-price">790,000₫</span>
+                    <span class="current-price">671,500₫</span>
+                    <span class="discount-tag">15%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 <section class="product-showcase-information tab-component">
     <div class="title-h1-linen">
         <h1>SẢN PHẨM ĐÃ XEM</h1>
