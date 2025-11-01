@@ -3,24 +3,21 @@
     display: flex;
     max-width: 1200px;
     background-color: #FFFFFF;
-    /*border-radius: 8px;*/
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     margin:0 auto;
     align-items: flex-start;
 }
 
-/* --- Cột Ảnh Sản Phẩm --- */
 .product-image-gallery {
-    /* Giữ nguyên các thuộc tính hiển thị (display: flex, width: 60%, padding: 20px) */
     display: flex;
-    width: 60%;
+    width: 50%;
     padding: 20px;
-
-    /* Thuộc tính quan trọng để cố định ảnh */
     position: sticky;
-    top: 5px; /* Khoảng cách từ đỉnh viewport khi nó bắt đầu dính */
-    align-self: flex-start; /* Quan trọng: Đảm bảo phần tử không kéo dài toàn bộ chiều cao của container */
-    height: fit-content; /* Quan trọng: Giới hạn chiều cao chỉ bằng nội dung của nó */
+    top: 0;
+    align-self: flex-start;
+    height: fit-content;
+    margin-top: -80px;
+    padding-top: 100px;
 }
 
 .thumbnails {
@@ -41,7 +38,7 @@
 }
 
 .thumbnail.active {
-    border-color: #a00; /* Màu viền khi ảnh được chọn */
+    border-color: #a00;
 }
 
 .main-image-wrapper {
@@ -56,11 +53,8 @@
     position: relative;
 
 }
-
-/* Nút chuyển ảnh*/
-/* --- Cột Thông Tin Sản Phẩm --- */
 .product-details {
-    width: 40%;
+    width: 50%;
     padding: 20px 40px 20px 20px;
 }
 
@@ -126,52 +120,26 @@
 
 
 /* Khuyến Mãi Box */
-/*.promotion-box {*/
-/*    border: 2px dashed #e73e4b; !* Màu đỏ của khung viền *!*/
-/*    padding: 15px;*/
-/*    margin-bottom: 30px;*/
-/*}*/
-
-/*.promotion-header {*/
-/*    font-weight: 700;*/
-/*    color: #e73e4b;*/
-/*    margin-bottom: 10px;*/
-/*    font-size: 1.05rem;*/
-/*}*/
-
-/*.promotion-box ul {*/
-/*    list-style: disc;*/
-/*    padding-left: 20px;*/
-/*    margin: 0;*/
-/*    font-size: 0.95rem;*/
-/*}*/
-/* --- CSS Cập nhật (styles.css) --- */
-
-/* Loại bỏ (hoặc ghi đè) CSS cũ cho .promotion-box */
-
 .promotion-box-fieldset {
-    /* Đặt kiểu viền như trong hình (đường đứt khúc màu đỏ) */
-    border: 2px dashed #640100; /* Màu đỏ chủ đạo */
+    border: 2px dashed #640100;
     padding: 15px;
     margin-bottom: 30px;
-    padding-top: 10px; /* Điều chỉnh padding trên để nội dung không bị legend che */
+    padding-top: 10px;
 }
 
 .promotion-header-legend {
-    /* Đặt màu chữ và padding cho chữ nằm trên viền */
     font-weight: 700;
-    color: #a00; /* Màu đỏ đậm cho chữ */
-    padding: 0 10px; /* Tạo khoảng trắng hai bên chữ */
+    color: #a00;
+    padding: 0 10px;
     font-size: 1.05rem;
-    margin-left: 10px; /* Đẩy chữ vào một chút nếu cần */
-    background-color: #fff; /* Rất quan trọng: Đặt nền trắng để che đường viền phía dưới chữ */
+    margin-left: 10px;
+    background-color: #fff;
 }
 
 .promotion-box-fieldset ul {
-    /* Đảm bảo nội dung list vẫn đẹp */
     list-style: disc;
     padding-left: 20px;
-    margin-top: 5px; /* Điều chỉnh margin cho list */
+    margin-top: 5px;
     font-size: 0.95rem;
 }
 /* Lựa chọn */
@@ -200,25 +168,6 @@
     border-color: #333;
     font-weight: 500;
 }
-
-.color-options {
-    margin-bottom: 20px;
-}
-
-.color-swatch {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: #f7a3ae; /* Màu hồng nhành hoa hồng */
-    border: 2px solid #ccc;
-    cursor: pointer;
-}
-
-.color-swatch.active {
-    border-color: #a00;
-    box-shadow: 0 0 0 2px #fff inset;
-}
-
 /* Thao tác mua hàng */
 .purchase-actions {
     display: flex;
@@ -246,7 +195,7 @@
 }
 
 .qty-btn {
-    width: 30px;
+    width: 50px;
     background: #FFFFFF;
     border: none;
     cursor: pointer;
@@ -268,12 +217,13 @@
     font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.3s ease;
     height: 48px;
 }
 
 .add-to-cart-btn:hover {
-    background-color: #ffe5e5;
+    background-color: var(--color-secondary);
+    color: #FFFFFF;
 }
 
 .buy-now-btn {
@@ -292,8 +242,46 @@
 .buy-now-btn:hover {
     background-color: #800;
 }
+.dashed-line {
+    border: none;
+    border-top: 2px dashed #999;
+    margin: 20px 0;
+}
+.shipping{
+    margin: 10px;
+}
+.shipping span i{
+    color: #a00;
+    margin: 0 5px;
+}
+details summary {
+    font-size: 18px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}
+.doitra-details .content-chinhsach p{
+    font-size: 16px;
+    margin-bottom: 10px;
+}
 
-/* Responsive cơ bản cho màn hình nhỏ hơn */
+.content-chitiet{
+    text-align: center;
+    padding: 10px;
+}
+.baohanh-img {
+    padding: 10px 15px 15px 15px;
+}
+
+.baohanh-img img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+
 @media (max-width: 768px) {
     .product-container {
         flex-direction: column;
@@ -306,7 +294,7 @@
     }
 
     .thumbnails {
-        display: none; /* Ẩn thumbnail để tiết kiệm không gian */
+        display: none;
     }
 
     .main-image-wrapper {
