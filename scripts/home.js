@@ -119,3 +119,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+
+    const searchTrigger = document.getElementById('searchTrigger');
+    const searchOverlay = document.getElementById('searchOverlay');
+    const searchCloseArea = document.getElementById('searchCloseArea');
+    const searchInput = document.getElementById('searchInput');
+
+    searchTrigger.addEventListener('click', function(event) {
+        event.preventDefault(); // Ngăn trình duyệt nhảy trang
+
+        searchOverlay.classList.add('search-overlay--active');
+
+        setTimeout(() => {
+            searchInput.focus();
+        }, 400); // 400ms (phải khớp với transition 0.4s trong CSS)
+    });
+
+    searchCloseArea.addEventListener('click', function() {
+        searchOverlay.classList.remove('search-overlay--active');
+    });
+
+});
