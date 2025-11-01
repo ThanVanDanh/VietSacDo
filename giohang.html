@@ -2,13 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Áo dài truyền thống</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Việt Sắc Đỏ - Giỏ hàng</title>
     <link rel="icon" href="image/logoaodai.jpg" type="image/jpeg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="style/aodailinen.css">
+    <link rel="stylesheet" href="style/giohang.css">
     <link rel="stylesheet" href="style/style-header.css">
+    <script src="scripts/home.js"></script>
     <link rel="stylesheet" href="style/footer.css">
+    <link rel="stylesheet" href="style/backtop.css">
+    <script src="scripts/backtop.js"></script>
     <link rel="stylesheet" href="style/breadcrumb.css">
+    <link rel="stylesheet" href="style/aodailinen.css">
 </head>
 <body>
 <header>
@@ -97,198 +102,102 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="index.html">Trang Chủ</a></li>
-            <li class="breadcrumb-item"><a href="all-product.html">Sản Phẩm</a></li><li class="breadcrumb-item active" aria-current="page">Áo dài truyền thống</li>
+            <li class="breadcrumb-item active" aria-current="page">Giỏ hàng</li>
         </ol>
     </nav>
 </div>
 <main>
-    <section class="product-showcase tab-component">
-        <div class="title-h1-linen">
-            <h1>ÁO DÀI TRUYỀN THỐNG</h1>
-        </div>
-        <div class="product-grid">
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href=""><img src="image/truyenthong1.png" alt="Áo dài truyền thống Quỳnh Hân"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="#" class="icon-button" title="Thêm vào giỏ hàng">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
+    <section class="shopping-cart">
+        <div class="container-sp">
+            <form action="">
+                <div class="header-cart-sp">
+                    <h1>GIỎ HÀNG</h1>
                 </div>
+                <div class="content-sp">
+                    <div class="cart-content-sp">
+                        <div class="upsell-card-sp">
+                            <div class="progress-bar-sp">
+                                <div class="progress-sp" style="width: 100%; background-color: darkgreen;"></div>
+                                <span class="percent-sp">100%</span>
+                            </div>
+                            <p>🎉 Chúc mừng! Đơn hàng của bạn đã đủ điều kiện được Freeship!</p>
+                        </div>
+                        <ul class="cart-items-list-sp">
+                            <li class="cart-item-sp">
+                                <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
+                                <img src="image/truyenthong1.png" alt="Áo dài truyền thống Quỳnh Hân">
+                                <div class="item-info-sp">
+                                    <a href="" class="item-name-sp">Áo dài truyền thống Quỳnh Hân</a>
+                                    <span class="item-meta-sp">Size A / Quỳnh Hân</span>
+                                </div>
+                                <div class="box-quantity-sp">
+                                    <div class="item-price-sp">
+                                        <span>711,000₫</span>
+                                    </div>
+                                    <div class="quatity-sp">
+                                        <button type="button" class="btn-minus"><i class="fa-solid fa-minus"></i></button>
+                                        <input type="text" value="1" class="quantity-input">
+                                        <button type="button" class="btn-plus"><i class="fa-solid fa-plus"></i></button>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="cart-item-sp">
+                                <div><button class="remove-item"><i class="fa-solid fa-xmark"></i></button></div>
 
-                <div class="product-info">
-                    <a href=""><p class="product-name">Áo dài truyền thống Quỳnh Hân</p></a>
-                    <div class="product-price">
-                        <span class="current-price">711,000₫</span>
+                                <img src="image/truyenthong3.png" alt="Áo dài truyền thống Phúc Hương">
+                                <div class="item-info-sp">
+                                    <a href="" class="item-name-sp">Áo dài truyền thống Phúc Hương</a>
+                                    <span class="item-meta-sp">Size A / Phúc Hương</span>
+                                </div>
+                                <div class="box-quantity-sp">
+                                    <div class="item-price-sp">
+                                        <span>880,000₫</span>
+                                    </div>
+                                    <div class="quatity-sp">
+                                        <button type="button" class="btn-minus"><i class="fa-solid fa-minus"></i></button>
+                                        <input type="text" value="1" class="quantity-input">
+                                        <button type="button" class="btn-plus"><i class="fa-solid fa-plus"></i></button>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="cart-item-sp">
+                                <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
+                                <img src="image/truyenthong4.png" alt="Áo dài truyền thống Quỳnh Châu">
+                                <div class="item-info-sp">
+                                    <a href="" class="item-name-sp">Áo dài truyền thống Quỳnh Châu</a>
+                                    <span class="item-meta-sp">Size A / Quỳnh Châu</span>
+                                </div>
+                                <div class="box-quantity-sp">
+                                    <div class="item-price-sp">
+                                        <span>790,000₫</span>
+                                    </div>
+                                    <div class="quatity-sp">
+                                        <button type="button" class="btn-minus"><i class="fa-solid fa-minus"></i></button>
+                                        <input type="text" value="1" class="quantity-input">
+                                        <button type="button" class="btn-plus"><i class="fa-solid fa-plus"></i></button>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="cart-note-sp">
+                            <label>Ghi chú đơn hàng</label>
+                            <textarea rows="2"></textarea>
+                        </div>
+                    </div>
+                    <div class="cart-price-sp">
+                        <div class="total-sp">
+                            <h3>Tổng cộng</h3>
+                            <span>2,281,000đ</span>
+                        </div>
+                        <div><button><span>Thanh toán</span></button></div>
                     </div>
                 </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href=""><img src="image/truyenthong2.png" alt="Áo dài truyền thống Quỳnh Phượng"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="#" class="icon-button" title="Thêm vào giỏ hàng">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href=""><p class="product-name">Áo dài truyền thống Quỳnh Phượng</p></a>
-                    <div class="product-price">
-                        <span class="current-price">790,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href=""><img src="image/truyenthong3.png" alt="Áo dài truyền thống Phúc Hương"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="#" class="icon-button" title="Thêm vào giỏ hàng">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="product-info">
-                    <a href=""><p class="product-name">Áo dài truyền thống Phúc Hương</p></a>
-                    <div class="product-price">
-                        <span class="current-price">880,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href=""><img src="image/truyenthong4.png" alt="Áo dài truyền thống Quỳnh Châu"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="#" class="icon-button" title="Thêm vào giỏ hàng">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href=""><p class="product-name">Áo dài truyền thống Quỳnh Châu</p></a>
-                    <div class="product-price">
-                        <span class="current-price">790,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href=""><img src="image/truyenthong5.png" alt="Áo dài truyền thống Quỳnh Hương"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="#" class="icon-button" title="Thêm vào giỏ hàng">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href=""><p class="product-name">Áo dài truyền thống Quỳnh Hương</p></a>
-                    <div class="product-price">
-                        <span class="current-price">790,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href=""><img src="image/truyenthong6.png" alt="Áo dài truyền thống Gấm Khuê Gia - Trắng dệt hoa"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="#" class="icon-button" title="Thêm vào giỏ hàng">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href=""><p class="product-name">Áo dài truyền thống Gấm Khuê Gia - Trắng dệt hoa</p></a>
-                    <div class="product-price">
-                        <span class="current-price">720,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href=""><img src="image/truyenthong7.png" alt="Áo dài truyền thống Gấm Khuê Gia - Xanh thông"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="#" class="icon-button" title="Thêm vào giỏ hàng">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href=""><p class="product-name">Áo dài truyền thống Gấm Khuê Gia - Xanh thông</p></a>
-                    <div class="product-price">
-                        <span class="old-price">850,000₫</span>
-                        <span class="current-price">720,500₫</span>
-                        <span class="discount-tag">15%</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href=""><img src="image/truyenthong8.png" alt="Áo dài truyền thống khảm hoa Cát Tường"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="#" class="icon-button" title="Thêm vào giỏ hàng">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href=""><p class="product-name">Áo dài truyền thống khảm hoa Cát Tường</p></a>
-                    <div class="product-price">
-                        <span class="current-price">671,500₫</span>
-                    </div>
-                </div>
-            </div>
+            </form>
         </div>
     </section>
     <section class="product-showcase tab-component">
         <div class="title-h1-linen">
-            <h1>SẢN PHẨM ĐÃ XEM</h1>
+            <h1>CÓ THỂ BẠN SẼ THÍCH</h1>
         </div>
         <div class="product-grid">
             <div class="product-card">
@@ -403,7 +312,6 @@
         </div>
     </section>
 </main>
-
 <footer>
     <div class="footer-container">
         <div class="footer-content">
@@ -442,6 +350,8 @@
         </div>
     </div>
 </footer>
+<button onclick="scrollToTop()" id="backToTopBtn" title="Trở về đầu trang">
+    <i class="fas fa-chevron-up"></i>
+</button>
 </body>
-
 </html>
