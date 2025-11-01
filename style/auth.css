@@ -32,7 +32,7 @@
 .wrap_background{
     border: 2px dashed #403e3e;
     border-radius: 15px;
-    background: rgb(198, 177, 151);
+    /*background: rgb(198, 177, 151);*/
 }
 
 .heading-bar {
@@ -82,7 +82,7 @@ label {
     margin-left: 3px;
 }
 input {
-    background: rgb(216, 199, 189);
+    background: #f7f7f7;
     padding: 12px 20px;
     border: 1px solid rgb(201, 183, 173);
     border-radius: 6px;
@@ -103,7 +103,7 @@ small {
 .page_auth button{
     width: 100%;
     background-color: var(--color-primary);
-    color: #aa9280;
+    color: #ffffff;
     font-size: 14px;
     font-weight: 600;
     padding: 15px 0;
@@ -138,7 +138,7 @@ button:hover {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    background-color: rgb(221, 206, 197);
+    background-color: #f7f7f7;
     border: 1px solid rgb(211, 196, 187);
     border-radius: 6px;
     padding: 8px 15px;
