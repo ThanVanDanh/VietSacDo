@@ -142,3 +142,35 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 });
+document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("quick-view-model");
+    const closeBtn = document.getElementById("close-model");
+    const quickViewButtons = document.querySelectorAll('.icon-button[title="Xem nhanh"]');
+
+    const swiper = new Swiper('.model-group-img', {
+        slidesPerView: 4,
+        loop: true,
+        spaceBetween: 10,
+        autoplay: {
+            delay: 2500,
+            disableOnInteraction: false,
+        },
+    });
+
+    quickViewButtons.forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            modal.classList.add("active");
+        });
+    });
+
+    closeBtn.addEventListener("click", () => {
+        modal.classList.remove("active");
+    });
+
+    modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+            modal.classList.remove("active");
+        }
+    });
+});
