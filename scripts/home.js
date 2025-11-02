@@ -147,6 +147,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const closeBtn = document.getElementById("close-model");
     const quickViewButtons = document.querySelectorAll('.icon-button[title="Xem nhanh"]');
 
+    const successPopup = document.getElementById("success-add-shopping");
+    const closeSuccessPopupBtn = document.getElementById("close-success-popup");
+    const addToCartBtn = modal.querySelector(".add-shopping");
+
     const swiper = new Swiper('.model-group-img', {
         slidesPerView: 4,
         loop: true,
@@ -156,14 +160,20 @@ document.addEventListener("DOMContentLoaded", () => {
             disableOnInteraction: false,
         },
     });
-
+    //Xem nhanh
     quickViewButtons.forEach(btn => {
         btn.addEventListener("click", (e) => {
             e.preventDefault();
             modal.classList.add("active");
         });
     });
-
+    //Thêm giỏ hàng
+    addToCartBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        modal.classList.remove("active");
+        successPopup.classList.add("active");
+    });
+    //Đóng xem nhanh
     closeBtn.addEventListener("click", () => {
         modal.classList.remove("active");
     });
@@ -171,6 +181,15 @@ document.addEventListener("DOMContentLoaded", () => {
     modal.addEventListener("click", (e) => {
         if (e.target === modal) {
             modal.classList.remove("active");
+        }
+    });
+    //Đóng giỏ hàng
+    closeSuccessPopupBtn.addEventListener("click", () => {
+        successPopup.classList.remove("active");
+    });
+    successPopup.addEventListener("click", (e) => {
+        if (e.target === successPopup) {
+            successPopup.classList.remove("active");
         }
     });
 });
