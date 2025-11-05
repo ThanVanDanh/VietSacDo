@@ -2,7 +2,7 @@
     --color-primary: #640100;
     --color-secondary: #320000;
     --color-bg: #fdfaf7;
-    --color-background: rgb(202, 183, 161);
+    --color-background: #ffffff;
 }
 p{
     margin-bottom: 10px;
@@ -167,9 +167,7 @@ section.shopping-cart {
     flex: 0 0 320px;
     height: auto;
     background-color: #f7f7f7;
-    /*border-radius: 10px;*/
     padding: 25px 30px;
-    /*box-shadow: 0 2px 8px rgba(0,0,0,0.1);*/
 }
 .cart-price-sp .total-sp{
     display: flex;
@@ -187,7 +185,7 @@ section.shopping-cart {
 }
 .cart-price-sp button {
     background-color: var(--color-primary);
-    color: #ccc;
+    color: #ffffff;
     border: none;
     padding: 12px 30px;
     border-radius: 8px;
