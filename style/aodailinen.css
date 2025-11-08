@@ -62,7 +62,8 @@ section {
     transition: color 0.3s ease;
 }
 .product-info a:hover {
-    color:#ffffff;
+    color:#000000;
+    text-decoration: underline;
 }
 .product-name {
     font-size: 16px;
