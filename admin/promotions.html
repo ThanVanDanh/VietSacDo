@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="promitionsStyle.css">
+    <script src="https://cdn.ckeditor.com/4.22.1/full-all/ckeditor.js"></script>
 </head>
 <body>
 <div class="admin-container">
@@ -33,12 +35,85 @@
                 <a href="login.html" class="btn-logout"><i class="fas fa-user-circle"></i> Đăng xuất</a>
             </div>
         </header>
-<!--        <h1>INDEX ADMIN</h1>-->
-<!--        <p>Đây là trang product. Các trang khác sẽ mở riêng file.</p>-->
-<!--viieets code vaof ddaay-->
+        <div class="promotion-editor-header">
+            <h2>Tạo bài viết khuyến mãi mới</h2>
+        </div>
 
+        <div class="promotion-editor-container">
+
+            <div class="editor-main">
+                <div class="form-group">
+                    <label for="promo-title">Tiêu đề bài viết</label>
+                    <input type="text" id="promo-title" placeholder="Tiêu đề bài quảng cáo">
+                </div>
+
+                <div class="form-group">
+                    <label for="promo-content">Nội dung bài viết</label>
+                    <textarea id="promo-content" name="promo-content">
+                    </textarea>
+                </div>
+            </div>
+
+            <div class="editor-sidebar">
+                <div class="publish-card">
+                    <h3>Hành động</h3>
+                    <div class="publish-actions">
+                        <button class="btn btn-draft">Lưu nháp</button>
+                        <button class="btn btn-publish">Đăng bài</button>
+                    </div>
+                </div>
+                <div class="publish-card">
+                    <h3>Ảnh đại diện (Banner)</h3>
+                    <input type="file" id="promo-image-input" accept="image/*">
+                    <label for="promo-image-input" class="image-upload-box">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <p>Nhấn để tải ảnh lên</p>
+                    </label>
+                    <div id="image-preview-container">
+                        <img src="" alt="Xem trước ảnh" id="image-preview">
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 </div>
 
+<script>
+    CKEDITOR.replace('promo-content', {
+        height: 500, // Chiều cao 500px
+        language: 'vi', // Tự động nhận diện (nếu gói full-all hỗ trợ)
+        toolbar: [
+            { name: 'document', items: [ 'Source', '-', 'Save', 'NewPage', 'ExportPdf', 'Preview', 'Print', '-', 'Templates' ] },
+            { name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+            { name: 'editing', items: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ] },
+            { name: 'forms', items: [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ] },
+            '/',
+            { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'CopyFormatting', 'RemoveFormat' ] },
+            { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language' ] },
+            { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+            { name: 'insert', items: [ 'Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe' ] },
+            '/',
+            { name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] },
+            { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
+            { name: 'tools', items: [ 'Maximize', 'ShowBlocks' ] },
+            { name: 'about', items: [ 'About' ] }
+        ]
+    });
+
+    const imageInput = document.getElementById('promo-image-input');
+    const imagePreview = document.getElementById('image-preview');
+
+    imageInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+</script>
 </body>
 </html>
