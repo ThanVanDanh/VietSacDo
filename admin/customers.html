@@ -2,8 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Admin - Quản lý khách hàng</title>
     <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="customers.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="admin.js"></script>
 </head>
 <body>
 <div class="admin-container">
@@ -32,9 +35,101 @@
                 <a href="login.html" class="btn-logout"><i class="fas fa-user-circle"></i> Đăng xuất</a>
             </div>
         </header>
-<!--        <h1>INDEX ADMIN</h1>-->
-<!--        <p>Đây là trang product. Các trang khác sẽ mở riêng file.</p>-->
-<!--Vieets code vaof ddaay -->
+        <h1>QUẢN LÝ KHÁCH HÀNG</h1>
+        <section class="overview-cards-customer">
+            <div class="stat-card-customer">
+                <div class="card-icon" style="background-color: #e0f7fa;">
+                    <i class="fas fa-users" style="color: #00796b;"></i>
+                </div>
+                <div class="card-info">
+                    <h4>Tổng số khách hàng</h4>
+                    <p>1,240</p>
+                </div>
+            </div>
+            <div class="stat-card-customer">
+                <div class="card-icon" style="background-color: #e8f5e9;">
+                    <i class="fas fa-user-plus" style="color: #388e3c;"></i>
+                </div>
+                <div class="card-info">
+                    <h4>Khách mới trong tuần</h4>
+                    <p>35</p>
+                </div>
+            </div>
+            <div class="stat-card-customer chart-placeholder">
+                <h4>Biểu đồ đơn hàng theo khách hàng</h4>
+            </div>
+        </section>
+
+        <section class="table-container">
+            <div class="table-toolbar">
+                <div class="filters">
+                    <select name="filter-status" id="filter-status">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="active">Hoạt động</option>
+                        <option value="blocked">Bị khóa</option>
+                    </select>
+                    <input type="text" placeholder="Tìm theo tên hoặc email..." class="table-search">
+                </div>
+                <button class="btn-csv"><i class="fas fa-file-csv"></i> Xuất CSV</button>
+            </div>
+            <table class="customer-table">
+                <thead>
+                <tr>
+                    <th>Tên</th>
+                    <th>Email</th>
+                    <th>Điện thoại</th>
+                    <th>Ngày đăng ký</th>
+                    <th>Số đơn hàng</th>
+                    <th>Trạng thái tài khoản</th>
+                    <th>Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Phùng Thị Minh Thư</td>
+                    <td>23130317@st.hcmuaf.edu.vn</td>
+                    <td>0338012575</td>
+                    <td>2024-10-25</td>
+                    <td>5</td>
+                    <td><span class="status-badge status-active">Hoạt động</span></td>
+                    <td class="table-actions">
+                        <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
+                        <button class="btn-action btn-edit" title="Sửa"><i class="fas fa-pencil-alt"></i></button>
+                        <button class="btn-action btn-block" title="Khóa"><i class="fas fa-ban"></i></button>
+                        <button class="btn-action btn-delete" title="Xóa"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Lại Thị Hoa</td>
+                    <td>23130111@st.hcmuaf.edu.vn</td>
+                    <td>0987654321</td>
+                    <td>2023-11-15</td>
+                    <td>2</td>
+                    <td><span class="status-badge status-active">Hoạt động</span></td>
+                    <td class="table-actions">
+                        <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
+                        <button class="btn-action btn-edit" title="Sửa"><i class="fas fa-pencil-alt"></i></button>
+                        <button class="btn-action btn-block" title="Khóa"><i class="fas fa-ban"></i></button>
+                        <button class="btn-action btn-delete" title="Xóa"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Thân Văn Danh</td>
+                    <td>23130041@st.hcmuaf.edu.vn</td>
+                    <td>0123456789</td>
+                    <td>2024-09-15</td>
+                    <td>0</td>
+                    <td><span class="status-badge status-blocked">Bị khóa</span></td>
+                    <td class="table-actions">
+                        <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
+                        <button class="btn-action btn-edit" title="Sửa"><i class="fas fa-pencil-alt"></i></button>
+                        <button class="btn-action btn-unlock" title="Mở khóa"><i class="fas fa-check-circle"></i></button>
+                        <button class="btn-action btn-delete" title="Xóa"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
 
     </main>
 </div>
