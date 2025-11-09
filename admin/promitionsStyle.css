@@ -1,0 +1,146 @@
+
+.promotion-editor-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 24px;
+}
+.promotion-editor-header h2 { margin: 0; font-size: 24px; color: #333; }
+.promotion-editor-container { display: flex; gap: 24px; }
+.editor-main {
+    flex: 3; background-color: #ffffff; border-radius: 8px;
+    padding: 24px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+.editor-sidebar { flex: 1; }
+.form-group { margin-bottom: 24px; }
+.form-group label {
+    display: block; font-size: 16px; font-weight: 600;
+    margin-bottom: 10px; color: #333;
+}
+.form-group input[type="text"] {
+    width: 100%; padding: 12px; font-size: 16px;
+    border: 1px solid #ced4da; border-radius: 5px; box-sizing: border-box;
+}
+
+.publish-card {
+    background-color: #ffffff; border-radius: 8px; padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); margin-bottom: 24px;
+}
+.publish-card h3 {
+    font-size: 16px; font-weight: 600; margin-top: 0; margin-bottom: 15px;
+    border-bottom: 1px solid #eee; padding-bottom: 10px;
+}
+
+.image-upload-box {
+    border: 2px dashed #007bff;
+    border-radius: 8px; /* Bo tròn góc hơn */
+    padding: 30px 20px; /* Tăng padding để khung rộng hơn */
+    text-align: center;
+    background-color: #f8faff;
+    cursor: pointer;
+    transition: background-color 0.2s, border-color 0.2s;
+    display: flex; /* Dùng flexbox để căn giữa nội dung */
+    flex-direction: column; /* Xếp icon và text theo cột */
+    justify-content: center; /* Căn giữa theo chiều dọc */
+    align-items: center; /* Căn giữa theo chiều ngang */
+    min-height: 120px; /* Đảm bảo khung có chiều cao tối thiểu */
+}
+
+.image-upload-box:hover {
+    background-color: #f1f6ff;
+    border-color: #0056b3; /* Đổi màu viền khi hover */
+}
+
+.image-upload-box i {
+    font-size: 48px; /* Tăng kích thước icon */
+    color: #007bff;
+    margin-bottom: 10px; /* Khoảng cách giữa icon và chữ */
+    line-height: 1; /* Đảm bảo không có khoảng trống thừa */
+}
+
+.image-upload-box p {
+    margin: 0;
+    color: #555;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.cke_chrome {
+    border-radius: 5px !important;
+    border: 1px solid #ced4da !important; /* Viền thống nhất với các input khác */
+    box-shadow: none !important; /* Bỏ shadow mặc định */
+    margin-top: 5px; /* Một chút khoảng cách với label */
+}
+
+.cke_top {
+    background: #f8f9fa !important; /* Nền toolbar sáng hơn */
+    border-bottom: 1px solid #dee2e6 !important;
+    border-radius: 5px 5px 0 0 !important; /* Bo góc trên */
+    padding: 8px 10px !important; /* Giảm padding toolbar */
+}
+
+.cke_button_icon {
+    opacity: 0.8; /* Làm icon mờ nhẹ */
+    transition: opacity 0.2s;
+}
+.cke_button_icon:hover {
+    opacity: 1; /* Rõ ràng khi hover */
+}
+
+.cke_contents {
+    background-color: #ffffff !important;
+    padding: 15px !important; /* Tăng padding cho nội dung */
+    line-height: 1.6; /* Giãn dòng cho dễ đọc */
+    font-size: 15px; /* Cỡ chữ mặc định */
+    color: #333;
+}
+
+#promo-image-input {
+    display: none;
+}
+
+#image-preview-container {
+    margin-top: 15px;
+    text-align: center;
+}
+
+#image-preview {
+    max-width: 100%;
+    height: auto; /* Đảm bảo ảnh không bị méo */
+    border-radius: 8px; /* Bo góc đồng bộ */
+    border: 1px solid #eee;
+    display: none; /* Ẩn ban đầu */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* Thêm shadow nhẹ */
+}
+
+.publish-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px; /* Khoảng cách giữa các nút */
+}
+
+.btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.2s, opacity 0.2s;
+}
+
+.btn-publish {
+    background-color: #007bff;
+    color: white;
+    flex-grow: 1; /* Nút Đăng to hơn */
+}
+.btn-publish:hover {
+    background-color: #0056b3;
+}
+
+.btn-draft {
+    background-color: #6c757d;
+    color: white;
+    flex-grow: 1; /* Nút Lưu nháp to bằng nút Đăng */
+}
+.btn-draft:hover {
+    background-color: #5a6268;
+}
