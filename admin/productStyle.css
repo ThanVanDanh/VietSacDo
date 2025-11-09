@@ -1,0 +1,153 @@
+.main-content {
+    background-color: #f4f7f6;
+}
+
+.product-section {
+    background-color: #ffffff; /* Nền trắng cho bảng */
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.product-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.product-list-header h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #333; /* Chữ đậm màu tối trên nền trắng */
+}
+
+.btn-add-product {
+    background-color: #007bff; /* Màu xanh cho nút primary */
+    color: #ffffff;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px; /* Khoảng cách giữa icon và chữ */
+}
+
+.btn-add-product:hover {
+    background-color: #0056b3;
+}
+
+.product-table {
+    width: 100%;
+    border-collapse: collapse; /* Gộp đường viền */
+    margin-bottom: 20px;
+}
+
+.product-table th,
+.product-table td {
+    padding: 16px 12px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6; /* Viền xám nhạt */
+    vertical-align: middle;
+    color: #495057; /* Màu chữ chính */
+}
+
+.product-table th {
+    background-color: #f8f9fa; /* Nền xám rất nhạt cho tiêu đề */
+    font-weight: 600;
+    color: #212529;
+    font-size: 14px;
+}
+
+.product-table img {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    object-fit: cover;
+    border: 1px solid #eee;
+}
+
+.status {
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status.active {
+    background-color: #e6f7ec; /* Nền xanh lá nhạt */
+    color: #28a745; /* Chữ xanh lá đậm */
+}
+
+.status.paused {
+    background-color: #e6f2ff; /* Nền xanh dương nhạt */
+    color: #007bff; /* Chữ xanh dương đậm */
+}
+
+.status.disabled {
+    background-color: #fdecea; /* Nền đỏ nhạt */
+    color: #dc3545; /* Chữ đỏ đậm */
+}
+
+.stock {
+    font-weight: 500;
+}
+
+.stock.in-stock {
+    color: #28a745; /* Xanh lá */
+}
+
+.stock.low-stock {
+    color: #ffc107; /* Vàng */
+}
+
+.stock.out-of-stock {
+    color: #dc3545; /* Đỏ */
+}
+
+.settings-icons a {
+    color: #6c757d; /* Màu icon xám */
+    margin: 0 6px;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.settings-icons a:hover {
+    color: #007bff; /* Đổi màu xanh khi hover */
+}
+
+.pagination {
+    display: flex;
+    justify-content: flex-end; /* Căn phải */
+    align-items: center;
+}
+
+.pagination a {
+    color: #007bff;
+    padding: 8px 14px;
+    margin-left: 5px;
+    text-decoration: none;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+.pagination a:hover {
+    background-color: #f4f4f4;
+    text-decoration: none;
+}
+
+.pagination a.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.pagination a:first-child {
+    margin-left: 0;
+}

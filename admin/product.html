@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="productStyle.css">
 </head>
 <body>
 <div class="admin-container">
@@ -29,13 +31,120 @@
         <header class="admin-header">
             <div class="header-actions">
                 <a href="#" class="btn-primary"><i class="fas fa-cog"></i> Cài đặt</a>
-                <a href="login.html" class="btn-logout"><i class="fas fa-user-circle"></i> Đăng xuất</a>
+                <a href="../login.html" class="btn-logout"><i class="fas fa-user-circle"></i> Đăng xuất</a>
             </div>
         </header>
-<!--        <h1>INDEX ADMIN</h1>-->
-<!--        <p>Đây là trang product. Các trang khác sẽ mở riêng file.</p>-->
-<!--Vieets code vaof ddaay-->
+        <div class="product-section">
+            <div class="product-list-header">
+                <h2>Danh sách Sản phẩm</h2>
+                <a href="#" class="btn-add-product">
+                    <i class="fas fa-plus"></i> Thêm Sản phẩm
+                </a>
+            </div>
 
+            <table class="product-table">
+                <thead>
+                <tr>
+                    <th>Ảnh</th>
+                    <th>Tên Sản phẩm</th>
+                    <th>Trạng thái</th>
+                    <th>Lượt mua</th>
+                    <th>Doanh số</th>
+                    <th>Tồn kho</th>
+                    <th>Giá</th>
+                    <th>Cài đặt</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><img src="../image/adtt01.png" alt="Product Image"></td>
+                    <td>Product Title 1</td>
+                    <td><span class="status active">Hoạt động</span></td>
+                    <td>50</td>
+                    <td>$750</td>
+                    <td><span class="stock out-of-stock">Hết hàng</span></td>
+                    <td>$15</td>
+                    <td class="settings-icons">
+                        <a href="#" title="Sửa"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="#" title="Xóa"><i class="fa-solid fa-trash"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><img src="../image/adtt01.png" alt="Product Image"></td>
+                    <td>Product Title 2</td>
+                    <td><span class="status paused">Tạm dừng</span></td>
+                    <td>60</td>
+                    <td>$1020</td>
+                    <td><span class="stock in-stock">Còn hàng</span></td>
+                    <td>$17</td>
+                    <td class="settings-icons">
+                        <a href="#" title="Sửa"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="#" title="Xóa"><i class="fa-solid fa-trash"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><img src="../image/adtt01.png" alt="Product Image"></td>
+                    <td>Product Title 3</td>
+                    <td><span class="status disabled">Vô hiệu hóa</span></td>
+                    <td>70</td>
+                    <td>$1050</td>
+                    <td><span class="stock low-stock">Sắp hết</span></td>
+                    <td>$15</td>
+                    <td class="settings-icons">
+                        <a href="#" title="Sửa"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="#" title="Xóa"><i class="fa-solid fa-trash"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><img src="../image/adtt01.png" alt="Product Image"></td>
+                    <td>Product Title 4</td>
+                    <td><span class="status active">Hoạt động</span></td>
+                    <td>120</td>
+                    <td>$1440</td>
+                    <td><span class="stock in-stock">Còn hàng</span></td>
+                    <td>$12</td>
+                    <td class="settings-icons">
+                        <a href="#" title="Sửa"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="#" title="Xóa"><i class="fa-solid fa-trash"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><img src="../image/adtt01.png" alt="Product Image"></td>
+                    <td>Product Title 5</td>
+                    <td><span class="status active">Hoạt động</span></td>
+                    <td>30</td>
+                    <td>$540</td>
+                    <td><span class="stock out-of-stock">Hết hàng</span></td>
+                    <td>$18</td>
+                    <td class="settings-icons">
+                        <a href="#" title="Sửa"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="#" title="Xóa"><i class="fa-solid fa-trash"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><img src="../image/adtt01.png" alt="Product Image"></td>
+                    <td>Product Title 6</td>
+                    <td><span class="status paused">Tạm dừng</span></td>
+                    <td>400</td>
+                    <td>$4000</td>
+                    <td><span class="stock in-stock">Còn hàng</span></td>
+                    <td>$10</td>
+                    <td class="settings-icons">
+                        <a href="#" title="Sửa"><i class="fa-solid fa-pen-to-square"></i></a>
+                        <a href="#" title="Xóa"><i class="fa-solid fa-trash"></i></a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="pagination">
+                <a href="#">Trước</a>
+                <a href="#" class="active">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">Sau</a>
+            </div>
+        </div>
     </main>
 </div>
 
