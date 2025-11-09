@@ -12,9 +12,7 @@
     <script src="scripts/home.js"></script>
     <script src="scripts/backtop.js"></script>
     <link rel="stylesheet" href="style/backtop.css">
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    <link rel="stylesheet" href="style/quick-view.css">
+    <script src="scripts/product-information.js"></script>
 </head>
 <body>
 <div class="search-overlay-container" id="searchOverlay">
@@ -31,7 +29,7 @@
 
         <div class="icons">
             <div class="user-menu">
-                <a><i class="fa-regular fa-user"></i></a>
+                <a href="#"><i class="fa-regular fa-user"></i></a>
                 <ul class="user">
                     <li><a href="login.html">Đăng nhập</a></li>
                     <li><a href="signup.html">Đăng ký</a></li>
@@ -46,7 +44,7 @@
                     <ul class="mini-cart-items-list">
                         <li> <img src="image/truyenthong1.png" alt="Áo dài truyền thống Quỳnh Hân">
                             <div class="mini-item-info">
-                                <a href="product-information.html" class="mini-item-name">Áo dài truyền thống Quỳnh Hân</a>
+                                <a href="" class="mini-item-name">Áo dài truyền thống Quỳnh Hân</a>
                                 <span class="mini-item-meta">Size A / Quỳnh Hân</span>
                                 <span class="mini-item-price">711,000₫</span>
                                 <span class="mini-quantity">x1</span>
@@ -55,7 +53,7 @@
                         </li>
                         <li> <img src="image/truyenthong3.png" alt="Áo dài truyền thống Phúc Hương">
                             <div class="mini-item-info">
-                                <a href="product-information.html" class="mini-item-name">Áo dài truyền thống Phúc Hương</a>
+                                <a href="" class="mini-item-name">Áo dài truyền thống Phúc Hương</a>
                                 <span class="mini-item-meta">Size A / Phúc Hương</span>
                                 <span class="mini-item-price">880,000₫</span>
                                 <span class="mini-quantity">x1</span>
@@ -64,7 +62,7 @@
                         </li>
                         <li> <img src="image/truyenthong4.png" alt="Áo dài truyền thống Quỳnh Châu">
                             <div class="mini-item-info">
-                                <a href="product-information.html" class="mini-item-name">Áo dài truyền thống Quỳnh Châu</a>
+                                <a href="" class="mini-item-name">Áo dài truyền thống Quỳnh Châu</a>
                                 <span class="mini-item-meta">Size A / Quỳnh Châu</span>
                                 <span class="mini-item-price">790,000₫</span>
                                 <span class="mini-quantity">x1</span>
@@ -115,9 +113,9 @@
                                 <div class="category-column">
                                     <h3>Quần & váy phối áo dài</h3>
                                     <ul>
-                                        <li><a href="#">Chân Váy</a></li>
-                                        <li><a href="#">Quần Phương Chi</a></li>
-                                        <li><a href="#">Quần Quế Chi</a></li>
+                                        <li><a href="chanvay.html">Chân Váy</a></li>
+                                        <li><a href="quanphuongchi.html">Quần Phương Chi</a></li>
+                                        <li><a href="quanquechi.html">Quần Quế Chi</a></li>
                                         <li><a href="#">Quần Vân Chi</a></li>
                                         <li><a href="#">Quần Mai Chi</a></li>
                                         <li><a href="#">Quần Trúc Chi</a></li>
@@ -141,7 +139,7 @@
                                     <h3>Nón Lá</h3>
                                     <ul>
                                         <li><a href="nonlahodiep.html">Nón lá bọc vải Hồ điệp</a></li>
-                                        <li><a href="#">Nón lá bọc vải Chè hoa bưởi</a></li>
+                                        <li><a href="nonlahoabuoi.html">Nón lá bọc vải Chè hoa bưởi</a></li>
                                     </ul>
                                 </div>
 
@@ -215,23 +213,23 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="index.html">Trang Chủ</a></li>
-            <li class="breadcrumb-item"><a href="all-product.html">Sản Phẩm</a></li><li class="breadcrumb-item active" aria-current="page">Tất cả sản phẩm</li>
+            <li class="breadcrumb-item"><a href="all-product.html">Sản Phẩm</a></li><li class="breadcrumb-item active" aria-current="page">Nón lá Hoa Bưởi</li>
         </ol>
     </nav>
 </div>
 <main>
     <section class="product-showcase tab-component">
         <div class="title-h1-linen">
-            <h1>TẤT CẢ SẢN PHẨM</h1>
+            <h1>NÓN LÁ HOA BƯỞI</h1>
         </div>
         <div class="product-grid">
             <div class="product-card">
                 <div class="product-image-wrapper">
                     <div class="product-image">
-                        <a href="product-information.html"><img src="image/linen_1.png" alt="Áo dài linen Chi Lan cổ đứng"></a>
+                        <a href="product-information.html"><img src="image/nonla_hoabuoi1.png" alt="Nón lá bọc vải Chè hoa bưởi - Gấm hồng hồ điệp"></a>
                     </div>
                     <div class="product-overlay">
-                        <a href="#" class="icon-button" title="Tùy chọn">
+                        <a href="#" class="icon-button" title="Thêm vào giỏ hàng">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </a>
                         <a href="#" class="icon-button" title="Xem nhanh">
@@ -241,52 +239,9 @@
                 </div>
 
                 <div class="product-info">
-                    <a href="product-information.html"><p class="product-name">Áo dài linen Chi Lan</p></a>
+                    <a href="product-information.html"><p class="product-name">Nón lá bọc vải Chè hoa bưởi - Gấm hồng hồ điệp</p></a>
                     <div class="product-price">
-                        <span class="current-price">790,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.html"><img src="image/linen_2.png" alt="Áo dài linen hoa Ý Lan"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="#" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.html"><p class="product-name">Áo dài linen hoa Ý Lan</p></a>
-                    <div class="product-price">
-                        <span class="current-price">720,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.html"><img src="image/linen_3.png" alt="Áo dài linen hoa Ý Mai"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="#" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="product-info">
-                    <a href="product-information.html"><p class="product-name">Áo dài linen hoa Ý Mai</p></a>
-                    <div class="product-price">
-                        <span class="current-price">790,000₫</span>
+                        <span class="current-price">190,000₫</span>
                     </div>
                 </div>
             </div>
@@ -336,7 +291,7 @@
             <div class="product-card">
                 <div class="product-image-wrapper">
                     <div class="product-image">
-                        <a href="product-information.html"><img src="image/nonlahodiep6.png" alt="Nón lá bọc vải Hồ điệp - Xanh non"></a>
+                        <a href="product-information.html"><img src="image/nonla_hoabuoi4.png" alt="Nón lá bọc vải Chè hoa bưởi - Gấm hồng phấn"></a>
                     </div>
                     <div class="product-overlay">
                         <a href="#" class="icon-button" title="Thêm vào giỏ hàng">
@@ -349,7 +304,7 @@
                 </div>
 
                 <div class="product-info">
-                    <a href="product-information.html"><p class="product-name">Nón lá bọc vải Hồ điệp - Xanh non</p></a>
+                    <a href="product-information.html"><p class="product-name">Nón lá bọc vải Chè hoa bưởi - Gấm hồng phấn</p></a>
                     <div class="product-price">
                         <span class="current-price">190,000₫</span>
                     </div>
@@ -358,10 +313,10 @@
             <div class="product-card">
                 <div class="product-image-wrapper">
                     <div class="product-image">
-                        <a href="product-information.html"><img src="image/quanqc7.png" alt="Quần Quế Chi - Hồng san hô"></a>
+                        <a href="product-information.html"><img src="image/nonla_hoabuoi5.jpg" alt="Nón lá bọc vải Chè hoa bưởi - Gấm hồng phấn"></a>
                     </div>
                     <div class="product-overlay">
-                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
+                        <a href="#" class="icon-button" title="Thêm vào giỏ hàng">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </a>
                         <a href="#" class="icon-button" title="Xem nhanh">
@@ -371,19 +326,19 @@
                 </div>
 
                 <div class="product-info">
-                    <a href="product-information.html"><p class="product-name">Quần Quế Chi - Hồng san hô</p></a>
+                    <a href="product-information.html"><p class="product-name">Nón lá bọc vải Chè hoa bưởi - Gấm hồng phấn</p></a>
                     <div class="product-price">
-                        <span class="current-price">350,000₫</span>
+                        <span class="current-price">120,000₫</span>
                     </div>
                 </div>
             </div>
             <div class="product-card">
                 <div class="product-image-wrapper">
                     <div class="product-image">
-                        <a href="product-information.html"><img src="image/quanqc8.png" alt="Quần Quế Chi - Xanh bích"></a>
+                        <a href="product-information.html"><img src="image/nonla_hoabuoi6.png" alt="Nón lá bọc vải Chè hoa bưởi - Gấm hồng sáng"></a>
                     </div>
                     <div class="product-overlay">
-                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
+                        <a href="#" class="icon-button" title="Thêm vào giỏ hàng">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </a>
                         <a href="#" class="icon-button" title="Xem nhanh">
@@ -393,295 +348,9 @@
                 </div>
 
                 <div class="product-info">
-                    <a href="product-information.html"><p class="product-name">Quần Quế Chi - Xanh bích</p></a>
+                    <a href="product-information.html"><p class="product-name">Nón lá bọc vải Chè hoa bưởi - Gấm hồng sáng</p></a>
                     <div class="product-price">
-                        <span class="current-price">350,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.html"><img src="image/quanpc1.png" alt="Quần Phương Chi - Xanh biển nhạt"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.html"><p class="product-name">Quần Phương Chi - Xanh biển nhạt</p></a>
-                    <div class="product-price">
-                        <span class="current-price">390,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.html"><img src="image/quanpc2.png" alt="Quần Phương Chi - Xanh ngọc đậm"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.html"><p class="product-name">Quần Phương Chi - Xanh ngọc đậm</p></a>
-                    <div class="product-price">
-                        <span class="current-price">390,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.html"><img src="image/quanpc3.png" alt="Quần Phương Chi - Xanh cổ vịt"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="product-info">
-                    <a href="product-information.html"><p class="product-name">Quần Phương Chi - Xanh cổ vịt</p></a>
-                    <div class="product-price">
-                        <span class="current-price">390,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.html"><img src="image/quanpc4.jpg" alt="Quần Phương Chi - Đỏ xẹc"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.html"><p class="product-name">Quần Phương Chi - Đỏ xẹc</p></a>
-                    <div class="product-price">
-                        <span class="current-price">390,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.html"><img src="image/quanpc5.png" alt="Quần Phương Chi - Hồng dâu"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.html"><p class="product-name">Quần Phương Chi - Hồng dâu</p></a>
-                    <div class="product-price">
-                        <span class="current-price">390,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.html"><img src="image/quanpc6.jpg" alt="Quần Phương Chi - Đen"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.html"><p class="product-name">Quần Phương Chi - Đen</p></a>
-                    <div class="product-price">
-                        <span class="current-price">390,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.html"><img src="image/quanpc7.jpg" alt="Quần Phương Chi - Cam cháy"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.html"><p class="product-name">Quần Phương Chi - Cam cháy</p></a>
-                    <div class="product-price">
-                        <span class="current-price">390,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.html"><img src="image/quanpc8.jpg" alt="Quần Phương Chi - Tím"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.html"><p class="product-name">Quần Phương Chi - Tím</p></a>
-                    <div class="product-price">
-                        <span class="current-price">390,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.html"><img src="image/chanvay7.png" alt="Chân váy thêu hoa Mây Hoa"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.html"><p class="product-name">Chân váy thêu hoa Mây Hoa</p></a>
-                    <div class="product-price">
-                        <span class="old-price">850,000₫</span>
-                        <span class="current-price">720,500₫</span>
-                        <span class="discount-tag">15%</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.html"><img src="image/chanvay8.jpg" alt="SET Áo yếm và Chân váy Bài ca mùa hè - 04 màu"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.html"><p class="product-name">SET Áo yếm và Chân váy Bài ca mùa hè - 04 màu</p></a>
-                    <div class="product-price">
-                        <span class="current-price">671,500₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.html"><img src="image/chanvay9.jpeg" alt="Chân váy dệt hoa Hoa Hạ - Vàng"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="#" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.html"><p class="product-name">Chân váy dệt hoa Hoa Hạ - Vàng</p></a>
-                    <div class="product-price">
-                        <span class="current-price">711,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.html"><img src="image/chanvay10.jpeg" alt="Chân váy dệt hoa Hoa Hạ - Kem"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.html"><p class="product-name">Chân váy dệt hoa Hoa Hạ - Kem</p></a>
-                    <div class="product-price">
-                        <span class="current-price">720,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.html"><img src="image/chanvay11.jpeg" alt="Chân váy dệt hoa Hoa Hạ - Hồng"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="product-info">
-                    <a href="product-information.html"><p class="product-name">Chân váy dệt hoa Hoa Hạ - Hồng</p></a>
-                    <div class="product-price">
-                        <span class="current-price">880,000₫</span>
+                        <span class="current-price">190,000₫</span>
                     </div>
                 </div>
             </div>
