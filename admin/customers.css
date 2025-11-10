@@ -270,7 +270,7 @@
 }
 .confirm-actions {
     display: flex;
-    justify-content: flex-end; /* Đẩy nút về bên phải */
+    justify-content: flex-end;
     gap: 10px;
     margin-top: 25px;
 }
@@ -285,17 +285,14 @@
     transition: background-color 0.2s, filter 0.2s;
 }
 
-/* Nút Hủy bỏ (màu xám) */
 .confirm-actions .btn-secondary {
-    background-color: #ecf0f1; /* Màu xám nhạt */
+    background-color: #ecf0f1;
     color: #7f8c8d;
 }
 .confirm-actions .btn-secondary:hover {
     background-color: #bdc3c7;
 }
 
-/* Nút Xác nhận Xóa (màu đỏ)
-   Sử dụng biến --color-danger bạn đã định nghĩa */
 .confirm-actions .btn-danger {
     background-color: var(--color-danger, #c0392b);
     color: white;
@@ -304,21 +301,6 @@
     filter: brightness(0.9);
 }
 
-/* Lưu ý: Bạn đã có style cho class .modal.
-  Nếu bạn chưa có, đây là style cơ bản để nó hoạt động:
-*/
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: none; /* Sẽ được đổi thành 'flex' bằng JavaScript */
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0,0,0,0.4);
-    z-index: 1000;
-}
 
 @keyframes slide-down {
     from {
