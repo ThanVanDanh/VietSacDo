@@ -78,5 +78,26 @@ document.addEventListener("DOMContentLoaded", () => {
             deleteModal.style.display = 'none';
         });
     }
+    const blockModal = document.getElementById('block-confirm-modal');
+    const blockButtons = document.querySelectorAll('.btn-block');
+    const blockClose = blockModal.querySelector('.close-modal');
+    const cancelBlockBtn = document.getElementById('btn-cancel-block');
+    const confirmBlockBtn = document.getElementById('btn-confirm-block');
+    if (blockModal) {
+        blockButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                blockModal.style.display = 'flex';
+            });
+        });
+        blockClose.addEventListener('click', () => {
+            blockModal.style.display = 'none';
+        });
+        cancelBlockBtn.addEventListener('click', () => {
+            blockModal.style.display = 'none';
+        });
+        confirmBlockBtn.addEventListener('click', () => {
+            blockModal.style.display = 'none';
+        });
+    }
 
 });
