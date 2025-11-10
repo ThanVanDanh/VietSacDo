@@ -55,4 +55,28 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
     }
+    const deleteModal = document.getElementById('delete-confirm-modal');
+    const deleteModalBtn = document.querySelectorAll('.btn-delete');
+    const deleteClose = deleteModal.querySelector('.close-modal');
+    const cancelDeleteBtn = document.getElementById('btn-cancel-delete');
+    const confirmDeleteBtn = document.getElementById('btn-confirm-delete');
+    if (deleteModal) {
+        deleteModalBtn.forEach(button => {
+            button.addEventListener('click', () => {
+                deleteModal.style.display = 'flex';
+            });
+        });
+
+        deleteClose.addEventListener('click', () => {
+            deleteModal.style.display = 'none';
+        });
+
+        cancelDeleteBtn.addEventListener('click', () => {
+            deleteModal.style.display = 'none';
+        });
+        confirmDeleteBtn.addEventListener('click', () => {
+            deleteModal.style.display = 'none';
+        });
+    }
+
 });
