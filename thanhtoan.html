@@ -286,7 +286,18 @@
                         <p class="current-price">1,180,000₫</p>
                     </div>
                     <div class="item-controls">
-                        <button class="remove-btn" aria-label="Xóa sản phẩm"><i class="fa-solid fa-trash-can"></i></button>
+                        <button class="remove-btn" id="btnOpen" aria-label="Xóa sản phẩm"><i class="fa-solid fa-trash-can"></i></button>
+                        <div class="overlay" id="overlay">
+                            <div class="popup">
+                                <h2>Bạn muốn bỏ khỏi giỏ hàng</h2>
+                                <p class="product">Áo dài linen Thêu tay Nguyệt Trà</p>
+                                <div class="actions">
+                                    <button class="btn normal" id="btnClose">Quay lại</button>
+                                    <button class="btn danger" id="btnRemove">Bỏ sản phẩm</button>
+                                </div>
+
+                            </div>
+                        </div>
                         <div class="quantity-control">
                             <button>-</button>
                             <span>1</span>
@@ -305,7 +316,23 @@
                 <h3>Mã khuyến mãi</h3>
                 <div class="select-promo">
                     <span>Chọn mã</span>
-                    <span><i class="fa-solid fa-chevron-right"></i></span>
+                    <button class="btnKhuyenMai" id="btnOpenkm"><i class="fa-solid fa-chevron-right"></i></button>
+                    <div class="popupOverlay" id="popupOverlay">
+                        <div class="promoModal">
+                            <div class="header-khuyenMai">
+                                <span class="btnCloseTop" id="btnCloseTop"><i class="fa-solid fa-xmark"></i></span>
+                                <h3 class="h3-khuyenmai">Chọn mã khuyến mãi</h3>
+                            </div>
+                            <div class="noPromoBox">
+                                <img src="image/discount.png" class="promoIcon">
+                                <p>Không có mã khuyến mãi phù hợp</p>
+                            </div>
+                            <div class="bottomZone">
+                                <button class="btnCloseBottom" id="btnCloseBottom">Đóng</button>
+                            </div>
+
+                        </div>
+                    </div>
                 </div>
                 <div class="apply-promo">
                     <input type="text" placeholder="Nhập mã khuyến mãi">
@@ -373,5 +400,29 @@
         </div>
     </div>
 </footer>
+<script>
+    const overlay = document.getElementById("overlay");
+    const btnOpen = document.getElementById("btnOpen");
+    const btnClose = document.getElementById("btnClose");
+    const btnRemove = document.getElementById("btnRemove");
+
+    btnOpen.onclick = ()=> overlay.style.display = "flex";
+    btnClose.onclick = ()=> overlay.style.display = "none";
+
+    btnRemove.onclick = ()=>{
+        alert("Đã bỏ sản phẩm!");
+        overlay.style.display = "none";
+    };
+    const popupOverlay = document.getElementById("popupOverlay");
+    const btnShowPromo = document.getElementById("btnOpenkm");
+    const btnCloseTop  = document.getElementById("btnCloseTop");
+    const btnCloseBottom = document.getElementById("btnCloseBottom");
+
+    btnShowPromo.onclick = ()=> popupOverlay.style.display = "flex";
+    btnCloseTop.onclick = ()=> popupOverlay.style.display = "none";
+    btnCloseBottom.onclick = ()=> popupOverlay.style.display = "none";
+
+
+</script>
 </body>
 </html>
