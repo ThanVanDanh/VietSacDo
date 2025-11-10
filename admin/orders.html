@@ -5,9 +5,9 @@
     <title>Admin - Quản lý Đơn hàng</title>
     <link rel="stylesheet" href="admin.css">
     <link rel="stylesheet" href="orders.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="customers.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="admin.js"></script>
 </head>
 <body>
 <div class="admin-container">
@@ -53,7 +53,7 @@
                 </div>
                 <div class="card-info">
                     <h4>Doanh Thu (Tháng)</h4>
-                    <p>15.500.000 VNĐ</p>
+                    <p>15.500.000₫</p>
                 </div>
             </div>
             <div class="stat-card-order">
@@ -69,16 +69,15 @@
         <section class="table-container">
             <div class="table-toolbar">
                 <div class="filters">
-                    <input type="text" placeholder="Tìm theo tên khách..." class="table-search">
                     <select id="filter-status">
                         <option value="">Tất cả Trạng thái</option>
-                        <option value="new">Mới</option>
                         <option value="processing">Đang xử lý</option>
                         <option value="shipping">Đang vận chuyển</option>
                         <option value="completed">Hoàn thành</option>
                         <option value="canceled">Đã hủy</option>
                     </select>
                     <input type="date" id="filter-date">
+                    <input type="text" placeholder="Tìm theo tên khách..." class="table-search">
                 </div>
                 <div class="toolbar-buttons">
                     <button class="btn-secondary"><i class="fas fa-file-excel"></i> Xuất Excel</button>
@@ -106,13 +105,12 @@
                         - Áo Dài Lụa (Đỏ) x 1<br>
                         - Guốc Gỗ Vàng x 1
                     </td>
-                    <td>1.850.000 VNĐ</td>
+                    <td>1.850.000₫</td>
                     <td><span class="status-badge status-completed">Hoàn thành</span></td>
                     <td>2025-11-07</td>
                     <td>2025-11-10</td>
                     <td class="table-actions">
                         <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
-                        <button class="btn-action btn-edit" title="Sửa"><i class="fas fa-pencil-alt"></i></button>
                         <button class="btn-action btn-delete" title="Xóa"><i class="fas fa-trash-alt"></i></button>
                     </td>
                 </tr>
@@ -122,13 +120,12 @@
                     <td class="product-list">
                         - Áo Dài Gấm (Xanh) x 2
                     </td>
-                    <td>3.200.000 VNĐ</td>
+                    <td>3.200.000₫</td>
                     <td><span class="status-badge status-shipping">Đang vận chuyển</span></td>
                     <td>2025-11-03</td>
                     <td>2025-11-04</td>
                     <td class="table-actions">
                         <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
-                        <button class="btn-action btn-edit" title="Sửa"><i class="fas fa-pencil-alt"></i></button>
                         <button class="btn-action btn-delete" title="Xóa"><i class="fas fa-trash-alt"></i></button>
                     </td>
                 </tr>
@@ -138,13 +135,12 @@
                     <td class="product-list">
                         - Phụ Kiện Cài Tóc x 3
                     </td>
-                    <td>450.000 VNĐ</td>
+                    <td>450.000₫</td>
                     <td><span class="status-badge status-processing">Đang xử lý</span></td>
                     <td>2025-11-02</td>
                     <td>2024-11-05</td>
                     <td class="table-actions">
                         <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
-                        <button class="btn-action btn-edit" title="Sửa"><i class="fas fa-pencil-alt"></i></button>
                         <button class="btn-action btn-delete" title="Xóa"><i class="fas fa-trash-alt"></i></button>
                     </td>
                 </tr>
@@ -154,13 +150,12 @@
                     <td class="product-list">
                         - Áo Dài Thêu Tay x 1
                     </td>
-                    <td>2.500.000 VNĐ</td>
+                    <td>2.500.000₫</td>
                     <td><span class="status-badge status-canceled">Đã hủy</span></td>
                     <td>2024-10-26</td>
                     <td>2024-10-27</td>
                     <td class="table-actions">
                         <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
-                        <button class="btn-action btn-edit" title="Sửa"><i class="fas fa-pencil-alt"></i></button>
                         <button class="btn-action btn-delete" title="Xóa"><i class="fas fa-trash-alt"></i></button>
                     </td>
                 </tr>
@@ -170,6 +165,102 @@
     </main>
 </div>
 
+<div id="order-modal" class="modal" style="display: none;">
+    <div class="modal-content large">
+        <span class="close-modal">&times;</span>
+        <h2>Chi tiết Đơn hàng: #1052</h2>
+        <div class="modal-body">
+            <div class="modal-flex">
+                <div class="modal-section">
+                    <div class="customer-information">
+                        <h3>Thông tin khách hàng</h3>
+                        <p><strong>Tên:</strong> Phùng Thị Minh Thư</p>
+                        <p><strong>Email:</strong> 23130317@st.hcmuaf.edu.vn</p>
+                        <p><strong>SĐT:</strong> 033333333</p>
+                        <p><strong>Địa chỉ:</strong> Quận 9, TP. HCM</p>
+                    </div>
+
+                    <div class="update-status">
+                        <h3>Cập nhật Trạng thái</h3>
+                        <div class="status-update-form">
+                            <select class="update-status-select">
+                                <option value="processing">Đang xử lý</option>
+                                <option value="shipping">Đang vận chuyển</option>
+                                <option value="completed" selected>Hoàn thành</option>
+                                <option value="canceled">Hủy đơn hàng</option>
+                            </select>
+                            <button class="btn-primary">Cập nhật</button>
+                        </div>
+                        <div class="modal-actions">
+                            <button class="btn-secondary"><i class="fas fa-print"></i> In Hóa Đơn</button>
+                            <button class="btn-secondary"><i class="fas fa-envelope"></i> Gửi Email</button>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-section">
+                    <div class="product">
+                        <h3>Sản phẩm trong Đơn hàng</h3>
+                        <table class="order-detail-table">
+                            <thead>
+                            <tr>
+                                <th>Sản Phẩm</th>
+                                <th>SL</th>
+                                <th>Giá</th>
+                                <th>Tổng</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Áo Dài Lụa (Đỏ)</td>
+                                <td>1</td>
+                                <td>1.500.000</td>
+                                <td>1.500.000</td>
+                            </tr>
+                            <tr>
+                                <td>Guốc gỗ vàng</td>
+                                <td>1</td>
+                                <td>350.000</td>
+                                <td>350.000</td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="3" style="text-align: center"><strong>Tổng tiền hàng</strong></td>
+                                <td>1.850.000</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="text-align: center"><strong>Phí vận chuyển</strong></td>
+                                <td>Miễn phí</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" style="text-align: center"><strong>Thành tiền</strong></td>
+                                <td><strong>1.850.000</strong></td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="history-status">
+                        <strong>Lịch sử Trạng thái</strong>
+                        <ul class="status-history">
+                            <li>
+                                <span class="status-text">Hoàn thành</span>
+                                <span class="status-time">2024-10-30 10:00 AM</span>
+                            </li>
+                            <li>
+                                <span class="status-text">Đang vận chuyển</span>
+                                <span class="status-time">2024-10-29 02:30 PM</span>
+                            </li>
+                            <li>
+                                <span class="status-text">Đang xử lý</span>
+                                <span class="status-time">2024-10-28 09:15 AM</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
