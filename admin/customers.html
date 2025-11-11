@@ -94,7 +94,6 @@
                     <td><span class="status-badge status-active">Hoạt động</span></td>
                     <td class="table-actions">
                         <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
-                        <button class="btn-action btn-edit" title="Sửa"><i class="fas fa-pencil-alt"></i></button>
                         <button class="btn-action btn-block" title="Khóa"><i class="fas fa-ban"></i></button>
                         <button class="btn-action btn-delete" title="Xóa"><i class="fas fa-trash-alt"></i></button>
                     </td>
@@ -108,7 +107,6 @@
                     <td><span class="status-badge status-active">Hoạt động</span></td>
                     <td class="table-actions">
                         <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
-                        <button class="btn-action btn-edit" title="Sửa"><i class="fas fa-pencil-alt"></i></button>
                         <button class="btn-action btn-block" title="Khóa"><i class="fas fa-ban"></i></button>
                         <button class="btn-action btn-delete" title="Xóa"><i class="fas fa-trash-alt"></i></button>
                     </td>
@@ -122,13 +120,19 @@
                     <td><span class="status-badge status-blocked">Bị khóa</span></td>
                     <td class="table-actions">
                         <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
-                        <button class="btn-action btn-edit" title="Sửa"><i class="fas fa-pencil-alt"></i></button>
                         <button class="btn-action btn-unlock" title="Mở khóa"><i class="fas fa-check-circle"></i></button>
                         <button class="btn-action btn-delete" title="Xóa"><i class="fas fa-trash-alt"></i></button>
                     </td>
                 </tr>
                 </tbody>
             </table>
+            <div class="pagination">
+                <a href="#">Trước</a>
+                <a href="#" class="active">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">Sau</a>
+            </div>
         </section>
 
     </main>
@@ -143,7 +147,6 @@
                 <button class="tab-link" data-tab="tab-history">Lịch sử đơn hàng</button>
                 <button class="tab-link" data-tab="tab-log">Hoạt động tài khoản</button>
             </div>
-
             <div id="tab-info" class="tab-content active">
                 <h3>Thông tin cá nhân</h3>
                 <p><strong>Email:</strong> 23130317@st.hcmuaf.edu.vn</p>
@@ -156,19 +159,19 @@
                 <h3>Lịch sử đơn hàng (5)</h3>
                 <ul>
                     <li>Đơn hàng #1052 _ 2025-03-28 _ <strong class="status-complete">Hoàn tất</strong>
-                        <p>Áo dài truyền thống Phúc Hương - <strong>880,000 VND</strong></p>
+                        <p>Áo dài truyền thống Phúc Hương - <strong>880,000₫</strong></p>
                     </li>
                     <li>Đơn hàng #1044 _ 2024-12-26 _ <strong class="status-cancel">Đã hủy</strong>
-                        <p>Hoa tai NK-185 hoa hồng phối trái mâm xôi rũ - <strong>80,750 VND</strong></p>
+                        <p>Hoa tai NK-185 hoa hồng phối trái mâm xôi rũ - <strong>80,750₫</strong></p>
                     </li>
                     <li>Đơn hàng #1032 _ 2024-11-15 _ <strong class="status-complete">Hoàn tất</strong>
-                        <p>Vòng tay VO-092 Phụng Nghi đỏ hoa xanh trắng vân vàng - 10mm - <strong>153,000 VND</strong></p>
+                        <p>Vòng tay VO-092 Phụng Nghi đỏ hoa xanh trắng vân vàng - 10mm - <strong>153,000₫</strong></p>
                     </li>
                     <li>Đơn hàng #1020 _ 2024-11-05 _ <strong class="status-complete">Hoàn tất</strong>
-                        <p>Mấn Trơn Hai Sợi Phối Dây Hạt Ngọc (Hạt to) - <strong>212,500 VND</strong></p>
+                        <p>Mấn Trơn Hai Sợi Phối Dây Hạt Ngọc (Hạt to) - <strong>212,500₫</strong></p>
                     </li>
                     <li>Đơn hàng #1003 _ 2024-10-26 _ <strong class="status-cancel">Đã hủy</strong>
-                        <p>Guốc gỗ Đế cao bọc vải Phụng Lan - Đỏ - <strong>212,500 VND</strong></p>
+                        <p>Guốc gỗ Đế cao bọc vải Phụng Lan - Đỏ - <strong>212,500₫</strong></p>
                     </li>
                 </ul>
             </div>
@@ -186,6 +189,31 @@
         </div>
     </div>
 </div>
+<div id="delete-confirm-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2>Xác nhận xóa</h2>
+        <p>Bạn có chắc chắn muốn xóa khách hàng <strong id="customer-name-to-delete">Phùng Thị Minh Thư</strong> không?</p>
+        <p>Hành động này không thể hoàn tác.</p>
 
+        <div class="confirm-actions">
+            <button id="btn-cancel-delete" class="btn-secondary">Hủy bỏ</button>
+            <button id="btn-confirm-delete" class="btn-danger">Xác nhận Xóa</button>
+        </div>
+    </div>
+</div>
+<div id="block-confirm-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-modal">&times;</span>
+        <h2>Xác nhận khóa tài khoản</h2>
+        <p>Bạn có chắc chắn muốn <strong>khóa</strong> khách hàng
+            <strong id="customer-name-to-block">Phùng Thị Minh Thư</strong> không?</p>
+
+        <div class="confirm-actions">
+            <button id="btn-cancel-block" class="btn-secondary">Hủy bỏ</button>
+            <button id="btn-confirm-block" class="btn-danger">Xác nhận Khóa</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>

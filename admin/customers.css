@@ -70,7 +70,7 @@
 .table-toolbar .table-search {
     padding: 10px;
     border-radius: 5px;
-    border: 1px solid var(--color-border);
+    /*border: 1px solid var(--color-border);*/
     font-size: 0.9rem;
 }
 .table-toolbar .btn-csv{
@@ -93,8 +93,7 @@
 }
 .customer-table th,
 .customer-table td {
-    padding: 15px;
-    text-align: left;
+    text-align: center;
     border : 1px solid var(--color-border);
 }
 
@@ -103,6 +102,7 @@
     color: #7f8c8d;
     font-size: 0.8rem;
     text-transform: uppercase;
+    padding: 15px;
 }
 
 .customer-table tbody tr {
@@ -131,8 +131,9 @@
     margin: 0;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
     height: auto;
+    padding: 15px;
 }
 .btn-action {
     background: none;
@@ -178,8 +179,8 @@
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    width: 80%;
-    max-width: 700px;
+    /*width: 80%;*/
+    /*max-width: 700px;*/
     position: relative;
     animation: slide-down 0.3s ease-out;
 }
@@ -264,6 +265,69 @@
 .status-cancel {
     color: red;
     font-weight: bold;
+}
+.confirm-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.confirm-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: background-color 0.2s, filter 0.2s;
+}
+
+.confirm-actions .btn-secondary {
+    background-color: #ecf0f1;
+    color: #7f8c8d;
+}
+.confirm-actions .btn-secondary:hover {
+    background-color: #bdc3c7;
+}
+
+.confirm-actions .btn-danger {
+    background-color: var(--color-danger, #c0392b);
+    color: white;
+}
+.confirm-actions .btn-danger:hover {
+    filter: brightness(0.9);
+}
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 15px;
+}
+
+.pagination a {
+    color: #333;
+    padding: 8px 14px;
+    margin-left: 5px;
+    text-decoration: none;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+.pagination a:hover {
+    background-color: #f4f4f4;
+    text-decoration: none;
+}
+
+.pagination a.active {
+    background-color: #e4e2e2;
+    color: #333;
+    border-color: #e4e2e2;
+}
+
+.pagination a:first-child {
+    margin-left: 0;
 }
 
 @keyframes slide-down {
