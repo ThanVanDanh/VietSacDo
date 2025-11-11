@@ -143,3 +143,40 @@ section {
 .product-image-wrapper a{
     text-decoration: none;
 }
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 15px;
+}
+
+.pagination a {
+    color: #333;
+    padding: 5px 15px;
+    margin-left: 5px;
+    text-decoration: none;
+    border: 1px solid var(--color-secondary);
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+.pagination a:hover {
+    background-color: #f4f4f4;
+    text-decoration: none;
+
+}
+
+.pagination a.active {
+    background-color: var(--color-secondary);
+    color: white;
+    border-color: #e4e2e2;
+    border: 1px solid var(--color-secondary);
+}
+
+.pagination a:first-child {
+    margin-left: 0;
+}
+.pagination img{
+    width: 15px;
+    height: 15px;
+}
