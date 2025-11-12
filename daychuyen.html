@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dây chuyền</title>
+    <link rel="icon" href="image/logoaodai.jpg" type="image/jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style/aodailinen.css">
+    <link rel="stylesheet" href="style/style-header.css">
+    <link rel="stylesheet" href="style/footer.css">
+    <link rel="stylesheet" href="style/breadcrumb.css">
+    <script src="scripts/home.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <link rel="stylesheet" href="style/quick-view.css">
+</head>
+<body>
+<div class="search-overlay-container" id="searchOverlay">
+
+    <div class="search-overlay-header">
+        <div class="logo">
+            <img src="image/logo.png" alt="Logo Việt Sắc Đỏ">
+        </div>
+
+        <form class="search-overlay-form">
+            <input type="text" id="searchInput" placeholder="áo dài truyền thống, quần áo dài, vòng tay...">
+            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+
+        <div class="icons">
+            <div class="user-menu">
+                <a><i class="fa-regular fa-user"></i></a>
+                <ul class="user">
+                    <li><a href="login.html">Đăng nhập</a></li>
+                    <li><a href="signup.html">Đăng ký</a></li>
+                </ul>
+            </div>
+            <div class="mini-cart-menu">
+                <a href="giohang.html" title="Giỏ hàng">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="mini-count_item count_item_pr">3</span>
+                </a>
+                <div class="mini-cart-content">
+                    <ul class="mini-cart-items-list">
+                        <li> <img src="image/truyenthong1.png" alt="Áo dài truyền thống Quỳnh Hân">
+                            <div class="mini-item-info">
+                                <a href="product-information.html" class="mini-item-name">Áo dài truyền thống Quỳnh Hân</a>
+                                <span class="mini-item-meta">Size A / Quỳnh Hân</span>
+                                <span class="mini-item-price">711,000₫</span>
+                                <span class="mini-quantity">x1</span>
+                            </div>
+                            <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
+                        </li>
+                        <li> <img src="image/truyenthong3.png" alt="Áo dài truyền thống Phúc Hương">
+                            <div class="mini-item-info">
+                                <a href="product-information.html" class="mini-item-name">Áo dài truyền thống Phúc Hương</a>
+                                <span class="mini-item-meta">Size A / Phúc Hương</span>
+                                <span class="mini-item-price">880,000₫</span>
+                                <span class="mini-quantity">x1</span>
+                            </div>
+                            <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
+                        </li>
+                        <li> <img src="image/truyenthong4.png" alt="Áo dài truyền thống Quỳnh Châu">
+                            <div class="mini-item-info">
+                                <a href="product-information.html" class="mini-item-name">Áo dài truyền thống Quỳnh Châu</a>
+                                <span class="mini-item-meta">Size A / Quỳnh Châu</span>
+                                <span class="mini-item-price">790,000₫</span>
+                                <span class="mini-quantity">x1</span>
+                            </div>
+                            <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
+                        </li>
+                    </ul>
+                    <div class="mini-cart-footer">
+                        <div class="mini-cart-total">
+                            <span >Tổng tiền tạm tính: <strong class="mini-total-price">2,281,000₫</strong></span>
+                        </div>
+                        <a href="giohang.html" class="btn-pay">Tiến hành thanh toán</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="search-overlay-close-area" id="searchCloseArea"></div>
+</div>
+<header>
+    <div class="header">
+        <div class="logo">
+            <img src="image/logo.png" alt="Logo Việt Sắc Đỏ">
+        </div>
+        <nav>
+            <ul class="menu">
+                <li><a href="index.html">Trang Chủ</a></li>
+                <li><a href="#">Áo dài<i class="fa-solid fa-chevron-down"></i></a>
+                    <ul class="sub-menu">
+                        <li><a href="aodaitruyenthong.html">Áo dài truyền thống</a></li>
+                        <li><a href="aodaitheutay.html">Áo dài thêu tay</a></li>
+                        <li><a href="aodailinen.html">Áo dài linen</a></li>
+                    </ul>
+                </li>
+                <li class="has-megamenu"><a href="#">Quần & Phụ kiện<i class="fa-solid fa-chevron-down"></i></a>
+                    <ul class="sub-menu">
+                        <div class="mega-menu-container">
+                            <div class="mega-menu-content">
+
+                                <div class="category-column">
+                                    <h3>Quần & váy phối áo dài</h3>
+                                    <ul>
+                                        <li><a href="chanvay.html">Chân Váy</a></li>
+                                        <li><a href="quanphuongchi.html">Quần Phương Chi</a></li>
+                                        <li><a href="quanquechi.html">Quần Quế Chi</a></li>
+                                        <li><a href="#">Quần Vân Chi</a></li>
+                                        <li><a href="#">Quần Mai Chi</a></li>
+                                        <li><a href="#">Quần Trúc Chi</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="category-column">
+                                    <h3>Phụ kiện</h3>
+                                    <ul>
+                                        <li><a href="manaodai.html">Mấn áo dài</a></li>
+                                        <li><a href="vongtay.html">Vòng tay</a></li>
+                                        <li><a href="hoatai.html">Hoa tai</a></li>
+                                        <li><a href="guocgo.html">Guốc gỗ</a></li>
+                                        <li><a href="#">Túi xách</a></li>
+                                        <li><a href="#">Dây chuyền</a></li>
+                                        <li><a href="kepvanocaitoc.html">Kẹp & nơ cài tóc</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="category-column">
+                                    <h3>Nón Lá</h3>
+                                    <ul>
+                                        <li><a href="nonlahodiep.html">Nón lá bọc vải Hồ điệp</a></li>
+                                        <li><a href="nonlahoabuoi.html">Nón lá bọc vải Chè hoa bưởi</a></li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+                    </ul>
+                </li>
+                <li><a href="contactus.html">Liên Hệ</a></li>
+                <li><a href="promotion.html">Chương trình khuyến mãi</a></li>
+            </ul>
+        </nav>
+        <div class="icons">
+
+            <a href="#" id="searchTrigger"><i class="fa-solid fa-magnifying-glass"></i></a>
+
+            <div class="user-menu">
+                <a><i class="fa-regular fa-user"></i></a>
+                <ul class="user">
+                    <li><a href="login.html">Đăng nhập</a></li>
+                    <li><a href="signup.html">Đăng ký</a></li>
+                </ul>
+            </div>
+            <div class="mini-cart-menu">
+                <a href="giohang.html" title="Giỏ hàng">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="mini-count_item count_item_pr">3</span>
+                </a>
+                <div class="mini-cart-content">
+                    <ul class="mini-cart-items-list">
+                        <li> <img src="image/truyenthong1.png" alt="Áo dài truyền thống Quỳnh Hân">
+                            <div class="mini-item-info">
+                                <a href="product-information.html" class="mini-item-name">Áo dài truyền thống Quỳnh Hân</a>
+                                <span class="mini-item-meta">Size A / Quỳnh Hân</span>
+                                <span class="mini-item-price">711,000₫</span>
+                                <span class="mini-quantity">x1</span>
+                            </div>
+                            <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
+                        </li>
+                        <li> <img src="image/truyenthong3.png" alt="Áo dài truyền thống Phúc Hương">
+                            <div class="mini-item-info">
+                                <a href="product-information.html" class="mini-item-name">Áo dài truyền thống Phúc Hương</a>
+                                <span class="mini-item-meta">Size A / Phúc Hương</span>
+                                <span class="mini-item-price">880,000₫</span>
+                                <span class="mini-quantity">x1</span>
+                            </div>
+                            <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
+                        </li>
+                        <li> <img src="image/truyenthong4.png" alt="Áo dài truyền thống Quỳnh Châu">
+                            <div class="mini-item-info">
+                                <a href="product-information.html" class="mini-item-name">Áo dài truyền thống Quỳnh Châu</a>
+                                <span class="mini-item-meta">Size A / Quỳnh Châu</span>
+                                <span class="mini-item-price">790,000₫</span>
+                                <span class="mini-quantity">x1</span>
+                            </div>
+                            <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
+                        </li>
+                    </ul>
+                    <div class="mini-cart-footer">
+                        <div class="mini-cart-total">
+                            <span >Tổng tiền tạm tính: <strong class="mini-total-price">2,281,000₫</strong></span>
+                        </div>
+                        <a href="giohang.html" class="btn-pay">Tiến hành thanh toán</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="breadcrumb-container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Trang Chủ</a></li>
+            <li class="breadcrumb-item"><a href="all-product.html">Sản Phẩm</a></li><li class="breadcrumb-item active" aria-current="page">Dây chuyền</li>
+        </ol>
+    </nav>
+</div>
+<main>
+    <section class="product-showcase tab-component">
+        <div class="title-h1-linen">
+            <h1>DÂY CHUYỀN</h1>
+        </div>
+        <div class="product-grid">
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <div class="product-image">
+                        <a href="product-information.html"><img src="image/daychuyen1.jpg" alt="Dây chuyền NT-006 hạt ngọc mặt giọt nước xanh lá lấp lánh"></a>
+                    </div>
+                    <div class="product-overlay">
+                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </a>
+                        <a href="#" class="icon-button" title="Xem nhanh">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="product-info">
+                    <a href="product-information.html"><p class="product-name">Dây chuyền NT-006 hạt ngọc mặt giọt nước xanh lá lấp lánh</p></a>
+                    <div class="product-price">
+                        <span class="current-price">153,000₫</span>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <div class="product-image">
+                        <a href="product-information.html"><img src="image/daychuyen2.jpg" alt="Dây chuyền NT-005 hạt ngọc mặt giọt nước trắng lấp lánh"></a>
+                    </div>
+                    <div class="product-overlay">
+                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </a>
+                        <a href="#" class="icon-button" title="Xem nhanh">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="product-info">
+                    <a href="product-information.html"><p class="product-name">Dây chuyền NT-005 hạt ngọc mặt giọt nước trắng lấp lánh</p></a>
+                    <div class="product-price">
+                        <span class="current-price">153,000₫</span>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <div class="product-image">
+                        <a href="product-information.html"><img src="image/daychuyen3.jpg" alt="Dây chuyền NT-004 hạt trắng mặt nơ trắng đính đá - size 1"></a>
+                    </div>
+                    <div class="product-overlay">
+                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </a>
+                        <a href="#" class="icon-button" title="Xem nhanh">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <a href="product-information.html"><p class="product-name">Dây chuyền NT-004 hạt trắng mặt nơ trắng đính đá - size 1</p></a>
+                    <div class="product-price">
+                        <span class="current-price">102,000₫</span>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <div class="product-image">
+                        <a href="product-information.html"><img src="image/daychuyen4.jpg" alt="Dây chuyền NT-003 ngọc đôi mặt hạt ngọc giọt nước"></a>
+                    </div>
+                    <div class="product-overlay">
+                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </a>
+                        <a href="#" class="icon-button" title="Xem nhanh">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="product-info">
+                    <a href="product-information.html"><p class="product-name">Dây chuyền NT-003 ngọc đôi mặt hạt ngọc giọt nước</p></a>
+                    <div class="product-price">
+                        <span class="current-price">153,000₫</span>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <div class="product-image">
+                        <a href="product-information.html"><img src="image/daychuyen5.jpg" alt="Dây chuyền hạt trắng - Size 4"></a>
+                    </div>
+                    <div class="product-overlay">
+                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </a>
+                        <a href="#" class="icon-button" title="Xem nhanh">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="product-info">
+                    <a href="product-information.html"><p class="product-name">Dây chuyền hạt trắng - Size 4</p></a>
+                    <div class="product-price">
+                        <span class="current-price">102,000₫</span>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <div class="product-image">
+                        <a href="product-information.html"><img src="image/daychuyen6.jpg" alt="Dây chuyền mặt bươm bướm xanh phối hạt"></a>
+                    </div>
+                    <div class="product-overlay">
+                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </a>
+                        <a href="#" class="icon-button" title="Xem nhanh">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="product-info">
+                    <a href="product-information.html"><p class="product-name">Dây chuyền mặt bươm bướm xanh phối hạt</p></a>
+                    <div class="product-price">
+                        <span class="current-price">102,000₫</span>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <div class="product-image">
+                        <a href="product-information.html"><img src="image/daychuyen7.jpg" alt="Dây chuyền mặt hoa cúc lá xanh"></a>
+                    </div>
+                    <div class="product-overlay">
+                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </a>
+                        <a href="#" class="icon-button" title="Xem nhanh">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="product-info">
+                    <a href="product-information.html"><p class="product-name">Dây chuyền mặt hoa cúc lá xanh</p></a>
+                    <div class="product-price">
+                        <span class="old-price">120,000₫</span>
+                        <span class="current-price">102,000₫</span>
+                        <span class="discount-tag">15%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <div class="product-image">
+                        <a href="product-information.html"><img src="image/daychuyen8.png" alt="Dây chuyền ngọc đôi"></a>
+                    </div>
+                    <div class="product-overlay">
+                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </a>
+                        <a href="#" class="icon-button" title="Xem nhanh">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="product-info">
+                    <a href="product-information.html"><p class="product-name">Dây chuyền ngọc đôi</p></a>
+                    <div class="product-price">
+                        <span class="current-price">144,500₫</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="product-showcase tab-component">
+        <div class="title-h1-linen">
+            <h1>SẢN PHẨM ĐÃ XEM</h1>
+        </div>
+        <div class="product-grid">
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <div class="product-image">
+                        <a href="product-information.html"><img src="image/daychuyen6.jpg" alt="Dây chuyền mặt bươm bướm xanh phối hạt"></a>
+                    </div>
+                    <div class="product-overlay">
+                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </a>
+                        <a href="#" class="icon-button" title="Xem nhanh">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="product-info">
+                    <a href="product-information.html"><p class="product-name">Dây chuyền mặt bươm bướm xanh phối hạt</p></a>
+                    <div class="product-price">
+                        <span class="current-price">102,000₫</span>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <div class="product-image">
+                        <a href="product-information.html"><img src="image/truyenthong6.png" alt="Áo dài truyền thống Gấm Khuê Gia - Trắng dệt hoa"></a>
+                    </div>
+                    <div class="product-overlay">
+                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </a>
+                        <a href="#" class="icon-button" title="Xem nhanh">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="product-info">
+                    <a href="product-information.html"><p class="product-name">Áo dài truyền thống Gấm Khuê Gia - Trắng dệt hoa</p></a>
+                    <div class="product-price">
+                        <span class="current-price">720,000₫</span>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <div class="product-image">
+                        <a href="product-information.html"><img src="image/truyenthong3.png" alt="Áo dài truyền thống Phúc Hương"></a>
+                    </div>
+                    <div class="product-overlay">
+                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </a>
+                        <a href="#" class="icon-button" title="Xem nhanh">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <a href="product-information.html"><p class="product-name">Áo dài truyền thống Phúc Hương</p></a>
+                    <div class="product-price">
+                        <span class="current-price">880,000₫</span>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <div class="product-image">
+                        <a href="product-information.html"><img src="image/truyenthong4.png" alt="Áo dài truyền thống Quỳnh Châu"></a>
+                    </div>
+                    <div class="product-overlay">
+                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </a>
+                        <a href="#" class="icon-button" title="Xem nhanh">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="product-info">
+                    <a href="product-information.html"><p class="product-name">Áo dài truyền thống Quỳnh Châu</p></a>
+                    <div class="product-price">
+                        <span class="current-price">790,000₫</span>
+                    </div>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <div class="product-image">
+                        <a href="product-information.html"><img src="image/truyenthong8.png" alt="Áo dài truyền thống khảm hoa Cát Tường"></a>
+                    </div>
+                    <div class="product-overlay">
+                        <a href="product-information.html" class="icon-button" title="Tùy chọn">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </a>
+                        <a href="#" class="icon-button" title="Xem nhanh">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="product-info">
+                    <a href="product-information.html"><p class="product-name">Áo dài truyền thống khảm hoa Cát Tường</p></a>
+                    <div class="product-price">
+                        <span class="current-price">671,500₫</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<div id="quick-view-model" class="model-overlay">
+    <div class="quick-content-model">
+        <div class="model-image">
+            <img class="large-image" src="image/truyenthong1.png" alt="Áo dài truyền thống Quỳnh Hân">
+            <div class="model-group-img swiper">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide"><img src="image/truyenthong1.png"></div>
+                    <div class="swiper-slide"><img src="image/truyenthong12.png"></div>
+                    <div class="swiper-slide"><img src="image/truyenthong13.png"></div>
+                    <div class="swiper-slide"><img src="image/truyenthong14.png"></div>
+                    <div class="swiper-slide"><img src="image/truyenthong15.png"></div>
+                    <div class="swiper-slide"><img src="image/truyenthong16.png"></div>
+                </div>
+            </div>
+        </div>
+        <div class="model-content">
+            <h2>Áo dài truyền thống Quỳnh Hân</h2>
+            <div class="model-info">
+                <p>Thương hiệu: <a href="index.html">Việt Sắc Đỏ</a>
+                    <span>|</span>
+                    Mã sản phẩm: <span>ADTT2326A</span>
+                </p>
+            </div>
+            <div class="product-price">
+                <span class="current-price">671,500₫</span>
+                <span class="old-price">790,000₫</span>
+                <span class="discount-tag">15%</span>
+            </div>
+            <div class="model-size">
+                <label>Kích thước:</label>
+                <div class="group-size">
+                    <input type="radio" name="size" id="size-s">
+                    <label for="size-s">S</label>
+                    <input type="radio" name="size" id="size-m">
+                    <label for="size-m">M</label>
+                    <input type="radio" name="size" id="size-l">
+                    <label for="size-l">L</label>
+                    <input type="radio" name="size" id="size-Xl">
+                    <label for="size-Xl">XL</label>
+                    <input type="radio" name="size" id="size-XXl">
+                    <label for="size-XXl">XXL</label>
+                </div>
+                <div class="size-table">
+                    <a href="#">Bảng quy đổi kích cỡ</a>
+                    <div class="size">
+                        <img src="image/size-ao.png" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="model-color">
+                <label>Màu sắc:</label>
+                <div class="group-color">
+                    <input type="radio" name="color-swatch" class="color-swatch" style="background: #cab6a1">
+                    <input type="radio" name="color-swatch" class="color-swatch" style="background: #d575c9">
+                    <input type="radio" name="color-swatch" class="color-swatch" style="background: #e84569">
+                    <input type="radio" name="color-swatch" class="color-swatch" style="background: #5b25bc">
+                </div>
+            </div>
+            <div class="model-promotion">
+                <span class="promotion-title">🎁 KHUYẾN MÃI - ƯU ĐÃI</span>
+                <ul class="promotion-box">
+                    <li>Freeship toàn quốc khi mua hàng (Không áp dụng cho đơn CHỈ CÓ phụ kiện dưới 350k)</li>
+                    <li>Hỏa tốc mọi ngày trong tuần</li>
+                </ul>
+            </div>
+            <div class="model-footer">
+                <div class="quantity">
+                    <button type="button" class="btn-minus"><i class="fa-solid fa-minus"></i></button>
+                    <input type="text" value="1" class="quantity-input">
+                    <button type="button" class="btn-plus"><i class="fa-solid fa-plus"></i></button>
+                </div>
+                <button class="add-shopping"><span>Thêm vào giỏ</span></button>
+            </div>
+        </div>
+        <button id="close-model" class="model-remove-item"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+</div>
+<div id="success-add-shopping" class="model-success-overlay">
+    <div class="success-content-model">
+        <button id="close-success-popup" class="model-remove-item"><i class="fa-solid fa-xmark"></i></button>
+        <div class="success-header">
+            <i class="fa-solid fa-check-circle"></i>
+            <span>Thêm vào giỏ hàng thành công</span>
+        </div>
+        <div class="success-product-info">
+            <img src="image/truyenthong1.png" alt="Áo dài truyền thống Quỳnh Hân">
+            <div class="item-info">
+                <a href="" class="item-name">Áo dài truyền thống Quỳnh Hân</a>
+                <span class="item-meta">Size A / Quỳnh Hân</span>
+            </div>
+        </div>
+        <div class="success-box-quantity">
+            <span>Giỏ hàng hiện có</span>
+            <div class="item-price">
+                <span>711,000₫</span>
+                <small>(1) sản phẩm</small>
+            </div>
+        </div>
+        <div class="success-footer">
+            <a href="#" class="checkout-btn">Thanh toán</a>
+            <a href="giohang.html" class="success-btn">Xem giỏ hàng</a>
+        </div>
+    </div>
+</div>
+<footer>
+    <div class="footer-container">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>Về Việt Sắc Đỏ</h4>
+                <p>Chuyên cung cấp các sản phẩm áo dài, vải linen và phụ kiện
+                    thời trang truyền thống, tôn vinh vẻ đẹp Việt.</p>
+                <p>
+                    <i class="fa-solid fa-location-dot"></i> 16 tổ 3, khu phố 6, Linh Trung, Tp.Thủ Đức, Tp.Hồ Chí Minh
+                </p>
+                <p>
+                    <i class="fa-solid fa-phone"></i> 0901.234.567
+                </p>
+                <p>
+                    <i class="fa-solid fa-envelope"></i> info@vietsacdo.com
+                </p>
+            </div>
+            <div class="footer-column">
+                <h4>Liên kết nhanh</h4>
+                <ul class="footer-links">
+                    <li><a href="aodaitruyenthong.html">Áo dài truyền thống</a></li>
+                    <li><a href="aodaitheutay.html">Áo dài thêu tay</a></li>
+                    <li><a href="#">Quần lụa</a></li>
+                    <li><a href="#">Guốc mộc</a></li>
+                    <li><a href="contactus.html">Liên Hệ</a></li>
+                </ul>
+                <div class="social-icons">
+                    <a href="#" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                    <a href="#" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" title="Zalo"><i class="fa-solid fa-comment-dots"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <p>&copy; 2025 Việt Sắc Đỏ. Đã đăng ký bản quyền.</p>
+        </div>
+    </div>
+</footer>
+</body>
+
+</html>
