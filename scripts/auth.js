@@ -5,8 +5,13 @@ document.addEventListener('DOMContentLoaded', function () {
     if (loginForm) {
         loginForm.addEventListener('submit', function (event) {
             event.preventDefault();
-
-            window.location.href = 'account.html';
+            const phone = document.getElementById('phone').value.trim();
+            const password = document.getElementById('customer_password').value.trim();
+            if (phone === '0123456789' && password === '123') {
+                window.location.href = 'admin/dashboard.html';
+            } else {
+                window.location.href = 'account.html';
+            }
         });
     }
     if (signupForm) {
