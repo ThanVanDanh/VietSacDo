@@ -5,6 +5,7 @@
     <title>Title</title>
     <link rel="stylesheet" href="admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
 <div class="admin-container">
@@ -15,7 +16,7 @@
         </div>
         <nav class="sidebar-nav">
             <ul>
-                <li class="nav-item active"><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                <li class="nav-item active"><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Tổng quan</a></li>
                 <li class="nav-item"><a href="product.html"><i class="fas fa-box-open"></i> Quản lý Sản phẩm</a></li>
                 <li class="nav-item"><a href="orders.html"><i class="fas fa-shopping-cart"></i> Quản lý Đơn hàng</a></li>
                 <li class="nav-item"><a href="customers.html"><i class="fas fa-users"></i> Quản lý Khách hàng</a></li>
@@ -26,6 +27,7 @@
             </ul>
         </nav>
     </div>
+
     <main class="main-content">
         <header class="admin-header">
             <div class="header-actions">
@@ -33,10 +35,188 @@
                 <a href="login.html" class="btn-logout"><i class="fas fa-user-circle"></i> Đăng xuất</a>
             </div>
         </header>
-        <h1>INDEX ADMIN</h1>
-        <p>Đây là trang index admin. Các trang khác sẽ mở riêng file.</p>
+        <section class="dashboard-stats">
+            <div class="stat-card">
+                <div class="card-icon" style="background-color: #e8f5e9;">
+                    <i class="fas fa-dollar-sign" style="color: #388e3c;"></i>
+                </div>
+                <div class="card-info">
+                    <h4>Doanh Thu (Tháng)</h4>
+                    <p>15.500.000₫</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="card-icon" style="background-color: #e0f7fa;">
+                    <i class="fas fa-shopping-cart" style="color: #00796b;"></i>
+                </div>
+                <div class="card-info">
+                    <h4>Đơn Hàng (Tháng)</h4>
+                    <p>15</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="card-icon" style="background-color: #fff3e0;">
+                    <i class="fas fa-users" style="color: #f57c00;"></i>
+                </div>
+                <div class="card-info">
+                    <h4>Khách Mới (Tuần)</h4>
+                    <p>35</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="card-icon" style="background-color: #fce4ec;">
+                    <i class="fas fa-box-open" style="color: #c2185b;"></i>
+                </div>
+                <div class="card-info">
+                    <h4>Sản Phẩm Bán Chạy</h4>
+                    <p>Áo Dài Lụa Trắng</p>
+                </div>
+            </div>
+        </section>
+        <section class="dashboard-recent-activity">
+            <div class="recent-panel">
+                <h3><i class="fas fa-receipt"></i> Đơn Hàng Gần Đây</h3>
+                <table class="recent-table">
+                    <thead>
+                    <tr>
+                        <th>Mã ĐH</th>
+                        <th>Khách Hàng</th>
+                        <th>Tổng Tiền</th>
+                        <th>Trạng Thái</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><strong>#1052</strong></td>
+                        <td>Phùng Thị Minh Thư</td>
+                        <td>1.850.000₫</td>
+                        <td><span class="status-badge status-completed">Hoàn thành</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>#1051</strong></td>
+                        <td>Lại Thị Hoa</td>
+                        <td>3.200.000₫</td>
+                        <td><span class="status-badge status-shipping">Đang vận chuyển</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>#1050</strong></td>
+                        <td>Thân Văn Danh</td>
+                        <td>450.000₫</td>
+                        <td><span class="status-badge status-processing">Đang xử lý</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>#1049</strong></td>
+                        <td>Nguyễn Văn Đ</td>
+                        <td>2.500.000₫</td>
+                        <td><span class="status-badge status-canceled">Đã hủy</span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="recent-panel">
+                <h3><i class="fas fa-user-plus"></i> Khách Hàng Mới</h3>
+                <table class="recent-table">
+                    <thead>
+                    <tr>
+                        <th>Tên</th>
+                        <th>Email</th>
+                        <th>Ngày ĐK</th>
+                        <th>Trạng Thái</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Phùng Thị Minh Thư</td>
+                        <td>23130317@...</td>
+                        <td>2024-10-25</td>
+                        <td><span class="status-badge status-active">Hoạt động</span></td>
+                    </tr>
+                    <tr>
+                        <td>Thân Văn Danh</td>
+                        <td>23130041@...</td>
+                        <td>2024-09-15</td>
+                        <td><span class="status-badge status-blocked">Bị khóa</span></td>
+                    </tr>
+                    <tr>
+                        <td>Lại Thị Hoa</td>
+                        <td>23130111@...</td>
+                        <td>2023-11-15</td>
+                        <td><span class="status-badge status-active">Hoạt động</span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
+            <div class="recent-panel">
+                <h3><i class="fas fa-calendar-alt"></i> Doanh Thu Theo Tháng</h3>
+                <table class="recent-table">
+                    <thead>
+                    <tr>
+                        <th>Tháng/Năm</th>
+                        <th>Số Đơn Hàng</th>
+                        <th>Doanh Thu</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><strong>11/2025</strong></td>
+                        <td>15</td>
+                        <td>15.500.000₫</td>
+                    </tr>
+                    <tr>
+                        <td><strong>10/2025</strong></td>
+                        <td>32</td>
+                        <td>22.000.000₫</td>
+                    </tr>
+                    <tr>
+                        <td><strong>09/2025</strong></td>
+                        <td>28</td>
+                        <td>18.000.000₫</td>
+                    </tr>
+                    <tr>
+                        <td><strong>08/2025</strong></td>
+                        <td>25</td>
+                        <td>15.000.000₫</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
 
+            <div class="recent-panel">
+                <h3><i class="fas fa-tags"></i> Khuyến Mãi Đang Chạy</h3>
+                <table class="recent-table">
+                    <thead>
+                    <tr>
+                        <th>Tên Khuyến Mãi</th>
+                        <th>Loại</th>
+                        <th>Ngày Hết Hạn</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><strong>Tri Ân 20/11</strong></td>
+                        <td>Giảm 20%</td>
+                        <td><span class="status-badge status-processing">2025-11-20</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Black Friday</strong></td>
+                        <td>Giảm 50% (Chọn lọc)</td>
+                        <td><span class="status-badge status-processing">2025-11-28</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Chào tháng 12</strong></td>
+                        <td>Miễn phí vận chuyển</td>
+                        <td><span class="status-badge status-processing">2025-12-05</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Giảm giá hè</strong></td>
+                        <td>Giảm 15%</td>
+                        <td><span class="status-badge status-canceled">Đã kết thúc</span></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </main>
 </div>
 </body>
