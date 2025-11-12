@@ -6,14 +6,14 @@ document.addEventListener('DOMContentLoaded', function () {
         loginForm.addEventListener('submit', function (event) {
             event.preventDefault();
 
-            window.location.href = 'index.html';
+            window.location.href = 'account.html';
         });
     }
     if (signupForm) {
         signupForm.addEventListener('submit', function (event) {
             event.preventDefault();
 
-            window.location.href = 'login.html';
+            window.location.href = 'account.html';
         });
     }
     const forgotForm = document.getElementById('forgot_password_form');
@@ -59,4 +59,40 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+    //-----account.html-----
+    // chuyển tab
+    const accountInfo = document.getElementById('nav-details');
+    const address = document.getElementById('nav-addresses');
+    const contentInfo = document.getElementById('account-details');
+    const contentAddress = document.getElementById('account-addresses');
+    accountInfo.addEventListener('click', e => {
+        contentInfo.style.display = 'block';
+        contentAddress.style.display = 'none';
+        accountInfo.classList.add('active');
+        address.classList.remove('active');
+    });
+
+    address.addEventListener('click', e => {
+        contentInfo.style.display = 'none';
+        contentAddress.style.display = 'block';
+        accountInfo.classList.remove('active');
+        address.classList.add('active');
+    });
+    const addModal = document.getElementById('add-address-modal');
+    const editModal = document.getElementById('edit-address-modal');
+
+    const addBtn = document.getElementById('add-address-btn');
+    const editBtn = document.getElementById('edit-address-btn');
+    //Mở modal
+    addBtn.addEventListener('click', () => addModal.style.display = 'flex');
+    editBtn.addEventListener('click', e => editModal.style.display = 'flex');
+
+    // Đóng modal
+    document.querySelectorAll('.modal-close').forEach(btn => {
+        btn.addEventListener('click', () => {
+            btn.closest('.modal-overlay').style.display = 'none';
+        });
+    });
+
+
 });
