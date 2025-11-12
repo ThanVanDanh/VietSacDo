@@ -170,6 +170,59 @@ body{
     font-size: 18px;
     color: #999;
 }
+.overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+/* popup */
+.popup{
+    width: 450px;
+    background: #fff;
+    border-radius: 18px;
+    padding: 12px;
+    text-align: center;
+}
+
+.popup h2{
+    margin: 0;
+    font-size: 20px;
+    font-weight: 200;
+}
+
+.popup .product{
+    margin: 8px 0 24px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.actions{
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.btn{
+    flex: 1;
+    padding: 10px 0;
+    border-radius: 12px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+}
+
+.normal{
+    background: #eee;
+}
+
+.danger{
+    background: var(--color-primary);
+    color:#fff;
+}
 
 .quantity-control {
     display: flex;
@@ -212,6 +265,77 @@ body{
     cursor: pointer;
     color: #555;
     font-size: 15px;
+}
+.btnKhuyenMai {
+    background:none;
+    border: none;
+    cursor: pointer;
+}
+.btnKhuyenMai i{
+   font-size: 12px;
+}
+
+.popupOverlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.promoModal{
+    width: 500px;
+    background:#fff;
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+.header-khuyenMai{
+    position: relative;
+    text-align:center;
+    font-weight:600;
+    padding:20px 0;
+    border-bottom:1px solid #ddd;
+}
+.header-khuyenMai h3{
+    padding-left: 30px;
+
+}
+.btnCloseTop {
+    display: flex;
+    position:absolute;
+    left:0;
+    top:40%;
+    transform:translateY(-50%);
+    font-size:26px;
+    cursor:pointer;
+
+}
+
+.noPromoBox{
+    text-align:center;
+    padding:60px 20px;
+}
+
+.promoIcon{
+    width:70px;
+    opacity:.5;
+}
+
+.bottomZone{
+    padding:20px;
+    border-top:1px solid #eee;
+}
+
+.btnCloseBottom{
+    width:100%;
+    padding:14px;
+    font-size:18px;
+    border:none;
+    background:#eee;
+    border-radius:16px;
+    cursor:pointer;
 }
 
 .apply-promo {
