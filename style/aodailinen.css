@@ -180,3 +180,77 @@ section {
     width: 15px;
     height: 15px;
 }
+/* ============================================== */
+/* CSS CHO THANH SẮP XẾP SẢN PHẨM */
+/* ============================================== */
+
+/* Container để đẩy thanh sắp xếp qua phải */
+.toolbar-container {
+    display: flex;
+    justify-content: flex-end; /* Đẩy qua phải */
+    padding: 0 15px; /* Đồng bộ padding với lề của trang */
+    margin-bottom: 25px; /* Khoảng cách với lưới sản phẩm */
+}
+
+/* Wrapper cho label và select box */
+.sort-by-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Khoảng cách giữa "Sắp xếp:" và box */
+}
+
+.sort-by-wrapper label {
+    font-size: 14px;
+    color: #333; /* Màu chữ */
+}
+
+/* Wrapper cho select box để tạo vị trí cho mũi tên */
+.custom-select-wrapper {
+    position: relative; /* Quan trọng để định vị mũi tên */
+    display: inline-block;
+}
+
+/* Tùy chỉnh select box (quan trọng nhất) */
+.custom-select-wrapper select {
+    /* 1. Loại bỏ giao diện mặc định của trình duyệt */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    /* 2. Kiểu dáng (border, padding) */
+    background-color: #ffffff;
+    border: 1px solid #ccc; /* Viền xám nhạt */
+    border-radius: 4px; /* Hơi bo góc nhẹ */
+
+    /* Chừa chỗ bên phải cho mũi tên */
+    padding: 8px 35px 8px 12px;
+
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    min-width: 160px; /* Đảm bảo box đủ rộng */
+    line-height: 1.4;
+}
+
+/* 3. Tạo mũi tên tùy chỉnh (giống trong ảnh) */
+.custom-select-wrapper .custom-arrow {
+    position: absolute;
+    top: 50%; /* Căn giữa theo chiều dọc */
+    right: 12px; /* Nằm bên trong lề phải của padding */
+    transform: translateY(-50%);
+
+    width: 0;
+    height: 0;
+
+    /* Kỹ thuật tạo tam giác bằng border */
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #555; /* Màu mũi tên */
+
+    pointer-events: none; /* Cho phép click xuyên qua mũi tên */
+}
+
+/* 4. Kiểu dáng khi hover (tùy chọn) */
+.custom-select-wrapper select:hover {
+    border-color: #888; /* Viền đậm hơn khi rê chuột */
+}
