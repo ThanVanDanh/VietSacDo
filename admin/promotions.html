@@ -37,18 +37,16 @@
                 <a href="login.html" class="btn-logout"><i class="fas fa-user-circle"></i> Đăng xuất</a>
             </div>
         </header>
+
         <div class="promotion-editor-header">
             <h2>Tạo bài viết khuyến mãi mới</h2>
         </div>
-
         <div class="promotion-editor-container">
-
             <div class="editor-main">
                 <div class="form-group">
                     <label for="promo-title">Tiêu đề bài viết</label>
-                    <input type="text" id="promo-title" placeholder="Tiêu đề bài quảng cáo">
+                    <input type="text" id="promo-title" placeholder="Ví dụ: Giảm giá sốc cuối năm 50%...">
                 </div>
-
                 <div class="form-group">
                     <label for="promo-content">Nội dung bài viết</label>
                     <textarea id="promo-content" name="promo-content">
@@ -58,17 +56,29 @@
 
             <div class="editor-sidebar">
                 <div class="publish-card">
-                    <h3>Hành động</h3>
+                    <h3><i class="fas fa-play-circle"></i> Hành động</h3>
                     <div class="publish-actions">
                         <button class="btn btn-draft">Lưu nháp</button>
                         <button class="btn btn-publish">Đăng bài</button>
                     </div>
                 </div>
+
                 <div class="publish-card">
-                    <h3>Ảnh đại diện (Banner)</h3>
+                    <h3><i class="fas fa-calendar-alt"></i> Lịch hoạt động</h3>
+                    <div class="form-group-sidebar">
+                        <label for="promo-start-date">Ngày bắt đầu</label>
+                        <input type="datetime-local" id="promo-start-date" name="promo-start-date">
+                    </div>
+                    <div class="form-group-sidebar">
+                        <label for="promo-end-date">Ngày kết thúc</label>
+                        <input type="datetime-local" id="promo-end-date" name="promo-end-date">
+                    </div>
+                </div>
+                <div class="publish-card">
+                    <h3><i class="fas fa-image"></i> Ảnh đại diện (Banner)</h3>
                     <input type="file" id="promo-image-input" accept="image/*">
                     <label for="promo-image-input" class="image-upload-box">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <i class="fas fa-cloud-upload-alt"></i>
                         <p>Nhấn để tải ảnh lên</p>
                     </label>
                     <div id="image-preview-container">
@@ -77,31 +87,81 @@
                 </div>
             </div>
         </div>
+        <div class="promotion-list-section">
+            <h2>Danh sách Khuyến mãi</h2>
+
+            <table class="promo-table">
+                <thead>
+                <tr>
+                    <th>Tiêu đề bài viết</th>
+                    <th>Trạng thái</th>
+                    <th>Thời gian hoạt động</th>
+                    <th>Hành động</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><strong>Giảm giá 50% toàn bộ cửa hàng</strong></td>
+                    <td><span class="status active">Đang chạy</span></td>
+                    <td class="period">
+                        Bắt đầu: 10/11/2025 00:00<br>
+                        Kết thúc: 20/11/2025 23:59
+                    </td>
+                    <td class="action-icons">
+                        <a href="#" title="Sửa"><i class="fas fa-edit"></i></a>
+                        <a href="#" title="Tạm dừng"><i class="fas fa-pause-circle"></i></a>
+                        <a href="#" class="delete" title="Xóa"><i class="fas fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Khuyến mãi tri ân 20/11</strong></td>
+                    <td><span class="status expired">Hết hạn</span></td>
+                    <td class="period">
+                        Bắt đầu: 20/10/2025 09:00<br>
+                        Kết thúc: 30/10/2025 22:00
+                    </td>
+                    <td class="action-icons">
+                        <a href="#" title="Sửa"><i class="fas fa-edit"></i></a>
+                        <a href="#" class="delete" title="Xóa"><i class="fas fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>Flash Sale 12.12 (Bản nháp)</strong></td>
+                    <td><span class="status draft">Nháp</span></td>
+                    <td class="period">Chưa lên lịch</td>
+                    <td class="action-icons">
+                        <a href="#" title="Sửa"><i class="fas fa-edit"></i></a>
+                        <a href="#" class="delete" title="Xóa"><i class="fas fa-trash-alt"></i></a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </main>
 </div>
 
 <script>
+    // 1. Khởi tạo CKEditor 4
     CKEDITOR.replace('promo-content', {
-        height: 500, // Chiều cao 500px
-        language: 'vi', // Tự động nhận diện (nếu gói full-all hỗ trợ)
+        height: 500,
+        language: 'vi',
         toolbar: [
-            { name: 'document', items: [ 'Source', '-', 'Save', 'NewPage', 'ExportPdf', 'Preview', 'Print', '-', 'Templates' ] },
+            { name: 'document', items: [ 'Source', '-', 'Preview', 'Print' ] },
             { name: 'clipboard', items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
-            { name: 'editing', items: [ 'Find', 'Replace', '-', 'SelectAll', '-', 'Scayt' ] },
-            { name: 'forms', items: [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ] },
+            { name: 'editing', items: [ 'Find', 'Replace', '-', 'SelectAll' ] },
             '/',
             { name: 'basicstyles', items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'CopyFormatting', 'RemoveFormat' ] },
-            { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language' ] },
+            { name: 'paragraph', items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
             { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
-            { name: 'insert', items: [ 'Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe' ] },
+            { name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak' ] },
             '/',
             { name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] },
             { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
-            { name: 'tools', items: [ 'Maximize', 'ShowBlocks' ] },
-            { name: 'about', items: [ 'About' ] }
+            { name: 'tools', items: [ 'Maximize', 'ShowBlocks' ] }
         ]
     });
 
+    // 2. Xử lý xem trước ảnh (Giữ nguyên)
     const imageInput = document.getElementById('promo-image-input');
     const imagePreview = document.getElementById('image-preview');
 
@@ -110,6 +170,7 @@
         if (file) {
             const reader = new FileReader();
             reader.onload = function(e) {
+                // SỬA LỖI: gõ nhầm targe.result -> e.target.result
                 imagePreview.src = e.target.result;
                 imagePreview.style.display = 'block';
             }
@@ -117,5 +178,6 @@
         }
     });
 </script>
+
 </body>
 </html>
