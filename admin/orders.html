@@ -7,13 +7,17 @@
     <link rel="stylesheet" href="orders.css">
     <link rel="stylesheet" href="customers.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="charts.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="admin.js"></script>
 </head>
 <body>
 <div class="admin-container">
     <div class="sidebar">
         <div class="sidebar-header">
-            <img src="/image/logo.png" alt="Logo Việt Sắc Đỏ">
+            <a href="dashboard.html">
+                <img src="/image/logo.png" alt="Logo Việt Sắc Đỏ">
+            </a>
             <h2>Trang Admin</h2>
         </div>
         <nav class="sidebar-nav">
@@ -44,7 +48,7 @@
                 </div>
                 <div class="card-info">
                     <h4>Tổng Đơn Hàng</h4>
-                    <p>15</p>
+                    <p>80</p>
                 </div>
             </div>
             <div class="stat-card-order">
@@ -52,8 +56,8 @@
                     <i class="fas fa-dollar-sign" style="color: #388e3c;"></i>
                 </div>
                 <div class="card-info">
-                    <h4>Doanh Thu (Tháng)</h4>
-                    <p>15.500.000₫</p>
+                    <h4>Tổng Doanh Thu</h4>
+                    <p>75.600.000₫</p>
                 </div>
             </div>
             <div class="stat-card-order">
@@ -61,10 +65,14 @@
                     <i class="fas fa-tshirt" style="color: #f57c00;"></i>
                 </div>
                 <div class="card-info">
-                    <h4>Bán Chạy Nhất</h4>
+                    <h4>Bán Chạy Nhất (Tháng hiện tại)</h4>
                     <p>Áo Dài Lụa Trắng</p>
                 </div>
             </div>
+        </section>
+        <section class="chart-container">
+            <h3>Tổng quan Doanh thu (6 tháng)</h3>
+            <canvas id="revenueChart"></canvas>
         </section>
         <section class="table-container">
             <div class="table-toolbar">
@@ -220,20 +228,20 @@
                             <tr>
                                 <td>Áo Dài Lụa (Đỏ)</td>
                                 <td>1</td>
-                                <td>1.500.000</td>
-                                <td>1.500.000</td>
+                                <td>1.500.000₫</td>
+                                <td>1.500.000₫</td>
                             </tr>
                             <tr>
                                 <td>Guốc gỗ vàng</td>
                                 <td>1</td>
-                                <td>350.000</td>
-                                <td>350.000</td>
+                                <td>350.000₫</td>
+                                <td>350.000₫</td>
                             </tr>
                             </tbody>
                             <tfoot>
                             <tr>
                                 <td colspan="3" style="text-align: center"><strong>Tổng tiền hàng</strong></td>
-                                <td>1.850.000</td>
+                                <td>1.850.000₫</td>
                             </tr>
                             <tr>
                                 <td colspan="3" style="text-align: center"><strong>Phí vận chuyển</strong></td>
@@ -241,7 +249,7 @@
                             </tr>
                             <tr>
                                 <td colspan="3" style="text-align: center"><strong>Thành tiền</strong></td>
-                                <td><strong>1.850.000</strong></td>
+                                <td><strong>1.850.000₫</strong></td>
                             </tr>
                             </tfoot>
                         </table>

@@ -13,13 +13,17 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <link rel="stylesheet" href="style/quick-view.css">
+    <script src="scripts/backtop.js"></script>
+    <link rel="stylesheet" href="style/backtop.css">
 </head>
 <body>
 <div class="search-overlay-container" id="searchOverlay">
 
     <div class="search-overlay-header">
         <div class="logo">
-            <img src="image/logo.png" alt="Logo Việt Sắc Đỏ">
+            <a href="index.html">
+                <img src="image/logo.png" alt="Logo Việt Sắc Đỏ">
+            </a>
         </div>
 
         <form class="search-overlay-form">
@@ -87,7 +91,9 @@
 <header>
     <div class="header">
         <div class="logo">
-            <img src="image/logo.png" alt="Logo Việt Sắc Đỏ">
+            <a href="index.html">
+                <img src="image/logo.png" alt="Logo Việt Sắc Đỏ">
+            </a>
         </div>
         <nav>
             <ul class="menu">
@@ -110,9 +116,9 @@
                                         <li><a href="chanvay.html">Chân Váy</a></li>
                                         <li><a href="quanphuongchi.html">Quần Phương Chi</a></li>
                                         <li><a href="quanquechi.html">Quần Quế Chi</a></li>
-                                        <li><a href="#">Quần Vân Chi</a></li>
-                                        <li><a href="#">Quần Mai Chi</a></li>
-                                        <li><a href="#">Quần Trúc Chi</a></li>
+                                        <li><a href="quanvanchi.html">Quần Vân Chi</a></li>
+                                        <li><a href="quanmaichi.html">Quần Mai Chi</a></li>
+                                        <li><a href="quantrucchi.html">Quần Trúc Chi</a></li>
                                     </ul>
                                 </div>
 
@@ -123,17 +129,17 @@
                                         <li><a href="vongtay.html">Vòng tay</a></li>
                                         <li><a href="hoatai.html">Hoa tai</a></li>
                                         <li><a href="guocgo.html">Guốc gỗ</a></li>
-                                        <li><a href="#">Túi xách</a></li>
-                                        <li><a href="#">Dây chuyền</a></li>
-                                        <li><a href="#">Kẹp & nơ cài tóc</a></li>
+                                        <li><a href="tuixach.html">Túi xách</a></li>
+                                        <li><a href="daychuyen.html">Dây chuyền</a></li>
+                                        <li><a href="kepvanocaitoc.html">Kẹp & nơ cài tóc</a></li>
                                     </ul>
                                 </div>
 
                                 <div class="category-column">
                                     <h3>Nón Lá</h3>
                                     <ul>
-                                        <li><a href="#">Nón lá bọc vải Hồ điệp</a></li>
-                                        <li><a href="#">Nón lá bọc vải Chè hoa bưởi</a></li>
+                                        <li><a href="nonlahodiep.html">Nón lá bọc vải Hồ điệp</a></li>
+                                        <li><a href="nonlahoabuoi.html">Nón lá bọc vải Chè hoa bưởi</a></li>
                                     </ul>
                                 </div>
 
@@ -215,6 +221,21 @@
     <section class="product-showcase tab-component">
         <div class="title-h1-linen">
             <h1>HOA TAI</h1>
+        </div>
+        <div class="toolbar-container">
+            <div class="sort-by-wrapper">
+                <label for="sort-by">Sắp xếp:</label>
+                <div class="custom-select-wrapper">
+                    <select id="sort-by" name="sort-by">
+                        <option value="alpha-asc">Tên A → Z</option>
+                        <option value="alpha-desc">Tên Z → A</option>
+                        <option value="price-asc">Giá tăng dần</option>
+                        <option value="price-desc">Giá giảm dần</option>
+                        <option value="created-desc">Hàng mới</option>
+                    </select>
+                    <span class="custom-arrow"></span>
+                </div>
+            </div>
         </div>
         <div class="product-grid">
             <div class="product-card">
@@ -689,6 +710,9 @@
         </div>
     </div>
 </footer>
+<button onclick="scrollToTop()" id="backToTopBtn" title="Trở về đầu trang">
+    <i class="fas fa-chevron-up"></i>
+</button>
 </body>
 
 </html>
