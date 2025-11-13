@@ -238,6 +238,11 @@
     transition: background-color 0.2s;
     height: 55px;
 }
+.buy-now-btn a{
+    color: #fff;
+    text-decoration: none;
+}
+
 
 .buy-now-btn:hover {
     background-color: #800;
