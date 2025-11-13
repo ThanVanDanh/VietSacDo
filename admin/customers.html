@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="admin.css">
     <link rel="stylesheet" href="customers.css">
+    <link rel="stylesheet" href="charts.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="admin.js"></script>
 </head>
 <body>
@@ -57,11 +59,11 @@
                     <p>35</p>
                 </div>
             </div>
-            <div class="stat-card-customer chart-placeholder">
-                <h4>Biểu đồ đơn hàng theo khách hàng</h4>
-            </div>
         </section>
-
+        <section class="chart-container">
+            <h3>Top khách hàng theo số đơn hàng</h3>
+            <canvas id="customerOrdersChart"></canvas>
+        </section>
         <section class="table-container">
             <div class="table-toolbar">
                 <div class="filters">
@@ -115,7 +117,7 @@
                 </tr>
                 <tr>
                     <td>Thân Văn Danh</td>
-                    <td>23130041@st.hcmuaf.edu.vn</td>
+                    <td>23130043@st.hcmuaf.edu.vn</td>
                     <td>0123456789</td>
                     <td>2024-09-15</td>
                     <td>0</td>
