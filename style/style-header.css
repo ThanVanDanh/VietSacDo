@@ -549,6 +549,27 @@ header nav ul.menu > li > a:hover::after,
 .search-overlay-header .icons .user a:hover {
     color: #ffffff;
 }
+.mini-empty-cart {
+    display: none;
+    text-align: center;
+    padding: 20px 5px;
+    background-color: #fff;
+}
+
+.mini-empty-cart i {
+    font-size: 30px;
+    color: #ccc;
+    margin-bottom: 15px;
+    display: block;
+    align-items: center;
+}
+
+.mini-empty-cart p {
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0;
+}
 @media (max-width: 768px) {
     .search-overlay-header {
         height: auto;
