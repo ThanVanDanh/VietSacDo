@@ -44,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
+
     //Chuyển tab trong chi tiết khách hàng
     const tabLinks = document.querySelectorAll(".tab-link");
     if (tabLinks) {
@@ -59,6 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
     }
+
     // Xác nhận xóa (chung)
     const deleteModal = document.getElementById('delete-confirm-modal');
     if (deleteModal) {
@@ -66,43 +68,146 @@ document.addEventListener("DOMContentLoaded", () => {
         const deleteClose = deleteModal.querySelector('.close-modal');
         const cancelDeleteBtn = document.getElementById('btn-cancel-delete');
         const confirmDeleteBtn = document.getElementById('btn-confirm-delete');
+        // Biến tạm để lưu dòng (tr) đang muốn xóa
+        let rowToDelete = null;
+
         deleteModalBtn.forEach(button => {
-            button.addEventListener('click', () => {
+            button.addEventListener('click', function() {
+                rowToDelete = this.closest('tr');
                 deleteModal.style.display = 'flex';
             });
         });
+
         deleteClose.addEventListener('click', () => {
             deleteModal.style.display = 'none';
         });
+
         cancelDeleteBtn.addEventListener('click', () => {
             deleteModal.style.display = 'none';
         });
+
         confirmDeleteBtn.addEventListener('click', () => {
-            deleteModal.style.display = 'none';
+            if (rowToDelete) {
+                // Hiệu ứng mờ dần (Optional - cho mượt)
+                rowToDelete.style.transition = "opacity 0.5s";
+                rowToDelete.style.opacity = "0";
+
+                setTimeout(() => {
+                    // Xóa dòng khỏi DOM (Giao diện)
+                    rowToDelete.remove();
+
+                    const tbody = document.querySelector('.table-general tbody');
+                    checkEmptyTable(tbody);
+                    // Đóng modal
+                    deleteModal.style.display = 'none';
+                    rowToDelete = null;
+                }, 100);
+            }
         });
     }
-    //Xác nhận block
+    function checkEmptyTable(tbody) {
+        // Lấy tất cả các dòng dữ liệu (trừ dòng thông báo)
+        const emptyRow = tbody.querySelector('.empty-state-row');
+        const allRows = tbody.querySelectorAll('tr:not(#empty-state-row)');
+        const pagination = document.querySelector('.pagination');
+
+        // Đếm số dòng đang hiển thị (style.display khác 'none')
+        let visibleRowCount = 0;
+        allRows.forEach(row => {
+            if (row.style.display !== 'none') {
+                visibleRowCount++;
+            }
+        });
+
+        // Logic hiển thị/ẩn thông báo
+        if (visibleRowCount === 0) {
+            if (emptyRow) emptyRow.style.display = 'table-row';
+            if (pagination) pagination.style.display = 'none';
+        } else {
+            if (emptyRow) emptyRow.style.display = 'none';
+            if (pagination) pagination.style.display = 'flex';
+        }
+    }
+
+    // Xác nhận block
     const blockModal = document.getElementById('block-confirm-modal');
     if (blockModal) {
         const blockButtons = document.querySelectorAll('.btn-block');
+        const unlockButtons = document.querySelectorAll('.btn-unlock'); // Thêm dòng này để bắt nút Mở khóa
+
         const blockClose = blockModal.querySelector('.close-modal');
         const cancelBlockBtn = document.getElementById('btn-cancel-block');
         const confirmBlockBtn = document.getElementById('btn-confirm-block');
+        const nameSpan = document.getElementById('customer-name-to-block'); // Chỗ hiển thị tên trong modal
+
+        let rowAction = null;
+
+        // 2. Xử lý nút KHÓA
         blockButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
+            btn.addEventListener('click', function() {
+                rowAction = this.closest('tr');
                 blockModal.style.display = 'flex';
             });
         });
+
+        // 3. Xử lý nút XÁC NHẬN
+        confirmBlockBtn.addEventListener('click', () => {
+            if (rowAction) {
+                toggleLockStatus(rowAction, 'blocked');
+                blockModal.style.display = 'none';
+                rowAction = null;
+            }
+        });
+
+        // 4. Xử lý nút MỞ KHÓA (Click là mở luôn, ko cần modal)
+        unlockButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const row = this.closest('tr');
+                toggleLockStatus(row, 'active');
+            });
+        });
+
         blockClose.addEventListener('click', () => {
             blockModal.style.display = 'none';
+            rowAction = null;
         });
         cancelBlockBtn.addEventListener('click', () => {
             blockModal.style.display = 'none';
+            rowAction = null;
         });
-        confirmBlockBtn.addEventListener('click', () => {
-            blockModal.style.display = 'none';
+        // Thêm: Click ra ngoài để đóng
+        window.addEventListener('click', (e) => {
+            if (e.target === blockModal) {
+                blockModal.style.display = 'none';
+                rowAction = null;
+            }
         });
+
+        // --- HÀM PHỤ TRỢ: Đổi trạng thái hiển thị (Ẩn/Hiện) ---
+        function toggleLockStatus(row, status) {
+            const badgeActive = row.querySelector('.status-active');
+            const badgeBlocked = row.querySelector('.status-blocked');
+            const btnBlock = row.querySelector('.btn-block');
+            const btnUnlock = row.querySelector('.btn-unlock');
+
+            if (status === 'blocked') {
+                // Nếu muốn KHÓA:
+                if(badgeActive) badgeActive.style.display = 'none';         // Ẩn Hoạt động
+                if(badgeBlocked) badgeBlocked.style.display = 'inline-block'; // Hiện Bị khóa
+
+                if(btnBlock) btnBlock.style.display = 'none';             // Ẩn nút Khóa
+                if(btnUnlock) btnUnlock.style.display = 'inline-block';   // Hiện nút Mở khóa
+            } else {
+                // Nếu muốn MỞ KHÓA (Active):
+                if(badgeActive) badgeActive.style.display = 'inline-block';
+                if(badgeBlocked) badgeBlocked.style.display = 'none';
+
+                if(btnBlock) btnBlock.style.display = 'inline-block';
+                if(btnUnlock) btnUnlock.style.display = 'none';
+            }
+        }
     }
+
     //------Chart------------
             //------ Biểu đồ khách hàng ------------
     const ctx1 = document.getElementById('customerOrdersChart');
