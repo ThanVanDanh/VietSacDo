@@ -47,6 +47,9 @@
                     <span class="mini-count_item count_item_pr">3</span>
                 </a>
                 <div class="mini-cart-content">
+                    <div class="mini-empty-cart">
+                        <p>Chưa có sản phẩm trong giỏ hàng</p>
+                    </div>
                     <ul class="mini-cart-items-list">
                         <li> <img src="image/truyenthong1.png" alt="Áo dài truyền thống Quỳnh Hân">
                             <div class="mini-item-info">
@@ -118,9 +121,9 @@
                                         <li><a href="chanvay.html">Chân Váy</a></li>
                                         <li><a href="quanphuongchi.html">Quần Phương Chi</a></li>
                                         <li><a href="quanquechi.html">Quần Quế Chi</a></li>
-                                        <li><a href="#">Quần Vân Chi</a></li>
-                                        <li><a href="#">Quần Mai Chi</a></li>
-                                        <li><a href="#">Quần Trúc Chi</a></li>
+                                        <li><a href="quanvanchi.html">Quần Vân Chi</a></li>
+                                        <li><a href="quanmaichi.html">Quần Mai Chi</a></li>
+                                        <li><a href="quantrucchi.html">Quần Trúc Chi</a></li>
                                     </ul>
                                 </div>
 
@@ -131,8 +134,8 @@
                                         <li><a href="vongtay.html">Vòng tay</a></li>
                                         <li><a href="hoatai.html">Hoa tai</a></li>
                                         <li><a href="guocgo.html">Guốc gỗ</a></li>
-                                        <li><a href="#">Túi xách</a></li>
-                                        <li><a href="#">Dây chuyền</a></li>
+                                        <li><a href="tuixach.html">Túi xách</a></li>
+                                        <li><a href="daychuyen.html">Dây chuyền</a></li>
                                         <li><a href="kepvanocaitoc.html">Kẹp & nơ cài tóc</a></li>
                                     </ul>
                                 </div>
@@ -170,6 +173,9 @@
                     <span class="mini-count_item count_item_pr">3</span>
                 </a>
                 <div class="mini-cart-content">
+                    <div class="mini-empty-cart">
+                        <p>Chưa có sản phẩm trong giỏ hàng</p>
+                    </div>
                     <ul class="mini-cart-items-list">
                         <li> <img src="image/truyenthong1.png" alt="Áo dài truyền thống Quỳnh Hân">
                             <div class="mini-item-info">
@@ -226,7 +232,13 @@
                 <div class="header-cart-sp">
                     <h1>GIỎ HÀNG</h1>
                 </div>
-                <div class="content-sp">
+                <div id="empty-cart-message" style="display: none; text-align: center; padding: 50px 20px;">
+                    <img src="./image/empty_cart.png" alt="Giỏ hàng trống" style="width: 100px; margin-bottom: 20px; opacity: 0.5;">
+                    <h3>Giỏ hàng của bạn đang trống</h3>
+                    <p>Hãy dạo một vòng và chọn những món đồ ưng ý nhé!</p>
+                    <a href="all-product.html" class="btn-pay" style=" margin-top: 20px; text-decoration: none;">Tiếp tục mua sắm</a>
+                </div>
+                <div class="content-sp" id="cart-data-container">
                     <div class="cart-content-sp">
                         <div class="upsell-card-sp">
                             <div class="progress-bar-sp">
@@ -297,7 +309,7 @@
                             <textarea rows="2"></textarea>
                         </div>
                     </div>
-                    <div class="cart-price-sp">
+                    <div class="cart-price-sp" id="cart-summary">
                         <div class="total-sp">
                             <h3>Tổng cộng</h3>
                             <span>2,281,000đ</span>
