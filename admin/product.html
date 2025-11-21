@@ -60,11 +60,11 @@
                 <tbody>
                 <tr>
                     <td><img src="/image/adtt01.png" alt="Product Image"></td>
-                    <td>Áo dài thêu tay</td>
+                    <td>Áo dài Bách Hoa - thêu tay Hương Lài Đỏ</td>
                     <td><span class="status active">Hoạt động</span></td>
                     <td>50</td>
                     <td>$750</td>
-                    <td><span class="stock in-stock">Còn hàng</span></td>
+                    <td><span class="stock in-stock">700</span></td>
                     <td>$15</td>
                     <td class="settings-icons">
                         <a href="#" class="edit-btn" title="Sửa"
@@ -78,16 +78,16 @@
                            data-price="15">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <a href="#" title="Xóa"><i class="fas fa-trash-alt"></i></a>
+                        <a href="#" title="Xóa"><i class="fa-solid fa-trash"></i></a>
                     </td>
                 </tr>
                 <tr>
-                    <td><img src="../image/adtt01.png" alt="Product Image"></td>
-                    <td>Product Title 2</td>
-                    <td><span class="status paused">Tạm dừng</span></td>
+                    <td><img src="../image/adtt06.png" alt="Product Image"></td>
+                    <td>Áo dài Bách Hoa Thêu tay Hương Lài - Xanh biển nhạt</td>
+                    <td><span class="status disabled">Không hoạt động</span></td>
                     <td>60</td>
                     <td>$1020</td>
-                    <td><span class="stock in-stock">Còn hàng</span></td>
+                    <td><span class="stock in-stock">10</span></td>
                     <td>$17</td>
                     <td class="settings-icons">
                         <a href="#" title="Sửa"><i class="fa-solid fa-pen-to-square"></i></a>
@@ -95,12 +95,12 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><img src="../image/adtt01.png" alt="Product Image"></td>
-                    <td>Product Title 3</td>
-                    <td><span class="status disabled">Vô hiệu hóa</span></td>
+                    <td><img src="../image/adtt02.png" alt="Product Image"></td>
+                    <td>Áo dài Bách Hoa Thêu tay Hương Lài - Hồng đào</td>
+                    <td><span class="status disabled">Không hoạt động</span></td>
                     <td>70</td>
                     <td>$1050</td>
-                    <td><span class="stock low-stock">Sắp hết</span></td>
+                    <td><span class="stock out-of-stock">0</span></td>
                     <td>$15</td>
                     <td class="settings-icons">
                         <a href="#" title="Sửa"><i class="fa-solid fa-pen-to-square"></i></a>
@@ -108,12 +108,12 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><img src="../image/adtt01.png" alt="Product Image"></td>
-                    <td>Product Title 4</td>
+                    <td><img src="../image/adtt03.png" alt="Product Image"></td>
+                    <td>Áo dài Bách Hoa Thêu tay Hương Lài - Hồng dâu</td>
                     <td><span class="status active">Hoạt động</span></td>
                     <td>120</td>
                     <td>$1440</td>
-                    <td><span class="stock in-stock">Còn hàng</span></td>
+                    <td><span class="stock in-stock">250</span></td>
                     <td>$12</td>
                     <td class="settings-icons">
                         <a href="#" title="Sửa"><i class="fa-solid fa-pen-to-square"></i></a>
@@ -121,12 +121,12 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><img src="../image/adtt01.png" alt="Product Image"></td>
-                    <td>Product Title 5</td>
+                    <td><img src="../image/adtt04.png" alt="Product Image"></td>
+                    <td>Áo dài Bách Hoa Thêu tay Hương Lài - Kem nhạt</td>
                     <td><span class="status active">Hoạt động</span></td>
                     <td>30</td>
                     <td>$540</td>
-                    <td><span class="stock out-of-stock">Hết hàng</span></td>
+                    <td><span class="stock in-stock">100</span></td>
                     <td>$18</td>
                     <td class="settings-icons">
                         <a href="#" title="Sửa"><i class="fa-solid fa-pen-to-square"></i></a>
@@ -134,12 +134,12 @@
                     </td>
                 </tr>
                 <tr>
-                    <td><img src="../image/adtt01.png" alt="Product Image"></td>
-                    <td>Product Title 6</td>
-                    <td><span class="status paused">Tạm dừng</span></td>
+                    <td><img src="../image/adtt05.png" alt="Product Image"></td>
+                    <td>Áo dài Bách Hoa Thêu tay Hương Lài - Tím nhạt</td>
+                    <td><span class="status disabled">Không hoạt động</span></td>
                     <td>400</td>
                     <td>$4000</td>
-                    <td><span class="stock in-stock">Còn hàng</span></td>
+                    <td><span class="stock out-of-stock">0</span></td>
                     <td>$10</td>
                     <td class="settings-icons">
                         <a href="#" title="Sửa"><i class="fa-solid fa-pen-to-square"></i></a>
@@ -167,45 +167,98 @@
                 <form id="addProductForm">
                     <div class="modal-body">
                         <div class="modal-form-grid">
-                            <div class="form-group-modal" style="grid-column: 1 / -1;">
-                                <label>Hình ảnh sản phẩm</label>
-                                <input type="file" id="product-image-input" accept="image/*" >
-                                <label for="product-image-input" class="product-image-upload">
-                                    <i class="fas fa-cloud-upload-alt"></i>
-                                    <p>Nhấn để tải ảnh lên (tối đa 1MB)</p>
-                                    <img src="" alt="Xem trước" id="product-image-preview">
-                                </label>
-                            </div>
+
+                            <h3 style="grid-column: 1 / -1; font-size: 16px; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-top: 0;">
+                                1. Thông tin chung
+                            </h3>
+
                             <div class="form-group-modal">
-                                <label for="product-name">Tên Sản phẩm</label>
-                                <input type="text" id="product-name" required>
+                                <label for="product-name">Tên Sản phẩm <span style="color:red">*</span></label>
+                                <input type="text" id="product-name" required placeholder="Nhập tên sản phẩm">
                             </div>
+
                             <div class="form-group-modal">
-                                <label for="product-category">Danh mục</label>
+                                <label for="product-category">Danh mục <span style="color:red">*</span></label>
                                 <select id="product-category" required>
                                     <option value="">-- Chọn danh mục --</option>
                                     <option value="ao-dai">Áo dài</option>
                                     <option value="quan-phu-kien">Quần & Phụ kiện</option>
                                 </select>
                             </div>
-                            <div class="form-group-modal">
-                                <label for="product-quantity">Số lượng (Tồn kho)</label>
-                                <input type="number" id="product-quantity" min="0" value="0" required>
-                            </div>
-                            <div class="form-group-modal">
-                                <label for="product-sku">Mã SKU (Tùy chọn)</label>
-                                <input type="text" id="product-sku">
-                            </div>
+
                             <div class="form-group-modal">
                                 <label for="product-type">Loại sản phẩm</label>
                                 <select id="product-type" required disabled>
-                                    <option value="">-- Vui lòng chọn danh mục trước --</option>
+                                    <option value="">-- Chọn danh mục trước --</option>
                                 </select>
                             </div>
+
                             <div class="form-group-modal">
-                                <label for="product-price">Giá (VND)</label>
-                                <input type="number" id="product-price" min="0" step="1000" required>
+                                <label for="product-status">Trạng thái</label>
+                                <select id="product-status">
+                                    <option value="active">Hoạt động</option>
+                                    <option value="inactive">Không hoạt động</option>
+                                </select>
                             </div>
+
+                            <div class="form-group-modal" style="grid-column: 1 / -1;">
+                                <label for="product-description">Mô tả sản phẩm</label>
+                                <textarea id="product-description" rows="3" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;" placeholder="Nhập mô tả chi tiết..."></textarea>
+                            </div>
+
+                            <h3 style="grid-column: 1 / -1; font-size: 16px; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-top: 10px;">
+                                2. Chi tiết biến thể
+                            </h3>
+
+                            <div class="form-group-modal">
+                                <label for="variant-size">Kích thước (Size)</label>
+                                <select id="variant-size">
+                                    <option value="S">S</option>
+                                    <option value="M">M</option>
+                                    <option value="L">L</option>
+                                    <option value="XL">XL</option>
+                                    <option value="FREE">Freesize</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group-modal">
+                                <label for="variant-color">Màu sắc</label>
+                                <input type="text" id="variant-color" placeholder="Vd: Đỏ, Xanh...">
+                            </div>
+
+                            <div class="form-group-modal">
+                                <label for="product-sku">Mã SKU</label>
+                                <input type="text" id="product-sku" placeholder="Mã kho">
+                            </div>
+
+                            <div class="form-group-modal">
+                                <label for="product-quantity">Tồn kho <span style="color:red">*</span></label>
+                                <input type="number" id="product-quantity" min="0" value="0" required>
+                            </div>
+
+                            <div class="form-group-modal">
+                                <label for="original-price">Giá gốc (VND)</label>
+                                <input type="number" id="original-price" min="0" step="1000" placeholder="Giá trước giảm">
+                            </div>
+
+                            <div class="form-group-modal">
+                                <label for="product-price">Giá bán (VND) <span style="color:red">*</span></label>
+                                <input type="number" id="product-price" min="0" step="1000" required placeholder="Giá thực tế">
+                            </div>
+
+                            <h3 style="grid-column: 1 / -1; font-size: 16px; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-top: 10px;">
+                                3. Hình ảnh
+                            </h3>
+
+                            <div class="form-group-modal" style="grid-column: 1 / -1;">
+                                <input type="file" id="product-image-input" accept="image/*" multiple>
+                                <label for="product-image-input" class="product-image-upload">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Nhấn để tải ảnh lên (Hỗ trợ nhiều ảnh)</p>
+                                    <img src="" alt="Xem trước" id="product-image-preview">
+                                </label>
+                            </div>
+
                         </div>
                     </div>
 
