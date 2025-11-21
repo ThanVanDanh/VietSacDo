@@ -75,7 +75,7 @@
                 </div>
                 <button class="btn-csv"><i class="fas fa-file-csv"></i> Xuất CSV</button>
             </div>
-            <table class="customer-table">
+            <table class="table-general customer-table">
                 <thead>
                 <tr>
                     <th>Tên</th>
@@ -94,10 +94,14 @@
                     <td>0338012575</td>
                     <td>2024-10-25</td>
                     <td>5</td>
-                    <td><span class="status-badge status-active">Hoạt động</span></td>
+                    <td>
+                        <span class="status-badge status-active">Hoạt động</span>
+                        <span class="status-badge status-blocked" style="display: none;">Bị khóa</span>
+                    </td>
                     <td class="table-actions">
                         <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
                         <button class="btn-action btn-block" title="Khóa"><i class="fas fa-ban"></i></button>
+                        <button class="btn-action btn-unlock" title="Mở khóa" style="display: none;"><i class="fas fa-check-circle"></i></button>
                         <button class="btn-action btn-delete" title="Xóa"><i class="fas fa-trash-alt"></i></button>
                     </td>
                 </tr>
@@ -107,10 +111,14 @@
                     <td>0987654321</td>
                     <td>2023-11-15</td>
                     <td>2</td>
-                    <td><span class="status-badge status-active">Hoạt động</span></td>
+                    <td>
+                        <span class="status-badge status-active">Hoạt động</span>
+                        <span class="status-badge status-blocked" style="display: none;">Bị khóa</span>
+                    </td>
                     <td class="table-actions">
                         <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
                         <button class="btn-action btn-block" title="Khóa"><i class="fas fa-ban"></i></button>
+                        <button class="btn-action btn-unlock" title="Mở khóa" style="display: none;"><i class="fas fa-check-circle"></i></button>
                         <button class="btn-action btn-delete" title="Xóa"><i class="fas fa-trash-alt"></i></button>
                     </td>
                 </tr>
@@ -120,12 +128,19 @@
                     <td>0123456789</td>
                     <td>2024-09-15</td>
                     <td>0</td>
-                    <td><span class="status-badge status-blocked">Bị khóa</span></td>
+                    <td>
+                        <span class="status-badge status-active">Hoạt động</span>
+                        <span class="status-badge status-blocked" style="display: none;">Bị khóa</span>
+                    </td>
                     <td class="table-actions">
                         <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
-                        <button class="btn-action btn-unlock" title="Mở khóa"><i class="fas fa-check-circle"></i></button>
+                        <button class="btn-action btn-block" title="Khóa"><i class="fas fa-ban"></i></button>
+                        <button class="btn-action btn-unlock" title="Mở khóa" style="display: none;"><i class="fas fa-check-circle"></i></button>
                         <button class="btn-action btn-delete" title="Xóa"><i class="fas fa-trash-alt"></i></button>
                     </td>
+                </tr>
+                <tr class="empty-state-row" style="display: none;">
+                    <td colspan="7" style="text-align: center; padding: 40px; color: #666;">Hiện tại không có khách hàng nào.</td>
                 </tr>
                 </tbody>
             </table>
