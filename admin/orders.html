@@ -6,7 +6,9 @@
     <link rel="stylesheet" href="admin.css">
     <link rel="stylesheet" href="orders.css">
     <link rel="stylesheet" href="customers.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+          integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" href="charts.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="admin.js"></script>
@@ -26,6 +28,7 @@
                 <li class="nav-item"><a href="product.html"><i class="fas fa-box-open"></i> Quản lý Sản phẩm</a></li>
                 <li class="nav-item active"><a href="orders.html"><i class="fas fa-shopping-cart"></i> Quản lý Đơn hàng</a></li>
                 <li class="nav-item"><a href="customers.html"><i class="fas fa-users"></i> Quản lý Khách hàng</a></li>
+                <li class="nav-item"><a href="contact-admin.html"><i class="fa-regular fa-address-book"></i> Quản lý Liên hệ</a></li>
                 <li class="nav-item"><a href="promotions.html"><i class="fas fa-tags"></i> Khuyến mãi</a></li>
                 <li class="nav-item">
                     <a href="../index.html"><i class="fas fa-sign-out-alt"></i> Trở về Trang Chủ</a>
@@ -40,35 +43,35 @@
             </div>
         </header>
         <h1>Quản lý Đơn hàng</h1>
-<!--        <section class="overview-cards-order">-->
-<!--            <div class="stat-card-order">-->
-<!--                <div class="card-icon" style="background-color: #e0f7fa;">-->
-<!--                    <i class="fas fa-box-open" style="color: #00796b;"></i>-->
-<!--                </div>-->
-<!--                <div class="card-info">-->
-<!--                    <h4>Tổng Đơn Hàng</h4>-->
-<!--                    <p>80</p>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="stat-card-order">-->
-<!--                <div class="card-icon" style="background-color: #e8f5e9;">-->
-<!--                    <i class="fas fa-dollar-sign" style="color: #388e3c;"></i>-->
-<!--                </div>-->
-<!--                <div class="card-info">-->
-<!--                    <h4>Tổng Doanh Thu</h4>-->
-<!--                    <p>75.600.000₫</p>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="stat-card-order">-->
-<!--                <div class="card-icon" style="background-color: #fff3e0;">-->
-<!--                    <i class="fas fa-tshirt" style="color: #f57c00;"></i>-->
-<!--                </div>-->
-<!--                <div class="card-info">-->
-<!--                    <h4>Bán Chạy Nhất (Tháng hiện tại)</h4>-->
-<!--                    <p>Áo Dài Lụa Trắng</p>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </section>-->
+        <!--        <section class="overview-cards-order">-->
+        <!--            <div class="stat-card-order">-->
+        <!--                <div class="card-icon" style="background-color: #e0f7fa;">-->
+        <!--                    <i class="fas fa-box-open" style="color: #00796b;"></i>-->
+        <!--                </div>-->
+        <!--                <div class="card-info">-->
+        <!--                    <h4>Tổng Đơn Hàng</h4>-->
+        <!--                    <p>80</p>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--            <div class="stat-card-order">-->
+        <!--                <div class="card-icon" style="background-color: #e8f5e9;">-->
+        <!--                    <i class="fas fa-dollar-sign" style="color: #388e3c;"></i>-->
+        <!--                </div>-->
+        <!--                <div class="card-info">-->
+        <!--                    <h4>Tổng Doanh Thu</h4>-->
+        <!--                    <p>75.600.000₫</p>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--            <div class="stat-card-order">-->
+        <!--                <div class="card-icon" style="background-color: #fff3e0;">-->
+        <!--                    <i class="fas fa-tshirt" style="color: #f57c00;"></i>-->
+        <!--                </div>-->
+        <!--                <div class="card-info">-->
+        <!--                    <h4>Bán Chạy Nhất (Tháng hiện tại)</h4>-->
+        <!--                    <p>Áo Dài Lụa Trắng</p>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--        </section>-->
         <section class="chart-container">
             <h3>Tổng quan Doanh thu (6 tháng)</h3>
             <canvas id="revenueChart"></canvas>
