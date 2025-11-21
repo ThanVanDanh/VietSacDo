@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
             event.preventDefault();
             const phone = document.getElementById('phone').value.trim();
             const password = document.getElementById('customer_password').value.trim();
-            if (phone === 'admin' && password === '123') {
+            if (phone === '123' && password === '123') {
                 window.location.href = 'admin/dashboard.html';
             } else {
                 window.location.href = 'account.html';

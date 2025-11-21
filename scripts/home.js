@@ -215,7 +215,7 @@
                     input.value = val + 1;
                 });
 
-                // Chạy ngay khi gõ phím -> Chặn ký tự chữ
+                // Chặn ký tự chữ
                 input.addEventListener('input', function(e) {
                     e.preventDefault();
                     this.value = this.value.replace(/[^0-9]/g, '1');
