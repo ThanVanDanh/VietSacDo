@@ -19,7 +19,7 @@
     text-decoration: none; font-size: 14px; font-weight: 500;
     display: inline-flex; align-items: center; gap: 8px;
 }
-.btn-add-product:hover { background-color: #0056b3; }
+.btn-add-product:hover { background-color: #320000; }
 .product-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
 .product-table th,
 .product-table td {
@@ -206,9 +206,9 @@
     background-color: #6c757d;
     color: white;
 }
-.btn-modal-secondary:hover { background-color: #5a6268; }
+.btn-modal-secondary:hover { background-color: #320000; }
 .btn-modal-primary {
-    background-color: #007bff;
+    background-color: #640100;
     color: white;
 }
-.btn-modal-primary:hover { background-color: #0056b3; }
+.btn-modal-primary:hover { background-color: #320000; }
