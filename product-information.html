@@ -17,11 +17,11 @@
     <link rel="stylesheet" href="style/breadcrumb.css">
     <link rel="stylesheet" href="style/style.css">
     <link rel="stylesheet" href="style/quick-view.css">
-    <!--    <link rel="stylesheet" href="style/aodailinen.css">-->
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 </head>
 <body>
 <div class="search-overlay-container" id="searchOverlay">
-
     <div class="search-overlay-header">
         <div class="logo">
             <a href="index.html">
@@ -108,7 +108,7 @@
                     <ul class="sub-menu">
                         <li><a href="aodaitruyenthong.html">Áo dài truyền thống</a></li>
                         <li><a href="aodaitheutay.html">Áo dài thêu tay</a></li>
-                        <li><a href="aodailinen.html">Áo dài linen</a></li>
+                        <li><a href="aodai.html">Áo dài linen</a></li>
                     </ul>
                 </li>
                 <li class="has-megamenu"><a href="#">Quần & Phụ kiện<i class="fa-solid fa-chevron-down"></i></a>
@@ -231,11 +231,11 @@
 
     <div class="product-image-gallery">
         <div class="thumbnails">
-            <img src="image/linen_7.jpg" alt="Ảnh nhỏ 1" class="thumbnail active">
-            <img src="image/linen_6.png" alt="Ảnh nhỏ 2" class="thumbnail">
-            <img src="image/linen_5.png" alt="Ảnh nhỏ 3" class="thumbnail">
-            <img src="image/linen_4.png" alt="Ảnh nhỏ 4" class="thumbnail">
-            <img src="image/linen_2.png" alt="Ảnh nhỏ 5" class="thumbnail">
+            <img src="image/chitietsp_1.png" alt="Ảnh nhỏ 1" class="thumbnail active">
+            <img src="image/chitietsp_5.png" alt="Ảnh nhỏ 2" class="thumbnail">
+            <img src="image/chitietsp_3.png" alt="Ảnh nhỏ 3" class="thumbnail">
+            <img src="image/chitietsp_4.png" alt="Ảnh nhỏ 4" class="thumbnail">
+            <img src="image/chitietsp_6.png" alt="Ảnh nhỏ 5" class="thumbnail">
         </div>
         <div class="main-image-wrapper">
             <img src="image/linen_7.jpg" alt="Áo dài Phượng Hoa Xuân" class="main-image">
@@ -277,7 +277,7 @@
                 <input type="text" value="1" readonly>
                 <button class="qty-btn">+</button>
             </div>
-            <button class="add-to-cart-btn">THÊM VÀO GIỎ</button>
+            <button class="add-to-cart-btn" id="them-vao-gio-hang">THÊM VÀO GIỎ</button>
         </div>
         <button class="buy-now-btn"><a href="thanhtoan.html">MUA NGAY</a></button>
         <hr class="dashed-line">
@@ -629,83 +629,6 @@
         </div>
     </div>
 </section>
-<div id="quick-view-model" class="model-overlay">
-    <div class="quick-content-model">
-        <div class="model-image">
-            <img class="large-image" src="image/truyenthong1.png" alt="Áo dài truyền thống Quỳnh Hân">
-            <div class="model-group-img swiper">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide"><img src="image/truyenthong1.png"></div>
-                    <div class="swiper-slide"><img src="image/truyenthong12.png"></div>
-                    <div class="swiper-slide"><img src="image/truyenthong13.png"></div>
-                    <div class="swiper-slide"><img src="image/truyenthong14.png"></div>
-                    <div class="swiper-slide"><img src="image/truyenthong15.png"></div>
-                    <div class="swiper-slide"><img src="image/truyenthong16.png"></div>
-                </div>
-            </div>
-        </div>
-        <div class="model-content">
-            <h2>Áo dài truyền thống Quỳnh Hân</h2>
-            <div class="model-info">
-                <p>Thương hiệu: <a href="index.html">Việt Sắc Đỏ</a>
-                    <span>|</span>
-                    Mã sản phẩm: <span>ADTT2326A</span>
-                </p>
-            </div>
-            <div class="product-price">
-                <span class="current-price">671,500₫</span>
-                <span class="old-price">790,000₫</span>
-                <span class="discount-tag">15%</span>
-            </div>
-            <div class="model-size">
-                <label>Kích thước:</label>
-                <div class="group-size">
-                    <input type="radio" name="size" id="size-s">
-                    <label for="size-s">S</label>
-                    <input type="radio" name="size" id="size-m">
-                    <label for="size-m">M</label>
-                    <input type="radio" name="size" id="size-l">
-                    <label for="size-l">L</label>
-                    <input type="radio" name="size" id="size-Xl">
-                    <label for="size-Xl">XL</label>
-                    <input type="radio" name="size" id="size-XXl">
-                    <label for="size-XXl">XXL</label>
-                </div>
-                <div class="size-table">
-                    <a href="#">Bảng quy đổi kích cỡ</a>
-                    <div class="size">
-                        <img src="image/size-ao.png" alt="">
-                    </div>
-                </div>
-            </div>
-            <div class="model-color">
-                <label>Màu sắc:</label>
-                <div class="group-color">
-                    <input type="radio" name="color-swatch" class="color-swatch" style="background: #cab6a1">
-                    <input type="radio" name="color-swatch" class="color-swatch" style="background: #d575c9">
-                    <input type="radio" name="color-swatch" class="color-swatch" style="background: #e84569">
-                    <input type="radio" name="color-swatch" class="color-swatch" style="background: #5b25bc">
-                </div>
-            </div>
-            <div class="model-promotion">
-                <span class="promotion-title">🎁 KHUYẾN MÃI - ƯU ĐÃI</span>
-                <ul class="promotion-box">
-                    <li>Freeship toàn quốc khi mua hàng (Không áp dụng cho đơn CHỈ CÓ phụ kiện dưới 350k)</li>
-                    <li>Hỏa tốc mọi ngày trong tuần</li>
-                </ul>
-            </div>
-            <div class="model-footer">
-                <div class="quantity">
-                    <button type="button" class="btn-minus"><i class="fa-solid fa-minus"></i></button>
-                    <input type="text" value="1" class="quantity-input">
-                    <button type="button" class="btn-plus"><i class="fa-solid fa-plus"></i></button>
-                </div>
-                <button class="add-shopping"><span>Thêm vào giỏ</span></button>
-            </div>
-        </div>
-        <button id="close-model" class="model-remove-item"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-</div>
 <div id="success-add-shopping" class="model-success-overlay">
     <div class="success-content-model">
         <button id="close-success-popup" class="model-remove-item"><i class="fa-solid fa-xmark"></i></button>
@@ -756,7 +679,7 @@
                 <ul class="footer-links">
                     <li><a href="aodaitruyenthong.html">Áo dài truyền thống</a></li>
                     <li><a href="aodaitheutay.html">Áo dài thêu tay</a></li>
-                    <li><a href="aodailinen.html">Áo dài linen</a></li>
+                    <li><a href="aodai.html">Áo dài linen</a></li>
                     <li><a href="quantrucchi.html">Quần trúc chi</a></li>
                     <li><a href="guocgo.html">Guốc mộc</a></li>
                     <li><a href="contactus.html">Liên hệ</a></li>
@@ -782,5 +705,9 @@
 <button onclick="scrollToTop()" id="backToTopBtn" title="Trở về đầu trang">
     <i class="fas fa-chevron-up"></i>
 </button>
+<script>
+    const overlay = document.getElementById("success-add-shopping");
+
+</script>
 </body>
 </html>
