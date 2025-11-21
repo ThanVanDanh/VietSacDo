@@ -145,92 +145,93 @@
     });
     document.addEventListener("DOMContentLoaded", () => {
         const modal = document.getElementById("quick-view-model");
-        const closeBtn = document.getElementById("close-model");
-        const quickViewButtons = document.querySelectorAll('.icon-button[title="Xem nhanh"]');
+        if (modal) {
+            const closeBtn = document.getElementById("close-model");
+            const quickViewButtons = document.querySelectorAll('.icon-button[title="Xem nhanh"]');
 
-        const successPopup = document.getElementById("success-add-shopping");
-        const closeSuccessPopupBtn = document.getElementById("close-success-popup");
-        const addToCartBtn = modal.querySelector(".add-shopping");
+            const successPopup = document.getElementById("success-add-shopping");
+            const closeSuccessPopupBtn = document.getElementById("close-success-popup");
+            const addToCartBtn = modal.querySelector(".add-shopping");
 
-        const swiper = new Swiper('.model-group-img', {
-            slidesPerView: 4,
-            loop: true,
-            spaceBetween: 10,
-            autoplay: {
-                delay: 2500,
-                disableOnInteraction: false,
-            },
-        });
-        //Xem nhanh
-        quickViewButtons.forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                e.preventDefault();
-                modal.classList.add("active");
+            const swiper = new Swiper('.model-group-img', {
+                slidesPerView: 4,
+                loop: true,
+                spaceBetween: 10,
+                autoplay: {
+                    delay: 2500,
+                    disableOnInteraction: false,
+                },
             });
-        });
-        //Thêm giỏ hàng
-        addToCartBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            modal.classList.remove("active");
-            successPopup.classList.add("active");
-        });
-        //Đóng xem nhanh
-        closeBtn.addEventListener("click", () => {
-            modal.classList.remove("active");
-        });
-
-        modal.addEventListener("click", (e) => {
-            if (e.target === modal) {
+            //Xem nhanh
+            quickViewButtons.forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    modal.classList.add("active");
+                });
+            });
+            //Thêm giỏ hàng
+            addToCartBtn.addEventListener("click", (e) => {
+                e.preventDefault();
                 modal.classList.remove("active");
-            }
-        });
-        //Đóng giỏ hàng
-        closeSuccessPopupBtn.addEventListener("click", () => {
-            successPopup.classList.remove("active");
-        });
-        successPopup.addEventListener("click", (e) => {
-            if (e.target === successPopup) {
+                successPopup.classList.add("active");
+            });
+            //Đóng xem nhanh
+            closeBtn.addEventListener("click", () => {
+                modal.classList.remove("active");
+            });
+
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove("active");
+                }
+            });
+            //Đóng giỏ hàng
+            closeSuccessPopupBtn.addEventListener("click", () => {
                 successPopup.classList.remove("active");
-            }
-        });
+            });
+            successPopup.addEventListener("click", (e) => {
+                if (e.target === successPopup) {
+                    successPopup.classList.remove("active");
+                }
+            });
 
-        //Logic tăng giảm số lượng
-        const quantityWrappers = document.querySelectorAll('.quantity, .quatity-sp');
+            //Logic tăng giảm số lượng
+            const quantityWrappers = document.querySelectorAll('.quantity, .quatity-sp');
 
-        quantityWrappers.forEach(wrapper => {
-            const btnMinus = wrapper.querySelector('.btn-minus');
-            const btnPlus = wrapper.querySelector('.btn-plus');
-            const input = wrapper.querySelector('input');
+            quantityWrappers.forEach(wrapper => {
+                const btnMinus = wrapper.querySelector('.btn-minus');
+                const btnPlus = wrapper.querySelector('.btn-plus');
+                const input = wrapper.querySelector('input');
 
-            if (btnMinus && btnPlus && input) {
-                btnMinus.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    let val = parseInt(input.value) || 1;
-                    if (val > 1) input.value = val - 1;
-                });
-
-                btnPlus.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    let val = parseInt(input.value) || 1;
-                    input.value = val + 1;
-                });
-
-                // Chặn ký tự chữ
-                input.addEventListener('input', function(e) {
-                    e.preventDefault();
-                    this.value = this.value.replace(/[^0-9]/g, '1');
-                });
-
-
-                // Chặn các phím ký tự đặc biệt (., -, +, e)
-                input.addEventListener('keypress', function(e) {
-                    if (!/[0-9]/.test(e.key)) {
+                if (btnMinus && btnPlus && input) {
+                    btnMinus.addEventListener('click', (e) => {
                         e.preventDefault();
-                    }
-                });
-            }
-        });
+                        let val = parseInt(input.value) || 1;
+                        if (val > 1) input.value = val - 1;
+                    });
 
+                    btnPlus.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        let val = parseInt(input.value) || 1;
+                        input.value = val + 1;
+                    });
+
+                    // Chặn ký tự chữ
+                    input.addEventListener('input', function (e) {
+                        e.preventDefault();
+                        this.value = this.value.replace(/[^0-9]/g, '1');
+                    });
+
+
+                    // Chặn các phím ký tự đặc biệt (., -, +, e)
+                    input.addEventListener('keypress', function (e) {
+                        if (!/[0-9]/.test(e.key)) {
+                            e.preventDefault();
+                        }
+                    });
+                }
+            });
+        }
         //LOGIC XÓA SẢN PHẨM KHỎI GIỎ HÀNG
         const removeButtons = document.querySelectorAll('.remove-item');
         removeButtons.forEach(btn => {
