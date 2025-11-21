@@ -70,27 +70,33 @@ document.addEventListener('DOMContentLoaded', function () {
     const address = document.getElementById('nav-addresses');
     const contentInfo = document.getElementById('account-details');
     const contentAddress = document.getElementById('account-addresses');
-    accountInfo.addEventListener('click', e => {
-        contentInfo.style.display = 'block';
-        contentAddress.style.display = 'none';
-        accountInfo.classList.add('active');
-        address.classList.remove('active');
-    });
+    if (accountInfo && address && contentInfo && contentAddress) {
+        accountInfo.addEventListener('click', e => {
+            contentInfo.style.display = 'block';
+            contentAddress.style.display = 'none';
+            accountInfo.classList.add('active');
+            address.classList.remove('active');
+        });
 
-    address.addEventListener('click', e => {
-        contentInfo.style.display = 'none';
-        contentAddress.style.display = 'block';
-        accountInfo.classList.remove('active');
-        address.classList.add('active');
-    });
+        address.addEventListener('click', e => {
+            contentInfo.style.display = 'none';
+            contentAddress.style.display = 'block';
+            accountInfo.classList.remove('active');
+            address.classList.add('active');
+        });
+    }
     const addModal = document.getElementById('add-address-modal');
     const editModal = document.getElementById('edit-address-modal');
 
     const addBtn = document.getElementById('add-address-btn');
     const editBtn = document.getElementById('edit-address-btn');
     //Mở modal
-    addBtn.addEventListener('click', () => addModal.style.display = 'flex');
-    editBtn.addEventListener('click', e => editModal.style.display = 'flex');
+    if (addBtn && addModal) {
+        addBtn.addEventListener('click', () => addModal.style.display = 'flex');
+    }
+    if (editBtn && editModal) {
+        editBtn.addEventListener('click', e => editModal.style.display = 'flex');
+    }
 
     // Đóng modal
     document.querySelectorAll('.modal-close').forEach(btn => {
