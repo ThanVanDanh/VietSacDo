@@ -450,3 +450,17 @@ section {
 .product-image-wrapper a{
     text-decoration: none;
 }
+.het_hang{
+    text-decoration: none;
+    padding: 15px 50px;
+    color: white;
+    background-color: var(--color-primary);
+    border: none;
+    font-size: 1.2rem;
+    font-weight: 200;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.het_hang:hover{
+    background-color: var(--color-secondary);
+}
