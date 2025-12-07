@@ -221,7 +221,7 @@
         </ol>
     </nav>
 </div>
-<section>
+<section style="background-image: url('image/Contact.png');">
     <div class="section-header">
         <div class="container">
             <h2>Liên hệ</h2>
