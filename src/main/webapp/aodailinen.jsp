@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -245,10 +246,11 @@
             </div>
         </div>
         <div class="product-grid">
+            <c:forEach var="p" items="${list}">
             <div class="product-card">
                 <div class="product-image-wrapper">
                     <div class="product-image">
-                        <a href="product-information.jsp"><img src="image/linen_1.png" alt="Áo dài linen Chi Lan cổ đứng"></a>
+                        <a href="product?id=${p.id}"><img src="${p.img}" alt="Áo dài linen Chi Lan cổ đứng"></a>
                     </div>
                     <div class="product-overlay">
                         <a href="product-information.jsp" class="icon-button" title="Tùy chọn">
@@ -261,169 +263,14 @@
                 </div>
 
                 <div class="product-info">
-                    <a href="product-information.jsp"><p class="product-name">Áo dài linen Chi Lan</p></a>
+                    <a href="product?id=${p.id}"><p class="product-name">${p.name}</p></a>
                     <div class="product-price">
-                        <span class="current-price">790,000₫</span>
+                        <span class="current-price">${p.price}</span>
                     </div>
                 </div>
             </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.jsp"><img src="image/linen_2.png" alt="Áo dài linen hoa Ý Lan"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.jsp" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
+            </c:forEach>
 
-                <div class="product-info">
-                    <a href="product-information.jsp"><p class="product-name">Áo dài linen hoa Ý Lan</p></a>
-                    <div class="product-price">
-                        <span class="current-price">720,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.jsp"><img src="image/linen_3.png" alt="Áo dài linen hoa Ý Mai"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.jsp" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="product-info">
-                    <a href="product-information.jsp"><p class="product-name">Áo dài linen hoa Ý Mai</p></a>
-                    <div class="product-price">
-                        <span class="current-price">790,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.jsp"><img src="image/linen_4.png" alt="Áo dài linen hoa Ý Nhi"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.jsp" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.jsp"><p class="product-name">Áo dài linen hoa Ý Nhi</p></a>
-                    <div class="product-price">
-                        <span class="current-price">790,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.jsp"><img src="image/linen_5.png" alt="Áo dài linen hoa Ý Nhiên"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.jsp" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.jsp"><p class="product-name">Áo dài linen hoa Ý Nhiên</p></a>
-                    <div class="product-price">
-                        <span class="current-price">720,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.jsp"><img src="image/linen_6.png" alt="Áo dài linen hoa Ý Xuân"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.jsp" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.jsp"><p class="product-name">Áo dài linen hoa Ý Xuân</p></a>
-                    <div class="product-price">
-                        <span class="current-price">790,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.jsp"><img src="image/linen_7.jpg" alt="Áo dài linen Khả Lan cổ đứng"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.jsp" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.jsp"><p class="product-name">Áo dài linen Khả Lan cổ đứng</p></a>
-                    <div class="product-price">
-                        <span class="old-price">790,000₫</span>
-                        <span class="current-price">671,500₫</span>
-                        <span class="discount-tag">15%</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.jsp"><img src="image/linen_8.png" alt="Áo dài linen Mộc Lan cổ đứng"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href=product-information.jsp#" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.jsp"><p class="product-name">Áo dài linen Mộc Lan cổ đứng</p></a>
-                    <div class="product-price">
-                        <span class="old-price">790,000₫</span>
-                        <span class="current-price">671,500₫</span>
-                        <span class="discount-tag">15%</span>
-                    </div>
-                </div>
-            </div>
         </div>
 <!--        phân trang-->
         <div class="pagination">

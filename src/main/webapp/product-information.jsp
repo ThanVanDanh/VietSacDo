@@ -232,11 +232,11 @@
 
     <div class="product-image-gallery">
         <div class="thumbnails">
-            <img src="image/chitietsp_1.png" alt="Ảnh nhỏ 1" class="thumbnail active">
-            <img src="image/chitietsp_5.png" alt="Ảnh nhỏ 2" class="thumbnail">
-            <img src="image/chitietsp_3.png" alt="Ảnh nhỏ 3" class="thumbnail">
-            <img src="image/chitietsp_4.png" alt="Ảnh nhỏ 4" class="thumbnail">
-            <img src="image/chitietsp_6.png" alt="Ảnh nhỏ 5" class="thumbnail">
+            <img src="${p.img}" alt="Ảnh nhỏ 1" class="thumbnail active">
+            <img src="${p.img}" alt="Ảnh nhỏ 2" class="thumbnail">
+            <img src="${p.img}" alt="Ảnh nhỏ 3" class="thumbnail">
+            <img src="${p.img}" alt="Ảnh nhỏ 4" class="thumbnail">
+            <img src="${p.img}" alt="Ảnh nhỏ 5" class="thumbnail">
         </div>
         <div class="main-image-wrapper">
             <img src="image/linen_7.jpg" alt="Áo dài Phượng Hoa Xuân" class="main-image">
@@ -246,11 +246,11 @@
     </div>
 
     <div class="product-details">
-        <h1>Áo dài Phượng Hoa Xuân - Hồng nhành hoa hồng</h1>
+        <h1>${p.name}</h1>
         <p class="sku">Mã sản phẩm: ADCTA1149A</p>
         <div class="product-price">
             <span class="old-price">850,000₫</span>
-            <span class="current-price">720,500₫</span>
+            <span class="current-price">${p.price}</span>
             <span class="discount-tag">15%</span>
             <p class="saving">(<span class="save">Tiết kiệm</span> <span class="price">118.500₫</span>)</p>
         </div>
