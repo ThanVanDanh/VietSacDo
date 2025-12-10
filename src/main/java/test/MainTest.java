@@ -18,7 +18,7 @@ public class MainTest {
         if (imgUrl != null) {
             System.out.println("Upload thành công! Link ảnh: " + imgUrl);
             List<Product> list = new ArrayList<>();
-            list.add(new Product(15, "Áo dài Cloudinary Test", 990000, imgUrl));
+//            list.add(new Product(15, "Áo dài Cloudinary Test", 990000, imgUrl));
             productDao.insert(list);
             System.out.println("Đã lưu sản phẩm vào Database!");
         } else {
