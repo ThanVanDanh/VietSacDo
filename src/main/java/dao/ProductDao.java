@@ -62,9 +62,9 @@ public class ProductDao extends BaseDao {
 
         List<Product> list = new ArrayList<>();
         // Lưu ý: ID để là 0, vì vào DB nó sẽ tự tăng, không quan trọng số ở đây
-        list.add(new Product(0, "Áo Nhật Bình triều Nguyễn", 1200000, "img_link_1.jpg"));
-        list.add(new Product(0, "Áo Tấc phom rộng", 650000, "img_link_2.jpg"));
-        list.add(new Product(0, "Guốc mộc quai nhung", 150000, "img_link_3.jpg"));
+//        list.add(new Product(0, "Áo Nhật Bình triều Nguyễn", 1200000, "img_link_1.jpg"));
+//        list.add(new Product(0, "Áo Tấc phom rộng", 650000, "img_link_2.jpg"));
+//        list.add(new Product(0, "Guốc mộc quai nhung", 150000, "img_link_3.jpg"));
 
         // Gọi hàm insert
         dao.insert(list);
