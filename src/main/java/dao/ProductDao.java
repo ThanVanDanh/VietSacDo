@@ -1,13 +1,11 @@
 package dao;
 
-import model.Product;
+import model.product.Product;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.statement.PreparedBatch;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ProductDao extends BaseDao {
     //    static Map<Integer, Product> productMap = new HashMap<Integer, Product>();
