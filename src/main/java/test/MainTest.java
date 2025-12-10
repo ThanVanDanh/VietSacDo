@@ -1,6 +1,6 @@
 package test;
 import dao.ProductDao;
-import model.Product;
+import model.product.Product;
 import services.CloudinaryService;
 
 import java.util.ArrayList;
