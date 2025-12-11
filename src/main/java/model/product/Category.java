@@ -2,15 +2,15 @@ package model.product;
 
 public class Category {
     private int id;
-    private String name_category;
+    private String nameCategory;
     private String slug;
     private String description;
     private int parentId;
     public Category(){
     }
-    public Category(int id, String name_category, String slug, String description, int parentId) {
+    public Category(int id, String nameCategory, String slug, String description, int parentId) {
         this.id = id;
-        this.name_category = name_category;
+        this.nameCategory = nameCategory;
         this.slug = slug;
         this.description = description;
         this.parentId = parentId;
@@ -24,12 +24,12 @@ public class Category {
         this.id = id;
     }
 
-    public String getName_category() {
-        return name_category;
+    public String getNameCategory() {
+        return nameCategory;
     }
 
-    public void setName_category(String name_category) {
-        this.name_category = name_category;
+    public void setNameCategory(String name_category) {
+        this.nameCategory = nameCategory;
     }
 
     public String getSlug() {
