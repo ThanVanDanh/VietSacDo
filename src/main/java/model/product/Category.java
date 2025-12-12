@@ -1,11 +1,16 @@
 package model.product;
 
 import model.AId;
+import org.jdbi.v3.core.mapper.reflect.ColumnName;
 
-public class Category extends AId {
-    private String name_category;
+import java.io.Serializable;
+
+public class Category extends AId implements Serializable {
+    @ColumnName("name_category")
+    private String nameCategory;
     private String slug;
     private String description;
+    @ColumnName("parent_id")
     private int parentId;
 
     public Category(int id) {
@@ -13,16 +18,16 @@ public class Category extends AId {
     }
     public Category() {}
 
-    public Category(int id, String name_category, String slug, String description, int parentId) {
+    public Category(int id, String nameCategory, String slug, String description, int parentId) {
         super(id);
-        this.name_category = name_category;
+        this.nameCategory = nameCategory;
         this.slug = slug;
         this.description = description;
         this.parentId = parentId;
     }
 
-    public String getName_category() {
-        return name_category;
+    public String getNameCategory() {
+        return nameCategory;
     }
 
     public void setNameCategory(String name_category) {

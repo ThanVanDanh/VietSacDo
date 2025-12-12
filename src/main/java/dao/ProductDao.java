@@ -4,6 +4,7 @@ import model.product.Product;
 import model.product.ProductImage;
 import model.product.ProductListDTO;
 import model.product.ProductVariant;
+import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.statement.PreparedBatch;
 
@@ -49,6 +50,26 @@ public class ProductDao extends BaseDao {
         });
     }
 
+    public int insert(Product product) {
+        return get().withHandle(handle -> insert(handle, product));
+    }
+
+    public int insert(Handle handle, Product product) {
+        String sql = "INSERT INTO Products (name_product, product_code, description, status_product, category_id) " +
+                "VALUES (:nameProduct, :productCode, :description, :statusProduct, :categoryId)";
+
+        Integer catId = product.getCategoryId() == 0 ? null : product.getCategoryId();
+
+        return handle.createUpdate(sql)
+                .bind("nameProduct", product.getNameProduct())
+                .bind("productCode", product.getProductCode())
+                .bind("description", product.getDescription())
+                .bind("statusProduct", product.getStatusProduct() == null ? "active" : product.getStatusProduct())
+                .bind("categoryId", catId)
+                .executeAndReturnGeneratedKeys("id")
+                .mapTo(int.class)
+                .one();
+    }
 
 
 }

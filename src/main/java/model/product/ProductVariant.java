@@ -3,7 +3,9 @@ package model.product;
 import model.AId;
 import org.jdbi.v3.core.mapper.reflect.ColumnName;
 
-public class ProductVariant extends AId {
+import java.io.Serializable;
+
+public class ProductVariant extends AId implements Serializable {
     @ColumnName("product_id")
     private int productId;
     private String sku;
