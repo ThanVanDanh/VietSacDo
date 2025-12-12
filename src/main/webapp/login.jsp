@@ -8,7 +8,7 @@
     <link rel="icon" href="image/logoaodai.jpg" type="image/jpeg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="style/auth.css">
-    <script src="scripts/auth.js"></script>
+    <script type="module" src="scripts/auth.js"></script>
     <link rel="stylesheet" href="style/style-header.css">
     <link rel="stylesheet" href="style/footer.css">
     <link rel="stylesheet" href="style/breadcrumb.css">
@@ -232,22 +232,25 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <form class="page_auth" id="login" action="">
+                        <form class="page_auth" id="login" action="Login" method="POST">
                             <fieldset class="form-group">
                                 <label>
                                     Số điện thoại
                                     <span class="req">*</span>
                                 </label>
-                                <input type="text" id="phone" placeholder="Số điện thoại" required autocomplete="tel">
+                                <input type="text" id="phone" name="phone" placeholder="Số điện thoại" required autocomplete="tel">
                             </fieldset>
                             <fieldset class="form-group">
                                 <label>
                                     Mật khẩu
                                     <span class="req">*</span>
                                 </label>
-                                <input type="password" id="customer_password" placeholder="Mật khẩu" required autocomplete="current-password">
+                                <input type="password" id="customer_password" name="password" placeholder="Mật khẩu" required autocomplete="current-password">
                                 <small>Quên mật khẩu? Nhấn vào <a href="#" id="show_forgot_view">đây</a></small>
                             </fieldset>
+                            <% if (request.getAttribute("error") != null) { %>
+                            <p style="color: red; font-style: italic;">${error}</p>
+                            <% } %>
                             <div>
                                 <button type="submit">Đăng nhập</button>
                             </div>
@@ -255,13 +258,13 @@
                         <div class="social-auth">
                             <p>Hoặc đăng nhập bằng</p>
                             <div class="wrap-social-auth">
-                                <button type="button" aria-label="Đăng nhập bằng Google">
+                                <button type="button" id="btn-google" aria-label="Đăng nhập bằng Google">
                                     <div class="btn-google">
                                         <i class="fa-brands fa-google"></i>
                                     </div>
                                     <div>Đăng nhập Google</div>
                                 </button>
-                                <button type="button" aria-label="Đăng nhập bằng Facebook">
+                                <button type="button" id="btn-facebook aria-label="Đăng nhập bằng Facebook">
                                     <div class="btn-facebook">
                                         <i class="fab fa-facebook-f"></i>
                                     </div>
