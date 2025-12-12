@@ -4,11 +4,12 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import model.product.Product;
+import model.product.ProductImage;
 import services.ProductService;
 
 import java.io.IOException;
 
-@WebServlet(name = "ProductController", value = "/product")
+@WebServlet(name = "ProductController", value = "/product-detail")
 public class ProductController extends HttpServlet {
     private ProductService productService;
 //    private Gson gon = new Gson;

@@ -1,32 +1,33 @@
 package model.product;
 
-public class ProductVariant {
-    private int id;
+import model.AId;
+import org.jdbi.v3.core.mapper.reflect.ColumnName;
+
+public class ProductVariant extends AId {
+    @ColumnName("product_id")
     private int productId;
     private String sku;
     private String size;
     private String color;
+    @ColumnName("current_price")
     private double currentPrice;
+    @ColumnName("stock_quantity")
     private int stockQuantity;
 
-    public ProductVariant(){}
+
+    public ProductVariant(int id) {
+        super(id);
+    }
+    public  ProductVariant(){}
 
     public ProductVariant(int id, int productId, String sku, String size, String color, double currentPrice, int stockQuantity) {
-        this.id = id;
+        super(id);
         this.productId = productId;
         this.sku = sku;
         this.size = size;
         this.color = color;
         this.currentPrice = currentPrice;
         this.stockQuantity = stockQuantity;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getProductId() {
