@@ -25,8 +25,8 @@ public class Category extends AId {
         return name_category;
     }
 
-    public void setName_category(String name_category) {
-        this.name_category = name_category;
+    public void setNameCategory(String name_category) {
+        this.nameCategory = nameCategory;
     }
 
     public String getSlug() {

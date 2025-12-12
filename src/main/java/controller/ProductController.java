@@ -11,6 +11,8 @@ import java.io.IOException;
 
 @WebServlet(name = "ProductController", value = "/product-detail")
 public class ProductController extends HttpServlet {
+    private ProductService productService;
+//    private Gson gon = new Gson;
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int id  = Integer.parseInt(request.getParameter("id"));
