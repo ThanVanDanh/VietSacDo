@@ -246,11 +246,13 @@
             </div>
         </div>
         <div class="product-grid">
-            <c:forEach var="p" items="${list}">
+            <c:forEach var="pdto" items="${list}">
             <div class="product-card">
                 <div class="product-image-wrapper">
                     <div class="product-image">
-                        <a href="product?id=${p.id}"><img src="${p.img}" alt="Áo dài linen Chi Lan cổ đứng"></a>
+                        <a href="product-detail?id=${pdto.id}">
+                            <img src="${pdto.thumbnail}" alt="${pdto.nameProduct}">
+                        </a>
                     </div>
                     <div class="product-overlay">
                         <a href="product-information.jsp" class="icon-button" title="Tùy chọn">
@@ -263,9 +265,9 @@
                 </div>
 
                 <div class="product-info">
-                    <a href="product?id=${p.id}"><p class="product-name">${p.name}</p></a>
+                    <a href="product?id=${pdto.id}"><p class="product-name">${pdto.nameProduct}</p></a>
                     <div class="product-price">
-                        <span class="current-price">${p.price}</span>
+                        <span class="current-price">${pdto.price}</span>
                     </div>
                 </div>
             </div>
