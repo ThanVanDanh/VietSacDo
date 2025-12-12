@@ -4,6 +4,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import model.product.Product;
+import model.product.ProductListDTO;
 import services.ProductService;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ public class ListProductController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         ProductService ps = new ProductService();
-        List<Product> list = ps.getListProduct();
+        List<ProductListDTO> list = ps.getListProduct();
         request.setAttribute("list", list);
         request.getRequestDispatcher("aodailinen.jsp").forward(request, response);
 

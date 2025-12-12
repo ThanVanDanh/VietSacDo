@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="vi">
@@ -232,25 +233,29 @@
 
     <div class="product-image-gallery">
         <div class="thumbnails">
-            <img src="${p.img}" alt="Ảnh nhỏ 1" class="thumbnail active">
-            <img src="${p.img}" alt="Ảnh nhỏ 2" class="thumbnail">
-            <img src="${p.img}" alt="Ảnh nhỏ 3" class="thumbnail">
-            <img src="${p.img}" alt="Ảnh nhỏ 4" class="thumbnail">
-            <img src="${p.img}" alt="Ảnh nhỏ 5" class="thumbnail">
+            <c:forEach items="${p.images}" var="img" varStatus="status">
+                <img src="${img.imageUrl}" alt="Ảnh nhỏ ${status.count}" class="thumbnail ${status.first ? 'active' : ''}">
+            </c:forEach>
         </div>
         <div class="main-image-wrapper">
-            <img src="image/linen_7.jpg" alt="Áo dài Phượng Hoa Xuân" class="main-image">
+            <c:if test="${not empty p.images}">
+                <img id="mainImg" src="${p.images[0].imageUrl}"
+                     alt="${p.nameProduct}" class="main-image">
+            </c:if>
+            <c:if test="${empty p.images}">
+                <img id="mainImg" src="image/default.jpg" alt="Chưa có ảnh" class="main-image">
+            </c:if>
             <a class="left carousel-control fui-arrow-left" href="#myCarousel" data-slide="prev"><i class="fa-solid fa-chevron-left"></i></a>
             <a class="right carousel-control fui-arrow-right" href="#myCarousel" data-slide="next"><i class="fa-solid fa-chevron-right"></i></a>
         </div>
     </div>
 
     <div class="product-details">
-        <h1>${p.name}</h1>
-        <p class="sku">Mã sản phẩm: ADCTA1149A</p>
+        <h1>${p.nameProduct}</h1>
+        <p class="sku">Mã sản phẩm: ${p.variants[0].sku}</p>
         <div class="product-price">
             <span class="old-price">850,000₫</span>
-            <span class="current-price">${p.price}</span>
+            <span class="current-price">${p.variants[0].currentPrice}</span>
             <span class="discount-tag">15%</span>
             <p class="saving">(<span class="save">Tiết kiệm</span> <span class="price">118.500₫</span>)</p>
         </div>
