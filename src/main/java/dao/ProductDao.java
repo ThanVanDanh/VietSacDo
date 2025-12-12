@@ -1,37 +1,54 @@
 package dao;
 
 import model.product.Product;
-import org.jdbi.v3.core.Handle;
+import model.product.ProductImage;
+import model.product.ProductListDTO;
+import model.product.ProductVariant;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.statement.PreparedBatch;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDao extends BaseDao {
-    public int insert(Product product) {
-        String sql = "INSERT INTO products(name, product_code, description, status_product, category_id) VALUES (:nameProduct, :productCode, :description, :statusProduct, :categoryId)";
-                return get().withHandle(handle -> handle.createUpdate(sql)
-                        .bind("name", product.getNameProduct())
-                        .bind("productCode", product.getProductCode())
-                        .bind("description", product.getDescription())
-                        .bind("statusProduct", product.getStatusProduct())
-                        .bind("categoryId", product.getCategoryId())
-                        .executeAndReturnGeneratedKeys("id")
-                        .mapTo(int.class)
-                        .one());
+    public List<ProductListDTO> getListProduct() {
+        // SQL lấy id, tên, và sub-query cho giá, ảnh, sku
+        String sql = "SELECT p.id, p.name_product, " +
+                "(SELECT current_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS price, " +
+                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
+                "(SELECT sku FROM Product_variants WHERE product_id = p.id LIMIT 1) AS sku " +
+                "FROM Products p";
+
+        return get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .mapToBean(ProductListDTO.class)
+                        .list()
+        );
     }
-    //transaction
-    public int insert(Handle handle,Product product) {
-        String sql = "INSERT INTO products(name, product_code, description, status_product, category_id) VALUES (:nameProduct, :productCode, :description, :statusProduct, :categoryId)";
-        return handle.createUpdate(sql)
-                .bind("name", product.getNameProduct())
-                .bind("productCode", product.getProductCode())
-                .bind("description", product.getDescription())
-                .bind("statusProduct", product.getStatusProduct())
-                .bind("categoryId", product.getCategoryId())
-                .executeAndReturnGeneratedKeys("id")
-                .mapTo(int.class)
-                .one();
+    public Product getProduct(int id) {
+        return get().withHandle(handle -> {
+            Product product = handle.createQuery("SELECT * FROM Products WHERE id = :id")
+                    .bind("id", id)
+                    .mapToBean(Product.class)
+                    .findFirst()
+                    .orElse(null);
+
+            if (product != null) {
+                // Lấy variants
+                product.setVariants(handle.createQuery("SELECT * FROM Product_variants WHERE product_id = :id")
+                        .bind("id", id)
+                        .mapToBean(ProductVariant.class)
+                        .list());
+
+                // Lấy images
+                product.setImages(handle.createQuery("SELECT * FROM Product_images WHERE product_id = :id")
+                        .bind("id", id)
+                        .mapToBean(ProductImage.class)
+                        .list());
+            }
+            return product;
+        });
     }
+
+
+
 }

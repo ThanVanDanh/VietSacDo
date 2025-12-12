@@ -1,31 +1,28 @@
 package model.product;
 
-public class Category {
-    private int id;
-    private String nameCategory;
+import model.AId;
+
+public class Category extends AId {
+    private String name_category;
     private String slug;
     private String description;
     private int parentId;
-    public Category(){
+
+    public Category(int id) {
+        super(id);
     }
-    public Category(int id, String nameCategory, String slug, String description, int parentId) {
-        this.id = id;
-        this.nameCategory = nameCategory;
+    public Category() {}
+
+    public Category(int id, String name_category, String slug, String description, int parentId) {
+        super(id);
+        this.name_category = name_category;
         this.slug = slug;
         this.description = description;
         this.parentId = parentId;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNameCategory() {
-        return nameCategory;
+    public String getName_category() {
+        return name_category;
     }
 
     public void setNameCategory(String name_category) {

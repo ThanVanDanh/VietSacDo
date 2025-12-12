@@ -1,28 +1,29 @@
 package model.product;
 
-public class ProductImage {
-    private int id;
+import model.AId;
+import org.jdbi.v3.core.mapper.reflect.ColumnName;
+
+public class ProductImage extends AId {
+    @ColumnName("product_id")
     private int productId;
+    @ColumnName("image_url")
     private String imageUrl;
+    @ColumnName("alt_text")
     private String altText;
+    @ColumnName("is_thumbnail")
     private boolean isThumbnail;
 
-    public ProductImage() {}
-
-    public ProductImage(int id, int productId, String imageUrl, String altText, boolean isThumbnail) {
-        this.id = id;
+    public ProductImage(int id) {
+        super(id);
+    }
+    public ProductImage() {
+    }
+    public ProductImage( int id, int productId, String imageUrl, String altText, boolean isThumbnail) {
+        super(id);
         this.productId = productId;
         this.imageUrl = imageUrl;
         this.altText = altText;
         this.isThumbnail = isThumbnail;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getProductId() {
