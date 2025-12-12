@@ -106,18 +106,18 @@ public class CloudinaryService {
         }
         return tmp;
     }
-//    public String uploadImage(String filePath) {
-//        if (cloudinary == null) return null; // Kiểm tra an toàn
-//
-//        try {
-//            java.io.File file = new java.io.File(filePath);
-//            Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
-//            return (String) uploadResult.get("secure_url");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
+    public String uploadImage(String filePath) {
+        if (cloudinary == null) return null; // Kiểm tra an toàn
+
+        try {
+            java.io.File file = new java.io.File(filePath);
+            Map uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+            return (String) uploadResult.get("secure_url");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     public static class UploadedImage {
         private final String secureUrl;
         private final String publicId;
