@@ -1,0 +1,112 @@
+package model.user;
+import org.jdbi.v3.core.mapper.reflect.ColumnName;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
+public class User implements Serializable {
+    @ColumnName("full_name")
+    private String fullName;
+    @ColumnName("phone_number")
+    private String phone;
+    private String email;
+    @ColumnName("password_hash")
+    private String password;
+    @ColumnName("created_at")
+    private LocalDateTime createdAt;
+    @ColumnName("account_status")
+    private String status;
+    @ColumnName("role_user")
+    private String role; // 'user', 'admin'
+    @ColumnName("auth_provider")
+    private String authProvider;
+    @ColumnName("firebase_uid")
+    private String firebaseUID;
+
+    public User(String fullName, String phone, String email, String password, LocalDateTime createdAt, String status, String role, String authProvider, String firebaseUID) {
+        this.fullName = fullName;
+        this.phone = phone;
+        this.email = email;
+        this.password = password;
+        this.createdAt = createdAt;
+        this.status = status;
+        this.role = role;
+        this.authProvider = authProvider;
+        this.firebaseUID = firebaseUID;
+    }
+
+    public User() {
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public String getAuthProvider() {
+        return authProvider;
+    }
+
+    public String getFirebaseUID() {
+        return firebaseUID;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public void setAuthProvider(String authProvider) {
+        this.authProvider = authProvider;
+    }
+
+    public void setFirebaseUID(String firebaseUID) {
+        this.firebaseUID = firebaseUID;
+    }
+}
