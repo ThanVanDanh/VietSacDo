@@ -6,12 +6,13 @@ import java.util.Optional;
 
 public class UserDao extends BaseDao {
     public User findByPhone(String phone) {
-        String sql = "SELECT id, full_name, phone_number, email, password_hash, created_at, account_status, role_user, auth_provider, firebase_uid " +
-                "FROM Users WHERE phone_number = :phone";
-
+        return get().withHandle(handle -> handle.createQuery("SELECT * FROM Users WHERE phone_number = :phone").bind("phone", phone)
+                    .mapToBean(User.class).stream().findFirst().orElse(null));
+    }
+    public User findByEmail(String email) {
         return get().withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("phone", phone)
+                handle.createQuery("SELECT * FROM Users WHERE email = :email")
+                        .bind("email", email)
                         .mapToBean(User.class)
                         .findFirst()
                         .orElse(null)
@@ -28,17 +29,6 @@ public class UserDao extends BaseDao {
                         .one()
         );
     }
-    public User findByEmail(String email) {
-        String sql = "SELECT id, full_name, phone_number, email, password_hash, created_at, account_status, role_user, auth_provider, firebase_uid " +
-                "FROM Users WHERE email = :email";
 
-        return get().withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("email", email)
-                        .mapToBean(User.class)
-                        .findFirst()
-                        .orElse(null)
-        );
-    }
 }
 
