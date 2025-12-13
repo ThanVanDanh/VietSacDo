@@ -1,16 +1,16 @@
 package model.user;
+import model.AId;
 import org.jdbi.v3.core.mapper.reflect.ColumnName;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class User implements Serializable {
+public class User extends AId implements Serializable {
     @ColumnName("full_name")
     private String fullName;
     @ColumnName("phone_number")
     private String phone;
     private String email;
-    @ColumnName("password_hash")
     private String password;
     @ColumnName("created_at")
     private LocalDateTime createdAt;
@@ -23,7 +23,8 @@ public class User implements Serializable {
     @ColumnName("firebase_uid")
     private String firebaseUID;
 
-    public User(String fullName, String phone, String email, String password, LocalDateTime createdAt, String status, String role, String authProvider, String firebaseUID) {
+    public User(int id, String fullName, String phone, String email, String password, LocalDateTime createdAt, String status, String role, String authProvider, String firebaseUID) {
+        super(id);
         this.fullName = fullName;
         this.phone = phone;
         this.email = email;
@@ -36,6 +37,7 @@ public class User implements Serializable {
     }
 
     public User() {
+        super();
     }
 
     public String getFullName() {
@@ -49,7 +51,7 @@ public class User implements Serializable {
     public String getEmail() {
         return email;
     }
-
+    @ColumnName("password_hash")
     public String getPassword() {
         return password;
     }
@@ -85,7 +87,7 @@ public class User implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
-
+    @ColumnName("password_hash")
     public void setPassword(String password) {
         this.password = password;
     }
