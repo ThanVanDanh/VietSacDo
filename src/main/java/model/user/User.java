@@ -63,7 +63,7 @@ public class User extends AId implements Serializable {
     public String getStatus() {
         return status;
     }
-
+    @ColumnName("role_user")
     public String getRole() {
         return role;
     }
@@ -99,7 +99,7 @@ public class User extends AId implements Serializable {
     public void setStatus(String status) {
         this.status = status;
     }
-
+    @ColumnName("role_user")
     public void setRole(String role) {
         this.role = role;
     }
