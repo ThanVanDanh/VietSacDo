@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="style/auth.css">
     <script src="scripts/home.js"></script>
     <link rel="stylesheet" href="style/style-header.css">
-    <script src="scripts/auth.js"></script>
+    <script type="module" src="scripts/auth.js"></script>
     <link rel="stylesheet" href="style/footer.css">
     <link rel="stylesheet" href="style/breadcrumb.css">
 </head>
