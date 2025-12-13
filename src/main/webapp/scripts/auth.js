@@ -1,18 +1,46 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+//Cấu hình FireBase
+const firebaseConfig = {
+    apiKey: "AIzaSyBcuuZMwTkWjkFTGlVlB38cLtOW_FlWxVQ",
+    authDomain: "vietsacdo-ck.firebaseapp.com",
+    projectId: "vietsacdo-ck",
+    storageBucket: "vietsacdo-ck.firebasestorage.app",
+    messagingSenderId: "57602782048",
+    appId: "1:57602782048:web:7df607358f7769c7c5e405",
+    measurementId: "G-LTWM6DGKHZ"
+};
+// Khởi tạo Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+
 document.addEventListener('DOMContentLoaded', function () {
-    const loginForm = document.getElementById('login');
+    const googleBtn = document.querySelector('.btn-google');
     const signupForm = document.getElementById('signup');
 
-    if (loginForm) {
-        loginForm.addEventListener('submit', function (event) {
-            event.preventDefault();
-            const phone = document.getElementById('phone').value.trim();
-            const password = document.getElementById('customer_password').value.trim();
-            if (phone === '123' && password === '123') {
-                window.location.href = '../admin/dashboard.jsp';
-            } else {
-                window.location.href = 'account.jsp';
-            }
-        });
+    if(googleBtn) {
+        const btnWrapper = googleBtn.closest('button');
+
+        if (btnWrapper) {
+            btnWrapper.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                signInWithPopup(auth, provider)
+                    .then((result) => {
+                        const user = result.user;
+                        console.log("Google User:", user.email);
+                        console.log("Google User Email:", user.email);
+                        console.log("Google User UID:", user.uid);
+                        doLoginGoogle(user.email, user.displayName, user.uid);
+                    })
+                    .catch((error) => {
+                        console.error("Lỗi Google Login:", error);
+                        alert("Đăng nhập thất bại: " + error.message);
+                    });
+            });
+        }
     }
     if (signupForm) {
         signupForm.addEventListener('submit', function (event) {
@@ -107,3 +135,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 });
+
+function doLoginGoogle(email, name, uid) {
+    const params = new URLSearchParams();
+    params.append('action', 'google');
+    params.append('email', email);
+    params.append('name', name);
+    params.append('uid', uid);
+
+    fetch('Login', {
+        method: 'POST',
+        headers: {
+            // Bổ sung header để Server hiểu đây là dữ liệu form
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        },
+        body: params
+    }).then(response => {
+        // Nếu Server redirect (về trang chủ hoặc dashboard), trình duyệt sẽ tự chuyển theo
+        if (response.redirected) {
+            window.location.href = response.url;
+        } else {
+            // Trường hợp Server trả về lỗi mà không redirect
+            return response.text().then(text => {
+                // Xử lý hiển thị lỗi nếu cần
+                console.log("Server response:", text);
+                window.location.href = "index.jsp"; // Fallback
+            });
+        }
+    }).catch(err => console.error("Fetch error:", err));
+}
