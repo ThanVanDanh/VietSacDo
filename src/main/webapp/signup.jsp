@@ -232,34 +232,40 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <form class="page_auth" id="signup" action="">
+                        <form class="page_auth" id="signup" action="signup" method="post">
+                            <% String error = (String) request.getAttribute("error"); %>
+                            <% if (error != null) { %>
+                            <div style="color: red; margin-bottom: 10px; font-weight: bold;">
+                                <%= error %>
+                            </div>
+                            <% } %>
                             <fieldset class="form-group">
                                 <label>
                                     Họ và tên
                                     <span class="req">*</span>
                                 </label>
-                                <input type="text" id="name" placeholder="Họ và tên" required autocomplete="name">
+                                <input type="text" name="fullname" id="name" placeholder="Họ và tên" required autocomplete="name">
                             </fieldset>
                             <fieldset class="form-group">
                                 <label>
                                     Số điện thoại
                                     <span class="req">*</span>
                                 </label>
-                                <input type="text" id="phone" placeholder="Số điện thoại" required autocomplete="tel">
+                                <input type="text" name="phone" id="phone" placeholder="Số điện thoại" required autocomplete="tel">
                             </fieldset>
                             <fieldset class="form-group">
                                 <label>
                                     Email
                                     <span class="req">*</span>
                                 </label>
-                                <input type="email" id="customer_email" placeholder="Email" required autocomplete="email">
+                                <input type="email" name="email" id="customer_email" placeholder="Email" required autocomplete="email">
                             </fieldset>
                             <fieldset class="form-group">
                                 <label>
                                     Mật khẩu
                                     <span class="req">*</span>
                                 </label>
-                                <input type="password" id="customer_password" placeholder="Mật khẩu" required autocomplete="new-password">
+                                <input type="password" name="password" id="customer_password" placeholder="Mật khẩu" required autocomplete="new-password">
                             </fieldset>
                             <div>
                                 <button type="submit">Đăng ký</button>
@@ -268,13 +274,13 @@
                         <div class="social-auth">
                             <p>Hoặc đăng nhập bằng</p>
                             <div class="wrap-social-auth">
-                                <button type="button" aria-label="Đăng nhập bằng Google">
+                                <button type="button" id="btn-google" aria-label="Đăng nhập bằng Google">
                                     <div class="btn-google">
                                         <i class="fa-brands fa-google"></i>
                                     </div>
                                     <div>Đăng nhập Google</div>
                                 </button>
-                                <button type="button" aria-label="Đăng nhập bằng Facebook">
+                                <button type="button" id="btn-facebook" aria-label="Đăng nhập bằng Facebook">
                                     <div class="btn-facebook">
                                         <i class="fab fa-facebook-f"></i>
                                     </div>
