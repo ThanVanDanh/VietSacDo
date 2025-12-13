@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 //Cấu hình FireBase
 const firebaseConfig = {
@@ -15,10 +15,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
+const facebookProvider = new FacebookAuthProvider();
 
 document.addEventListener('DOMContentLoaded', function () {
     const googleBtn = document.querySelector('.btn-google');
-
     if(googleBtn) {
         const btnWrapper = googleBtn.closest('button');
 
@@ -36,6 +36,26 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
             });
         }
+    }
+
+    const facebookBtn = document.getElementById('btn-facebook');
+    if (facebookBtn) {
+        facebookBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            signInWithPopup(auth, facebookProvider)
+                .then((result) => {
+                    const user = result.user;
+                    doLoginSocial(user.email, user.displayName, user.uid, 'facebook');
+                })
+                .catch((error) => {
+                    console.error("Lỗi Facebook Login:", error);
+                    if (error.code === 'auth/account-exists-with-different-credential') {
+                        alert("Email này đã được đăng ký bằng phương thức khác (Google/Email).");
+                    } else {
+                        alert("Đăng nhập Facebook thất bại: " + error.message);
+                    }
+                });
+        });
     }
 
     const forgotForm = document.getElementById('forgot_password_form');
@@ -125,9 +145,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-function doLoginGoogle(email, name, uid) {
+function doLoginSocial(email, name, uid, providerType) {
     const params = new URLSearchParams();
-    params.append('action', 'google');
+    params.append('action', providerType);
     params.append('email', email);
     params.append('name', name);
     params.append('uid', uid);
