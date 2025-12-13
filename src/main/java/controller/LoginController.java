@@ -22,16 +22,25 @@ public class LoginController extends HttpServlet {
     }
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String phone = request.getParameter("phone");
-        String pass = request.getParameter("password");
-
-        User user = userService.login(phone, pass);
-
-        if (user != null) {
+        String action = request.getParameter("action");
+        if ("google".equals(action)) {
+            String email = request.getParameter("email");
+            String name = request.getParameter("name");
+            String googleId = request.getParameter("uid");
+            System.out.println("Email: " + email);
+            System.out.println("UID: " + googleId);
+            User user = userService.processGoogleLogin(email, name, googleId);
             createSession(request, response, user);
         } else {
-            request.setAttribute("error", "Sai số điện thoại hoặc mật khẩu!");
-            request.getRequestDispatcher("login.jsp").forward(request, response);
+            String phone = request.getParameter("phone");
+            String pass = request.getParameter("password");
+            User user = userService.login(phone, pass);
+            if (user != null) {
+                createSession(request, response, user);
+            } else {
+                request.setAttribute("error", "Sai số điện thoại hoặc mật khẩu!");
+                request.getRequestDispatcher("login.jsp").forward(request, response);
+            }
         }
     }
     private void createSession(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
