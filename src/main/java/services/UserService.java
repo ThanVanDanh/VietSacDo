@@ -44,7 +44,7 @@ public class UserService {
         return userDao.insert(user) > 0;
     }
 
-    public User processGoogleLogin(String email, String name, String firebase_uid) {
+    public User processSocialLogin(String email, String name, String firebase_uid, String provider) {
         User user = userDao.findByEmail(email);
         if (user != null) {
             return user;
@@ -53,7 +53,7 @@ public class UserService {
             newUser.setEmail(email);
             newUser.setFullName(name);
             newUser.setFirebaseUID(firebase_uid);
-            newUser.setAuthProvider("google");
+            newUser.setAuthProvider(provider);
             newUser.setRole("user");
             userDao.insert(newUser);
             return newUser;
