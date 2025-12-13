@@ -264,7 +264,7 @@
                                     </div>
                                     <div>Đăng nhập Google</div>
                                 </button>
-                                <button type="button" id="btn-facebook aria-label="Đăng nhập bằng Facebook">
+                                <button type="button" id="btn-facebook" aria-label="Đăng nhập bằng Facebook">
                                     <div class="btn-facebook">
                                         <i class="fab fa-facebook-f"></i>
                                     </div>
