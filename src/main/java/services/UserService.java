@@ -44,5 +44,21 @@ public class UserService {
         return userDao.insert(user) > 0;
     }
 
+    public User processGoogleLogin(String email, String name, String firebase_uid) {
+        User user = userDao.findByEmail(email);
+        if (user != null) {
+            return user;
+        } else {
+            User newUser = new User();
+            newUser.setEmail(email);
+            newUser.setFullName(name);
+            newUser.setFirebaseUID(firebase_uid);
+            newUser.setAuthProvider("google");
+            newUser.setRole("user");
+            userDao.insert(newUser);
+            return newUser;
+        }
+    }
+
 
 }
