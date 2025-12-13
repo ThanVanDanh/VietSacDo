@@ -18,7 +18,6 @@ const provider = new GoogleAuthProvider();
 
 document.addEventListener('DOMContentLoaded', function () {
     const googleBtn = document.querySelector('.btn-google');
-    const signupForm = document.getElementById('signup');
 
     if(googleBtn) {
         const btnWrapper = googleBtn.closest('button');
@@ -26,13 +25,9 @@ document.addEventListener('DOMContentLoaded', function () {
         if (btnWrapper) {
             btnWrapper.addEventListener('click', (e) => {
                 e.preventDefault();
-
                 signInWithPopup(auth, provider)
                     .then((result) => {
                         const user = result.user;
-                        console.log("Google User:", user.email);
-                        console.log("Google User Email:", user.email);
-                        console.log("Google User UID:", user.uid);
                         doLoginGoogle(user.email, user.displayName, user.uid);
                     })
                     .catch((error) => {
@@ -42,13 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         }
     }
-    if (signupForm) {
-        signupForm.addEventListener('submit', function (event) {
-            event.preventDefault();
 
-            window.location.href = 'account.jsp';
-        });
-    }
     const forgotForm = document.getElementById('forgot_password_form');
     const loginView = document.getElementById('login_view');
     const forgotView = document.getElementById('forgot_view');
@@ -56,17 +45,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const showForgotLink = document.getElementById('show_forgot_view');
     const showLoginLink = document.getElementById('show_login_view');
 
-    if (forgotForm) {
-        forgotForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            alert('Chúng tôi đã gửi một link khôi phục đến đó.');
-            if (loginView && forgotView) {
-                loginView.style.display = 'block';
-                forgotView.style.display = 'none';
-                document.title = 'Việt Sắc Đỏ - Đăng nhập';
-            }
-        });
-    }
+    // if (forgotForm) {
+    //     forgotForm.addEventListener('submit', function(event) {
+    //         event.preventDefault();
+    //         alert('Chúng tôi đã gửi một link khôi phục đến đó.');
+    //         if (loginView && forgotView) {
+    //             loginView.style.display = 'block';
+    //             forgotView.style.display = 'none';
+    //             document.title = 'Việt Sắc Đỏ - Đăng nhập';
+    //         }
+    //     });
+    // }
 
     // Ẩn/hiện form
     if (showForgotLink) {
@@ -146,20 +135,16 @@ function doLoginGoogle(email, name, uid) {
     fetch('Login', {
         method: 'POST',
         headers: {
-            // Bổ sung header để Server hiểu đây là dữ liệu form
             'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
         },
         body: params
     }).then(response => {
-        // Nếu Server redirect (về trang chủ hoặc dashboard), trình duyệt sẽ tự chuyển theo
         if (response.redirected) {
             window.location.href = response.url;
         } else {
-            // Trường hợp Server trả về lỗi mà không redirect
             return response.text().then(text => {
-                // Xử lý hiển thị lỗi nếu cần
                 console.log("Server response:", text);
-                window.location.href = "index.jsp"; // Fallback
+                window.location.href = "index.jsp";
             });
         }
     }).catch(err => console.error("Fetch error:", err));
