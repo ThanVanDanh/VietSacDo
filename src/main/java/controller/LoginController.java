@@ -23,13 +23,11 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        if ("google".equals(action)) {
+        if ("google".equals(action)|| "facebook".equals(action)) {
             String email = request.getParameter("email");
             String name = request.getParameter("name");
-            String googleId = request.getParameter("uid");
-            System.out.println("Email: " + email);
-            System.out.println("UID: " + googleId);
-            User user = userService.processGoogleLogin(email, name, googleId);
+            String uid = request.getParameter("uid");
+            User user = userService.processSocialLogin(email, name, uid, action);
             createSession(request, response, user);
         } else {
             String phone = request.getParameter("phone");
