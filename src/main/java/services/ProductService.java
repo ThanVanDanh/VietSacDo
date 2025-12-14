@@ -81,6 +81,14 @@ public class ProductService {
     public List<ProductListDTO> getListProduct() {
         return productDao.getListProduct();
     }
+    public List<ProductListDTO> getProductsByCategory(int categoryId) {
+        return productDao.getProductsByCategory(categoryId);
+    }
+    public Product getProduct(int id){
+        return productDao.getProduct(id);
+    }
+
+
 
 //    // Xóa danh sách ảnh đã upload (dùng publicId)
 //    private void cleanupUploaded(List<UploadedImageResult> uploaded) {
@@ -97,9 +105,6 @@ public class ProductService {
 //        }
 //    }
 
-    public Product getProduct(int id) {
-        return productDao.getProduct(id);
-    }
     public int createProduct(Product product, List<ProductVariant> variants, List<ImageUpload> uploads) {
         List<UploadedImage> uploaded = new ArrayList<>();
 

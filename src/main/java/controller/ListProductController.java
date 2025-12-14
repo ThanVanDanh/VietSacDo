@@ -42,7 +42,7 @@ public class ListProductController extends HttpServlet {
 
         List<ProductListDTO> list = productService.getListProduct();
         request.setAttribute("list", list);
-        request.getRequestDispatcher("aodailinen.jsp").forward(request, response);
+        request.getRequestDispatcher("list-product.jsp").forward(request, response);
 
     }
 

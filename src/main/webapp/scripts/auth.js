@@ -1,50 +1,71 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+//Cấu hình FireBase
+const firebaseConfig = {
+    apiKey: "AIzaSyBcuuZMwTkWjkFTGlVlB38cLtOW_FlWxVQ",
+    authDomain: "vietsacdo-ck.firebaseapp.com",
+    projectId: "vietsacdo-ck",
+    storageBucket: "vietsacdo-ck.firebasestorage.app",
+    messagingSenderId: "57602782048",
+    appId: "1:57602782048:web:7df607358f7769c7c5e405",
+    measurementId: "G-LTWM6DGKHZ"
+};
+// Khởi tạo Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
+const facebookProvider = new FacebookAuthProvider();
+
 document.addEventListener('DOMContentLoaded', function () {
-    const loginForm = document.getElementById('login');
-    const signupForm = document.getElementById('signup');
+    const googleBtn = document.querySelector('.btn-google');
+    if(googleBtn) {
+        const btnWrapper = googleBtn.closest('button');
 
-    if (loginForm) {
-        loginForm.addEventListener('submit', function (event) {
-            event.preventDefault();
-            const phone = document.getElementById('phone').value.trim();
-            const password = document.getElementById('customer_password').value.trim();
-            if (phone === '123' && password === '123') {
-                window.location.href = '../admin/dashboard.jsp';
-            } else {
-                window.location.href = 'account.jsp';
-            }
+        if (btnWrapper) {
+            btnWrapper.addEventListener('click', (e) => {
+                e.preventDefault();
+                signInWithPopup(auth, provider)
+                    .then((result) => {
+                        const user = result.user;
+                        doLoginSocial(user.email, user.displayName, user.uid, 'google');
+                    })
+                    .catch((error) => {
+                        console.error("Lỗi Google Login:", error);
+                        alert("Đăng nhập thất bại: " + error.message);
+                    });
+            });
+        }
+    }
+
+    const facebookBtn = document.getElementById('btn-facebook');
+    if (facebookBtn) {
+        facebookBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            signInWithPopup(auth, facebookProvider)
+                .then((result) => {
+                    const user = result.user;
+                    doLoginSocial(user.email, user.displayName, user.uid, 'facebook');
+                })
+                .catch((error) => {
+                    console.error("Lỗi Facebook Login:", error);
+                    if (error.code === 'auth/account-exists-with-different-credential') {
+                        alert("Email này đã được đăng ký bằng phương thức khác (Google/Email).");
+                    } else {
+                        alert("Đăng nhập Facebook thất bại: " + error.message);
+                    }
+                });
         });
     }
-    if (signupForm) {
-        signupForm.addEventListener('submit', function (event) {
-            event.preventDefault();
 
-            window.location.href = 'account.jsp';
-        });
-    }
-    const forgotForm = document.getElementById('forgot_password_form');
     const loginView = document.getElementById('login_view');
     const forgotView = document.getElementById('forgot_view');
-
     const showForgotLink = document.getElementById('show_forgot_view');
     const showLoginLink = document.getElementById('show_login_view');
-
-    if (forgotForm) {
-        forgotForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            alert('Chúng tôi đã gửi một link khôi phục đến đó.');
-            if (loginView && forgotView) {
-                loginView.style.display = 'block';
-                forgotView.style.display = 'none';
-                document.title = 'Việt Sắc Đỏ - Đăng nhập';
-            }
-        });
-    }
-
     // Ẩn/hiện form
     if (showForgotLink) {
         showForgotLink.addEventListener('click', function(event) {
             event.preventDefault();
-
             if (loginView && forgotView) {
                 loginView.style.display = 'none';
                 forgotView.style.display = 'block';
@@ -107,3 +128,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 });
+
+function doLoginSocial(email, name, uid, providerType) {
+    const params = new URLSearchParams();
+    params.append('action', providerType);
+    params.append('email', email);
+    params.append('name', name);
+    params.append('uid', uid);
+
+    fetch('Login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+        },
+        body: params
+    }).then(response => {
+        if (response.redirected) {
+            window.location.href = response.url;
+        } else {
+            return response.text().then(text => {
+                console.log("Server response:", text);
+                window.location.href = "index.jsp";
+            });
+        }
+    }).catch(err => console.error("Fetch error:", err));
+}
