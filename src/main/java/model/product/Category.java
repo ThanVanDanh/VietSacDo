@@ -30,7 +30,7 @@ public class Category extends AId implements Serializable {
         return nameCategory;
     }
 
-    public void setNameCategory(String name_category) {
+    public void setNameCategory(String nameCategory) {
         this.nameCategory = nameCategory;
     }
 

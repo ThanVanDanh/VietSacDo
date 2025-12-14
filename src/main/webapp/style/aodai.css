@@ -16,7 +16,9 @@ section {
     letter-spacing: 2px;
     margin-top: 20px;
     margin-bottom: 10px;
-    color: var(--color-secondary)
+    color: var(--color-secondary);
+    text-transform: uppercase;
+
 }
 
 .product-grid {

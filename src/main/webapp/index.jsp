@@ -7,16 +7,22 @@
     <title>Việt Sắc Đỏ - Trang Chủ</title>
     <link rel="icon" href="image/logoaodai.jpg" type="image/jpeg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="style/style.css">
+<%--    <link rel="stylesheet" href="style/style.css">--%>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/aodai.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/footer.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/backtop.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/style-header.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/quick-view.css">
     <script src="scripts/home.js"></script>
-    <link rel="stylesheet" href="style/footer.css">
-    <link rel="stylesheet" href="style/backtop.css">
-    <script src="scripts/backtop.js"></script>
-    <link rel="stylesheet" href="style/aodai.css">
-    <link rel="stylesheet" href="style/style-header.css">
+<%--    <link rel="stylesheet" href="style/footer.css">--%>
+<%--    <link rel="stylesheet" href="style/backtop.css">--%>
+<%--    <link rel="stylesheet" href="style/aodai.css">--%>
+<%--    <link rel="stylesheet" href="style/style-header.css">--%>
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-    <link rel="stylesheet" href="style/quick-view.css">
+    <script src="scripts/backtop.js"></script>
+<%--    <link rel="stylesheet" href="style/quick-view.css">--%>
 </head>
 <body>
 <div class="search-overlay-container" id="searchOverlay">
@@ -102,14 +108,16 @@
         </div>
         <nav>
             <ul class="menu">
-                <li><a href="index.html">Trang Chủ</a></li>
+                <li><a href="${pageContext.request.contextPath}/index.jsp">Trang Chủ</a></li>
+
                 <li><a href="#">Áo dài<i class="fa-solid fa-chevron-down"></i></a>
                     <ul class="sub-menu">
-                        <li><a href="aodaitruyenthong.jsp">Áo dài truyền thống</a></li>
-                        <li><a href="aodaitheutay.jsp">Áo dài thêu tay</a></li>
-                        <li><a href="aodailinen.jsp">Áo dài linen</a></li>
+                        <li><a href="${pageContext.request.contextPath}/danh-muc/ao-dai-truyen-thong">Áo dài truyền thống</a></li>
+                        <li><a href="${pageContext.request.contextPath}/danh-muc/ao-dai-theu-tay">Áo dài thêu tay</a></li>
+                        <li><a href="${pageContext.request.contextPath}/danh-muc/ao-dai-linen">Áo dài linen</a></li>
                     </ul>
                 </li>
+
                 <li class="has-megamenu"><a href="#">Quần & Phụ kiện<i class="fa-solid fa-chevron-down"></i></a>
                     <ul class="sub-menu">
                         <div class="mega-menu-container">
@@ -118,33 +126,33 @@
                                 <div class="category-column">
                                     <h3>Quần & váy phối áo dài</h3>
                                     <ul>
-                                        <li><a href="chanvay.jsp">Chân Váy</a></li>
-                                        <li><a href="quanphuongchi.jsp">Quần Phương Chi</a></li>
-                                        <li><a href="quanquechi.jsp">Quần Quế Chi</a></li>
-                                        <li><a href="quanvanchi.jsp">Quần Vân Chi</a></li>
-                                        <li><a href="quanmaichi.jsp">Quần Mai Chi</a></li>
-                                        <li><a href="quantrucchi.jsp">Quần Trúc Chi</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/chan-vay">Chân Váy</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/quan-phuong-chi">Quần Phương Chi</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/quan-que-chi">Quần Quế Chi</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/quan-van-chi">Quần Vân Chi</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/quan-mai-chi">Quần Mai Chi</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/quan-truc-chi">Quần Trúc Chi</a></li>
                                     </ul>
                                 </div>
 
                                 <div class="category-column">
                                     <h3>Phụ kiện</h3>
                                     <ul>
-                                        <li><a href="manaodai.jsp">Mấn áo dài</a></li>
-                                        <li><a href="vongtay.jsp">Vòng tay</a></li>
-                                        <li><a href="hoatai.jsp">Hoa tai</a></li>
-                                        <li><a href="guocgo.jsp">Guốc gỗ</a></li>
-                                        <li><a href="tuixach.jsp">Túi xách</a></li>
-                                        <li><a href="daychuyen.jsp">Dây chuyền</a></li>
-                                        <li><a href="kepvanocaitoc.jsp">Kẹp & nơ cài tóc</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/man-doi-dau">Mấn áo dài</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/vong-tay">Vòng tay</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/hoa-tai">Hoa tai</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/guoc-go">Guốc gỗ</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/tui-xach">Túi xách</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/day-chuyen">Dây chuyền</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/kep-no-cai-toc">Kẹp & nơ cài tóc</a></li>
                                     </ul>
                                 </div>
 
                                 <div class="category-column">
                                     <h3>Nón Lá</h3>
                                     <ul>
-                                        <li><a href="nonlahodiep.jsp">Nón lá bọc vải Hồ điệp</a></li>
-                                        <li><a href="nonlahoabuoi.jsp">Nón lá bọc vải Chè hoa bưởi</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/non-la-ho-diep">Nón lá bọc vải Hồ điệp</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/non-la-hoa-buoi">Nón lá bọc vải Chè hoa bưởi</a></li>
                                     </ul>
                                 </div>
 
@@ -152,8 +160,8 @@
                         </div>
                     </ul>
                 </li>
-                <li><a href="contactus.jsp">Liên Hệ</a></li>
-                <li><a href="promotion.jsp">Chương trình khuyến mãi</a></li>
+                <li><a href="${pageContext.request.contextPath}/contactus.jsp">Liên Hệ</a></li>
+                <li><a href="${pageContext.request.contextPath}/promotion.jsp">Chương trình khuyến mãi</a></li>
             </ul>
         </nav>
         <div class="icons">

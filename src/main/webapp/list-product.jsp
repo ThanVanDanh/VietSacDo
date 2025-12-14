@@ -1,27 +1,32 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Việt Sắc Đỏ - Kẹp và nơ cài tóc</title>
+    <title>${currentCategory.nameCategory} | Việt Sắc Đỏ</title>
     <link rel="icon" href="image/logoaodai.jpg" type="image/jpeg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="style/style.css">
+<%--    <link rel="stylesheet" href="style/aodai.css">--%>
+<%--    <link rel="stylesheet" href="style/style-header.css">--%>
+<%--    <link rel="stylesheet" href="style/footer.css">--%>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/breadcrumb.css">
     <script src="scripts/home.js"></script>
-    <link rel="stylesheet" href="style/footer.css">
+<%--    <script src="scripts/backtop.js"></script>--%>
     <link rel="stylesheet" href="style/backtop.css">
-    <script src="scripts/backtop.js"></script>
-    <link rel="stylesheet" href="style/aodai.css">
-    <link rel="stylesheet" href="style/style-header.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <link rel="stylesheet" href="style/quick-view.css">
-    <link rel="stylesheet" href="style/breadcrumb.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/aodai.css">
+<%--    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/style.css">--%>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/footer.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/backtop.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/style-header.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/quick-view.css">
 </head>
-
 <body>
 <div class="search-overlay-container" id="searchOverlay">
+
     <div class="search-overlay-header">
         <div class="logo">
             <a href="index.jsp">
@@ -33,10 +38,9 @@
             <input type="text" id="searchInput" placeholder="áo dài truyền thống, quần áo dài, vòng tay...">
             <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>
-
         <div class="icons">
             <div class="user-menu">
-                <a href="#"><i class="fa-regular fa-user"></i></a>
+                <a><i class="fa-regular fa-user"></i></a>
                 <ul class="user">
                     <li><a href="login.jsp">Đăng nhập</a></li>
                     <li><a href="signup.jsp">Đăng ký</a></li>
@@ -103,14 +107,16 @@
         </div>
         <nav>
             <ul class="menu">
-                <li><a href="index.jsp">Trang Chủ</a></li>
+                <li><a href="${pageContext.request.contextPath}/index.jsp">Trang Chủ</a></li>
+
                 <li><a href="#">Áo dài<i class="fa-solid fa-chevron-down"></i></a>
                     <ul class="sub-menu">
-                        <li><a href="aodaitruyenthong.jsp">Áo dài truyền thống</a></li>
-                        <li><a href="aodaitheutay.jsp">Áo dài thêu tay</a></li>
-                        <li><a href="aodailinen.jsp">Áo dài linen</a></li>
+                        <li><a href="${pageContext.request.contextPath}/danh-muc/ao-dai-truyen-thong">Áo dài truyền thống</a></li>
+                        <li><a href="${pageContext.request.contextPath}/danh-muc/ao-dai-theu-tay">Áo dài thêu tay</a></li>
+                        <li><a href="${pageContext.request.contextPath}/danh-muc/ao-dai-linen">Áo dài linen</a></li>
                     </ul>
                 </li>
+
                 <li class="has-megamenu"><a href="#">Quần & Phụ kiện<i class="fa-solid fa-chevron-down"></i></a>
                     <ul class="sub-menu">
                         <div class="mega-menu-container">
@@ -119,33 +125,33 @@
                                 <div class="category-column">
                                     <h3>Quần & váy phối áo dài</h3>
                                     <ul>
-                                        <li><a href="chanvay.jsp">Chân Váy</a></li>
-                                        <li><a href="quanphuongchi.jsp">Quần Phương Chi</a></li>
-                                        <li><a href="quanquechi.jsp">Quần Quế Chi</a></li>
-                                        <li><a href="quanvanchi.jsp">Quần Vân Chi</a></li>
-                                        <li><a href="quanmaichi.jsp">Quần Mai Chi</a></li>
-                                        <li><a href="quantrucchi.jsp">Quần Trúc Chi</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/chan-vay">Chân Váy</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/quan-phuong-chi">Quần Phương Chi</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/quan-que-chi">Quần Quế Chi</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/quan-van-chi">Quần Vân Chi</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/quan-mai-chi">Quần Mai Chi</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/quan-truc-chi">Quần Trúc Chi</a></li>
                                     </ul>
                                 </div>
 
                                 <div class="category-column">
                                     <h3>Phụ kiện</h3>
                                     <ul>
-                                        <li><a href="manaodai.jsp">Mấn áo dài</a></li>
-                                        <li><a href="vongtay.jsp">Vòng tay</a></li>
-                                        <li><a href="hoatai.jsp">Hoa tai</a></li>
-                                        <li><a href="guocgo.jsp">Guốc gỗ</a></li>
-                                        <li><a href="tuixach.jsp">Túi xách</a></li>
-                                        <li><a href="daychuyen.jsp">Dây chuyền</a></li>
-                                        <li><a href="kepvanocaitoc.html">Kẹp & nơ cài tóc</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/man-doi-dau">Mấn áo dài</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/vong-tay">Vòng tay</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/hoa-tai">Hoa tai</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/guoc-go">Guốc gỗ</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/tui-xach">Túi xách</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/day-chuyen">Dây chuyền</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/kep-no-cai-toc">Kẹp & nơ cài tóc</a></li>
                                     </ul>
                                 </div>
 
                                 <div class="category-column">
                                     <h3>Nón Lá</h3>
                                     <ul>
-                                        <li><a href="nonlahodiep.jsp">Nón lá bọc vải Hồ điệp</a></li>
-                                        <li><a href="nonlahoabuoi.jsp">Nón lá bọc vải Chè hoa bưởi</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/non-la-ho-diep">Nón lá bọc vải Hồ điệp</a></li>
+                                        <li><a href="${pageContext.request.contextPath}/danh-muc/non-la-hoa-buoi">Nón lá bọc vải Chè hoa bưởi</a></li>
                                     </ul>
                                 </div>
 
@@ -153,12 +159,11 @@
                         </div>
                     </ul>
                 </li>
-                <li><a href="contactus.jsp">Liên Hệ</a></li>
-                <li><a href="promotion.jsp">Chương trình khuyến mãi</a></li>
+                <li><a href="${pageContext.request.contextPath}/contactus.jsp">Liên Hệ</a></li>
+                <li><a href="${pageContext.request.contextPath}/promotion.jsp">Chương trình khuyến mãi</a></li>
             </ul>
         </nav>
         <div class="icons">
-
             <a href="#" id="searchTrigger"><i class="fa-solid fa-magnifying-glass"></i></a>
 
             <div class="user-menu">
@@ -222,14 +227,14 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="index.jsp">Trang Chủ</a></li>
-            <li class="breadcrumb-item"><a href="all-product.jsp">Tất cả sản phẩm </a></li><li class="breadcrumb-item active" aria-current="page">Kẹp và nơ cài tóc</li>
+            <li class="breadcrumb-item active" aria-current="page">${currentCategory.nameCategory}</li>
         </ol>
     </nav>
 </div>
 <main>
     <section class="product-showcase tab-component">
         <div class="title-h1-linen">
-            <h1>KẸP VÀ NƠ CÀI TÓC</h1>
+            <h1>${currentCategory.nameCategory}</h1>
         </div>
         <div class="toolbar-container">
             <div class="sort-by-wrapper">
@@ -247,13 +252,16 @@
             </div>
         </div>
         <div class="product-grid">
+            <c:forEach var="pdto" items="${list}">
             <div class="product-card">
                 <div class="product-image-wrapper">
                     <div class="product-image">
-                        <a href="product-information.jsp"><img src="image/kep_1.jpg" alt="Kẹp tóc hình hoa 5 cánh - cỡ lớn"></a>
+                        <a href="${pageContext.request.contextPath}/product-detail?id=${pdto.id}">
+                            <img src="${pdto.thumbnail}" alt="${pdto.nameProduct}">
+                        </a>
                     </div>
                     <div class="product-overlay">
-                        <a href="product-information.jsp" class="icon-button" title="Tuỳ chọn">
+                        <a href="${pageContext.request.contextPath}/product-detail?id=${pdto.id}" class="icon-button" title="Tùy chọn">
                             <i class="fa-solid fa-cart-shopping"></i>
                         </a>
                         <a href="#" class="icon-button" title="Xem nhanh">
@@ -263,170 +271,16 @@
                 </div>
 
                 <div class="product-info">
-                    <a href="product-information.jsp"><p class="product-name">Kẹp tóc hình hoa 5 cánh - cỡ lớn</p></a>
+                    <a href="${pageContext.request.contextPath}/product-detail?id=${pdto.id}"><p class="product-name">${pdto.nameProduct}</p></a>
                     <div class="product-price">
-                        <span class="current-price">72,000₫</span>
+                        <span class="current-price">${pdto.price}</span>
                     </div>
                 </div>
             </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.jsp"><img src="image/kep_2.jpg" alt="Kẹp tóc hình hoa 4 cánh - cỡ nhỏ"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.jsp" class="icon-button" title="Tuỳ chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
+            </c:forEach>
 
-                <div class="product-info">
-                    <a href="product-information.jsp"><p class="product-name">Kẹp tóc hình hoa 4 cánh - cỡ nhỏ</p></a>
-                    <div class="product-price">
-                        <span class="current-price">39,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.jsp"><img src="image/kep_3.jpg" alt="Kẹp tóc hình hoa 5 cánh - cỡ vừa"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.jsp" class="icon-button" title="Tuỳ chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="product-info">
-                    <a href="product-information.jsp"><p class="product-name">Kẹp tóc hình hoa 5 cánh - cỡ vừa</p></a>
-                    <div class="product-price">
-                        <span class="current-price">79,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.jsp"><img src="image/kep_4.jpg" alt="Kẹp tóc càng cua hình hoa hồng"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.jsp" class="icon-button" title="Tuỳ chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.jsp"><p class="product-name">Kẹp tóc càng cua hình hoa hồng</p></a>
-                    <div class="product-price">
-                        <span class="current-price">70,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.jsp"><img src="image/kep_5.jpg" alt="Kẹp tóc hình vỏ sò"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.jsp" class="icon-button" title="Tuỳ chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.jsp"><p class="product-name">Kẹp tóc hình vỏ sò</p></a>
-                    <div class="product-price">
-                        <span class="current-price">72,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.jsp"><img src="image/kep_6.jpg" alt="Kẹp tóc KE-089 bó hoa tulip vàng nơ vàng"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.jsp" class="icon-button" title="Tuỳ chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.jsp"><p class="product-name">Kẹp tóc KE-089 bó hoa tulip vàng nơ vàng</p></a>
-                    <div class="product-price">
-                        <span class="current-price">790,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.jsp"><img src="image/kep_7.jpg" alt="Kẹp tóc KE-088 bó hoa tím cam loang tua rua xanh lá"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.jsp" class="icon-button" title="Tuỳ chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.jsp"><p class="product-name">Kẹp tóc KE-088 bó hoa tím cam loang tua rua xanh lág</p></a>
-                    <div class="product-price">
-                        <span class="old-price">70,000₫</span>
-                        <span class="current-price">55,000₫</span>
-                        <span class="discount-tag">15%</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.jsp"><img src="image/kep_8.jpg" alt="Kẹp tóc KE-087 hoa lily hồng nơ trắng sữa"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.jsp" class="icon-button" title="Tuỳ chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.jsp"><p class="product-name"> Kẹp tóc KE-087 hoa lily hồng nơ trắng sữa</p></a>
-                    <div class="product-price">
-                        <span class="old-price">70,000₫</span>
-                        <span class="current-price">55,000₫</span>
-                        <span class="discount-tag">15%</span>
-                    </div>
-                </div>
-            </div>
         </div>
+<!--        phân trang-->
         <div class="pagination">
             <a href="#"><img src="image/chevron_left.png" alt=""></a>
             <a href="#" class="active">1</a>
@@ -438,15 +292,14 @@
     <section class="product-showcase tab-component">
         <div class="title-h1-linen">
             <h1>SẢN PHẨM ĐÃ XEM</h1>
-        </div>
             <div class="product-grid">
                 <div class="product-card">
                     <div class="product-image-wrapper">
                         <div class="product-image">
-                            <a href="product-information.jsp"><img src="image/kep_9.jpg" alt="Kẹp tóc KE-086 hoa vàng hồng tím nơ trắng"></a>
+                            <a href="product-information.jsp"><img src="image/linen_1.png" alt="Áo dài linen Chi Lan cổ đứng"></a>
                         </div>
                         <div class="product-overlay">
-                            <a href="product-information.jsp" class="icon-button" title="Tuỳ chọn">
+                            <a href="product-information.jsp" class="icon-button" title="Tùy chọn">
                                 <i class="fa-solid fa-cart-shopping"></i>
                             </a>
                             <a href="#" class="icon-button" title="Xem nhanh">
@@ -456,138 +309,7 @@
                     </div>
 
                     <div class="product-info">
-                        <a href="product-information.jsp"><p class="product-name">Kẹp tóc KE-086 hoa vàng hồng tím nơ trắng</p></a>
-                        <div class="product-price">
-                            <span class="current-price">79,000₫</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image-wrapper">
-                        <div class="product-image">
-                            <a href="product-information.jsp"><img src="image/kep_1.jpg" alt="Kẹp tóc hình hoa 5 cánh - cỡ lớn"></a>
-                        </div>
-                        <div class="product-overlay">
-                            <a href="product-information.jsp" class="icon-button" title="Tuỳ chọn">
-                                <i class="fa-solid fa-cart-shopping"></i>
-                            </a>
-                            <a href="#" class="icon-button" title="Xem nhanh">
-                                <i class="fa-solid fa-eye"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="product-info">
-                        <a href="product-information.jsp"><p class="product-name">Kẹp tóc hình hoa 5 cánh - cỡ lớn</p></a>
-                        <div class="product-price">
-                            <span class="current-price">72,000₫</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image-wrapper">
-                        <div class="product-image">
-                            <a href="product-information.jsp"><img src="image/kep_2.jpg" alt="Kẹp tóc hình hoa 4 cánh - cỡ nhỏ"></a>
-                        </div>
-                        <div class="product-overlay">
-                            <a href="product-information.jsp" class="icon-button" title="Tuỳ chọn">
-                                <i class="fa-solid fa-cart-shopping"></i>
-                            </a>
-                            <a href="#" class="icon-button" title="Xem nhanh">
-                                <i class="fa-solid fa-eye"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="product-info">
-                        <a href="product-information.jsp"><p class="product-name">Kẹp tóc hình hoa 4 cánh - cỡ nhỏ</p></a>
-                        <div class="product-price">
-                            <span class="current-price">39,000₫</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image-wrapper">
-                        <div class="product-image">
-                            <a href="product-information.jsp"><img src="image/kep_3.jpg" alt="Kẹp tóc hình hoa 5 cánh - cỡ vừa"></a>
-                        </div>
-                        <div class="product-overlay">
-                            <a href="product-information.jsp" class="icon-button" title="Tuỳ chọn">
-                                <i class="fa-solid fa-cart-shopping"></i>
-                            </a>
-                            <a href="#" class="icon-button" title="Xem nhanh">
-                                <i class="fa-solid fa-eye"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="product-info">
-                        <a href="product-information.jsp"><p class="product-name">Kẹp tóc hình hoa 5 cánh - cỡ vừa</p></a>
-                        <div class="product-price">
-                            <span class="current-price">79,000₫</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image-wrapper">
-                        <div class="product-image">
-                            <a href="product-information.jsp"><img src="image/kep_4.jpg" alt="Kẹp tóc càng cua hình hoa hồng"></a>
-                        </div>
-                        <div class="product-overlay">
-                            <a href="product-information.jsp" class="icon-button" title="Tuỳ chọn">
-                                <i class="fa-solid fa-cart-shopping"></i>
-                            </a>
-                            <a href="#" class="icon-button" title="Xem nhanh">
-                                <i class="fa-solid fa-eye"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="product-info">
-                        <a href="product-information.jsp"><p class="product-name">Kẹp tóc càng cua hình hoa hồng</p></a>
-                        <div class="product-price">
-                            <span class="current-price">70,000₫</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image-wrapper">
-                        <div class="product-image">
-                            <a href="product-information.jsp"><img src="image/kep_5.jpg" alt="Kẹp tóc hình vỏ sò"></a>
-                        </div>
-                        <div class="product-overlay">
-                            <a href="product-information.jsp" class="icon-button" title="Tuỳ chọn">
-                                <i class="fa-solid fa-cart-shopping"></i>
-                            </a>
-                            <a href="#" class="icon-button" title="Xem nhanh">
-                                <i class="fa-solid fa-eye"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="product-info">
-                        <a href="product-information.jsp"><p class="product-name">Kẹp tóc hình vỏ sò</p></a>
-                        <div class="product-price">
-                            <span class="current-price">72,000₫</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="product-card">
-                    <div class="product-image-wrapper">
-                        <div class="product-image">
-                            <a href="product-information.jsp"><img src="image/kep_6.jpg" alt="Kẹp tóc KE-089 bó hoa tulip vàng nơ vàng"></a>
-                        </div>
-                        <div class="product-overlay">
-                            <a href="product-information.jsp" class="icon-button" title="Tuỳ chọn">
-                                <i class="fa-solid fa-cart-shopping"></i>
-                            </a>
-                            <a href="#" class="icon-button" title="Xem nhanh">
-                                <i class="fa-solid fa-eye"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="product-info">
-                        <a href="product-information.jsp"><p class="product-name">Kẹp tóc KE-089 bó hoa tulip vàng nơ vàng</p></a>
+                        <a href="product-information.jsp"><p class="product-name">Áo dài linen Chi Lan</p></a>
                         <div class="product-price">
                             <span class="current-price">790,000₫</span>
                         </div>
@@ -596,7 +318,7 @@
                 <div class="product-card">
                     <div class="product-image-wrapper">
                         <div class="product-image">
-                            <a href="product-information.jsp"><img src="image/kep_7.jpg" alt="Kẹp tóc KE-088 bó hoa tím cam loang tua rua xanh lá"></a>
+                            <a href="product-information.jsp"><img src="image/linen_2.png" alt="Áo dài linen hoa Ý Lan"></a>
                         </div>
                         <div class="product-overlay">
                             <a href="product-information.jsp" class="icon-button" title="Tuỳ chọn">
@@ -609,21 +331,40 @@
                     </div>
 
                     <div class="product-info">
-                        <a href="product-information.jsp"><p class="product-name">Kẹp tóc KE-088 bó hoa tím cam loang tua rua xanh lág</p></a>
+                        <a href="product-information.jsp"><p class="product-name">Áo dài linen hoa Ý Lan</p></a>
                         <div class="product-price">
-                            <span class="old-price">70,000₫</span>
-                            <span class="current-price">55,000₫</span>
-                            <span class="discount-tag">15%</span>
+                            <span class="current-price">720,000₫</span>
                         </div>
                     </div>
                 </div>
                 <div class="product-card">
                     <div class="product-image-wrapper">
                         <div class="product-image">
-                            <a href="product-information.jsp"><img src="image/kep_8.jpg" alt="Kẹp tóc KE-087 hoa lily hồng nơ trắng sữa"></a>
+                            <a href="product-information.jsp"><img src="image/linen_3.png" alt="Áo dài linen hoa Ý Mai"></a>
                         </div>
                         <div class="product-overlay">
-                            <a href="product-information.htm" class="icon-button" title="Tuỳ chọn">
+                            <a href="product-information.jsp" class="icon-button" title="Tùy chọn">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                            </a>
+                            <a href="#" class="icon-button" title="Xem nhanh">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <a href="product-information.jsp"><p class="product-name">Áo dài linen hoa Ý Mai</p></a>
+                        <div class="product-price">
+                            <span class="current-price">790,000₫</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image-wrapper">
+                        <div class="product-image">
+                            <a href="product-information.jsp"><img src="image/linen_4.png" alt="Áo dài linen hoa Ý Nhi"></a>
+                        </div>
+                        <div class="product-overlay">
+                            <a href="product-information.jsp" class="icon-button" title="Tuỳ chọn">
                                 <i class="fa-solid fa-cart-shopping"></i>
                             </a>
                             <a href="#" class="icon-button" title="Xem nhanh">
@@ -633,13 +374,104 @@
                     </div>
 
                     <div class="product-info">
-                        <a href="product-information.jsp"><p class="product-name"> Kẹp tóc KE-087 hoa lily hồng nơ trắng sữa</p></a>
+                        <a href="product-information.jsp"><p class="product-name">Áo dài linen hoa Ý Nhi</p></a>
                         <div class="product-price">
-                            <span class="old-price">70,000₫</span>
-                            <span class="current-price">55,000₫</span>
+                            <span class="current-price">790,000₫</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image-wrapper">
+                        <div class="product-image">
+                            <a href="product-information.jsp"><img src="image/linen_5.png" alt="Áo dài linen hoa Ý Nhiên"></a>
+                        </div>
+                        <div class="product-overlay">
+                            <a href="product-information.jsp" class="icon-button" title="Tuỳ chọn">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                            </a>
+                            <a href="#" class="icon-button" title="Xem nhanh">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="product-info">
+                        <a href="product-information.jsp"><p class="product-name">Áo dài linen hoa Ý Nhiên</p></a>
+                        <div class="product-price">
+                            <span class="current-price">720,000₫</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image-wrapper">
+                        <div class="product-image">
+                            <a href="product-information.jsp"><img src="image/linen_6.png" alt="Áo dài linen hoa Ý Xuân"></a>
+                        </div>
+                        <div class="product-overlay">
+                            <a href="product-information.jsp" class="icon-button" title="Tuỳ chọn">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                            </a>
+                            <a href="#" class="icon-button" title="Xem nhanh">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="product-info">
+                        <a href="product-information.jsp"><p class="product-name">Áo dài linen hoa Ý Xuân</p></a>
+                        <div class="product-price">
+                            <span class="current-price">790,000₫</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image-wrapper">
+                        <div class="product-image">
+                            <a href="product-information.jsp"><img src="image/linen_7.jpg" alt="Áo dài linen Khả Lan cổ đứng"></a>
+                        </div>
+                        <div class="product-overlay">
+                            <a href="product-information.jsp" class="icon-button" title="Tuỳ chọn">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                            </a>
+                            <a href="#" class="icon-button" title="Xem nhanh">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="product-info">
+                        <a href="product-information.jsp"><p class="product-name">Áo dài linen Khả Lan cổ đứng</p></a>
+                        <div class="product-price">
+                            <span class="old-price">790,000₫</span>
+                            <span class="current-price">671,500₫</span>
                             <span class="discount-tag">15%</span>
                         </div>
                     </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-image-wrapper">
+                        <div class="product-image">
+                            <a href="product-information.jsp"><img src="image/linen_8.png" alt="Áo dài linen Mộc Lan cổ đứng"></a>
+                        </div>
+                        <div class="product-overlay">
+                            <a href="product-information.jsp" class="icon-button" title="Tùy chọn">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                            </a>
+                            <a href="#" class="icon-button" title="Xem nhanh">
+                                <i class="fa-solid fa-eye"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="product-info">
+                        <a href="product-information.jsp"><p class="product-name">Áo dài linen Mộc Lan cổ đứng</p></a>
+                        <div class="product-price">
+                            <span class="old-price">790,000₫</span>
+                            <span class="current-price">671,500₫</span>
+                            <span class="discount-tag">15%</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="pagination">
@@ -649,6 +481,7 @@
             <a href="#">3</a>
             <a href="#"><img src="image/chevron_right.png" alt=""></a>
         </div>
+
     </section>
 </main>
 <div id="quick-view-model" class="model-overlay">
@@ -750,7 +583,7 @@
             </div>
         </div>
         <div class="success-footer">
-            <a href="#" class="checkout-btn">Thanh toán</a>
+            <a href="thanhtoan.jsp" class="checkout-btn">Thanh toán</a>
             <a href="giohang.jsp" class="success-btn">Xem giỏ hàng</a>
         </div>
     </div>
@@ -778,7 +611,7 @@
                 <ul class="footer-links">
                     <li><a href="aodaitruyenthong.jsp">Áo dài truyền thống</a></li>
                     <li><a href="aodaitheutay.jsp">Áo dài thêu tay</a></li>
-                    <li><a href="aodailinen.jsp">Áo dài linen</a></li>
+                    <li><a href="aodailinen.html">Áo dài linen</a></li>
                     <li><a href="quantrucchi.jsp">Quần trúc chi</a></li>
                     <li><a href="guocgo.jsp">Guốc mộc</a></li>
                     <li><a href="contactus.jsp">Liên hệ</a></li>
