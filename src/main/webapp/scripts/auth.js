@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 signInWithPopup(auth, provider)
                     .then((result) => {
                         const user = result.user;
-                        doLoginGoogle(user.email, user.displayName, user.uid);
+                        doLoginSocial(user.email, user.displayName, user.uid, 'google');
                     })
                     .catch((error) => {
                         console.error("Lỗi Google Login:", error);

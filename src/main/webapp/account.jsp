@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="style/style-header.css">
     <link rel="stylesheet" href="style/footer.css">
     <link rel="stylesheet" href="style/breadcrumb.css">
+    <link rel="stylesheet" href="style/aodai.css">
     <script src="scripts/home.js"></script>
     <link rel="stylesheet" href="style/account.css">
 </head>
@@ -104,7 +105,7 @@
                     <ul class="sub-menu">
                         <li><a href="aodaitruyenthong.jsp">Áo dài truyền thống</a></li>
                         <li><a href="aodaitheutay.jsp">Áo dài thêu tay</a></li>
-                        <li><a href="aodailinen.jsp">Áo dài linen</a></li>
+                        <li><a href="list-product.jsp">Áo dài linen</a></li>
                     </ul>
                 </li>
                 <li class="has-megamenu"><a href="#">Quần & Phụ kiện<i class="fa-solid fa-chevron-down"></i></a>
@@ -421,7 +422,7 @@
                 <ul class="footer-links">
                     <li><a href="aodaitruyenthong.jsp">Áo dài truyền thống</a></li>
                     <li><a href="aodaitheutay.jsp">Áo dài thêu tay</a></li>
-                    <li><a href="aodailinen.jsp">Áo dài linen</a></li>
+                    <li><a href="list-product.jsp">Áo dài linen</a></li>
                     <li><a href="quantrucchi.jsp">Quần trúc chi</a></li>
                     <li><a href="guocgo.jsp">Guốc mộc</a></li>
                     <li><a href="contactus.jsp">Liên hệ</a></li>
