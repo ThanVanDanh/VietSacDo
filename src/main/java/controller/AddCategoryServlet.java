@@ -30,15 +30,11 @@ public class AddCategoryServlet extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         try {
-            System.out.println("=== Initializing AddCategoryServlet ===");
             CategoryDao categoryDao = new CategoryDao();
             Jdbi jdbi = categoryDao.get();
-            System.out.println("✅ CategoryDao created, JDBI: " + jdbi);
 
             this.categoryService = new CategoryService(jdbi);
-            System.out.println("✅ CategoryService initialized");
 
-            // Test load categories
             List<Category> testCats = categoryService.getAllCategories();
             System.out.println("✅ Test load: " + testCats.size() + " categories found");
 

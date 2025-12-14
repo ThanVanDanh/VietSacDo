@@ -82,4 +82,13 @@ public class CategoryDao extends BaseDao {
         );
         return count != null && count > 0;
     }
+    public Category getCategoryBySlug(String slug) {
+        return get().withHandle(handle ->
+                handle.createQuery("SELECT * FROM Categories WHERE slug = :slug")
+                        .bind("slug", slug)
+                        .mapToBean(Category.class)
+                        .findFirst()
+                        .orElse(null)
+        );
+    }
 }
