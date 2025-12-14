@@ -29,6 +29,14 @@ public class UserDao extends BaseDao {
                         .one()
         );
     }
+    public boolean updatePassword(String email, String newPasswordHash) {
+        return get().withHandle(handle ->
+                handle.createUpdate("UPDATE Users SET password_hash = :password WHERE email = :email")
+                        .bind("password", newPasswordHash)
+                        .bind("email", email)
+                        .execute() > 0
+        );
+    }
 
 }
 
