@@ -109,8 +109,7 @@
                                 <label for="product-category">Danh mục <span style="color:red">*</span></label>
                                 <div style="display:flex; gap:8px; align-items:center;">
                                     <select name="product-category" id="product-category" required>
-                                        <option value="">-- Tải danh mục --</option>
-                                        <!-- server render categories or frontend will populate -->
+                                        <option value="">-- Đang tải danh mục --</option>
                                     </select>
                                     <a href="#" id="openAddCategoryFromProduct" class="btn btn-secondary">Thêm</a>
                                 </div>
@@ -136,7 +135,6 @@
 
                             <div class="form-group-modal full-width">
                                 <h3>Biến thể (Product_variants)</h3>
-                                <!-- variants as array inputs -->
                                 <div id="variantsContainer" class="variants-list"></div>
                                 <a href="#" id="addVariantBtn" class="btn btn-secondary" style="margin-top:8px;">+ Thêm Biến thể</a>
                             </div>
@@ -147,7 +145,7 @@
                                     <i class="fas fa-cloud-upload-alt"></i>
                                     <p>Nhấn để tải ảnh lên (Hỗ trợ nhiều ảnh)</p>
                                 </label>
-                                <input type="file" id="product-image-input" name="productImages[]" accept="image/*" multiple>
+                                <input type="file" id="product-image-input" name="productImages" accept="image/*" multiple style="display:none;">
                                 <div class="image-preview-grid" id="imagePreviewGrid"></div>
                                 <p class="meta">Bạn có thể đánh dấu 1 ảnh làm thumbnail. Ảnh sẽ được upload lên server khi lưu.</p>
                             </div>
@@ -162,7 +160,7 @@
             </div>
         </div>
 
-        <!-- Add Category Modal (simple demo) -->
+        <!-- Add Category Modal -->
         <div id="addCategoryModal" class="modal-overlay" aria-hidden="true">
             <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="categoryModalTitle">
                 <div class="modal-header">
@@ -170,27 +168,27 @@
                     <span class="close-button" id="closeCategoryModalBtn">&times;</span>
                 </div>
 
-                <form id="addCategoryForm" novalidate>
+                <form id="addCategoryForm" action="${pageContext.request.contextPath}/admin/category/add" method="post" novalidate>
                     <div class="modal-body">
                         <div class="modal-form-grid">
                             <div class="form-group-modal full-width">
                                 <label for="category-name">Tên danh mục <span style="color:red">*</span></label>
-                                <input type="text" id="category-name" placeholder="VD: Áo dài" required>
+                                <input type="text" id="category-name" name="category-name" placeholder="VD: Áo dài" required>
                             </div>
 
                             <div class="form-group-modal full-width">
                                 <label for="category-slug">Slug (tự động nếu để trống)</label>
-                                <input type="text" id="category-slug" placeholder="ao-dai">
+                                <input type="text" id="category-slug" name="category-slug" placeholder="ao-dai">
                             </div>
 
                             <div class="form-group-modal full-width">
                                 <label for="category-description">Mô tả</label>
-                                <textarea id="category-description"></textarea>
+                                <textarea id="category-description" name="category-description"></textarea>
                             </div>
 
                             <div class="form-group-modal full-width">
                                 <label for="category-parent">Danh mục cha (nếu có)</label>
-                                <select id="category-parent">
+                                <select id="category-parent" name="category-parent">
                                     <option value="">-- Không --</option>
                                 </select>
                             </div>
@@ -198,8 +196,8 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn-modal btn-modal-secondary" id="cancelAddCategory">Hủy</button>
-                        <button type="submit" class="btn-modal btn-modal-primary">Lưu Danh mục</button>
+                        <button type="button" class="btn-modal btn-modal-secondary" id="cancelCategoryModalBtn">Hủy</button>
+                        <button type="submit" class="btn-modal btn-modal-primary" id="categorySubmitBtn">Lưu Danh mục</button>
                     </div>
                 </form>
             </div>
@@ -208,23 +206,28 @@
     </main>
 </div>
 
-<!-- JavaScript: chỉ chứa logic cần thiết cho thêm sản phẩm -->
+<!-- JavaScript -->
 <script>
+    // Context path từ JSP
+    const CTX = '${pageContext.request.contextPath}';
+
     document.addEventListener('DOMContentLoaded', function () {
         // ============================
-        // Biến DOM chính
+        // DOM Elements
         // ============================
         const addProductModal = document.getElementById('addProductModal');
         const addProductBtn = document.getElementById('addProductBtn');
         const closeModalBtn = document.getElementById('closeModalBtn');
         const cancelModalBtn = document.getElementById('cancelModalBtn');
         const addProductForm = document.getElementById('addProductForm');
+        const modalSubmitBtn = document.getElementById('modalSubmitBtn');
 
         const addCategoryBtn = document.getElementById('addCategoryBtn');
         const addCategoryModal = document.getElementById('addCategoryModal');
         const closeCategoryModalBtn = document.getElementById('closeCategoryModalBtn');
-        const cancelAddCategory = document.getElementById('cancelAddCategory');
+        const cancelCategoryModalBtn = document.getElementById('cancelCategoryModalBtn');
         const addCategoryForm = document.getElementById('addCategoryForm');
+        const categorySubmitBtn = document.getElementById('categorySubmitBtn');
         const openAddCategoryFromProduct = document.getElementById('openAddCategoryFromProduct');
 
         const productCategorySelect = document.getElementById('product-category');
@@ -234,18 +237,10 @@
         const imagePreviewGrid = document.getElementById('imagePreviewGrid');
         const variantsContainer = document.getElementById('variantsContainer');
         const addVariantBtn = document.getElementById('addVariantBtn');
-        const modalSubmitBtn = document.getElementById('modalSubmitBtn');
-
-        // Kiểm tra nhanh để tránh lỗi nếu DOM thiếu
-        if (!addProductForm) {
-            console.warn('addProductForm không tồn tại trên trang. Kiểm tra lại id trong JSP.');
-            return;
-        }
 
         // ============================
-        // Helpers (Tiếng Việt)
+        // Helper Functions
         // ============================
-        // escapeHtml: tránh XSS khi chèn text vào value/innerHTML
         function escapeHtml(s) {
             if (s === null || s === undefined) return '';
             return String(s)
@@ -256,117 +251,248 @@
                 .replace(/'/g, '&#39;');
         }
 
-        // slugify: tạo slug đơn giản từ tên
-        function slugify(text) {
-            if (!text) return '';
-            return text.toString().toLowerCase()
-                .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-                .replace(/đ/g,'d').replace(/[^a-z0-9 -]/g,'').trim().replace(/\s+/g,'-');
-        }
-
-        // ============================
-        // Modal open / close
-        // ============================
         function openModal(modal) {
             if (!modal) return;
+            modal.classList.add('active');
             modal.style.display = 'block';
             modal.setAttribute('aria-hidden', 'false');
-            modal.style.zIndex = 9999;
-            // focus first input để tiện thao tác
-            const first = modal.querySelector('input, select, textarea, button');
-            if (first) first.focus();
         }
+
         function closeModal(modal) {
             if (!modal) return;
+            modal.classList.remove('active');
             modal.style.display = 'none';
             modal.setAttribute('aria-hidden', 'true');
         }
 
-        // Gắn event cho các nút modal
-        if (addProductBtn) {
-            addProductBtn.addEventListener('click', function (e) {
-                e.preventDefault();
-                resetProductForm();
-                document.getElementById('modalTitle').textContent = 'Thêm Sản phẩm mới';
-                openModal(addProductModal);
-            });
-        } else {
-            console.warn('Không tìm thấy nút addProductBtn');
+        // ============================
+        // Load Categories từ Server
+        // ============================
+        function loadCategories() {
+            console.log('Đang tải danh mục...');
+
+            fetch(CTX + '/admin/category/list')
+                .then(function(response) {
+                    console.log('Response status:', response.status);
+                    if (!response.ok) {
+                        throw new Error('HTTP ' + response.status + ': ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(function(categories) {
+                    console.log('Đã tải ' + categories.length + ' danh mục:', categories);
+                    refreshCategorySelects(categories);
+                })
+                .catch(function(error) {
+                    console.error('Lỗi tải danh mục:', error);
+                    alert('Không thể tải danh sách danh mục: ' + error.message + '\n\nKiểm tra:\n1. Servlet có chạy?\n2. URL đúng?\n3. Database có kết nối?');
+                });
         }
-        if (closeModalBtn) closeModalBtn.addEventListener('click', function () { closeModal(addProductModal); });
-        if (cancelModalBtn) cancelModalBtn.addEventListener('click', function () { closeModal(addProductModal); });
-        // đóng khi click ra ngoài
-        window.addEventListener('click', function (evt) {
+
+        // ============================
+        // Refresh Category Selects
+        // ============================
+        function refreshCategorySelects(categories) {
+            console.log('Cập nhật dropdowns với', categories.length, 'danh mục');
+
+            // Update product category select
+            if (productCategorySelect) {
+                const currentValue = productCategorySelect.value;
+                productCategorySelect.innerHTML = '<option value="">-- Chọn danh mục --</option>';
+
+                if (categories && categories.length > 0) {
+                    categories.forEach(function(cat) {
+                        const opt = document.createElement('option');
+                        opt.value = cat.id;
+                        opt.textContent = cat.nameCategory;
+                        productCategorySelect.appendChild(opt);
+                    });
+                    console.log('Đã thêm', categories.length, 'options vào product-category');
+                }
+
+                if (currentValue) productCategorySelect.value = currentValue;
+            }
+
+            // Update parent category select
+            if (categoryParentSelect) {
+                const currentValue = categoryParentSelect.value;
+                categoryParentSelect.innerHTML = '<option value="">-- Không --</option>';
+
+                if (categories && categories.length > 0) {
+                    categories.forEach(function(cat) {
+                        const opt = document.createElement('option');
+                        opt.value = cat.id;
+                        opt.textContent = cat.nameCategory;
+                        categoryParentSelect.appendChild(opt);
+                    });
+                    console.log('Đã thêm', categories.length, 'options vào category-parent');
+                }
+
+                if (currentValue) categoryParentSelect.value = currentValue;
+            }
+        }
+
+        // ============================
+        // Product Modal Events
+        // ============================
+        if (addProductBtn) {
+            addProductBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Mở modal thêm sản phẩm');
+                resetProductForm();
+                openModal(addProductModal);
+                loadCategories(); // Tải danh mục khi mở modal
+            });
+        }
+
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', function() {
+                closeModal(addProductModal);
+            });
+        }
+
+        if (cancelModalBtn) {
+            cancelModalBtn.addEventListener('click', function() {
+                closeModal(addProductModal);
+            });
+        }
+
+        // Đóng khi click ngoài modal
+        window.addEventListener('click', function(evt) {
             if (evt.target === addProductModal) closeModal(addProductModal);
             if (evt.target === addCategoryModal) closeModal(addCategoryModal);
         });
 
-        // Category modal
-        if (addCategoryBtn) addCategoryBtn.addEventListener('click', function (e) { e.preventDefault(); openModal(addCategoryModal); });
-        if (closeCategoryModalBtn) closeCategoryModalBtn.addEventListener('click', function () { closeModal(addCategoryModal); });
-        if (cancelAddCategory) cancelAddCategory.addEventListener('click', function () { closeModal(addCategoryModal); });
-        if (openAddCategoryFromProduct) openAddCategoryFromProduct.addEventListener('click', function (e) { e.preventDefault(); openModal(addCategoryModal); });
-
         // ============================
-        // Demo categories (bạn thay bằng dữ liệu thật server-side)
+        // Category Modal Events
         // ============================
-        var categories = [
-            {id:1, name_category:'Áo dài', slug:'ao-dai', description:'', parent_category_id:null}
-        ];
-        function refreshCategorySelects(){
-            if (!productCategorySelect || !categoryParentSelect) return;
-            productCategorySelect.innerHTML = '<option value="">-- Chọn danh mục --</option>';
-            categoryParentSelect.innerHTML = '<option value="">-- Không --</option>';
-            categories.forEach(function(cat){
-                var opt = document.createElement('option'); opt.value = cat.id; opt.textContent = cat.name_category;
-                productCategorySelect.appendChild(opt);
-                var opt2 = document.createElement('option'); opt2.value = cat.id; opt2.textContent = cat.name_category;
-                categoryParentSelect.appendChild(opt2);
+        if (addCategoryBtn) {
+            addCategoryBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                console.log('Mở modal thêm danh mục');
+                addCategoryForm.reset();
+                openModal(addCategoryModal);
+                loadCategories(); // Tải danh mục cho parent select
             });
         }
-        refreshCategorySelects();
 
-        // Add category demo (nếu muốn gửi server thì đổi phần này thành AJAX POST)
-        if (addCategoryForm) {
-            addCategoryForm.addEventListener('submit', function (e) {
+        if (openAddCategoryFromProduct) {
+            openAddCategoryFromProduct.addEventListener('click', function(e) {
                 e.preventDefault();
-                var name = document.getElementById('category-name').value.trim();
-                var slug = document.getElementById('category-slug').value.trim();
-                var desc = document.getElementById('category-description').value.trim();
-                var parent = document.getElementById('category-parent').value || null;
-                if (!name) { alert('Tên danh mục là bắt buộc'); return; }
-                if (!slug) slug = slugify(name);
-                // demo local push
-                var newCat = { id: Date.now(), name_category: name, slug: slug, description: desc, parent_category_id: parent };
-                categories.push(newCat);
-                refreshCategorySelects();
+                console.log('Mở modal thêm danh mục từ form sản phẩm');
+                addCategoryForm.reset();
+                openModal(addCategoryModal);
+                loadCategories();
+            });
+        }
+
+        if (closeCategoryModalBtn) {
+            closeCategoryModalBtn.addEventListener('click', function() {
+                closeModal(addCategoryModal);
+            });
+        }
+
+        if (cancelCategoryModalBtn) {
+            cancelCategoryModalBtn.addEventListener('click', function() {
                 closeModal(addCategoryModal);
             });
         }
 
         // ============================
-        // Variants UI: tạo hàng biến thể (dùng name arrays để form gửi dễ)
+        // Submit Category Form với AJAX
+        // ============================
+        if (addCategoryForm) {
+            addCategoryForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const name = document.getElementById('category-name').value.trim();
+                if (!name) {
+                    alert('Tên danh mục là bắt buộc');
+                    return;
+                }
+
+                console.log('Đang gửi form thêm danh mục...');
+
+                // Disable button
+                if (categorySubmitBtn) {
+                    categorySubmitBtn.disabled = true;
+                    categorySubmitBtn.textContent = 'Đang lưu...';
+                }
+
+                const formData = new FormData(addCategoryForm);
+
+                fetch(CTX + '/admin/category/add', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                })
+                    .then(function(response) {
+                        console.log('Response status:', response.status);
+                        if (!response.ok) {
+                            return response.text().then(function(text) {
+                                throw new Error(text || 'Lỗi server: ' + response.status);
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(function(data) {
+                        console.log('Server response:', data);
+                        if (data && data.success) {
+                            alert('Thêm danh mục thành công!');
+                            closeModal(addCategoryModal);
+                            addCategoryForm.reset();
+
+                            // Reload categories và chọn category vừa tạo
+                            loadCategories();
+
+                            // Chọn category mới trong dropdown
+                            setTimeout(function() {
+                                if (productCategorySelect && data.id) {
+                                    productCategorySelect.value = data.id;
+                                }
+                            }, 500);
+                        } else {
+                            alert('Thêm danh mục thất bại. Server trả về: ' + JSON.stringify(data));
+                        }
+                    })
+                    .catch(function(error) {
+                        console.error('Lỗi:', error);
+                        alert('Lỗi khi thêm danh mục: ' + error.message);
+                    })
+                    .finally(function() {
+                        // Re-enable button
+                        if (categorySubmitBtn) {
+                            categorySubmitBtn.disabled = false;
+                            categorySubmitBtn.textContent = 'Lưu Danh mục';
+                        }
+                    });
+            });
+        }
+
+        // ============================
+        // Variants Management
         // ============================
         function createVariantRow(data) {
             data = data || {sku:'', size:'', color:'', price:'', stock:''};
 
-            var row = document.createElement('div');
+            const row = document.createElement('div');
             row.className = 'variant-row';
 
-            var html = '';
-            html += '<input name="sku[]" placeholder="SKU" class="variant-sku" value="' + escapeHtml(data.sku) + '" />';
-            html += '<input name="size[]" placeholder="Size" class="variant-size" value="' + escapeHtml(data.size) + '" />';
-            html += '<input name="color[]" placeholder="Color" class="variant-color" value="' + escapeHtml(data.color) + '" />';
-            html += '<input name="current_price[]" type="number" step="0.01" placeholder="Giá" class="variant-price" value="' + escapeHtml(data.price) + '" />';
-            html += '<input name="stock_quantity[]" type="number" placeholder="Tồn" class="variant-stock" value="' + escapeHtml(data.stock) + '" />';
+            let html = '';
+            html += '<input name="variant-sku[]" placeholder="SKU" class="variant-sku" value="' + escapeHtml(data.sku) + '" />';
+            html += '<input name="variant-size[]" placeholder="Size" class="variant-size" value="' + escapeHtml(data.size) + '" />';
+            html += '<input name="variant-color[]" placeholder="Color" class="variant-color" value="' + escapeHtml(data.color) + '" />';
+            html += '<input name="variant-price[]" type="number" step="0.01" placeholder="Giá" class="variant-price" value="' + escapeHtml(data.price) + '" />';
+            html += '<input name="variant-quantity[]" type="number" placeholder="Tồn" class="variant-stock" value="' + escapeHtml(data.stock) + '" />';
             html += '<button class="btn btn-secondary btn-remove-variant" type="button">Xóa</button>';
 
             row.innerHTML = html;
 
-            // gắn event xóa
-            var btn = row.querySelector('.btn-remove-variant');
-            if (btn) {
-                btn.addEventListener('click', function (e) {
+            const btnRemove = row.querySelector('.btn-remove-variant');
+            if (btnRemove) {
+                btnRemove.addEventListener('click', function(e) {
                     e.preventDefault();
                     row.remove();
                 });
@@ -377,22 +503,29 @@
         }
 
         if (addVariantBtn) {
-            addVariantBtn.addEventListener('click', function (e) { e.preventDefault(); createVariantRow(); });
+            addVariantBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                createVariantRow();
+            });
         }
-        // tạo 1 row mặc định nếu chưa có
-        if (variantsContainer && !variantsContainer.querySelector('.variant-row')) createVariantRow();
+
+        // Tạo 1 variant mặc định
+        if (variantsContainer) {
+            createVariantRow();
+        }
 
         // ============================
-        // Image preview + chọn thumbnail
+        // Image Preview
         // ============================
         if (imageInput && imagePreviewGrid) {
-            imageInput.addEventListener('change', function (e) {
-                var files = Array.prototype.slice.call(e.target.files || []);
+            imageInput.addEventListener('change', function(e) {
+                const files = Array.prototype.slice.call(e.target.files || []);
                 imagePreviewGrid.innerHTML = '';
-                files.forEach(function (file, idx) {
-                    var reader = new FileReader();
-                    reader.onload = function (ev) {
-                        var wrapper = document.createElement('div');
+
+                files.forEach(function(file, idx) {
+                    const reader = new FileReader();
+                    reader.onload = function(ev) {
+                        const wrapper = document.createElement('div');
                         wrapper.className = 'image-preview-item';
                         wrapper.style.position = 'relative';
                         wrapper.style.display = 'inline-block';
@@ -400,7 +533,7 @@
                         wrapper.dataset.filename = file.name;
                         wrapper.dataset.isThumbnail = '0';
 
-                        var img = document.createElement('img');
+                        const img = document.createElement('img');
                         img.src = ev.target.result;
                         img.alt = file.name;
                         img.style.width = '160px';
@@ -409,42 +542,44 @@
                         img.style.borderRadius = '8px';
                         wrapper.appendChild(img);
 
-                        var label = document.createElement('div');
+                        const label = document.createElement('div');
                         label.style.fontSize = '12px';
                         label.style.marginTop = '6px';
                         label.style.textAlign = 'center';
                         label.textContent = file.name;
                         wrapper.appendChild(label);
 
-                        var thumbBtn = document.createElement('button');
-                        thumbBtn.className = 'btn btn-secondary';
+                        const thumbBtn = document.createElement('button');
+                        thumbBtn.className = 'btn btn-primary';
                         thumbBtn.type = 'button';
                         thumbBtn.style.position = 'absolute';
                         thumbBtn.style.bottom = '6px';
                         thumbBtn.style.left = '6px';
                         thumbBtn.textContent = 'Thumbnail';
-                        thumbBtn.addEventListener('click', function (evt) {
+                        thumbBtn.addEventListener('click', function(evt) {
                             evt.preventDefault();
-                            // clear previous
-                            var items = imagePreviewGrid.querySelectorAll('.image-preview-item');
-                            Array.prototype.forEach.call(items, function(it){
+                            const items = imagePreviewGrid.querySelectorAll('.image-preview-item');
+                            Array.prototype.forEach.call(items, function(it) {
                                 it.dataset.isThumbnail = '0';
-                                var iimg = it.querySelector('img');
+                                const iimg = it.querySelector('img');
                                 if (iimg) iimg.style.outline = '';
                             });
                             wrapper.dataset.isThumbnail = '1';
-                            img.style.outline = '3px solid ' + (getComputedStyle(document.documentElement).getPropertyValue('--brand') || '#640100').trim();
+                            img.style.outline = '3px solid #640100';
                         });
                         wrapper.appendChild(thumbBtn);
 
-                        var removeBtn = document.createElement('button');
+                        const removeBtn = document.createElement('button');
                         removeBtn.className = 'btn btn-secondary';
                         removeBtn.type = 'button';
                         removeBtn.style.position = 'absolute';
                         removeBtn.style.bottom = '6px';
                         removeBtn.style.right = '6px';
                         removeBtn.textContent = 'Xóa';
-                        removeBtn.addEventListener('click', function (evt) { evt.preventDefault(); wrapper.remove(); });
+                        removeBtn.addEventListener('click', function(evt) {
+                            evt.preventDefault();
+                            wrapper.remove();
+                        });
                         wrapper.appendChild(removeBtn);
 
                         imagePreviewGrid.appendChild(wrapper);
@@ -455,77 +590,68 @@
         }
 
         // ============================
-        // Trước khi submit: tạo hidden inputs cho alt + isThumbnail theo thứ tự preview
-        // Form dùng gửi truyền thống (multipart/form-data) đến servlet
+        // Submit Product Form
         // ============================
-        addProductForm.addEventListener('submit', function (e) {
-            // basic validation
-            var name = document.getElementById('product-name').value.trim();
-            if (!name) { e.preventDefault(); alert('Tên sản phẩm là bắt buộc'); return; }
-
-            // disable nút submit để tránh bấm 2 lần
-            if (modalSubmitBtn) {
-                modalSubmitBtn.disabled = true;
-                modalSubmitBtn.textContent = 'Đang lưu...';
-            }
-
-            // xóa các hidden cũ (nếu có)
-            var oldAlts = addProductForm.querySelectorAll('input[name="productImageAlt[]"], input[name="productImageIsThumb[]"]');
-            Array.prototype.forEach.call(oldAlts, function(n){ n.remove(); });
-
-            // build metadata từ preview grid (nếu có), nếu không dùng file input
-            var previewItems = imagePreviewGrid ? imagePreviewGrid.querySelectorAll('.image-preview-item') : [];
-            if (previewItems && previewItems.length > 0) {
-                Array.prototype.forEach.call(previewItems, function(item){
-                    var fname = item.dataset.filename || '';
-                    var alt = (item.querySelector('img') && item.querySelector('img').alt) ? item.querySelector('img').alt : fname;
-                    var isThumb = item.dataset.isThumbnail === '1' ? '1' : '0';
-
-                    var altInput = document.createElement('input');
-                    altInput.type = 'hidden';
-                    altInput.name = 'productImageAlt[]';
-                    altInput.value = alt;
-                    addProductForm.appendChild(altInput);
-
-                    var thumbInput = document.createElement('input');
-                    thumbInput.type = 'hidden';
-                    thumbInput.name = 'productImageIsThumb[]';
-                    thumbInput.value = isThumb;
-                    addProductForm.appendChild(thumbInput);
-                });
-            } else {
-                // fallback: lấy file input theo thứ tự file list
-                var fileInput = document.getElementById('product-image-input');
-                if (fileInput && fileInput.files && fileInput.files.length > 0) {
-                    for (var i = 0; i < fileInput.files.length; i++) {
-                        var f = fileInput.files[i];
-                        var altInput2 = document.createElement('input');
-                        altInput2.type = 'hidden';
-                        altInput2.name = 'productImageAlt[]';
-                        altInput2.value = f.name;
-                        addProductForm.appendChild(altInput2);
-
-                        var thumbInput2 = document.createElement('input');
-                        thumbInput2.type = 'hidden';
-                        thumbInput2.name = 'productImageIsThumb[]';
-                        thumbInput2.value = '0';
-                        addProductForm.appendChild(thumbInput2);
-                    }
+        if (addProductForm) {
+            addProductForm.addEventListener('submit', function(e) {
+                const name = document.getElementById('product-name').value.trim();
+                if (!name) {
+                    e.preventDefault();
+                    alert('Tên sản phẩm là bắt buộc');
+                    return;
                 }
-            }
-            // form sẽ submit tự nhiên; servlet sẽ xử lý upload + lưu DB
-        });
+
+                // Disable submit button
+                if (modalSubmitBtn) {
+                    modalSubmitBtn.disabled = true;
+                    modalSubmitBtn.textContent = 'Đang lưu...';
+                }
+
+                // Xóa hidden inputs cũ
+                const oldInputs = addProductForm.querySelectorAll('input[name="productImageAlt[]"], input[name="productImageIsThumb[]"]');
+                Array.prototype.forEach.call(oldInputs, function(input) {
+                    input.remove();
+                });
+
+                // Tạo hidden inputs cho image metadata
+                const previewItems = imagePreviewGrid.querySelectorAll('.image-preview-item');
+                if (previewItems.length > 0) {
+                    Array.prototype.forEach.call(previewItems, function(item) {
+                        const fname = item.dataset.filename || '';
+                        const alt = item.querySelector('img') ? item.querySelector('img').alt : fname;
+                        const isThumb = item.dataset.isThumbnail === '1' ? '1' : '0';
+
+                        const altInput = document.createElement('input');
+                        altInput.type = 'hidden';
+                        altInput.name = 'productImageAlt[]';
+                        altInput.value = alt;
+                        addProductForm.appendChild(altInput);
+
+                        const thumbInput = document.createElement('input');
+                        thumbInput.type = 'hidden';
+                        thumbInput.name = 'productImageIsThumb[]';
+                        thumbInput.value = isThumb;
+                        addProductForm.appendChild(thumbInput);
+                    });
+                }
+
+                console.log('Đang submit form sản phẩm...');
+                // Form sẽ submit bình thường đến servlet
+            });
+        }
 
         // ============================
-        // Reset helper
+        // Reset Product Form
         // ============================
         function resetProductForm() {
             addProductForm.reset();
-            if (variantsContainer) variantsContainer.innerHTML = '';
-            if (imagePreviewGrid) imagePreviewGrid.innerHTML = '';
-            // tạo 1 dòng biến thể mặc định
-            if (variantsContainer) createVariantRow();
-            refreshCategorySelects();
+            if (variantsContainer) {
+                variantsContainer.innerHTML = '';
+                createVariantRow();
+            }
+            if (imagePreviewGrid) {
+                imagePreviewGrid.innerHTML = '';
+            }
             if (modalSubmitBtn) {
                 modalSubmitBtn.disabled = false;
                 modalSubmitBtn.textContent = 'Lưu Sản phẩm';
@@ -533,35 +659,38 @@
         }
 
         // ============================
-        // Tính năng tìm kiếm bảng (giữ lại)
+        // Search Function
         // ============================
-        (function () {
-            var searchInput = document.getElementById('globalSearchInput');
-            if (!searchInput) return;
-            searchInput.addEventListener('input', function () {
-                var q = this.value.trim().toLowerCase();
-                var rows = document.querySelectorAll('#productTableBody tr');
-                Array.prototype.forEach.call(rows, function (row) {
-                    var name = (row.querySelector('td:nth-child(2)') && row.querySelector('td:nth-child(2)').innerText) ? row.querySelector('td:nth-child(2)').innerText.toLowerCase() : '';
-                    var codeMeta = (row.querySelector('.meta') && row.querySelector('.meta').innerText) ? row.querySelector('.meta').innerText.toLowerCase() : '';
-                    var category = (row.querySelector('td:nth-child(3)') && row.querySelector('td:nth-child(3)').innerText) ? row.querySelector('td:nth-child(3)').innerText.toLowerCase() : '';
-                    var all = (row.innerText || '').toLowerCase();
-                    var match = !q || name.indexOf(q) !== -1 || codeMeta.indexOf(q) !== -1 || category.indexOf(q) !== -1 || all.indexOf(q) !== -1;
+        const searchInput = document.getElementById('globalSearchInput');
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const q = this.value.trim().toLowerCase();
+                const rows = document.querySelectorAll('#productTableBody tr');
+
+                Array.prototype.forEach.call(rows, function(row) {
+                    const text = row.innerText.toLowerCase();
+                    const match = !q || text.indexOf(q) !== -1;
                     row.style.display = match ? '' : 'none';
                 });
             });
-            window.addEventListener('keydown', function (e) {
+
+            // Shortcut: press '/' to focus search
+            window.addEventListener('keydown', function(e) {
                 if (e.key === '/' && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)) {
                     e.preventDefault();
-                    var s = document.getElementById('globalSearchInput');
-                    if (s) s.focus();
+                    searchInput.focus();
                 }
             });
-        })();
+        }
+
+        // ============================
+        // Load categories on page load
+        // ============================
+        console.log('Page loaded, loading categories...');
+        loadCategories();
 
     }); // DOMContentLoaded end
 </script>
-
 
 </body>
 </html>
