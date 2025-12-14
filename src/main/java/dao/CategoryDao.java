@@ -31,4 +31,22 @@ public class CategoryDao extends BaseDao {
                 .mapTo(int.class)
                 .one();
     }
+    public Category getCategoryById(int id) {
+        return get().withHandle(handle ->
+                handle.createQuery("SELECT * FROM Categories WHERE id = :id")
+                        .bind("id", id)
+                        .mapToBean(Category.class)
+                        .findFirst()
+                        .orElse(null)
+        );
+    }
+    public Category getCategoryBySlug(String slug) {
+        return get().withHandle(handle ->
+                handle.createQuery("SELECT * FROM Categories WHERE slug = :slug")
+                        .bind("slug", slug)
+                        .mapToBean(Category.class)
+                        .findFirst()
+                        .orElse(null)
+        );
+    }
 }
