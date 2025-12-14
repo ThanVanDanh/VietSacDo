@@ -282,15 +282,17 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <form class="page_auth" id="forgot_password_form">
+                        <form class="page_auth" id="forgot_password_form" action="forgot-password" method="POST">
+                            <input type="hidden" name="action" value="request">
                             <fieldset class="form-group">
                                 <label>
                                     Email
                                     <span class="req">*</span>
                                 </label>
-                                <input type="email" id="email_reset" placeholder="Email" required autocomplete="email">
+                                <input type="email" name="email" id="email_reset" placeholder="Email" required autocomplete="email">
                                 <small>Chúng tôi sẽ gửi mã otp đến email để khôi phục mật khẩu của bạn.</small>
                             </fieldset>
+                            <p style="color: red; font-style: italic;">${error}</p>
                             <div>
                                 <button type="submit">Gửi yêu cầu</button>
                             </div>
