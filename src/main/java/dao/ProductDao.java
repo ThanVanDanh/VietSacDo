@@ -12,7 +12,6 @@ import java.util.List;
 
 public class ProductDao extends BaseDao {
     public List<ProductListDTO> getListProduct() {
-        // SQL lấy id, tên, và sub-query cho giá, ảnh, sku
         String sql = "SELECT p.id, p.name_product, " +
                 "(SELECT current_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS price, " +
                 "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
@@ -48,6 +47,22 @@ public class ProductDao extends BaseDao {
             }
             return product;
         });
+    }
+    // Thêm vào trong class ProductDao
+    public List<ProductListDTO> getProductsByCategory(int categoryId) {
+        String sql = "SELECT p.id, p.name_product, " +
+                "(SELECT current_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS price, " +
+                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
+                "(SELECT sku FROM Product_variants WHERE product_id = p.id LIMIT 1) AS sku " +
+                "FROM Products p " +
+                "WHERE p.category_id = :categoryId";
+
+        return get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("categoryId", categoryId)
+                        .mapToBean(ProductListDTO.class)
+                        .list()
+        );
     }
 
     public int insert(Product product) {
