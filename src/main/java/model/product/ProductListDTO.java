@@ -12,7 +12,8 @@ public class ProductListDTO extends AId {
     public ProductListDTO(int id) {
         super(id);
     }
-    public ProductListDTO() {}
+    public ProductListDTO() {
+    }
 
 
     public String getNameProduct() { return nameProduct; }
