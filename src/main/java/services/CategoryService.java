@@ -12,8 +12,9 @@ public class CategoryService {
     private final Jdbi jdbi;
 
     public CategoryService(Jdbi jdbi) {
-        this.jdbi = Objects.requireNonNull(jdbi);;
-        this.categoryDao = new  CategoryDao();
+        this.jdbi = Objects.requireNonNull(jdbi);
+        ;
+        this.categoryDao = new CategoryDao();
     }
 
     public List<Category> getAllCategories() {
@@ -42,8 +43,10 @@ public class CategoryService {
         if (categoryDao.existsBySlug(cat.getSlug())) {
             // vẫn trùng sau nhiều lần
             return -2; // mã lỗi slug duplicate
-        }   return categoryDao.insert(cat);
+        }
+        return categoryDao.insert(cat);
     }
+
     private String slugify(String text) {
         if (text == null) return "";
         String s = text.toLowerCase().trim();
@@ -55,6 +58,27 @@ public class CategoryService {
         s = s.replaceAll("\\s+", "-");
         s = s.replaceAll("-{2,}", "-");
         return s;
+    }
+
+    public Category getCategoryById(int id) {
+        return categoryDao.getById(id);
+    }
+
+    public boolean updateCategory(Category category) {
+        return categoryDao.update(category);
+    }
+
+    public boolean deleteCategory(int id) {
+        return categoryDao.delete(id);
+    }
+
+
+    public int countChildCategories(int categoryId) {
+        return categoryDao.countChildCategories(categoryId);
+    }
+
+    public int countProducts(int categoryId) {
+        return categoryDao.countProducts(categoryId);
     }
 }
 
