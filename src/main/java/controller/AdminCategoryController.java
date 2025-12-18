@@ -16,15 +16,15 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * AddCategoryServlet với CORS support
+ * AdminCategoryController với CORS support
  */
-@WebServlet(name = "AddCategoryServlet", urlPatterns = {"/admin/category/add", "/admin/category/list"})
+@WebServlet(name = "AdminCategoryController", urlPatterns = {"/admin/category/add", "/admin/category/list"})
 @MultipartConfig
-public class AddCategoryServlet extends HttpServlet {
+public class AdminCategoryController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private CategoryService categoryService;
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
 
     @Override
     public void init() throws ServletException {
