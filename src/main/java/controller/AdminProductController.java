@@ -23,14 +23,14 @@ import java.io.InputStream;
 import java.util.*;
 
 /**
- * AddProductServlet - GỘP CẢ LIST VÀ ADD
+ * AdminProductController - GỘP CẢ LIST VÀ ADD
  *
  * GET  /admin/product/add -> Trả về JSON danh sách products (list)
  * POST /admin/product/add -> Thêm product mới
  */
-@WebServlet(name = "AddProductServlet", urlPatterns = {"/admin/product/add"})
+@WebServlet(name = "AdminProductController", urlPatterns = {"/admin/product/add"})
 @MultipartConfig(maxFileSize = 1024 * 1024 * 10, maxRequestSize = 1024 * 1024 * 50)
-public class AddProductServlet extends HttpServlet {
+public class AdminProductController extends HttpServlet {
 
     private ProductService productService;
     private Gson gson = new Gson();
@@ -39,7 +39,7 @@ public class AddProductServlet extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         try {
-            System.out.println("=== Initializing AddProductServlet ===");
+            System.out.println("=== Initializing AdminProductController ===");
 
             ProductDao temp = new ProductDao();
             Jdbi jdbi = temp.get();
@@ -79,7 +79,7 @@ public class AddProductServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        System.out.println("=== doGet AddProductServlet (LIST) ===");
+        System.out.println("=== doGet AdminProductController (LIST) ===");
 
         addCorsHeaders(resp);
         resp.setCharacterEncoding("UTF-8");
@@ -114,7 +114,7 @@ public class AddProductServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        System.out.println("=== doPost AddProductServlet (ADD) ===");
+        System.out.println("=== doPost AdminProductController (ADD) ===");
 
         addCorsHeaders(resp);
         req.setCharacterEncoding("UTF-8");

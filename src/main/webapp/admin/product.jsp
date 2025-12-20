@@ -9,6 +9,37 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" href="../style/admin.css">
     <link rel="stylesheet" href="../style/productStyle.css">
+    <style>
+        /* Category Tree Styles */
+        .category-row {
+            transition: background-color 0.2s;
+        }
+        .category-row:hover {
+            background-color: #f8f9fa;
+        }
+        .category-indent {
+            display: inline-block;
+            width: 30px;
+            text-align: center;
+            color: #999;
+        }
+        .category-name-cell {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .parent-category {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        .child-category {
+            color: #555;
+        }
+        .category-icon {
+            color: #999;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
 <div class="admin-container">
@@ -41,6 +72,35 @@
             </div>
         </header>
 
+        <!-- Category Section -->
+        <section class="category-section" style="margin-bottom: 40px;">
+            <div class="category-list-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                <h2>Danh sách Danh mục</h2>
+                <div class="actions-row">
+                    <a href="#" class="btn btn-primary" id="addCategoryBtnTop">
+                        <i class="fas fa-folder-plus"></i> Thêm Danh mục
+                    </a>
+                </div>
+            </div>
+
+            <table class="product-table">
+                <thead>
+                <tr>
+                    <th style="width: 50px;">ID</th>
+                    <th>Tên Danh mục</th>
+                    <th style="width: 200px;">Slug</th>
+                    <th>Mô tả</th>
+                    <th style="width: 100px;">Số SP</th>
+                    <th style="width: 120px;">Cài đặt</th>
+                </tr>
+                </thead>
+                <tbody id="categoryTableBody">
+                <!-- Categories will be loaded here -->
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Product Section -->
         <section class="product-section">
             <div class="product-list-header">
                 <h2>Danh sách Sản phẩm</h2>
@@ -51,9 +111,6 @@
                 </div>
 
                 <div class="actions-row">
-                    <a href="#" class="btn btn-secondary" id="addCategoryBtn">
-                        <i class="fas fa-folder-plus"></i> Thêm Danh mục
-                    </a>
                     <a href="#" class="btn btn-primary" id="addProductBtn">
                         <i class="fas fa-plus"></i> Thêm Sản phẩm
                     </a>
@@ -100,21 +157,18 @@
                       method="post" enctype="multipart/form-data" novalidate>
                     <div class="modal-body">
                         <div class="modal-form-grid">
-                            <!-- Tên sản phẩm -->
                             <div class="form-group-modal full-width">
                                 <label for="product-name">Tên Sản phẩm <span style="color:red">*</span></label>
                                 <input name="product-name" type="text" id="product-name" required
                                        placeholder="Tên sản phẩm">
                             </div>
 
-                            <!-- Mã sản phẩm -->
                             <div class="form-group-modal">
                                 <label for="product-code">Mã sản phẩm</label>
                                 <input name="product-code" type="text" id="product-code"
                                        placeholder="VD: ADTT01">
                             </div>
 
-                            <!-- Danh mục - BỎ NÚT THÊM -->
                             <div class="form-group-modal">
                                 <label for="product-category">Danh mục <span style="color:red">*</span></label>
                                 <select name="product-category" id="product-category" required>
@@ -122,7 +176,6 @@
                                 </select>
                             </div>
 
-                            <!-- Trạng thái -->
                             <div class="form-group-modal">
                                 <label for="product-status">Trạng thái</label>
                                 <select name="product-status" id="product-status">
@@ -131,16 +184,12 @@
                                 </select>
                             </div>
 
-                            <!-- BỎ TRƯỜNG NGÀY TẠO -->
-
-                            <!-- Mô tả -->
                             <div class="form-group-modal full-width">
                                 <label for="product-description">Mô tả</label>
                                 <textarea name="product-description" id="product-description"
                                           placeholder="Mô tả chi tiết"></textarea>
                             </div>
 
-                            <!-- Biến thể -->
                             <div class="form-group-modal full-width">
                                 <h3>Biến thể (Product_variants)</h3>
                                 <div id="variantsContainer" class="variants-list"></div>
@@ -149,7 +198,6 @@
                                 </a>
                             </div>
 
-                            <!-- Hình ảnh -->
                             <div class="form-group-modal full-width">
                                 <h3>Hình ảnh (Product_images)</h3>
                                 <label class="product-image-upload" for="product-image-input">
@@ -231,6 +279,7 @@
 
 <script>
     const CTX = '${pageContext.request.contextPath}';
+
     function formatDateTime(dateStr) {
         if (!dateStr) return '-';
         var str = String(dateStr);
@@ -247,8 +296,238 @@
         return d + '/' + m + '/' + y + ' ' + h + ':' + min + ':' + s;
     }
 
+    function displayCategoriesTable(categories) {
+        var tbody = document.getElementById('categoryTableBody');
+        if (!tbody) return;
+
+        tbody.innerHTML = '';
+
+        if (!categories || categories.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:40px;">Chưa có danh mục nào</td></tr>';
+            return;
+        }
+
+        var categoryMap = {};
+        var productCountMap = {};
+
+        categories.forEach(function (cat) {
+            categoryMap[cat.id] = cat;
+            productCountMap[cat.id] = 0;
+        });
+
+        var parentCategories = [];
+        var childrenByParent = {};
+
+        categories.forEach(function (cat) {
+            if (!cat.parentCategoryId || cat.parentCategoryId === 0) {
+                parentCategories.push(cat);
+            } else {
+                if (!childrenByParent[cat.parentCategoryId]) {
+                    childrenByParent[cat.parentCategoryId] = [];
+                }
+                childrenByParent[cat.parentCategoryId].push(cat);
+            }
+        });
+
+        parentCategories.forEach(function (parent) {
+            renderCategoryRow(tbody, parent, 0, categoryMap, productCountMap);
+
+            var children = childrenByParent[parent.id];
+            if (children && children.length > 0) {
+                children.forEach(function (child) {
+                    renderCategoryRow(tbody, child, 1, categoryMap, productCountMap);
+                });
+            }
+        });
+    }
+
+    function renderCategoryRow(tbody, category, level, categoryMap, productCountMap) {
+        var row = document.createElement('tr');
+        row.className = 'category-row';
+
+        // ID
+        var idCell = document.createElement('td');
+        idCell.textContent = category.id;
+        idCell.style.textAlign = 'center';
+        idCell.style.color = '#666';
+        row.appendChild(idCell);
+
+        // Tên (với indent)
+        var nameCell = document.createElement('td');
+        var nameDiv = document.createElement('div');
+        nameDiv.className = 'category-name-cell';
+
+        if (level > 0) {
+            var indent = document.createElement('span');
+            indent.className = 'category-indent';
+            indent.innerHTML = '└─';
+            nameDiv.appendChild(indent);
+        }
+
+        var icon = document.createElement('i');
+        icon.className = level === 0 ? 'fas fa-folder category-icon' : 'fas fa-folder-open category-icon';
+        nameDiv.appendChild(icon);
+
+        var nameSpan = document.createElement('span');
+        nameSpan.textContent = category.nameCategory || 'N/A';
+        nameSpan.className = level === 0 ? 'parent-category' : 'child-category';
+        nameDiv.appendChild(nameSpan);
+
+        nameCell.appendChild(nameDiv);
+        row.appendChild(nameCell);
+
+        // Slug
+        var slugCell = document.createElement('td');
+        if (category.slug) {
+            var slugSpan = document.createElement('span');
+            slugSpan.textContent = category.slug;
+            slugSpan.style.color = '#666';
+            slugSpan.style.fontSize = '13px';
+            slugSpan.style.fontFamily = 'monospace';
+            slugCell.appendChild(slugSpan);
+        } else {
+            slugCell.textContent = '-';
+            slugCell.style.color = '#999';
+        }
+        row.appendChild(slugCell);
+
+        // Mô tả
+        var descCell = document.createElement('td');
+        if (category.description) {
+            var desc = category.description;
+            if (desc.length > 40) desc = desc.substring(0, 40) + '...';
+            descCell.textContent = desc;
+            descCell.style.fontSize = '13px';
+            descCell.style.color = '#555';
+        } else {
+            descCell.textContent = '-';
+            descCell.style.color = '#999';
+        }
+        row.appendChild(descCell);
+
+        // Số sản phẩm
+        var countCell = document.createElement('td');
+        countCell.textContent = productCountMap[category.id] || 0;
+        countCell.style.textAlign = 'center';
+        countCell.style.fontWeight = '500';
+        row.appendChild(countCell);
+
+        // Actions
+        var actionCell = document.createElement('td');
+        actionCell.style.textAlign = 'center';
+
+        var editBtn = document.createElement('a');
+        editBtn.href = '#';
+        editBtn.className = 'btn-icon';
+        editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+        editBtn.title = 'Sửa';
+        editBtn.style.marginRight = '8px';
+        editBtn.onclick = function (e) {
+            e.preventDefault();
+            editCategory(category);
+        };
+
+        var deleteBtn = document.createElement('a');
+        deleteBtn.href = '#';
+        deleteBtn.className = 'btn-icon btn-icon-danger';
+        deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+        deleteBtn.title = 'Xóa';
+        deleteBtn.onclick = function (e) {
+            e.preventDefault();
+            deleteCategory(category);
+        };
+
+        actionCell.appendChild(editBtn);
+        actionCell.appendChild(deleteBtn);
+        row.appendChild(actionCell);
+
+        tbody.appendChild(row);
+    }
+
+    function editCategory(category) {
+        var modal = document.getElementById('addCategoryModal');
+        var form = document.getElementById('addCategoryForm');
+
+        document.getElementById('categoryModalTitle').textContent = 'Chỉnh sửa Danh mục';
+
+        document.getElementById('category-name').value = category.nameCategory || '';
+        document.getElementById('category-slug').value = category.slug || '';
+        document.getElementById('category-description').value = category.description || '';
+        document.getElementById('category-parent').value = category.parentCategoryId || '';
+
+        form.dataset.editId = category.id;
+        document.getElementById('categorySubmitBtn').textContent = 'Cập nhật';
+
+        openModal(modal);
+        loadCategories();
+    }
+
+    function deleteCategory(category) {
+        if (!confirm('Bạn có chắc muốn xóa danh mục "' + category.nameCategory + '"?')) {
+            return;
+        }
+
+        fetch(CTX + '/admin/category/delete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'application/json'
+            },
+            body: 'id=' + category.id
+        })
+            .then(function (response) {
+                return response.json().then(function (data) {
+                    return {status: response.status, data: data};
+                });
+            })
+            .then(function (result) {
+                if (result.data && result.data.success) {
+                    alert('Xóa danh mục thành công!');
+                    loadCategories();
+                } else if (result.data && result.data.canDelete === false) {
+                    var childCount = result.data.childCount || 0;
+                    var productCount = result.data.productCount || 0;
+
+                    var msg = 'Không thể xóa danh mục "' + category.nameCategory + '" vì:\n\n';
+                    if (childCount > 0) msg += '• Còn ' + childCount + ' danh mục con\n';
+                    if (productCount > 0) msg += '• Còn ' + productCount + ' sản phẩm\n';
+
+                    msg += '\nVui lòng ';
+                    if (childCount > 0 && productCount > 0) {
+                        msg += 'xóa các danh mục con và chuyển/xóa các sản phẩm';
+                    } else if (childCount > 0) {
+                        msg += 'xóa các danh mục con';
+                    } else {
+                        msg += 'chuyển hoặc xóa các sản phẩm';
+                    }
+                    msg += ' trước.';
+
+                    alert(msg);
+                } else {
+                    alert('Xóa thất bại: ' + (result.data.error || 'Unknown error'));
+                }
+            })
+            .catch(function (error) {
+                alert('Lỗi: ' + error.message);
+            });
+    }
+
+    function loadCategories() {
+        fetch(CTX + '/admin/category/list')
+            .then(function (response) {
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.json();
+            })
+            .then(function (categories) {
+                refreshCategorySelects(categories);
+                displayCategoriesTable(categories);
+            })
+            .catch(function (error) {
+                alert('Không thể tải danh mục: ' + error.message);
+            });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
-        // DOM Elements
         const addProductModal = document.getElementById('addProductModal');
         const addProductBtn = document.getElementById('addProductBtn');
         const closeModalBtn = document.getElementById('closeModalBtn');
@@ -257,6 +536,7 @@
         const modalSubmitBtn = document.getElementById('modalSubmitBtn');
 
         const addCategoryBtn = document.getElementById('addCategoryBtn');
+        const addCategoryBtnTop = document.getElementById('addCategoryBtnTop');
         const addCategoryModal = document.getElementById('addCategoryModal');
         const closeCategoryModalBtn = document.getElementById('closeCategoryModalBtn');
         const cancelCategoryModalBtn = document.getElementById('cancelCategoryModalBtn');
@@ -271,7 +551,6 @@
         const variantsContainer = document.getElementById('variantsContainer');
         const addVariantBtn = document.getElementById('addVariantBtn');
 
-        // Helper Functions
         function escapeHtml(s) {
             if (s === null || s === undefined) return '';
             return String(s)
@@ -296,26 +575,7 @@
             modal.setAttribute('aria-hidden', 'true');
         }
 
-        // Load Categories
-        function loadCategories() {
-            console.log('Loading categories...');
-            fetch(CTX + '/admin/category/list')
-                .then(function (response) {
-                    if (!response.ok) throw new Error('HTTP ' + response.status);
-                    return response.json();
-                })
-                .then(function (categories) {
-                    console.log('Loaded ' + categories.length + ' categories');
-                    refreshCategorySelects(categories);
-                })
-                .catch(function (error) {
-                    console.error('Error loading categories:', error);
-                    alert('Không thể tải danh mục: ' + error.message);
-                });
-        }
-
-        function refreshCategorySelects(categories) {
-            // Update product category select
+        window.refreshCategorySelects = function (categories) {
             if (productCategorySelect) {
                 const currentValue = productCategorySelect.value;
                 productCategorySelect.innerHTML = '<option value="">-- Chọn danh mục --</option>';
@@ -332,7 +592,6 @@
                 if (currentValue) productCategorySelect.value = currentValue;
             }
 
-            // Update parent category select
             if (categoryParentSelect) {
                 const currentValue = categoryParentSelect.value;
                 categoryParentSelect.innerHTML = '<option value="">-- Không --</option>';
@@ -348,13 +607,11 @@
 
                 if (currentValue) categoryParentSelect.value = currentValue;
             }
-        }
+        };
 
-        // Product Modal Events
         if (addProductBtn) {
             addProductBtn.addEventListener('click', function (e) {
                 e.preventDefault();
-                console.log('Opening product modal...');
                 resetProductForm();
                 openModal(addProductModal);
                 loadCategories();
@@ -373,18 +630,25 @@
             });
         }
 
-        // Close on outside click
         window.addEventListener('click', function (evt) {
             if (evt.target === addProductModal) closeModal(addProductModal);
             if (evt.target === addCategoryModal) closeModal(addCategoryModal);
         });
 
-        // Category Modal Events
-        if (addCategoryBtn) {
-            addCategoryBtn.addEventListener('click', function (e) {
+        if (addCategoryBtnTop) {
+            addCategoryBtnTop.addEventListener('click', function (e) {
                 e.preventDefault();
-                addCategoryForm.reset();
-                openModal(addCategoryModal);
+
+                var form = document.getElementById('addCategoryForm');
+                var modal = document.getElementById('addCategoryModal');
+
+                form.reset();
+                delete form.dataset.editId;
+
+                document.getElementById('categoryModalTitle').textContent = 'Thêm Danh mục';
+                document.getElementById('categorySubmitBtn').textContent = 'Lưu Danh mục';
+
+                openModal(modal);
                 loadCategories();
             });
         }
@@ -401,7 +665,6 @@
             });
         }
 
-        // Submit Category Form
         if (addCategoryForm) {
             addCategoryForm.addEventListener('submit', function (e) {
                 e.preventDefault();
@@ -418,6 +681,10 @@
                 }
 
                 const formData = new FormData(addCategoryForm);
+                const editId = addCategoryForm.dataset.editId;
+                if (editId) {
+                    formData.append('id', editId);
+                }
 
                 fetch(CTX + '/admin/category/add', {
                     method: 'POST',
@@ -434,32 +701,25 @@
                     })
                     .then(function (data) {
                         if (data && data.success) {
-                            alert('Thêm danh mục thành công!');
+                            alert(editId ? 'Cập nhật thành công!' : 'Thêm danh mục thành công!');
                             closeModal(addCategoryModal);
                             addCategoryForm.reset();
+                            delete addCategoryForm.dataset.editId;
                             loadCategories();
-
-                            setTimeout(function () {
-                                if (productCategorySelect && data.id) {
-                                    productCategorySelect.value = data.id;
-                                }
-                            }, 500);
                         }
                     })
                     .catch(function (error) {
-                        console.error('Error:', error);
                         alert('Lỗi: ' + error.message);
                     })
                     .finally(function () {
                         if (categorySubmitBtn) {
                             categorySubmitBtn.disabled = false;
-                            categorySubmitBtn.textContent = 'Lưu Danh mục';
+                            categorySubmitBtn.textContent = editId ? 'Cập nhật' : 'Lưu Danh mục';
                         }
                     });
             });
         }
 
-        // Variants Management
         function createVariantRow(data) {
             data = data || {sku: '', size: '', color: '', price: '', stock: ''};
 
@@ -499,7 +759,6 @@
             createVariantRow();
         }
 
-        // Image Preview
         if (imageInput && imagePreviewGrid) {
             imageInput.addEventListener('change', function (e) {
                 const files = Array.prototype.slice.call(e.target.files || []);
@@ -572,7 +831,6 @@
             });
         }
 
-        // Submit Product Form với AJAX
         if (addProductForm) {
             addProductForm.addEventListener('submit', function (e) {
                 e.preventDefault();
@@ -588,13 +846,11 @@
                     modalSubmitBtn.textContent = 'Đang lưu...';
                 }
 
-                // Remove old hidden inputs
                 const oldInputs = addProductForm.querySelectorAll('input[name="productImageAlt[]"], input[name="productImageIsThumb[]"]');
                 Array.prototype.forEach.call(oldInputs, function (input) {
                     input.remove();
                 });
 
-                // Create hidden inputs for image metadata
                 const previewItems = imagePreviewGrid.querySelectorAll('.image-preview-item');
                 if (previewItems.length > 0) {
                     Array.prototype.forEach.call(previewItems, function (item) {
@@ -616,7 +872,6 @@
                     });
                 }
 
-                // Send AJAX request
                 const formData = new FormData(addProductForm);
 
                 fetch(CTX + '/admin/product/add', {
@@ -640,7 +895,6 @@
                         }
                     })
                     .catch(function (error) {
-                        console.error('Error:', error);
                         alert('Lỗi: ' + error.message);
                     })
                     .finally(function () {
@@ -652,7 +906,6 @@
             });
         }
 
-        // Reset Product Form
         function resetProductForm() {
             addProductForm.reset();
             if (variantsContainer) {
@@ -668,7 +921,6 @@
             }
         }
 
-        // Search Function
         const searchInput = document.getElementById('globalSearchInput');
         if (searchInput) {
             searchInput.addEventListener('input', function () {
@@ -690,41 +942,28 @@
             });
         }
 
-        // Load categories and products on page load
-        console.log('Page loaded');
         loadCategories();
         loadProducts();
 
-    }); // DOMContentLoaded end
+    });
 
-    // Load Products Function
     function loadProducts() {
-        console.log('Loading products...');
         fetch(CTX + '/admin/product/add')
-                .then(function (response) {
+            .then(function (response) {
                 if (!response.ok) throw new Error('HTTP ' + response.status);
                 return response.json();
             })
             .then(function (products) {
-                console.log('Loaded ' + products.length + ' products');
                 displayProducts(products);
             })
             .catch(function (error) {
-                console.error('Error loading products:', error);
                 alert('Không thể tải danh sách sản phẩm: ' + error.message);
             });
     }
 
-    // ============================================
-    // THAY THẾ HÀM displayProducts() TRONG product.jsp
-    // ============================================
-
     function displayProducts(products) {
         var tbody = document.getElementById('productTableBody');
-        if (!tbody) {
-            console.error('productTableBody not found');
-            return;
-        }
+        if (!tbody) return;
 
         tbody.innerHTML = '';
 
@@ -736,7 +975,6 @@
         products.forEach(function (product) {
             var row = document.createElement('tr');
 
-            // 1. Ảnh
             var imgCell = document.createElement('td');
             if (product.thumbnail) {
                 var img = document.createElement('img');
@@ -753,7 +991,6 @@
             }
             row.appendChild(imgCell);
 
-            // 2. Tên / Mã
             var nameCell = document.createElement('td');
             var nameDiv = document.createElement('div');
             nameDiv.className = 'product-name';
@@ -778,13 +1015,11 @@
             }
             row.appendChild(nameCell);
 
-            // 3. Danh mục
             var catCell = document.createElement('td');
             catCell.textContent = product.categoryName || 'N/A';
             if (!product.categoryName) catCell.style.color = '#999';
             row.appendChild(catCell);
 
-            // 4. Trạng thái
             var statusCell = document.createElement('td');
             var badge = document.createElement('span');
             badge.className = 'badge';
@@ -807,17 +1042,14 @@
             statusCell.appendChild(badge);
             row.appendChild(statusCell);
 
-            // 5. Biến thể
             var variantCell = document.createElement('td');
             variantCell.textContent = product.variantCount || 0;
             row.appendChild(variantCell);
 
-            // 6. Tồn kho
             var stockCell = document.createElement('td');
             if (product.totalStock !== null && product.totalStock !== undefined) {
                 stockCell.textContent = product.totalStock;
 
-                // Thêm màu cảnh báo nếu hết hàng
                 if (product.totalStock === 0) {
                     stockCell.style.color = 'red';
                     stockCell.style.fontWeight = 'bold';
@@ -830,7 +1062,6 @@
             }
             row.appendChild(stockCell);
 
-            // 7. Giá
             var priceCell = document.createElement('td');
             if (product.price !== null && product.price !== undefined) {
                 priceCell.textContent = Number(product.price).toLocaleString('vi-VN') + 'đ';
@@ -840,14 +1071,12 @@
             }
             row.appendChild(priceCell);
 
-            // 8. Ngày tạo
             var dateCell = document.createElement('td');
             dateCell.textContent = formatDateTime(product.createdAt);
             dateCell.style.fontSize = '13px';
             if (!product.createdAt) dateCell.style.color = '#999';
             row.appendChild(dateCell);
 
-            // 9. Cài đặt (Actions)
             var actionCell = document.createElement('td');
 
             var editBtn = document.createElement('a');
@@ -879,18 +1108,7 @@
 
             tbody.appendChild(row);
         });
-
-        console.log('✅ Displayed ' + products.length + ' products with full info');
     }
-
-    // ============================================
-    // NOTES:
-    // - categoryName: từ JOIN với Categories table
-    // - variantCount: số lượng variants
-    // - totalStock: tổng tồn kho từ tất cả variants
-    // - createdAt: ngày tạo (format dd/mm/yyyy)
-    // - statusProduct: active/inactive với màu sắc
-    // ============================================
 
 </script>
 
