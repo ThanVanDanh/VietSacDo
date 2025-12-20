@@ -6,7 +6,7 @@ import java.util.Optional;
 
 public class UserDao extends BaseDao {
     public User findByPhone(String phone) {
-        return get().withHandle(handle -> handle.createQuery("SELECT * FROM Users WHERE phone_number = :phone").bind("phone", phone)
+        return get().withHandle(handle -> handle.createQuery("SELECT * FROM Users WHERE email = :key OR phone_number = :key").bind("key", key)
                     .mapToBean(User.class).stream().findFirst().orElse(null));
     }
     public User findByEmail(String email) {
