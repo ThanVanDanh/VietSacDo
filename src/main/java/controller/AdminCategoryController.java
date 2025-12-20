@@ -11,176 +11,214 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.product.Category;
 import org.jdbi.v3.core.Jdbi;
 import services.CategoryService;
-
 import java.io.IOException;
 import java.util.List;
 
-/**
- * AdminCategoryController với CORS support
- */
-@WebServlet(name = "AdminCategoryController", urlPatterns = {"/admin/category/add", "/admin/category/list"})
+@WebServlet(name = "AdminCategoryController", urlPatterns = {"/admin/category/add", "/admin/category/list", "/admin/category/delete"})
 @MultipartConfig
 public class AdminCategoryController extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private CategoryService categoryService;
+    private CategoryDao categoryDao;
     private final Gson gson = new Gson();
 
     @Override
     public void init() throws ServletException {
         super.init();
         try {
-            CategoryDao categoryDao = new CategoryDao();
+            categoryDao = new CategoryDao();
             Jdbi jdbi = categoryDao.get();
-
-            this.categoryService = new CategoryService(jdbi);
-
-            List<Category> testCats = categoryService.getAllCategories();
-            System.out.println("✅ Test load: " + testCats.size() + " categories found");
-
+            categoryService = new CategoryService(jdbi);
         } catch (Throwable t) {
-            System.err.println("❌ Init failed: " + t.getMessage());
-            t.printStackTrace();
             throw new ServletException("Khởi tạo CategoryService thất bại: " + t.getMessage(), t);
         }
     }
 
-    /**
-     * ✅ THÊM: Xử lý CORS cho tất cả requests
-     */
     private void addCorsHeaders(HttpServletResponse resp) {
         resp.setHeader("Access-Control-Allow-Origin", "*");
-        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        resp.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, Authorization");
+        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
+        resp.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept");
         resp.setHeader("Access-Control-Max-Age", "3600");
     }
 
-    /**
-     * ✅ THÊM: Xử lý OPTIONS request (CORS preflight)
-     */
     @Override
     protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         addCorsHeaders(resp);
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 
-    /**
-     * GET -> trả JSON danh sách categories
-     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        System.out.println("=== doGet called ===");
-        System.out.println("Request URI: " + req.getRequestURI());
-
-        // ✅ Thêm CORS headers
         addCorsHeaders(resp);
-
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("application/json;charset=UTF-8");
 
         try {
-            if (categoryService == null) {
-                throw new IllegalStateException("CategoryService chưa được khởi tạo");
-            }
-
             List<Category> cats = categoryService.getAllCategories();
-            System.out.println("✅ Loaded " + cats.size() + " categories");
-
-            String json = gson.toJson(cats);
-            System.out.println("JSON response: " + json);
-
-            resp.getWriter().write(json);
+            resp.getWriter().write(gson.toJson(cats));
             resp.setStatus(HttpServletResponse.SC_OK);
-
         } catch (Exception ex) {
-            System.err.println("❌ Error in doGet: " + ex.getMessage());
-            ex.printStackTrace();
-
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().write("{\"error\":\"" + escapeJson(ex.getMessage()) + "\"}");
         }
     }
 
-    /**
-     * POST -> thêm danh mục
-     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("=== doPost called ===");
-        System.out.println("Request URI: " + req.getRequestURI());
-
-        // ✅ Thêm CORS headers
         addCorsHeaders(resp);
-
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
+        resp.setContentType("application/json;charset=UTF-8");
 
         try {
-            String name = req.getParameter("category-name");
-            String slug = req.getParameter("category-slug");
-            String description = req.getParameter("category-description");
-            String parent = req.getParameter("category-parent");
+            // Kiểm tra nếu là DELETE request
+            String uri = req.getRequestURI();
+            if (uri != null && uri.contains("/delete")) {
+                handleDelete(req, resp);
+                return;
+            }
 
-            System.out.println("Received params:");
-            System.out.println("  - name: " + name);
-            System.out.println("  - slug: " + slug);
-            System.out.println("  - description: " + description);
-            System.out.println("  - parent: " + parent);
+            // Đọc parameters
+            String idStr = req.getParameter("id");
+            String name = safe(req.getParameter("category-name"));
+            String slug = safe(req.getParameter("category-slug"));
+            String description = safe(req.getParameter("category-description"));
+            String parent = safe(req.getParameter("category-parent"));
 
-            if (name == null || name.trim().isEmpty()) {
+            if (name.isEmpty()) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                resp.setContentType("application/json;charset=UTF-8");
                 resp.getWriter().write("{\"success\":false, \"error\":\"Tên danh mục là bắt buộc\"}");
                 return;
             }
 
             Category cat = new Category();
-            cat.setNameCategory(name.trim());
-            cat.setSlug(slug != null && !slug.trim().isEmpty() ? slug.trim() : null);
-            cat.setDescription(description != null ? description.trim() : null);
+            cat.setNameCategory(name);
+            cat.setSlug(slug.isEmpty() ? generateSlug(name) : slug);
+            cat.setDescription(description.isEmpty() ? null : description);
 
-            if (parent != null && !parent.trim().isEmpty()) {
-                try {
-                    cat.setParentId(Integer.valueOf(parent.trim()));
-                } catch (NumberFormatException ex) {
-                    cat.setParentId(null);
+            int parentId = 0;
+            if (!parent.isEmpty()) {
+                try { parentId = Integer.parseInt(parent); } catch (Exception e) {}
+            }
+            cat.setParentId(parentId == 0 ? null : parentId);
+
+            boolean isUpdate = (idStr != null && !idStr.trim().isEmpty());
+
+            if (isUpdate) {
+                // UPDATE
+                int id = Integer.parseInt(idStr.trim());
+                cat.setId(id);
+                boolean success = categoryService.updateCategory(cat);
+
+                if (success) {
+                    resp.getWriter().write("{\"success\":true, \"id\":" + id + ", \"action\":\"update\"}");
+                } else {
+                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    resp.getWriter().write("{\"success\":false, \"error\":\"Category not found\"}");
                 }
             } else {
-                cat.setParentId(null);
+                // ADD
+                int newId = categoryService.createCategory(cat);
+
+                if (newId > 0) {
+                    resp.getWriter().write("{\"success\":true, \"id\":" + newId + ", \"slug\":\"" + escapeJson(cat.getSlug()) + "\", \"action\":\"add\"}");
+                } else if (newId == -2) {
+                    resp.setStatus(HttpServletResponse.SC_CONFLICT);
+                    resp.getWriter().write("{\"success\":false, \"error\":\"Slug đã tồn tại\"}");
+                } else {
+                    resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                    resp.getWriter().write("{\"success\":false, \"error\":\"Không thể thêm danh mục\"}");
+                }
             }
-
-            int newId = categoryService.createCategory(cat);
-            System.out.println("Created category with ID: " + newId);
-
-            if (newId > 0) {
-                resp.setContentType("application/json;charset=UTF-8");
-                String json = "{\"success\":true, \"id\":" + newId + ", \"slug\":\"" + escapeJson(cat.getSlug()) + "\"}";
-                resp.getWriter().write(json);
-                resp.setStatus(HttpServletResponse.SC_OK);
-
-            } else if (newId == -2) {
-                resp.setStatus(HttpServletResponse.SC_CONFLICT);
-                resp.setContentType("application/json;charset=UTF-8");
-                resp.getWriter().write("{\"success\":false, \"error\":\"Slug đã tồn tại\"}");
-
-            } else {
-                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                resp.setContentType("application/json;charset=UTF-8");
-                resp.getWriter().write("{\"success\":false, \"error\":\"Không thể thêm danh mục\"}");
-            }
-
+        } catch (NumberFormatException ex) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().write("{\"success\":false, \"error\":\"Invalid ID format\"}");
         } catch (Exception ex) {
-            System.err.println("❌ Error in doPost: " + ex.getMessage());
-            ex.printStackTrace();
-
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            resp.setContentType("application/json;charset=UTF-8");
             resp.getWriter().write("{\"success\":false, \"error\":\"" + escapeJson(ex.getMessage()) + "\"}");
         }
     }
 
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        handleDelete(req, resp);
+    }
+
+    private void handleDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        addCorsHeaders(resp);
+        resp.setCharacterEncoding("UTF-8");
+        resp.setContentType("application/json;charset=UTF-8");
+
+        try {
+            String idStr = req.getParameter("id");
+            if (idStr == null || idStr.trim().isEmpty()) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().write("{\"success\":false, \"error\":\"ID is required\"}");
+                return;
+            }
+
+            int id = Integer.parseInt(idStr.trim());
+
+            // Kiểm tra trước khi xóa
+            int childCount = categoryDao.countChildCategories(id);
+            int productCount = categoryDao.countProducts(id);
+
+            if (childCount > 0 || productCount > 0) {
+                // Không thể xóa
+                String jsonResponse = String.format(
+                        "{\"success\":false, \"canDelete\":false, \"childCount\":%d, \"productCount\":%d}",
+                        childCount, productCount
+                );
+                resp.setStatus(HttpServletResponse.SC_CONFLICT);
+                resp.getWriter().write(jsonResponse);
+                return;
+            }
+
+            // Có thể xóa
+            boolean success = categoryService.deleteCategory(id);
+            if (success) {
+                resp.getWriter().write("{\"success\":true, \"canDelete\":true}");
+            } else {
+                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                resp.getWriter().write("{\"success\":false, \"error\":\"Category not found\"}");
+            }
+
+        } catch (NumberFormatException ex) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().write("{\"success\":false, \"error\":\"Invalid ID format\"}");
+        } catch (IllegalStateException ex) {
+            resp.setStatus(HttpServletResponse.SC_CONFLICT);
+            resp.getWriter().write("{\"success\":false, \"error\":\"" + escapeJson(ex.getMessage()) + "\"}");
+        } catch (Exception ex) {
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.getWriter().write("{\"success\":false, \"error\":\"" + escapeJson(ex.getMessage()) + "\"}");
+        }
+    }
+
+    private String safe(String s) {
+        return s == null ? "" : s.trim();
+    }
+
+    private String generateSlug(String name) {
+        if (name == null || name.isEmpty()) return "";
+        return name.toLowerCase()
+                .replaceAll("[àáạảãâầấậẩẫăằắặẳẵ]", "a")
+                .replaceAll("[èéẹẻẽêềếệểễ]", "e")
+                .replaceAll("[ìíịỉĩ]", "i")
+                .replaceAll("[òóọỏõôồốộổỗơờớợởỡ]", "o")
+                .replaceAll("[ùúụủũưừứựửữ]", "u")
+                .replaceAll("[ỳýỵỷỹ]", "y")
+                .replaceAll("[đ]", "d")
+                .replaceAll("[^a-z0-9]+", "-")
+                .replaceAll("^-+|-+$", "");
+    }
+
     private String escapeJson(String s) {
         if (s == null) return "";
-        return s.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r");
+        return s.replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r");
     }
 }
