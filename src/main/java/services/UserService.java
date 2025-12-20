@@ -19,8 +19,8 @@ public class UserService {
         return userDao;
     }
 
-    public User login(String phone, String password) {
-        User user = userDao.findByPhone(phone);
+    public User login(String loginKey, String password) {
+        User user = userDao.findByPhone(loginKey);
         if (user == null) {
             return null;
         }
