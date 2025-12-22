@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -145,18 +146,24 @@
             </div>
 
             <div class="contact-form">
-                <form action="" id="contact-form">
+                <form action="" id="contact-form" method="post">
                     <h2>Gửi tin nhắn</h2>
+                    <c:if test="${not empty success}">
+                        <p style="color: green; margin-bottom: 10px;">${success}</p>
+                    </c:if>
+                    <c:if test="${not empty error}">
+                        <p style="color: red; margin-bottom: 10px;">${error}</p>
+                    </c:if>
                     <div class="input-box">
-                        <input type="text" placeholder="Họ và Tên" >
+                        <input type="text" name="fullName" placeholder="Họ và Tên" required>
                     </div>
 
                     <div class="input-box">
-                        <input type="email"  placeholder="Địa chỉ Email">
+                        <input type="email" name="email" placeholder="Địa chỉ Email" required>
                     </div>
 
                     <div class="input-box">
-                        <textarea placeholder="Lời nhắn..."></textarea>
+                        <textarea name="messageBody" placeholder="Lời nhắn..." required></textarea >
 
                     </div>
 
