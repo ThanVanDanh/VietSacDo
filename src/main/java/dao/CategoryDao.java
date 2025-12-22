@@ -4,7 +4,9 @@ import model.product.Category;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * CategoryDao - FIXED
@@ -138,6 +140,26 @@ public class CategoryDao extends BaseDao {
         );
     }
 
+    public Map<Integer, Integer> getProductCountsForAllCategories() {
+        String sql = "SELECT category_id, COUNT(*) as product_count " +
+                "FROM Products " +
+                "GROUP BY category_id";
+
+        return jdbi.withHandle(handle -> {
+            Map<Integer, Integer> counts = new HashMap<>();
+
+            handle.createQuery(sql)
+                    .map((rs, ctx) -> {
+                        int categoryId = rs.getInt("category_id");
+                        int count = rs.getInt("product_count");
+                        counts.put(categoryId, count);
+                        return null;
+                    })
+                    .list();
+
+            return counts;
+        });
+    }
     /**
      * Xóa category (có validation)
      * @throws IllegalStateException nếu không thể xóa

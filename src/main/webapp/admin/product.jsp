@@ -86,12 +86,11 @@
             <table class="product-table">
                 <thead>
                 <tr>
-                    <th style="width: 50px;">ID</th>
                     <th>Tên Danh mục</th>
                     <th style="width: 200px;">Slug</th>
                     <th>Mô tả</th>
-                    <th style="width: 100px;">Số SP</th>
-                    <th style="width: 120px;">Cài đặt</th>
+                    <th style="width: 100px; text-align: center">Số SP</th>
+                    <th style="width: 120px; text-align: center">Cài đặt</th>
                 </tr>
                 </thead>
                 <tbody id="categoryTableBody">
@@ -307,19 +306,19 @@
             return;
         }
 
+        // Map categories
         var categoryMap = {};
-        var productCountMap = {};
-
         categories.forEach(function (cat) {
             categoryMap[cat.id] = cat;
-            productCountMap[cat.id] = 0;
         });
 
+        // Phân loại parent và children
         var parentCategories = [];
         var childrenByParent = {};
 
         categories.forEach(function (cat) {
-            if (!cat.parentCategoryId || cat.parentCategoryId === 0) {
+            // ✅ FIX: Kiểm tra parentCategoryId (không phải parentId)
+            if (!cat.parentCategoryId || cat.parentCategoryId === null) {
                 parentCategories.push(cat);
             } else {
                 if (!childrenByParent[cat.parentCategoryId]) {
@@ -329,30 +328,24 @@
             }
         });
 
+        // Render: parent → children
         parentCategories.forEach(function (parent) {
-            renderCategoryRow(tbody, parent, 0, categoryMap, productCountMap);
+            renderCategoryRow(tbody, parent, 0);
 
             var children = childrenByParent[parent.id];
             if (children && children.length > 0) {
                 children.forEach(function (child) {
-                    renderCategoryRow(tbody, child, 1, categoryMap, productCountMap);
+                    renderCategoryRow(tbody, child, 1);
                 });
             }
         });
     }
 
-    function renderCategoryRow(tbody, category, level, categoryMap, productCountMap) {
+    function renderCategoryRow(tbody, category, level) {
         var row = document.createElement('tr');
         row.className = 'category-row';
 
-        // ID
-        var idCell = document.createElement('td');
-        idCell.textContent = category.id;
-        idCell.style.textAlign = 'center';
-        idCell.style.color = '#666';
-        row.appendChild(idCell);
-
-        // Tên (với indent)
+        // 2. Tên (với indent nếu là child)
         var nameCell = document.createElement('td');
         var nameDiv = document.createElement('div');
         nameDiv.className = 'category-name-cell';
@@ -376,7 +369,7 @@
         nameCell.appendChild(nameDiv);
         row.appendChild(nameCell);
 
-        // Slug
+        // 3. Slug
         var slugCell = document.createElement('td');
         if (category.slug) {
             var slugSpan = document.createElement('span');
@@ -391,7 +384,7 @@
         }
         row.appendChild(slugCell);
 
-        // Mô tả
+        // 4. Mô tả
         var descCell = document.createElement('td');
         if (category.description) {
             var desc = category.description;
@@ -405,21 +398,28 @@
         }
         row.appendChild(descCell);
 
-        // Số sản phẩm
+        // 5. Số sản phẩm - ✅ FIX: Lấy từ productCount trong response
         var countCell = document.createElement('td');
-        countCell.textContent = productCountMap[category.id] || 0;
+        countCell.textContent = category.productCount || 0;
         countCell.style.textAlign = 'center';
         countCell.style.fontWeight = '500';
+
+        // Thêm màu sắc cho số lượng
+        if (category.productCount > 0) {
+            countCell.style.color = '#28a745';
+        } else {
+            countCell.style.color = '#999';
+        }
         row.appendChild(countCell);
 
-        // Actions
+        // 6. Actions
         var actionCell = document.createElement('td');
         actionCell.style.textAlign = 'center';
 
         var editBtn = document.createElement('a');
         editBtn.href = '#';
         editBtn.className = 'btn-icon';
-        editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+        editBtn.innerHTML = '<i class="fas fa-edit" style="color: var(--brand)"></i>';
         editBtn.title = 'Sửa';
         editBtn.style.marginRight = '8px';
         editBtn.onclick = function (e) {
@@ -430,7 +430,7 @@
         var deleteBtn = document.createElement('a');
         deleteBtn.href = '#';
         deleteBtn.className = 'btn-icon btn-icon-danger';
-        deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+        deleteBtn.innerHTML = '<i class="fas fa-trash" style="color: var(--brand)"></i>';
         deleteBtn.title = 'Xóa';
         deleteBtn.onclick = function (e) {
             e.preventDefault();
@@ -1082,7 +1082,7 @@
             var editBtn = document.createElement('a');
             editBtn.href = '#';
             editBtn.className = 'btn-icon';
-            editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+            editBtn.innerHTML = '<i class="fas fa-edit" style="color: var(--brand)"></i>';
             editBtn.title = 'Sửa';
             editBtn.style.marginRight = '8px';
             editBtn.onclick = function (e) {
@@ -1093,7 +1093,7 @@
             var deleteBtn = document.createElement('a');
             deleteBtn.href = '#';
             deleteBtn.className = 'btn-icon btn-icon-danger';
-            deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+            deleteBtn.innerHTML = '<i class="fas fa-trash" style="color: var(--brand)"></i>';
             deleteBtn.title = 'Xóa';
             deleteBtn.onclick = function (e) {
                 e.preventDefault();
