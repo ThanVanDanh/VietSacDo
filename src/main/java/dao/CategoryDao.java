@@ -111,16 +111,20 @@ public class CategoryDao extends BaseDao {
                 "name_category = :nameCategory, " +
                 "slug = :slug, " +
                 "description = :description, " +
-                "parent_category_id = :parentCategoryId " +
+                "parent_category_id = :parentId " +
                 "WHERE id = :id";
 
         return jdbi.withHandle(handle -> {
+            Integer parentId = category.getParentId();
+            if (parentId != null && parentId == 0) {
+                parentId = null; // Convert 0 → null
+            }
             int affected = handle.createUpdate(sql)
                     .bind("id", category.getId())
                     .bind("nameCategory", category.getNameCategory())
                     .bind("slug", category.getSlug())
                     .bind("description", category.getDescription())
-                    .bind("parentCategoryId", category.getParentId() == 0 ? null : category.getParentId())
+                    .bind("parentId", parentId) // ✅ Sử dụng biến đã xử lý
                     .execute();
             return affected > 0;
         });
@@ -205,4 +209,5 @@ public class CategoryDao extends BaseDao {
             return count > 0;
         });
     }
+
 }
