@@ -11,6 +11,12 @@ import org.jdbi.v3.core.statement.PreparedBatch;
 import java.util.List;
 
 public class ProductDao extends BaseDao {
+    private final Jdbi jdbi;
+
+    public ProductDao() {
+        this.jdbi = get();
+    }
+
     public List<ProductListDTO> getListProduct() {
         String sql = "SELECT " +
                 "p.id, " +
@@ -40,6 +46,7 @@ public class ProductDao extends BaseDao {
                         .list()
         );
     }
+
     public Product getProduct(int id) {
         return get().withHandle(handle -> {
             Product product = handle.createQuery("SELECT * FROM Products WHERE id = :id")
@@ -64,6 +71,7 @@ public class ProductDao extends BaseDao {
             return product;
         });
     }
+
     // Thêm vào trong class ProductDao
     public List<ProductListDTO> getProductsByCategory(int categoryId) {
         String sql = "SELECT p.id, p.name_product, " +
@@ -102,5 +110,58 @@ public class ProductDao extends BaseDao {
                 .one();
     }
 
+    public boolean exists(int id) {
+        String sql = "SELECT COUNT(*) FROM Products WHERE id = :id";
+        return get().withHandle(handle -> {
+            Integer count = handle.createQuery(sql).bind("id", id).mapTo(Integer.class).one();
+            return count > 0;
+        });
+    }
 
+    /**
+     * ✅ MỚI: Xóa product (cascade delete variants & images)
+     */
+    public boolean delete(int productId) {
+        return get().withHandle(handle -> {
+            // Delete trong transaction để đảm bảo consistency
+            return handle.inTransaction(h -> {
+                // 1. Xóa product images
+                h.createUpdate("DELETE FROM Product_images WHERE product_id = :productId")
+                        .bind("productId", productId)
+                        .execute();
+
+                // 2. Xóa product variants
+                h.createUpdate("DELETE FROM Product_variants WHERE product_id = :productId")
+                        .bind("productId", productId)
+                        .execute();
+
+                // 3. Xóa product
+                int affected = h.createUpdate("DELETE FROM Products WHERE id = :productId")
+                        .bind("productId", productId)
+                        .execute();
+
+                return affected > 0;
+            });
+        });
+    }
+
+    /**
+     * ✅ MỚI: Đếm số variants của product
+     */
+    public int countVariants(int productId) {
+        String sql = "SELECT COUNT(*) FROM Product_variants WHERE product_id = :productId";
+        return get().withHandle(handle ->
+                handle.createQuery(sql).bind("productId", productId).mapTo(Integer.class).one()
+        );
+    }
+
+    /**
+     * ✅ MỚI: Đếm số images của product
+     */
+    public int countImages(int productId) {
+        String sql = "SELECT COUNT(*) FROM Product_images WHERE product_id = :productId";
+        return get().withHandle(handle ->
+                handle.createQuery(sql).bind("productId", productId).mapTo(Integer.class).one()
+        );
+    }
 }
