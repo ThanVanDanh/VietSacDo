@@ -14,7 +14,11 @@ import services.CategoryService;
 import java.io.IOException;
 import java.util.*;
 
-@WebServlet(name = "AdminCategoryController", urlPatterns = {"/admin/category/add", "/admin/category/list", "/admin/category/delete"})
+@WebServlet(name = "AdminCategoryController", urlPatterns = {
+        "/admin/category/add",
+        "/admin/category/list",
+        "/admin/category/delete"
+})
 @MultipartConfig
 public class AdminCategoryController extends HttpServlet {
 
@@ -57,7 +61,7 @@ public class AdminCategoryController extends HttpServlet {
         try {
             List<Category> cats = categoryService.getAllCategories();
 
-            // ✅ Lấy product counts cho tất cả categories
+            // ✅ Lấy product counts
             Map<Integer, Integer> productCounts = categoryDao.getProductCountsForAllCategories();
 
             // ✅ Tạo response với productCount
@@ -112,9 +116,18 @@ public class AdminCategoryController extends HttpServlet {
             cat.setSlug(slug.isEmpty() ? generateSlug(name) : slug);
             cat.setDescription(description.isEmpty() ? null : description);
 
+            // ✅ FIX: Xử lý parentId đúng
             Integer parentId = null;
             if (!parent.isEmpty()) {
-                try { parentId = Integer.parseInt(parent); } catch (Exception e) {}
+                try {
+                    int parsed = Integer.parseInt(parent);
+                    if (parsed > 0) {
+                        parentId = parsed;
+                    }
+                } catch (NumberFormatException e) {
+                    // Log nếu cần
+                    log("Invalid parent ID: " + parent);
+                }
             }
             cat.setParentId(parentId);
 
@@ -123,6 +136,14 @@ public class AdminCategoryController extends HttpServlet {
             if (isUpdate) {
                 int id = Integer.parseInt(idStr.trim());
                 cat.setId(id);
+
+                // ✅ THÊM: Validate không được chọn chính nó làm parent
+                if (parentId != null && parentId == id) {
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    resp.getWriter().write("{\"success\":false, \"error\":\"Không thể chọn chính category này làm parent\"}");
+                    return;
+                }
+
                 boolean success = categoryService.updateCategory(cat);
 
                 if (success) {
@@ -148,6 +169,7 @@ public class AdminCategoryController extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.getWriter().write("{\"success\":false, \"error\":\"Invalid ID format\"}");
         } catch (Exception ex) {
+            log("Error in doPost: " + ex.getMessage(), ex);
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().write("{\"success\":false, \"error\":\"" + escape(ex.getMessage()) + "\"}");
         }
