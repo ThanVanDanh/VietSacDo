@@ -112,10 +112,10 @@
                         <form class="page_auth" id="login" action="Login" method="POST">
                             <fieldset class="form-group">
                                 <label>
-                                    Số điện thoại
+                                    Số điện thoại hoặc Email
                                     <span class="req">*</span>
                                 </label>
-                                <input type="text" id="phone" name="phone" placeholder="Số điện thoại" required autocomplete="tel">
+                                <input type="text" id="username" name="username" placeholder="Nhập email hoặc số điện thoại...">
                             </fieldset>
                             <fieldset class="form-group">
                                 <label>
