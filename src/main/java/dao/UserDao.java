@@ -5,7 +5,7 @@ import org.jdbi.v3.core.Handle;
 import java.util.Optional;
 
 public class UserDao extends BaseDao {
-    public User findByPhone(String phone) {
+    public User findByEmailOrPhone(String key) {
         return get().withHandle(handle -> handle.createQuery("SELECT * FROM Users WHERE email = :key OR phone_number = :key").bind("key", key)
                     .mapToBean(User.class).stream().findFirst().orElse(null));
     }
@@ -13,6 +13,15 @@ public class UserDao extends BaseDao {
         return get().withHandle(handle ->
                 handle.createQuery("SELECT * FROM Users WHERE email = :email")
                         .bind("email", email)
+                        .mapToBean(User.class)
+                        .findFirst()
+                        .orElse(null)
+        );
+    }
+    public User findByPhone(String phone) {
+        return get().withHandle(handle ->
+                handle.createQuery("SELECT * FROM Users WHERE phone_number = :phone")
+                        .bind("phone", phone)
                         .mapToBean(User.class)
                         .findFirst()
                         .orElse(null)

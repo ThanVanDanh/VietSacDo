@@ -20,7 +20,7 @@ public class UserService {
     }
 
     public User login(String loginKey, String password) {
-        User user = userDao.findByPhone(loginKey);
+        User user = userDao.findByEmailOrPhone(loginKey);
         if (user == null) {
             return null;
         }
@@ -55,7 +55,8 @@ public class UserService {
             newUser.setFirebaseUID(firebase_uid);
             newUser.setAuthProvider(provider);
             newUser.setRole("user");
-            userDao.insert(newUser);
+            int newId = userDao.insert(newUser);
+            newUser.setId(newId);
             return newUser;
         }
     }
