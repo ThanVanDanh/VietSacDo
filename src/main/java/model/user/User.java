@@ -22,6 +22,8 @@ public class User extends AId implements Serializable {
     private String authProvider;
     @ColumnName("firebase_uid")
     private String firebaseUID;
+    @ColumnName("verify_token")
+    private String verifyToken;
 
     public User(int id, String fullName, String phone, String email, String password, LocalDateTime createdAt, String status, String role, String authProvider, String firebaseUID) {
         super(id);
@@ -110,5 +112,13 @@ public class User extends AId implements Serializable {
 
     public void setFirebaseUID(String firebaseUID) {
         this.firebaseUID = firebaseUID;
+    }
+
+    public String getVerifyToken() {
+        return verifyToken;
+    }
+
+    public void setVerifyToken(String verifyToken) {
+        this.verifyToken = verifyToken;
     }
 }
