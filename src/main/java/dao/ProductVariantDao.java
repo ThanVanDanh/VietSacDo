@@ -3,6 +3,8 @@ package dao;
 import model.product.ProductVariant;
 import org.jdbi.v3.core.Handle;
 
+import java.util.List;
+
 /**
  * ProductVariantDao - thao tác với bảng Product_variants
  */
@@ -26,5 +28,71 @@ public class ProductVariantDao extends BaseDao {
                 .executeAndReturnGeneratedKeys("id")
                 .mapTo(int.class)
                 .one();
+    }
+
+    public void deleteByProductId(int productId) {
+        get().withHandle(handle -> {
+            deleteByProductId(handle, productId);
+            return null;
+        });
+    }
+
+
+    public void deleteByProductId(Handle handle, int productId) {
+        String sql = "DELETE FROM Product_variants WHERE product_id = :productId";
+        handle.createUpdate(sql)
+                .bind("productId", productId)
+                .execute();
+    }
+
+    public List<ProductVariant> getByProductId(int productId) {
+        return get().withHandle(handle -> getByProductId(handle, productId));
+    }
+
+
+    public List<ProductVariant> getByProductId(Handle handle, int productId) {
+        String sql = "SELECT * FROM Product_variants WHERE product_id = :productId ORDER BY id";
+        return handle.createQuery(sql)
+                .bind("productId", productId)
+                .mapToBean(ProductVariant.class)
+                .list();
+    }
+
+
+    public boolean update(ProductVariant variant) {
+        return get().withHandle(handle -> update(handle, variant));
+    }
+
+    public boolean update(Handle handle, ProductVariant variant) {
+        String sql = "UPDATE Product_variants SET " +
+                "sku = :sku, " +
+                "size = :size, " +
+                "color = :color, " +
+                "current_price = :currentPrice, " +
+                "stock_quantity = :stockQuantity " +
+                "WHERE id = :id";
+
+        int affected = handle.createUpdate(sql)
+                .bind("id", variant.getId())
+                .bind("sku", variant.getSku())
+                .bind("size", variant.getSize())
+                .bind("color", variant.getColor())
+                .bind("currentPrice", variant.getCurrentPrice())
+                .bind("stockQuantity", variant.getStockQuantity())
+                .execute();
+
+        return affected > 0;
+    }
+
+    public boolean delete(int variantId) {
+        return get().withHandle(handle -> delete(handle, variantId));
+    }
+
+    public boolean delete(Handle handle, int variantId) {
+        String sql = "DELETE FROM Product_variants WHERE id = :id";
+        int affected = handle.createUpdate(sql)
+                .bind("id", variantId)
+                .execute();
+        return affected > 0;
     }
 }
