@@ -64,7 +64,6 @@ public class ProductDao extends BaseDao {
             return product;
         });
     }
-    // Thêm vào trong class ProductDao
     public List<ProductListDTO> getProductsByCategory(int categoryId) {
         String sql = "SELECT p.id, p.name_product, " +
                 "(SELECT current_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS price, " +
