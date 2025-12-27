@@ -620,6 +620,47 @@
                 alert('Không thể tải danh sách sản phẩm: ' + error.message);
             });
     }
+    function deleteProduct(product) {
+        var message = 'Bạn có chắc muốn xóa sản phẩm "' + product.nameProduct + '"?\n\n';
+        message += 'Thao tác này sẽ xóa:\n';
+        message += '• Sản phẩm chính\n';
+
+        if (product.variantCount && product.variantCount > 0) {
+            message += '• ' + product.variantCount + ' biến thể\n';
+        }
+
+        message += '• Tất cả hình ảnh liên quan\n';
+        message += '\nThao tác này KHÔNG THỂ hoàn tác!';
+
+        if (!confirm(message)) {
+            return;
+        }
+
+        fetch(CTX + '/admin/product/delete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Accept': 'application/json'
+            },
+            body: 'id=' + product.id
+        })
+            .then(function (response) {
+                return response.json().then(function (data) {
+                    return {status: response.status, data: data};
+                });
+            })
+            .then(function (result) {
+                if (result.data && result.data.success) {
+                    alert('Xóa sản phẩm thành công!');
+                    loadProducts();
+                } else {
+                    alert('Xóa thất bại: ' + (result.data.error || 'Unknown error'));
+                }
+            })
+            .catch(function (error) {
+                alert('Lỗi: ' + error.message);
+            });
+    }
 
     function displayProducts(products) {
         var tbody = document.getElementById('productTableBody');
@@ -757,9 +798,7 @@
             deleteBtn.title = 'Xóa';
             deleteBtn.onclick = function (e) {
                 e.preventDefault();
-                if (confirm('Bạn có chắc muốn xóa sản phẩm "' + product.nameProduct + '"?')) {
-                    alert('Chức năng xóa đang phát triển. ID: ' + product.id);
-                }
+                deleteProduct(product);  // ← CHỈ CẦN DÒNG NÀY
             };
 
             actionCell.appendChild(editBtn);
