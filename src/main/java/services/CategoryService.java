@@ -64,14 +64,35 @@ public class CategoryService {
         return categoryDao.getById(id);
     }
 
-    public boolean updateCategory(Category category) {
-        return categoryDao.update(category);
+    public boolean updateCategory(Category cat) {
+        if (cat == null || cat.getId() <= 0) return false;
+        if (cat.getNameCategory() == null || cat.getNameCategory().trim().isEmpty()) return false;
+
+        // Auto-generate slug if empty
+        String slug = cat.getSlug();
+        if (slug == null || slug.trim().isEmpty()) {
+            slug = slugify(cat.getNameCategory());
+            cat.setSlug(slug);
+        }
+
+        // Check if category exists
+        if (!categoryDao.exists(cat.getId())) {
+            return false;
+        }
+
+        return categoryDao.update(cat);
     }
 
     public boolean deleteCategory(int id) {
+        if (id <= 0) return false;
+
+        // Check if exists
+        if (!categoryDao.exists(id)) {
+            return false;
+        }
+
         return categoryDao.delete(id);
     }
-
 
     public int countChildCategories(int categoryId) {
         return categoryDao.countChildCategories(categoryId);
