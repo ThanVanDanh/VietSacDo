@@ -1,121 +1,110 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const viewModal = document.getElementById('contact-modal');
-    const viewCloseButton = viewModal.querySelector('.close-button');
-    const deleteModal = document.getElementById('delete-modal');
-    const confirmDeleteButton = document.getElementById('confirm-delete');
-    const cancelDeleteButton = document.getElementById('cancel-delete');
-    const deleteCloseButton = deleteModal.querySelector('.close-button');
-    const replyModal = document.getElementById('reply-modal');
-    const replyCloseButton = replyModal.querySelector('.close-button');
-    const cancelReplyButton = document.getElementById('cancel-reply');
-    const replyForm = document.getElementById('reply-form');
-    let currentDeleteRow = null; // Biến lưu trữ hàng cần xóa
-    document.querySelectorAll('.btn-view-detail').forEach(button => {
-        button.addEventListener('click', function() {
-            const row = this.closest('tr');
-            const id = row.cells[0].textContent.trim();
-            const name = row.cells[1].textContent.trim();
-            const email = row.cells[2].textContent.trim();
-            const date = row.cells[3].textContent.trim();
-            const fullMessage = this.getAttribute('data-full-message');
 
+    // --- 1. CẤU HÌNH CÁC BIẾN MODAL ---
+    const viewModal = document.getElementById('contact-modal');
+    const deleteModal = document.getElementById('delete-modal');
+    const replyModal = document.getElementById('reply-modal');
+
+    // --- 2. XỬ LÝ NÚT: XEM CHI TIẾT ---
+    const viewButtons = document.querySelectorAll('.btn-view-detail');
+    viewButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Lấy dữ liệu từ data-attribute trong nút bấm HTML
+            const id = this.getAttribute('data-id');
+            const name = this.getAttribute('data-name');
+            const email = this.getAttribute('data-email');
+            const date = this.getAttribute('data-date');
+            const message = this.getAttribute('data-message');
+
+            // Đổ dữ liệu vào các thẻ trong Modal
             document.getElementById('modal-id').textContent = id;
             document.getElementById('modal-name').textContent = name;
             document.getElementById('modal-email').textContent = email;
             document.getElementById('modal-date').textContent = date;
-            document.getElementById('modal-message-full').textContent = fullMessage;
+            document.getElementById('modal-message-full').textContent = message;
 
+            // Hiển thị modal
             viewModal.style.display = 'block';
         });
     });
-    viewCloseButton.onclick = function() {
-        viewModal.style.display = 'none';
-    }
-    document.querySelectorAll('.delete').forEach(button => {
+
+    // --- 3. XỬ LÝ NÚT: XÓA (quan trọng) ---
+    const deleteButtons = document.querySelectorAll('.delete');
+    deleteButtons.forEach(button => {
         button.addEventListener('click', function() {
-            currentDeleteRow = this.closest('tr');
-            const id = currentDeleteRow.cells[0].textContent.trim();
-            const name = currentDeleteRow.cells[1].textContent.trim();
+            // Lấy ID từ data-id
+            const id = this.getAttribute('data-id');
 
-            document.getElementById('delete-id').textContent = id;
-            document.getElementById('delete-name').textContent = name;
+            // Lấy tên khách hàng từ cột thứ 2 của dòng đó (để hiển thị cho chắc chắn)
+            const row = this.closest('tr');
+            const name = row.querySelector('td:nth-child(2)').textContent;
 
+            // 1. Hiển thị thông tin lên màn hình xác nhận
+            const displayId = document.getElementById('delete-id-display'); // (Lưu ý: Bạn cần có thẻ span id="delete-id-display" trong JSP)
+            if (displayId) displayId.textContent = id;
+
+            const displayName = document.getElementById('delete-name');
+            if (displayName) displayName.textContent = name;
+
+            // 2. QUAN TRỌNG NHẤT: Gán ID vào ô Input Ẩn của Form
+            const inputHiddenId = document.getElementById('input-delete-id');
+            if (inputHiddenId) {
+                inputHiddenId.value = id;
+            } else {
+                console.error("Lỗi: Không tìm thấy thẻ input có id='input-delete-id' trong Modal Xóa!");
+            }
+
+            // Hiển thị modal
             deleteModal.style.display = 'block';
         });
     });
 
-    confirmDeleteButton.onclick = function() {
-        if (currentDeleteRow) {
-            currentDeleteRow.remove();
-            currentDeleteRow = null;
-        }
-        deleteModal.style.display = 'none';
-    }
-
-    cancelDeleteButton.onclick = function() {
-        deleteModal.style.display = 'none';
-    }
-    deleteCloseButton.onclick = function() {
-        deleteModal.style.display = 'none';
-    }
-    window.onclick = function(event) {
-        if (event.target == viewModal) {
-            viewModal.style.display = 'none';
-        }
-        if (event.target == deleteModal) {
-            deleteModal.style.display = 'none';
-        }
-    }
-    document.querySelectorAll('.btn-reply-email').forEach(button => {
+    // --- 4. XỬ LÝ NÚT: TRẢ LỜI EMAIL ---
+    const replyButtons = document.querySelectorAll('.btn-reply-email');
+    replyButtons.forEach(button => {
         button.addEventListener('click', function() {
-            const recipientEmail = this.getAttribute('data-recipient-email');
+            // Lấy email từ data-attribute (ưu tiên) hoặc từ cột trong bảng
+            let email = this.getAttribute('data-recipient-email');
 
-            // Điền thông tin người nhận vào form
-            document.getElementById('reply-to').value = `${recipientEmail}`;
+            // Nếu nút không có data-email, thử tìm trong bảng
+            if (!email) {
+                const row = this.closest('tr');
+                email = row.querySelector('td:nth-child(3)').textContent;
+            }
 
-            // Hiển thị Modal Phản hồi
+            // Gán email vào ô nhập liệu
+            document.getElementById('reply-to').value = email;
+
+            // Hiển thị modal
             replyModal.style.display = 'block';
         });
     });
 
-// Đóng Modal Phản hồi khi nhấn nút X hoặc Hủy
-    replyCloseButton.onclick = function() {
+    // --- 5. XỬ LÝ ĐÓNG MODAL (Chung cho tất cả) ---
+
+    // Hàm đóng tất cả modal
+    function closeAllModals() {
+        viewModal.style.display = 'none';
+        deleteModal.style.display = 'none';
         replyModal.style.display = 'none';
-        replyForm.reset(); // Xóa nội dung form khi đóng
     }
-    cancelReplyButton.onclick = function() {
-        replyModal.style.display = 'none';
-        replyForm.reset(); // Xóa nội dung form khi đóng
-    }
 
-// Xử lý sự kiện gửi form (DEMO)
-    replyForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const recipient = document.getElementById('reply-to').value;
-        const subject = document.getElementById('reply-subject').value;
-        const body = document.getElementById('reply-body').value;
-
-        if (body.trim() === "") {
-            alert("Nội dung email không được để trống!");
-            return;
-        }
-
-        // THỰC TẾ: GỌI AJAX/FETCH TỚI SERVER ĐỂ XỬ LÝ GỬI EMAIL
-        console.log(`Đang gửi email tới: ${recipient} với tiêu đề: ${subject}`);
-
-        alert(`Đã mô phỏng gửi email thành công tới ${recipient}!`);
-
-        replyModal.style.display = 'none';
-        replyForm.reset();
+    // Gán sự kiện click cho các nút "X" (close-button)
+    document.querySelectorAll('.close-button').forEach(btn => {
+        btn.onclick = closeAllModals;
     });
 
-// Bổ sung vào hàm window.onclick hiện có để đóng Modal Phản hồi
+    // Gán sự kiện cho các nút "Hủy"
+    const cancelDeleteBtn = document.getElementById('cancel-delete');
+    if (cancelDeleteBtn) cancelDeleteBtn.onclick = closeAllModals;
+
+    const cancelReplyBtn = document.getElementById('cancel-reply');
+    if (cancelReplyBtn) cancelReplyBtn.onclick = closeAllModals;
+
+    // Gán sự kiện click ra ngoài vùng modal để đóng
     window.onclick = function(event) {
-        // ... code cũ cho viewModal và deleteModal ...
-        if (event.target == replyModal) {
-            replyModal.style.display = 'none';
-            replyForm.reset();
+        if (event.target == viewModal || event.target == deleteModal || event.target == replyModal) {
+            closeAllModals();
         }
     }
 });

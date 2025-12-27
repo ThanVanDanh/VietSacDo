@@ -78,12 +78,12 @@ public class ProductService {
         }
     }
 
-    public List<ProductListDTO> getListProduct() {
-        return productDao.getListProduct();
-    }
-    public List<ProductListDTO> getProductsByCategory(int categoryId) {
-        return productDao.getProductsByCategory(categoryId);
-    }
+//    public List<ProductListDTO> getListProduct() {
+//        return productDao.getListProduct();
+//    }
+//    public List<ProductListDTO> getProductsByCategory(int categoryId) {
+//        return productDao.getProductsByCategory(categoryId);
+//    }
     public Product getProduct(int id){
         return productDao.getProduct(id);
     }

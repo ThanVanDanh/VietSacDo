@@ -67,7 +67,7 @@
                         </div>
                     </ul>
                 </li>
-                <li><a href="${pageContext.request.contextPath}/contactus.jsp">Liên Hệ</a></li>
+                <li><a href="${pageContext.request.contextPath}/contactus">Liên Hệ</a></li>
                 <li><a href="${pageContext.request.contextPath}/promotion.jsp">Chương trình khuyến mãi</a></li>
             </ul>
         </nav>
