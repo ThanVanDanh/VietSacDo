@@ -108,7 +108,7 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <form class="page_auth" action="forgot-password" method="POST">
+                        <form class="page_auth" id="reset-password-form" action="forgot-password" method="POST">
                             <input type="hidden" name="action" value="reset">
 
                             <fieldset class="form-group">
@@ -122,6 +122,7 @@
                             </fieldset>
 
                             <p style="color: red; font-style: italic;">${error}</p>
+                            <div id="js-reset-error" style="color: red; margin-bottom: 10px; font-weight: bold; display: none;"></div>
 
                             <div>
                                 <button type="submit">Đổi mật khẩu</button>
