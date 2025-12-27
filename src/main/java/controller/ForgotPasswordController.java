@@ -60,6 +60,13 @@ public class ForgotPasswordController extends HttpServlet {
             HttpSession session = request.getSession();
             String email = (String) session.getAttribute("email");
 
+            String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$";
+            if (!newPass.matches(passwordRegex)) {
+                request.setAttribute("error", "Mật khẩu yếu: Phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và ký tự đặc biệt!");
+                request.getRequestDispatcher("reset-pw.jsp").forward(request, response);
+                return;
+            }
+
             if (newPass.equals(confirmPass)) {
                 String hashPass = BCrypt.hashpw(newPass, BCrypt.gensalt(12));
                 boolean isUpdated = userDao.updatePassword(email, hashPass);
