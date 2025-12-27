@@ -140,5 +140,108 @@ public class CategoryDao extends BaseDao {
                         .list()
         );
     }
+    public boolean update(Category category) {
+        String sql = "UPDATE Categories SET " +
+                "name_category = :nameCategory, " +
+                "slug = :slug, " +
+                "description = :description, " +
+                "parent_category_id = :parentId " +
+                "WHERE id = :id";
+
+        return jdbi.withHandle(handle -> {
+            Integer parentId = category.getParentId();
+            if (parentId != null && parentId == 0) {
+                parentId = null; // Convert 0 → null
+            }
+            int affected = handle.createUpdate(sql)
+                    .bind("id", category.getId())
+                    .bind("nameCategory", category.getNameCategory())
+                    .bind("slug", category.getSlug())
+                    .bind("description", category.getDescription())
+                    .bind("parentId", parentId) // ✅ Sử dụng biến đã xử lý
+                    .execute();
+            return affected > 0;
+        });
+    }
+
+    public int countChildCategories(int categoryId) {
+        String sql = "SELECT COUNT(*) FROM Categories WHERE parent_category_id = :categoryId";
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql).bind("categoryId", categoryId).mapTo(Integer.class).one()
+        );
+    }
+
+    public int countProducts(int categoryId) {
+        String sql = "SELECT COUNT(*) FROM Products WHERE category_id = :categoryId";
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql).bind("categoryId", categoryId).mapTo(Integer.class).one()
+        );
+    }
+
+    public Map<Integer, Integer> getProductCountsForAllCategories() {
+        String sql = "SELECT category_id, COUNT(*) as product_count " +
+                "FROM Products " +
+                "GROUP BY category_id";
+
+        return jdbi.withHandle(handle -> {
+            Map<Integer, Integer> counts = new HashMap<>();
+
+            handle.createQuery(sql)
+                    .map((rs, ctx) -> {
+                        int categoryId = rs.getInt("category_id");
+                        int count = rs.getInt("product_count");
+                        counts.put(categoryId, count);
+                        return null;
+                    })
+                    .list();
+
+            return counts;
+        });
+    }
+    /**
+     * Xóa category (có validation)
+     * @throws IllegalStateException nếu không thể xóa
+     */
+    public boolean delete(int id) {
+        int childCount = countChildCategories(id);
+        int productCount = countProducts(id);
+
+        // Validation
+        if (childCount > 0 || productCount > 0) {
+            StringBuilder msg = new StringBuilder("Không thể xóa danh mục này vì:\n");
+            if (childCount > 0) {
+                msg.append("- Còn ").append(childCount).append(" danh mục con\n");
+            }
+            if (productCount > 0) {
+                msg.append("- Còn ").append(productCount).append(" sản phẩm\n");
+            }
+            msg.append("\nVui lòng xóa ");
+            if (childCount > 0 && productCount > 0) {
+                msg.append("các danh mục con và sản phẩm");
+            } else if (childCount > 0) {
+                msg.append("các danh mục con");
+            } else {
+                msg.append("các sản phẩm");
+            }
+            msg.append(" trước.");
+
+            throw new IllegalStateException(msg.toString());
+        }
+
+        // Thực hiện xóa
+        String sql = "DELETE FROM Categories WHERE id = :id";
+        return jdbi.withHandle(handle -> {
+            int affected = handle.createUpdate(sql).bind("id", id).execute();
+            return affected > 0;
+        });
+    }
+
+    public boolean exists(int id) {
+        String sql = "SELECT COUNT(*) FROM Categories WHERE id = :id";
+        return jdbi.withHandle(handle -> {
+            Integer count = handle.createQuery(sql).bind("id", id).mapTo(Integer.class).one();
+            return count > 0;
+        });
+    }
 
 }
