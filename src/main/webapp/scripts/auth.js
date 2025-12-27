@@ -58,6 +58,75 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    function validatePassword(password) {
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/;
+        return regex.test(password);
+    }
+    const signupForm = document.getElementById('signup');
+    if (signupForm) {
+        signupForm.addEventListener('submit', function (e) {
+            const passwordInput = document.querySelector('input[name="password"]');
+            const password = passwordInput.value;
+
+            const errorDiv = document.getElementById('js-error');
+            if (errorDiv) {
+                errorDiv.style.display = 'none';
+                errorDiv.innerText = '';
+            }
+
+            if (!validatePassword(password)) {
+                e.preventDefault();
+                errorDiv.innerText = "Mật khẩu yếu: Phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và ký tự đặc biệt!";
+                errorDiv.style.display = 'block';
+                passwordInput.focus();
+                passwordInput.style.border = "1px solid red";
+            } else {
+                passwordInput.style.border = "";
+            }
+        });
+    }
+    const resetForm = document.getElementById('reset-password-form');
+    if (resetForm) {
+        resetForm.addEventListener('submit', function (e) {
+            const newPassInput = resetForm.querySelector('input[name="new_password"]');
+            const confirmPassInput = resetForm.querySelector('input[name="confirm_password"]');
+            const newPass = newPassInput.value;
+            const confirmPass = confirmPassInput.value;
+            const errorDiv = document.getElementById('js-reset-error');
+
+            if (errorDiv) {
+                errorDiv.style.display = 'none';
+                errorDiv.innerText = '';
+            }
+            newPassInput.style.border = "";
+            confirmPassInput.style.border = "";
+
+            if (!validatePassword(newPass)) {
+                e.preventDefault();
+                if (errorDiv) {
+                    errorDiv.innerText = "Mật khẩu mới yếu: Cần 8 ký tự, 1 Hoa, 1 thường, 1 đặc biệt!";
+                    errorDiv.style.display = 'block';
+                }
+                newPassInput.focus();
+                newPassInput.style.border = "1px solid red";
+                return;
+            }
+                if (newPass !== confirmPass) {
+                    e.preventDefault();
+
+                    if (errorDiv) {
+                        errorDiv.innerText = "Mật khẩu xác nhận không khớp!";
+                        errorDiv.style.display = 'block';
+                    } else {
+                        alert("Mật khẩu xác nhận không khớp!");
+                    }
+
+                    confirmPassInput.focus();
+                    confirmPassInput.style.border = "1px solid red";
+                }
+
+        });
+    }
     const loginView = document.getElementById('login_view');
     const forgotView = document.getElementById('forgot_view');
     const showForgotLink = document.getElementById('show_forgot_view');

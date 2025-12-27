@@ -116,6 +116,8 @@
                                 <%= error %>
                             </div>
                             <% } %>
+
+                            <div id="js-error" style="color: red; margin-bottom: 10px; font-weight: bold; display: none;"></div>
                             <fieldset class="form-group">
                                 <label>
                                     Họ và tên
