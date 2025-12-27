@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * CategoryDao - FIXED
- *
+ * <p>
  * VẤN ĐỀ CŨ: Gọi get() mỗi lần dùng -> tạo connection mới
  * GIẢI PHÁP: Lưu JDBI instance
  */
@@ -71,6 +71,17 @@ public class CategoryDao extends BaseDao {
         }
     }
 
+    public Category getById(int id) {
+        String sql = "SELECT id, name_category, slug, description, parent_category_id FROM Categories WHERE id = :id";
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("id", id)
+                        .mapToBean(Category.class)
+                        .findOne()
+                        .orElse(null)
+        );
+    }
+
     public boolean existsBySlug(String slug) {
         if (slug == null || slug.isEmpty()) return false;
 
@@ -82,6 +93,7 @@ public class CategoryDao extends BaseDao {
         );
         return count != null && count > 0;
     }
+
     public Category getCategoryBySlug(String slug) {
         return get().withHandle(handle ->
                 handle.createQuery("SELECT * FROM Categories WHERE slug = :slug")
@@ -90,5 +102,85 @@ public class CategoryDao extends BaseDao {
                         .findFirst()
                         .orElse(null)
         );
+    }
+
+    public boolean update(Category category) {
+        String sql = "UPDATE Categories SET " +
+                "name_category = :nameCategory, " +
+                "slug = :slug, " +
+                "description = :description, " +
+                "parent_category_id = :parentCategoryId " +
+                "WHERE id = :id";
+
+        return jdbi.withHandle(handle -> {
+            int affected = handle.createUpdate(sql)
+                    .bind("id", category.getId())
+                    .bind("nameCategory", category.getNameCategory())
+                    .bind("slug", category.getSlug())
+                    .bind("description", category.getDescription())
+                    .bind("parentCategoryId", category.getParentId() == 0 ? null : category.getParentId())
+                    .execute();
+            return affected > 0;
+        });
+    }
+
+    public int countChildCategories(int categoryId) {
+        String sql = "SELECT COUNT(*) FROM Categories WHERE parent_category_id = :categoryId";
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql).bind("categoryId", categoryId).mapTo(Integer.class).one()
+        );
+    }
+
+    public int countProducts(int categoryId) {
+        String sql = "SELECT COUNT(*) FROM Products WHERE category_id = :categoryId";
+        return jdbi.withHandle(handle ->
+                handle.createQuery(sql).bind("categoryId", categoryId).mapTo(Integer.class).one()
+        );
+    }
+
+    /**
+     * Xóa category (có validation)
+     * @throws IllegalStateException nếu không thể xóa
+     */
+    public boolean delete(int id) {
+        int childCount = countChildCategories(id);
+        int productCount = countProducts(id);
+
+        // Validation
+        if (childCount > 0 || productCount > 0) {
+            StringBuilder msg = new StringBuilder("Không thể xóa danh mục này vì:\n");
+            if (childCount > 0) {
+                msg.append("- Còn ").append(childCount).append(" danh mục con\n");
+            }
+            if (productCount > 0) {
+                msg.append("- Còn ").append(productCount).append(" sản phẩm\n");
+            }
+            msg.append("\nVui lòng xóa ");
+            if (childCount > 0 && productCount > 0) {
+                msg.append("các danh mục con và sản phẩm");
+            } else if (childCount > 0) {
+                msg.append("các danh mục con");
+            } else {
+                msg.append("các sản phẩm");
+            }
+            msg.append(" trước.");
+
+            throw new IllegalStateException(msg.toString());
+        }
+
+        // Thực hiện xóa
+        String sql = "DELETE FROM Categories WHERE id = :id";
+        return jdbi.withHandle(handle -> {
+            int affected = handle.createUpdate(sql).bind("id", id).execute();
+            return affected > 0;
+        });
+    }
+
+    public boolean exists(int id) {
+        String sql = "SELECT COUNT(*) FROM Categories WHERE id = :id";
+        return jdbi.withHandle(handle -> {
+            Integer count = handle.createQuery(sql).bind("id", id).mapTo(Integer.class).one();
+            return count > 0;
+        });
     }
 }
