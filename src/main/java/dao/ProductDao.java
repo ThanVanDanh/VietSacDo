@@ -12,11 +12,27 @@ import java.util.List;
 
 public class ProductDao extends BaseDao {
     public List<ProductListDTO> getListProduct() {
-        String sql = "SELECT p.id, p.name_product, " +
-                "(SELECT current_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS price, " +
+        String sql = "SELECT " +
+                "p.id, " +
+                "p.name_product, " +
+                "p.product_code, " +
+                "p.status_product, " +
+                "p.created_at, " +
+                "p.category_id, " +
+                "c.name_category AS categoryName, " +
+                // Giá từ variant đầu tiên
+                "(SELECT current_price FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS price, " +
+                // Ảnh thumbnail
                 "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
-                "(SELECT sku FROM Product_variants WHERE product_id = p.id LIMIT 1) AS sku " +
-                "FROM Products p";
+                // SKU từ variant đầu tiên
+                "(SELECT sku FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS sku, " +
+                // ✅ Đếm số variants (COALESCE để trả về 0 nếu null)
+                "COALESCE((SELECT COUNT(*) FROM Product_variants WHERE product_id = p.id), 0) AS variantCount, " +
+                // ✅ Tổng tồn kho (COALESCE để trả về 0 nếu null)
+                "COALESCE((SELECT SUM(stock_quantity) FROM Product_variants WHERE product_id = p.id), 0) AS totalStock " +
+                "FROM Products p " +
+                "LEFT JOIN Categories c ON p.category_id = c.id " +
+                "ORDER BY p.id DESC";
 
         return get().withHandle(handle ->
                 handle.createQuery(sql)

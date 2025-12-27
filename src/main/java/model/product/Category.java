@@ -10,15 +10,15 @@ public class Category extends AId implements Serializable {
     private String nameCategory;
     private String slug;
     private String description;
-    @ColumnName("parent_id")
-    private int parentId;
+    @ColumnName("parent_category_id")
+    private Integer parentId;
 
     public Category(int id) {
         super(id);
     }
     public Category() {}
 
-    public Category(int id, String nameCategory, String slug, String description, int parentId) {
+    public Category(int id, String nameCategory, String slug, String description, Integer parentId) {
         super(id);
         this.nameCategory = nameCategory;
         this.slug = slug;
@@ -50,11 +50,11 @@ public class Category extends AId implements Serializable {
         this.description = description;
     }
 
-    public int getParentId() {
+    public Integer getParentId() {
         return parentId;
     }
 
-    public void setParentId(int parentId) {
+    public void setParentId(Integer parentId) {
         this.parentId = parentId;
     }
 }
