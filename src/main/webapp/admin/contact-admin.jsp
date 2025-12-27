@@ -1,14 +1,16 @@
+<%@ taglib prefix = "c" uri = "http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="../style/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="../style/dashboard.css">
-    <link rel="stylesheet" href="../style/contact.css">
-    <script src="../scripts/contact.js"></script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/admin.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/dashboard.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/contact-admin.css">
+
+    <script src="${pageContext.request.contextPath}/scripts/contact.js"></script>
 </head>
 <body>
 <div class="admin-container">
@@ -33,7 +35,13 @@
             </ul>
         </nav>
     </div>
-
+    <c:if test="${not empty sessionScope.message}">
+        <div class="alert alert-${sessionScope.messageType == 'success' ? 'success' : 'danger'}"
+             style="padding: 10px; background: #d4edda; color: #155724; margin-bottom: 15px;">
+                ${sessionScope.message}
+        </div>
+        <% session.removeAttribute("message"); %>
+    </c:if>
     <main class="main-content">
         <header class="admin-header">
             <div class="header-actions">
@@ -57,71 +65,44 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <td>C-005</td>
-                        <td>Nguyễn Văn A</td>
-                        <td>a.nguyen@example.com</td>
-                        <td>2025-11-20 10:30</td>
-                        <td class="excerpt-column">Sản phẩm X có đang giảm giá không? Tôi muốn biết các voucher giảm giá. </td>
-                        <td><span class="status-badge">Mới</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-reply-email" title="Phản hồi Email"
-                                    data-recipient-email="a.nguyen@example.com">
-                                <i class="fas fa-reply"></i>
-                            </button>
-                            <button class="btn btn-sm xemchitiet btn-view-detail" title="Xem chi tiết"
-                                    data-full-message="Sản phẩm X có đang giảm giá không? Tôi muốn biết các voucher giảm giá mà cửa hàng đang áp dụng cho đơn hàng lớn.">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-sm delete" title="Xóa">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
+                    <c:forEach var="c" items="${contactList}">
+                        <tr>
+                            <td>#${c.id}</td>
+                            <td>${c.fullName}</td>
+                            <td>${c.email}</td>
+                            <td>${c.formattedDate}</td> <td class="excerpt-column">
+                            <div style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    ${c.messageBody}
+                            </div>
                         </td>
-                    </tr>
 
-                    <tr>
-                        <td>C-004</td>
-                        <td>Trần Thị B</td>
-                        <td>b.tran@example.com</td>
-                        <td>2025-11-19 15:45</td>
-                        <td class="excerpt-column">Tôi đã nhận được đơn hàng rồi, nhưng có vấn đề về mặt hàng này.</td>
-                        <td><span class="status-badge ">Đã trả lời</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-reply-email" title="Phản hồi Email"
-                                    data-recipient-email="b.tran@example.com">
-                                <i class="fas fa-reply"></i>
-                            </button>
-                            <button class="btn btn-sm xemchitiet btn-view-detail" title="Xem chi tiết"
-                                    data-full-message="Tôi đã nhận được đơn hàng rồi, nhưng có vấn đề về mặt hàng này. Sản phẩm bị trầy xước nhẹ. Vui lòng hỗ trợ đổi trả.">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-sm delete"  title="Xóa">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </td>
-                    </tr>
+                            <td>
+                <span class="status-badge ${c.statusMessage == 'new' ? 'status-new' : ''}">
+                        ${c.statusMessage != null ? c.statusMessage : 'Mới'}
+                </span>
+                            </td>
 
-                    <tr>
-                        <td>C-003</td>
-                        <td>Lê Văn C</td>
-                        <td>c.le@example.com</td>
-                        <td>2025-11-19 09:00</td>
-                        <td class="excerpt-column">Tôi cần tư vấn về chính sách đổi trả hàng</td>
-                        <td><span class="status-badge ">Mới</span></td>
-                        <td>
-                            <button class="btn btn-sm btn-reply-email" title="Phản hồi Email"
-                                    data-recipient-email="c.le@example.com">
-                                <i class="fas fa-reply"></i>
-                            </button>
-                            <button class="btn btn-sm xemchitiet btn-view-detail" title="Xem chi tiết"
-                                    data-full-message="Tôi cần tư vấn chi tiết về chính sách đổi trả hàng, đặc biệt là thời gian quy định và thủ tục cần thiết cho mặt hàng dễ vỡ.">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-sm delete"  title="Xóa">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </td>
-                    </tr>
+                            <td>
+                                <button class="btn btn-sm btn-reply-email" title="Phản hồi Email"
+                                        data-recipient-email="${c.email}">
+                                    <i class="fas fa-reply"></i>
+                                </button>
+
+                                <button class="btn btn-sm btn-view-detail"
+                                        data-id="${c.id}"
+                                        data-name="${c.fullName}"
+                                        data-email="${c.email}"
+                                        data-date="${c.formattedDate}"
+                                        data-message="${c.messageBody}">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+
+                                <button class="btn btn-sm delete" title="Xóa" data-id="${c.id}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </c:forEach>
                     </tbody>
                 </table>
             </div>
@@ -147,30 +128,34 @@
     <div class="modal-content">
         <span class="close-button">&times;</span>
         <h3>Xác nhận Xóa Tin nhắn</h3>
-        <p>Bạn có chắc chắn muốn xóa tin nhắn liên hệ của <strong id="delete-name"></strong> (ID: <strong id="delete-id"></strong>) không?</p>
-        <div class="modal-actions">
-            <button class="btn btn-sm status-complete" id="cancel-delete">Hủy</button>
-            <button class="btn btn-sm status-cancel" id="confirm-delete">Xác nhận Xóa</button>
-        </div>
+        <p>Bạn có chắc muốn xóa tin nhắn của: <strong id="delete-name"></strong>?</p>
+        <p>ID tin nhắn: <strong id="delete-id-display"></strong></p>
+
+        <form action="${pageContext.request.contextPath}/admin/contact-delete" method="post">
+            <input type="hidden" name="id" id="input-delete-id">
+
+            <div class="modal-actions">
+                <button type="button" class="btn btn-sm status-complete" id="cancel-delete">Hủy</button>
+                <button type="submit" class="btn btn-sm status-cancel">Xác nhận Xóa</button>
+            </div>
+        </form>
     </div>
 </div>
 <div id="reply-modal" class="modal reply-modal">
     <div class="modal-content">
-        <span class="close-button">&times;</span>
-        <h3>Phản hồi Email cho Khách hàng</h3>
-        <form id="reply-form">
+        <form id="reply-form" action="${pageContext.request.contextPath}/admin/contact-reply" method="post">
             <div class="form-group">
-                <label for="reply-to">Đến:</label>
-                <input type="text" id="reply-to" class="form-control" readonly>
+                <label>Đến:</label>
+                <input type="text" name="email" id="reply-to" class="form-control" readonly>
             </div>
+
+            <input type="hidden" name="subject" value="Re: Hỗ trợ Việt Sắc Đỏ">
+
             <div class="form-group">
-                <label for="reply-subject">Tiêu đề:</label>
-                <input type="text" id="reply-subject" class="form-control" value="Re: Yêu cầu hỗ trợ từ Việt Sắc Đỏ">
+                <label>Nội dung:</label>
+                <textarea name="content" id="reply-body" class="form-control" required></textarea>
             </div>
-            <div class="form-group">
-                <label for="reply-body">Nội dung:</label>
-                <textarea id="reply-body" class="form-control" rows="10" placeholder="Viết nội dung phản hồi tại đây..."></textarea>
-            </div>
+
             <div class="modal-actions">
                 <button type="button" class="btn btn-sm status-cancel" id="cancel-reply">Hủy</button>
                 <button type="submit" class="btn btn-sm status-shipping">Gửi Email</button>

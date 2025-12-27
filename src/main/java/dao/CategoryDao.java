@@ -64,7 +64,6 @@ public class CategoryDao extends BaseDao {
         );
     }
 
-    // 2. Lấy danh sách sản phẩm có phân trang (OFFSET và LIMIT)
     public List<ProductListDTO> getProductsByCategoryPayload(int categoryId, int page, int pageSize) {
         String sql = "SELECT p.id, p.name_product, " +
                 "(SELECT current_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS price, " +
@@ -74,8 +73,6 @@ public class CategoryDao extends BaseDao {
                 "WHERE p.category_id = :categoryId " +
                 "LIMIT :limit OFFSET :offset";
 
-        // Tính vị trí bắt đầu lấy dữ liệu
-        // Ví dụ: Trang 1 bắt đầu từ 0, Trang 2 bắt đầu từ 12 (nếu pageSize = 12)
         int offset = (page - 1) * pageSize;
 
         return get().withHandle(handle ->
