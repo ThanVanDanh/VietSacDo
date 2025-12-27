@@ -24,14 +24,16 @@ import java.util.*;
 
 /**
  * AdminProductController - LIST, ADD, DELETE
- *
+ * <p>
  * GET  /admin/product/add    -> Trả về JSON danh sách products (list)
  * POST /admin/product/add    -> Thêm product mới
  * POST /admin/product/delete -> Xóa product (hoặc dùng query param ?action=delete)
  */
 @WebServlet(name = "AdminProductController", urlPatterns = {
         "/admin/product/add",
-        "/admin/product/delete"
+        "/admin/product/delete",
+        "/admin/product/update",
+        "/admin/product/get"
 })
 @MultipartConfig(maxFileSize = 1024 * 1024 * 10, maxRequestSize = 1024 * 1024 * 50)
 public class AdminProductController extends HttpServlet {
@@ -238,7 +240,10 @@ public class AdminProductController extends HttpServlet {
 
             int categoryId = 0;
             if (!cat.isEmpty()) {
-                try { categoryId = Integer.parseInt(cat); } catch (Exception e) {}
+                try {
+                    categoryId = Integer.parseInt(cat);
+                } catch (Exception e) {
+                }
             }
 
             Product product = new Product(0);
@@ -268,11 +273,17 @@ public class AdminProductController extends HttpServlet {
                     v.setColor(get(colors, i));
 
                     double price = 0;
-                    try { price = Double.parseDouble(get(prices, i)); } catch (Exception e) {}
+                    try {
+                        price = Double.parseDouble(get(prices, i));
+                    } catch (Exception e) {
+                    }
                     v.setCurrentPrice(price);
 
                     int stock = 0;
-                    try { stock = Integer.parseInt(get(stocks, i)); } catch (Exception e) {}
+                    try {
+                        stock = Integer.parseInt(get(stocks, i));
+                    } catch (Exception e) {
+                    }
                     v.setStockQuantity(stock);
 
                     variants.add(v);
@@ -318,9 +329,17 @@ public class AdminProductController extends HttpServlet {
     }
 
     /* ---------- helpers ---------- */
-    private String safe(String s) { return s == null ? "" : s.trim(); }
-    private String[] optional(String[] a, String[] b) { return a != null ? a : b; }
-    private String get(String[] arr, int i) { return (arr != null && i >= 0 && i < arr.length) ? arr[i] : null; }
+    private String safe(String s) {
+        return s == null ? "" : s.trim();
+    }
+
+    private String[] optional(String[] a, String[] b) {
+        return a != null ? a : b;
+    }
+
+    private String get(String[] arr, int i) {
+        return (arr != null && i >= 0 && i < arr.length) ? arr[i] : null;
+    }
 
     private String getFilename(Part part) {
         String cd = part.getHeader("content-disposition");
