@@ -33,6 +33,12 @@ public class SignupController extends HttpServlet {
             request.getRequestDispatcher("signup.jsp").forward(request, response);
             return;
         }
+        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$";
+        if (!password.matches(passwordRegex)) {
+            request.setAttribute("error", "Mật khẩu yếu: Phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và ký tự đặc biệt!");
+            request.getRequestDispatcher("signup.jsp").forward(request, response);
+            return;
+        }
         boolean isRegistered = userService.register(fullName, phone, email, password);
         if (isRegistered) {
             request.getSession().setAttribute("successMessage", "Đăng ký thành công!");
