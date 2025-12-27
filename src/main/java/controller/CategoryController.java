@@ -17,14 +17,15 @@ public class CategoryController extends HttpServlet {
 
     private ProductService productService;
     private CategoryDao categoryDao;
+    private ProductDao productDao;
 
     @Override
     public void init() throws ServletException {
         super.init();
         try {
-            ProductDao pd = new ProductDao();
-            this.productService = new ProductService(pd.get(), new CloudinaryService());
+            this.productDao = new ProductDao();
             this.categoryDao = new CategoryDao();
+            this.productService = new ProductService(productDao.get(), new CloudinaryService());
         } catch (Exception ex) {
             throw new ServletException("Lỗi khởi tạo CategoryController: " + ex.getMessage(), ex);
         }
@@ -40,16 +41,39 @@ public class CategoryController extends HttpServlet {
             return;
         }
         String slug = pathInfo.substring(1);
+
         try {
+//            danh muc
             Category currentCategory = categoryDao.getCategoryBySlug(slug);
             if (currentCategory == null) {
                 response.sendError(404, "Danh mục không tồn tại");
                 return;
             }
-            List<ProductListDTO> list = productService.getProductsByCategory(currentCategory.getId());
+//            phan trang
+            int page = 1;
+            int pageSize = 15;
+            if (request.getParameter("page") != null) {
+                try {
+                    page = Integer.parseInt(request.getParameter("page"));
+                } catch (NumberFormatException e) {
+                    page = 1;
+                }
+            }
+
+            int totalProducts = categoryDao.countProductsByCategory(currentCategory.getId());
+            int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
+
+            if (page < 1) page = 1;
+            if (page > totalPages && totalPages > 0) page = totalPages;
+
+            List<ProductListDTO> list = categoryDao.getProductsByCategoryPayload(currentCategory.getId(), page, pageSize);
 
             request.setAttribute("currentCategory", currentCategory);
             request.setAttribute("list", list);
+
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+
             request.getRequestDispatcher("/list-product.jsp").forward(request, response);
 
         } catch (Exception e) {

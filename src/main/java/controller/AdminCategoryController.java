@@ -12,9 +12,13 @@ import model.product.Category;
 import org.jdbi.v3.core.Jdbi;
 import services.CategoryService;
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 
-@WebServlet(name = "AdminCategoryController", urlPatterns = {"/admin/category/add", "/admin/category/list", "/admin/category/delete"})
+@WebServlet(name = "AdminCategoryController", urlPatterns = {
+        "/admin/category/add",
+        "/admin/category/list",
+        "/admin/category/delete"
+})
 @MultipartConfig
 public class AdminCategoryController extends HttpServlet {
 
@@ -56,11 +60,28 @@ public class AdminCategoryController extends HttpServlet {
 
         try {
             List<Category> cats = categoryService.getAllCategories();
-            resp.getWriter().write(gson.toJson(cats));
+
+            // ✅ Lấy product counts
+            Map<Integer, Integer> productCounts = categoryDao.getProductCountsForAllCategories();
+
+            // ✅ Tạo response với productCount
+            List<Map<String, Object>> response = new ArrayList<>();
+            for (Category cat : cats) {
+                Map<String, Object> catMap = new HashMap<>();
+                catMap.put("id", cat.getId());
+                catMap.put("nameCategory", cat.getNameCategory());
+                catMap.put("slug", cat.getSlug());
+                catMap.put("description", cat.getDescription());
+                catMap.put("parentCategoryId", cat.getParentId());
+                catMap.put("productCount", productCounts.getOrDefault(cat.getId(), 0));
+                response.add(catMap);
+            }
+
+            resp.getWriter().write(gson.toJson(response));
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (Exception ex) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            resp.getWriter().write("{\"error\":\"" + escapeJson(ex.getMessage()) + "\"}");
+            resp.getWriter().write("{\"error\":\"" + escape(ex.getMessage()) + "\"}");
         }
     }
 
@@ -72,14 +93,12 @@ public class AdminCategoryController extends HttpServlet {
         resp.setContentType("application/json;charset=UTF-8");
 
         try {
-            // Kiểm tra nếu là DELETE request
             String uri = req.getRequestURI();
             if (uri != null && uri.contains("/delete")) {
                 handleDelete(req, resp);
                 return;
             }
 
-            // Đọc parameters
             String idStr = req.getParameter("id");
             String name = safe(req.getParameter("category-name"));
             String slug = safe(req.getParameter("category-slug"));
@@ -97,18 +116,34 @@ public class AdminCategoryController extends HttpServlet {
             cat.setSlug(slug.isEmpty() ? generateSlug(name) : slug);
             cat.setDescription(description.isEmpty() ? null : description);
 
-            int parentId = 0;
+            // ✅ FIX: Xử lý parentId đúng
+            Integer parentId = null;
             if (!parent.isEmpty()) {
-                try { parentId = Integer.parseInt(parent); } catch (Exception e) {}
+                try {
+                    int parsed = Integer.parseInt(parent);
+                    if (parsed > 0) {
+                        parentId = parsed;
+                    }
+                } catch (NumberFormatException e) {
+                    // Log nếu cần
+                    log("Invalid parent ID: " + parent);
+                }
             }
-            cat.setParentId(parentId == 0 ? null : parentId);
+            cat.setParentId(parentId);
 
             boolean isUpdate = (idStr != null && !idStr.trim().isEmpty());
 
             if (isUpdate) {
-                // UPDATE
                 int id = Integer.parseInt(idStr.trim());
                 cat.setId(id);
+
+                // ✅ THÊM: Validate không được chọn chính nó làm parent
+                if (parentId != null && parentId == id) {
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    resp.getWriter().write("{\"success\":false, \"error\":\"Không thể chọn chính category này làm parent\"}");
+                    return;
+                }
+
                 boolean success = categoryService.updateCategory(cat);
 
                 if (success) {
@@ -118,11 +153,10 @@ public class AdminCategoryController extends HttpServlet {
                     resp.getWriter().write("{\"success\":false, \"error\":\"Category not found\"}");
                 }
             } else {
-                // ADD
                 int newId = categoryService.createCategory(cat);
 
                 if (newId > 0) {
-                    resp.getWriter().write("{\"success\":true, \"id\":" + newId + ", \"slug\":\"" + escapeJson(cat.getSlug()) + "\", \"action\":\"add\"}");
+                    resp.getWriter().write("{\"success\":true, \"id\":" + newId + ", \"slug\":\"" + escape(cat.getSlug()) + "\", \"action\":\"add\"}");
                 } else if (newId == -2) {
                     resp.setStatus(HttpServletResponse.SC_CONFLICT);
                     resp.getWriter().write("{\"success\":false, \"error\":\"Slug đã tồn tại\"}");
@@ -135,8 +169,9 @@ public class AdminCategoryController extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.getWriter().write("{\"success\":false, \"error\":\"Invalid ID format\"}");
         } catch (Exception ex) {
+            log("Error in doPost: " + ex.getMessage(), ex);
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            resp.getWriter().write("{\"success\":false, \"error\":\"" + escapeJson(ex.getMessage()) + "\"}");
+            resp.getWriter().write("{\"success\":false, \"error\":\"" + escape(ex.getMessage()) + "\"}");
         }
     }
 
@@ -160,12 +195,10 @@ public class AdminCategoryController extends HttpServlet {
 
             int id = Integer.parseInt(idStr.trim());
 
-            // Kiểm tra trước khi xóa
             int childCount = categoryDao.countChildCategories(id);
             int productCount = categoryDao.countProducts(id);
 
             if (childCount > 0 || productCount > 0) {
-                // Không thể xóa
                 String jsonResponse = String.format(
                         "{\"success\":false, \"canDelete\":false, \"childCount\":%d, \"productCount\":%d}",
                         childCount, productCount
@@ -175,7 +208,6 @@ public class AdminCategoryController extends HttpServlet {
                 return;
             }
 
-            // Có thể xóa
             boolean success = categoryService.deleteCategory(id);
             if (success) {
                 resp.getWriter().write("{\"success\":true, \"canDelete\":true}");
@@ -189,10 +221,10 @@ public class AdminCategoryController extends HttpServlet {
             resp.getWriter().write("{\"success\":false, \"error\":\"Invalid ID format\"}");
         } catch (IllegalStateException ex) {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
-            resp.getWriter().write("{\"success\":false, \"error\":\"" + escapeJson(ex.getMessage()) + "\"}");
+            resp.getWriter().write("{\"success\":false, \"error\":\"" + escape(ex.getMessage()) + "\"}");
         } catch (Exception ex) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            resp.getWriter().write("{\"success\":false, \"error\":\"" + escapeJson(ex.getMessage()) + "\"}");
+            resp.getWriter().write("{\"success\":false, \"error\":\"" + escape(ex.getMessage()) + "\"}");
         }
     }
 
@@ -214,7 +246,7 @@ public class AdminCategoryController extends HttpServlet {
                 .replaceAll("^-+|-+$", "");
     }
 
-    private String escapeJson(String s) {
+    private String escape(String s) {
         if (s == null) return "";
         return s.replace("\\", "\\\\")
                 .replace("\"", "\\\"")

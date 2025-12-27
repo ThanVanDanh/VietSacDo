@@ -1,8 +1,13 @@
 package dao;
 
 import model.product.Category;
+import model.product.ProductListDTO;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import java.util.List;
 
@@ -103,22 +108,57 @@ public class CategoryDao extends BaseDao {
                         .orElse(null)
         );
     }
+    // 1. Đếm tổng số sản phẩm trong danh mục (Dùng để tính Total Pages)
+    public int countProductsByCategory(int categoryId) {
+        String sql = "SELECT COUNT(*) FROM Products WHERE category_id = :categoryId";
 
+        return get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("categoryId", categoryId)
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
+
+    public List<ProductListDTO> getProductsByCategoryPayload(int categoryId, int page, int pageSize) {
+        String sql = "SELECT p.id, p.name_product, " +
+                "(SELECT current_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS price, " +
+                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
+                "(SELECT sku FROM Product_variants WHERE product_id = p.id LIMIT 1) AS sku " +
+                "FROM Products p " +
+                "WHERE p.category_id = :categoryId " +
+                "LIMIT :limit OFFSET :offset";
+
+        int offset = (page - 1) * pageSize;
+
+        return get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("categoryId", categoryId)
+                        .bind("limit", pageSize)
+                        .bind("offset", offset)
+                        .mapToBean(ProductListDTO.class)
+                        .list()
+        );
+    }
     public boolean update(Category category) {
         String sql = "UPDATE Categories SET " +
                 "name_category = :nameCategory, " +
                 "slug = :slug, " +
                 "description = :description, " +
-                "parent_category_id = :parentCategoryId " +
+                "parent_category_id = :parentId " +
                 "WHERE id = :id";
 
         return jdbi.withHandle(handle -> {
+            Integer parentId = category.getParentId();
+            if (parentId != null && parentId == 0) {
+                parentId = null; // Convert 0 → null
+            }
             int affected = handle.createUpdate(sql)
                     .bind("id", category.getId())
                     .bind("nameCategory", category.getNameCategory())
                     .bind("slug", category.getSlug())
                     .bind("description", category.getDescription())
-                    .bind("parentCategoryId", category.getParentId() == 0 ? null : category.getParentId())
+                    .bind("parentId", parentId) // ✅ Sử dụng biến đã xử lý
                     .execute();
             return affected > 0;
         });
@@ -138,6 +178,26 @@ public class CategoryDao extends BaseDao {
         );
     }
 
+    public Map<Integer, Integer> getProductCountsForAllCategories() {
+        String sql = "SELECT category_id, COUNT(*) as product_count " +
+                "FROM Products " +
+                "GROUP BY category_id";
+
+        return jdbi.withHandle(handle -> {
+            Map<Integer, Integer> counts = new HashMap<>();
+
+            handle.createQuery(sql)
+                    .map((rs, ctx) -> {
+                        int categoryId = rs.getInt("category_id");
+                        int count = rs.getInt("product_count");
+                        counts.put(categoryId, count);
+                        return null;
+                    })
+                    .list();
+
+            return counts;
+        });
+    }
     /**
      * Xóa category (có validation)
      * @throws IllegalStateException nếu không thể xóa
@@ -183,4 +243,5 @@ public class CategoryDao extends BaseDao {
             return count > 0;
         });
     }
+
 }

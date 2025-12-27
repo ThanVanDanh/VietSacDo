@@ -158,11 +158,24 @@
         </div>
 <!--        phân trang-->
         <div class="pagination">
-            <a href="#"><img src="image/chevron_left.png" alt=""></a>
-            <a href="#" class="active">1</a>
-            <a href="#">2</a>
-            <a href="#">3</a>
-            <a href="#"><img src="image/chevron_right.png" alt=""></a>
+            <c:if test="${currentPage > 1}">
+                <a href="?page=${currentPage - 1}&sort-by=${param['sort-by']}">
+                    <img src="${pageContext.request.contextPath}/image/chevron_left.png" alt="Prev">
+                </a>
+            </c:if>
+
+            <c:forEach begin="1" end="${totalPages}" var="i">
+                <a href="?page=${i}&sort-by=${param['sort-by']}"
+                   class="${currentPage == i ? 'active' : ''}">
+                        ${i}
+                </a>
+            </c:forEach>
+
+            <c:if test="${currentPage < totalPages}">
+                <a href="?page=${currentPage + 1}&sort-by=${param['sort-by']}">
+                    <img src="${pageContext.request.contextPath}/image/chevron_right.png" alt="Next">
+                </a>
+            </c:if>
         </div>
     </section>
     <section class="product-showcase tab-component">
