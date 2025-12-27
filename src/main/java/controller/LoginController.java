@@ -30,9 +30,9 @@ public class LoginController extends HttpServlet {
             User user = userService.processSocialLogin(email, name, uid, action);
             createSession(request, response, user);
         } else {
-            String phone = request.getParameter("phone");
+            String loginKey = request.getParameter("username");
             String pass = request.getParameter("password");
-            User user = userService.login(phone, pass);
+            User user = userService.login(loginKey, pass);
             if (user != null) {
                 createSession(request, response, user);
             } else {
