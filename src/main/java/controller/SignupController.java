@@ -36,7 +36,7 @@ public class SignupController extends HttpServlet {
         boolean isRegistered = userService.register(fullName, phone, email, password);
         if (isRegistered) {
             request.getSession().setAttribute("successMessage", "Đăng ký thành công!");
-            response.sendRedirect("account.jsp");
+            response.sendRedirect("login.jsp");
         } else {
             request.setAttribute("error", "Đăng ký thất bại! Email hoặc số điện thoại đã tồn tại.");
             request.getRequestDispatcher("signup.jsp").forward(request, response);
