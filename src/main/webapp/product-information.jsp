@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="style/product-infomation.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="scripts/home.js"></script>
-    <script src="scripts/product-information.js"></script>
+<%--    <script src="scripts/product-information.js"></script>--%>
     <link rel="stylesheet" href="style/style-header.css">
     <link rel="stylesheet" href="style/footer.css">
     <link rel="stylesheet" href="style/backtop.css">
@@ -129,7 +129,10 @@
 
     <div class="product-details">
         <h1>${p.nameProduct}</h1>
-        <p class="sku">Mã sản phẩm: ${p.variants[0].sku}</p>
+        <p class="sku">
+            Mã sản phẩm: <span id="sku-value">${p.variants[0].sku}</span>
+        </p>
+
         <div class="product-price">
             <span class="old-price">850,000₫</span>
             <span class="current-price">${p.variants[0].currentPrice}</span>
@@ -146,19 +149,25 @@
             </ul>
         </fieldset>
         <div class="section-title">Mã giảm giá</div>
-        <div class="section-title">Kích thước: Size S</div>
+        <div class="section-title">Kích thước: <span id="selected-size">${p.variants[0].size}</span></div>
+
         <div class="size-options">
-            <button class="size-btn active">Size S</button>
-            <button class="size-btn">Size M</button>
-            <button class="size-btn">Size L</button>
-            <button class="size-btn">Size XL</button>
+            <c:forEach items="${p.variants}" var="variant" varStatus="status">
+                <button class="size-btn ${status.first ? 'active' : ''}"
+                        data-price="${variant.currentPrice}"
+                        data-sku="${variant.sku}"
+                        onclick="updateVariant(this, '${variant.size}')">
+                        ${variant.size}
+                </button>
+
+            </c:forEach>
         </div>
         <div class="section-title">Màu sắc: Hồng nhành hoa hồng</div>
         <div class="purchase-actions">
             <div class="quantity-control">
-                <button class="qty-btn">-</button>
-                <input type="text" value="1" readonly>
-                <button class="qty-btn">+</button>
+                <button type="button" class="qty-btn">-</button>
+                <input type="text" name="quantity" id="product-quantity" value="1" readonly>
+            <button type="button" class="qty-btn">+</button>
             </div>
             <button class="add-to-cart-btn" id="them-vao-gio-hang">THÊM VÀO GIỎ</button>
         </div>
@@ -621,5 +630,6 @@
 <button onclick="scrollToTop()" id="backToTopBtn" title="Trở về đầu trang">
     <i class="fas fa-chevron-up"></i>
 </button>
+<script src="${pageContext.request.contextPath}/scripts/product-information.js"></script>
 </body>
 </html>

@@ -57,7 +57,7 @@ public class ProductDao extends BaseDao {
 
             if (product != null) {
                 // Lấy variants
-                product.setVariants(handle.createQuery("SELECT * FROM Product_variants WHERE product_id = :id")
+                product.setVariants(handle.createQuery("SELECT * FROM Product_variants WHERE product_id = :id ORDER BY FIELD(size, 'S', 'M', 'L', 'XL', 'XXL');")
                         .bind("id", id)
                         .mapToBean(ProductVariant.class)
                         .list());

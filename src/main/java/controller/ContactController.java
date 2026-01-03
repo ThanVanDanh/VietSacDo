@@ -7,14 +7,14 @@ import jakarta.servlet.annotation.*;
 import model.contact.ContactUs;
 import java.io.IOException;
 
-@WebServlet(name = "ContactController", value = "/contactus")
+@WebServlet(name = "ContactController", value = "/contact_us")
 public class ContactController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getRequestDispatcher("contactus.jsp").forward(request, response);
     }
 
-    // Xử lý Form ở đây
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
