@@ -21,7 +21,6 @@ public class DeleteContactController extends HttpServlet {
             ContactDao dao = new ContactDao();
             dao.delete(id);
 
-            // LƯU Ý: Dùng Session để thông báo sau khi chuyển trang
             request.getSession().setAttribute("message", "Đã xóa thành công!");
             request.getSession().setAttribute("messageType", "success");
 
@@ -31,7 +30,6 @@ public class DeleteContactController extends HttpServlet {
             request.getSession().setAttribute("messageType", "error");
         }
 
-        // QUAN TRỌNG: Chuyển hướng quay lại trang danh sách
         response.sendRedirect(request.getContextPath() + "/contactus-admin");
 
     }
