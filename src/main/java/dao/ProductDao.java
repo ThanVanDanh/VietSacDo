@@ -164,4 +164,32 @@ public class ProductDao extends BaseDao {
                 handle.createQuery(sql).bind("productId", productId).mapTo(Integer.class).one()
         );
     }
+
+    public boolean update(Product product) {
+        return get().withHandle(handle -> {
+            return update(handle, product);
+        });
+    }
+
+    public boolean update(Handle handle, Product product) {
+        String sql = "UPDATE Products SET " +
+                "name_product = ?, " +
+                "product_code = ?, " +
+                "description = ?, " +
+                "status_product = ?, " +
+                "category_id = ?, " +
+                "updated_at = NOW() " +
+                "WHERE id = ?";
+
+        int rows = handle.createUpdate(sql)
+                .bind(0, product.getNameProduct())
+                .bind(1, product.getProductCode())
+                .bind(2, product.getDescription())
+                .bind(3, product.getStatusProduct())
+                .bind(4, product.getCategoryId() > 0 ? product.getCategoryId() : null)
+                .bind(5, product.getId())
+                .execute();
+
+        return rows > 0;
+    }
 }
