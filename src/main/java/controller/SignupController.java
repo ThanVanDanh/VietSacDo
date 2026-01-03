@@ -3,6 +3,7 @@ package controller;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import services.EmailService;
 import services.UserService;
 import dao.UserDao;
 
@@ -10,7 +11,7 @@ import java.io.IOException;
 
 @WebServlet(name = "Signup", value = "/signup")
 public class SignupController extends HttpServlet {
-    private UserService userService = new UserService(new UserDao());
+    private UserService userService = new UserService(new UserDao(),new EmailService());
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -27,8 +28,7 @@ public class SignupController extends HttpServlet {
         String phone = request.getParameter("phone");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        if (fullName == null || phone == null || email == null || password == null ||
-                fullName.isEmpty() || phone.isEmpty() || email.isEmpty() || password.isEmpty()) {
+        if (fullName == null || phone == null || email == null || password == null || fullName.isEmpty() || phone.isEmpty() || email.isEmpty() || password.isEmpty()) {
             request.setAttribute("error", "Vui lòng nhập đầy đủ thông tin!");
             request.getRequestDispatcher("signup.jsp").forward(request, response);
             return;
@@ -39,7 +39,9 @@ public class SignupController extends HttpServlet {
             request.getRequestDispatcher("signup.jsp").forward(request, response);
             return;
         }
-        boolean isRegistered = userService.register(fullName, phone, email, password);
+        // 1. Lấy domain hiện tại (ví dụ: http://localhost:8080/VietSacDo)
+        String domain = request.getRequestURL().toString().replace(request.getRequestURI(), "") + request.getContextPath();
+        boolean isRegistered = userService.register(fullName, phone, email, password, domain);
         if (isRegistered) {
             request.getSession().setAttribute("successMessage", "Đăng ký thành công!");
             response.sendRedirect("login.jsp");

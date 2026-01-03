@@ -6,13 +6,11 @@ import org.mindrot.jbcrypt.BCrypt;
 
 public class UserService {
     private final UserDao userDao;
+    private final EmailService emailService;
 
-    public UserService(UserDao userDao) {
+    public UserService(UserDao userDao, EmailService emailService) {
         this.userDao = userDao;
-    }
-
-    public UserService() {
-        this.userDao = new UserDao();
+        this.emailService = emailService;
     }
 
     public UserDao getUserDao() {
@@ -24,16 +22,21 @@ public class UserService {
         if (user == null) {
             return null;
         }
+        if (!"ACTIVE".equals(user.getStatus())) {
+            return null;
+        }
         if (user.getPassword() != null && BCrypt.checkpw(password, user.getPassword())) {
             return user;
         }
         return null;
     }
 
-    public boolean register(String name, String phone, String email, String password) {
+    public boolean register(String name, String phone, String email, String password, String domain) {
         if (userDao.findByEmail(email) != null || userDao.findByPhone(phone) != null) {
             return false;
         }
+        String token = java.util.UUID.randomUUID().toString();
+
         User user = new User();
         user.setFullName(name);
         user.setPhone(phone);
@@ -41,7 +44,15 @@ public class UserService {
         user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt(12)));
         user.setRole("user");
         user.setAuthProvider("local");
-        return userDao.insert(user) > 0;
+        user.setStatus("PENDING");
+        user.setVerifyToken(token);
+
+        int id = userDao.insert(user);
+        if (id > 0) {
+            emailService.sendVerifyLink(email, token, domain);
+            return true;
+        }
+        return false;
     }
 
     public User processSocialLogin(String email, String name, String firebase_uid, String provider) {
