@@ -5,13 +5,14 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import model.user.User;
+import services.EmailService;
 import services.UserService;
 
 import java.io.IOException;
 
 @WebServlet(name = "Login", value = "/Login")
 public class LoginController extends HttpServlet {
-    private UserService userService = new UserService(new UserDao());
+    private UserService userService = new UserService(new UserDao(),new EmailService());
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (request.getSession().getAttribute("account") != null) {
