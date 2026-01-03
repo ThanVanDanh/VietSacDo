@@ -14,27 +14,33 @@
         .category-row {
             transition: background-color 0.2s;
         }
+
         .category-row:hover {
             background-color: #f8f9fa;
         }
+
         .category-indent {
             display: inline-block;
             width: 30px;
             text-align: center;
             color: #999;
         }
+
         .category-name-cell {
             display: flex;
             align-items: center;
             gap: 8px;
         }
+
         .parent-category {
             font-weight: 600;
             color: #2c3e50;
         }
+
         .child-category {
             color: #555;
         }
+
         .category-icon {
             color: #999;
             font-size: 14px;
@@ -55,9 +61,11 @@
                 <li class="nav-item active"><a href="#"><i class="fas fa-box-open"></i> Quản lý Sản phẩm</a></li>
                 <li class="nav-item"><a href="orders.jsp"><i class="fas fa-shopping-cart"></i> Quản lý Đơn hàng</a></li>
                 <li class="nav-item"><a href="customers.jsp"><i class="fas fa-users"></i> Quản lý Khách hàng</a></li>
-                <li class="nav-item"><a href="contact-admin.jsp"><i class="fa-regular fa-address-book"></i> Quản lý Liên hệ</a></li>
+                <li class="nav-item"><a href="contact-admin.jsp"><i class="fa-regular fa-address-book"></i> Quản lý Liên
+                    hệ</a></li>
                 <li class="nav-item"><a href="promotions.jsp"><i class="fas fa-tags"></i> Khuyến mãi</a></li>
-                <li class="nav-item"><a href="${pageContext.request.contextPath}/index.jsp"><i class="fas fa-sign-out-alt"></i> Trở về Trang Chủ</a></li>
+                <li class="nav-item"><a href="${pageContext.request.contextPath}/index.jsp"><i
+                        class="fas fa-sign-out-alt"></i> Trở về Trang Chủ</a></li>
             </ul>
         </nav>
     </div>
@@ -74,7 +82,8 @@
 
         <!-- Category Section -->
         <section class="category-section" style="margin-bottom: 40px;">
-            <div class="category-list-header" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+            <div class="category-list-header"
+                 style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
                 <h2>Danh sách Danh mục</h2>
                 <div class="actions-row">
                     <a href="#" class="btn btn-primary" id="addCategoryBtnTop">
@@ -347,12 +356,10 @@
         var categoryParentSelect = document.getElementById('category-parent');
         var editForm = document.getElementById('addCategoryForm');
 
-        // ✅ FIX: Lấy ID của category đang edit
         var editingCategoryId = editForm && editForm.dataset.editId
             ? parseInt(editForm.dataset.editId)
             : null;
 
-        // Update product category select
         if (productCategorySelect) {
             var currentValue = productCategorySelect.value;
             productCategorySelect.innerHTML = '<option value="">-- Chọn danh mục --</option>';
@@ -369,16 +376,14 @@
             if (currentValue) productCategorySelect.value = currentValue;
         }
 
-        // Update parent category select
         if (categoryParentSelect) {
             var currentValue = categoryParentSelect.value;
             categoryParentSelect.innerHTML = '<option value="">-- Không --</option>';
 
             if (categories && categories.length > 0) {
                 categories.forEach(function (cat) {
-                    // ✅ FIX: Không cho chọn chính nó làm parent
                     if (editingCategoryId && cat.id === editingCategoryId) {
-                        return; // Skip category đang edit
+                        return;
                     }
 
                     var opt = document.createElement('option');
@@ -540,7 +545,6 @@
         document.getElementById('category-slug').value = category.slug || '';
         document.getElementById('category-description').value = category.description || '';
 
-        // ✅ FIX: Set parent value (có thể là null)
         var parentSelect = document.getElementById('category-parent');
         if (parentSelect) {
             parentSelect.value = category.parentCategoryId || '';
@@ -550,7 +554,7 @@
         document.getElementById('categorySubmitBtn').textContent = 'Cập nhật';
 
         openModal(modal);
-        loadCategories(); // ✅ Load để refresh parent select
+        loadCategories();
     }
 
     function deleteCategory(category) {
@@ -620,6 +624,7 @@
                 alert('Không thể tải danh sách sản phẩm: ' + error.message);
             });
     }
+
     function deleteProduct(product) {
         var message = 'Bạn có chắc muốn xóa sản phẩm "' + product.nameProduct + '"?\n\n';
         message += 'Thao tác này sẽ xóa:\n';
@@ -660,6 +665,181 @@
             .catch(function (error) {
                 alert('Lỗi: ' + error.message);
             });
+    }
+
+    // ============================================
+    // ✅ EDIT PRODUCT FUNCTION
+    // ============================================
+
+    function editProduct(product) {
+        console.log('Editing product:', product);
+
+        // Đổi title và button
+        document.getElementById('productModalTitle').textContent = 'Chỉnh sửa Sản phẩm';
+        var modalSubmitBtn = document.getElementById('modalSubmitBtn');
+        modalSubmitBtn.textContent = 'Cập nhật Sản phẩm';
+        modalSubmitBtn.style.backgroundColor = '#ff8c00';
+
+        // Lấy chi tiết product
+        fetch(CTX + '/admin/product/get?id=' + product.id)
+            .then(function (response) {
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.json();
+            })
+            .then(function (productDetail) {
+                console.log('Product detail:', productDetail);
+
+                // Fill form cơ bản
+                document.getElementById('product-name').value = productDetail.nameProduct || '';
+                document.getElementById('product-code').value = productDetail.productCode || '';
+                document.getElementById('product-description').value = productDetail.description || '';
+                document.getElementById('product-status').value = productDetail.statusProduct || 'active';
+                document.getElementById('product-category').value = productDetail.categoryId || '';
+
+                // Lưu product ID
+                var addProductForm = document.getElementById('addProductForm');
+                addProductForm.dataset.editId = product.id;
+
+                // Load variants
+                var variantsContainer = document.getElementById('variantsContainer');
+                variantsContainer.innerHTML = '';
+
+                if (productDetail.variants && productDetail.variants.length > 0) {
+                    productDetail.variants.forEach(function (variant) {
+                        createVariantRow({
+                            sku: variant.sku || '',
+                            size: variant.size || '',
+                            color: variant.color || '',
+                            price: variant.currentPrice || 0,
+                            stock: variant.stockQuantity || 0
+                        });
+                    });
+                } else {
+                    createVariantRow();
+                }
+
+                // Load images
+                var imagePreviewGrid = document.getElementById('imagePreviewGrid');
+                imagePreviewGrid.innerHTML = '';
+
+                if (productDetail.images && productDetail.images.length > 0) {
+                    productDetail.images.forEach(function (image) {
+                        createExistingImagePreview(image);
+                    });
+                }
+
+                // Mở modal
+                openModal(document.getElementById('addProductModal'));
+                loadCategories();
+            })
+            .catch(function (error) {
+                alert('Không thể tải thông tin sản phẩm: ' + error.message);
+            });
+    }
+
+    // ============================================
+    // ✅ CREATE EXISTING IMAGE PREVIEW
+    // ============================================
+
+    function createExistingImagePreview(image) {
+        var imagePreviewGrid = document.getElementById('imagePreviewGrid');
+
+        var wrapper = document.createElement('div');
+        wrapper.className = 'image-preview-item existing-image';
+        wrapper.style.position = 'relative';
+        wrapper.style.display = 'inline-block';
+        wrapper.style.margin = '8px';
+        wrapper.style.border = '2px solid #28a745';
+        wrapper.style.borderRadius = '8px';
+        wrapper.style.padding = '4px';
+        wrapper.dataset.imageId = image.id;
+        wrapper.dataset.isThumbnail = image.thumbnail ? '1' : '0';
+
+        var img = document.createElement('img');
+        img.src = image.imageUrl;
+        img.alt = image.altText || '';
+        img.style.width = '150px';
+        img.style.height = '150px';
+        img.style.objectFit = 'cover';
+        img.style.borderRadius = '4px';
+        img.style.display = 'block';
+
+        if (image.thumbnail) {
+            img.style.border = '3px solid #640100';
+        }
+
+        wrapper.appendChild(img);
+
+        var label = document.createElement('div');
+        label.style.fontSize = '11px';
+        label.style.marginTop = '4px';
+        label.style.textAlign = 'center';
+        label.style.color = '#28a745';
+        label.style.fontWeight = 'bold';
+        label.textContent = 'Ảnh hiện có';
+        wrapper.appendChild(label);
+
+        var btnContainer = document.createElement('div');
+        btnContainer.style.display = 'flex';
+        btnContainer.style.gap = '4px';
+        btnContainer.style.marginTop = '4px';
+        btnContainer.style.justifyContent = 'center';
+
+        var thumbBtn = document.createElement('button');
+        thumbBtn.className = 'btn btn-primary';
+        thumbBtn.type = 'button';
+        thumbBtn.style.fontSize = '11px';
+        thumbBtn.style.padding = '4px 8px';
+        thumbBtn.textContent = image.thumbnail ? '★ Thumb' : 'Thumbnail';
+        thumbBtn.addEventListener('click', function (evt) {
+            evt.preventDefault();
+            setThumbnailForImage(wrapper);
+        });
+        btnContainer.appendChild(thumbBtn);
+
+        var removeBtn = document.createElement('button');
+        removeBtn.className = 'btn btn-secondary';
+        removeBtn.type = 'button';
+        removeBtn.style.fontSize = '11px';
+        removeBtn.style.padding = '4px 8px';
+        removeBtn.textContent = 'Xóa';
+        removeBtn.addEventListener('click', function (evt) {
+            evt.preventDefault();
+            if (confirm('Xóa ảnh này khỏi sản phẩm?')) {
+                wrapper.remove();
+            }
+        });
+        btnContainer.appendChild(removeBtn);
+
+        wrapper.appendChild(btnContainer);
+        imagePreviewGrid.appendChild(wrapper);
+    }
+
+    // ============================================
+    // ✅ SET THUMBNAIL FOR IMAGE
+    // ============================================
+
+    function setThumbnailForImage(selectedWrapper) {
+        var imagePreviewGrid = document.getElementById('imagePreviewGrid');
+        var items = imagePreviewGrid.querySelectorAll('.image-preview-item');
+
+        // Unset all
+        Array.prototype.forEach.call(items, function (item) {
+            item.dataset.isThumbnail = '0';
+            var img = item.querySelector('img');
+            if (img) img.style.border = '';
+
+            var thumbBtn = item.querySelector('.btn-primary');
+            if (thumbBtn) thumbBtn.textContent = 'Thumbnail';
+        });
+
+        // Set selected
+        selectedWrapper.dataset.isThumbnail = '1';
+        var img = selectedWrapper.querySelector('img');
+        if (img) img.style.border = '3px solid #640100';
+
+        var thumbBtn = selectedWrapper.querySelector('.btn-primary');
+        if (thumbBtn) thumbBtn.textContent = '★ Thumb';
     }
 
     function displayProducts(products) {
@@ -788,7 +968,7 @@
             editBtn.style.marginRight = '8px';
             editBtn.onclick = function (e) {
                 e.preventDefault();
-                alert('Chức năng sửa đang phát triển. ID: ' + product.id);
+                editProduct(product);
             };
 
             var deleteBtn = document.createElement('a');
@@ -798,7 +978,7 @@
             deleteBtn.title = 'Xóa';
             deleteBtn.onclick = function (e) {
                 e.preventDefault();
-                deleteProduct(product);  // ← CHỈ CẦN DÒNG NÀY
+                deleteProduct(product);
             };
 
             actionCell.appendChild(editBtn);
@@ -833,7 +1013,10 @@
         var variantsContainer = document.getElementById('variantsContainer');
         var addVariantBtn = document.getElementById('addVariantBtn');
 
-        // Product Modal Events
+        // ============================================
+        // PRODUCT MODAL EVENTS
+        // ============================================
+
         if (addProductBtn) {
             addProductBtn.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -855,7 +1038,10 @@
             });
         }
 
-        // Category Modal Events
+        // ============================================
+        // CATEGORY MODAL EVENTS
+        // ============================================
+
         if (addCategoryBtnTop) {
             addCategoryBtnTop.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -889,7 +1075,10 @@
             if (evt.target === addCategoryModal) closeModal(addCategoryModal);
         });
 
-        // Category Form Submit
+        // ============================================
+        // CATEGORY FORM SUBMIT
+        // ============================================
+
         if (addCategoryForm) {
             addCategoryForm.addEventListener('submit', function (e) {
                 e.preventDefault();
@@ -945,7 +1134,10 @@
             });
         }
 
-        // Variant Management
+        // ============================================
+        // VARIANT MANAGEMENT
+        // ============================================
+
         function createVariantRow(data) {
             data = data || {sku: '', size: '', color: '', price: '', stock: ''};
 
@@ -966,7 +1158,9 @@
             if (btnRemove) {
                 btnRemove.addEventListener('click', function (e) {
                     e.preventDefault();
-                    row.remove();
+                    if (confirm('Xóa variant này?')) {
+                        row.remove();
+                    }
                 });
             }
 
@@ -985,72 +1179,78 @@
             createVariantRow();
         }
 
-        // Image Preview
+        // ============================================
+        // IMAGE PREVIEW - NEW IMAGES
+        // ============================================
+
         if (imageInput && imagePreviewGrid) {
             imageInput.addEventListener('change', function (e) {
                 var files = Array.prototype.slice.call(e.target.files || []);
-                imagePreviewGrid.innerHTML = '';
 
                 files.forEach(function (file) {
                     var reader = new FileReader();
                     reader.onload = function (ev) {
                         var wrapper = document.createElement('div');
-                        wrapper.className = 'image-preview-item';
+                        wrapper.className = 'image-preview-item new-image';
                         wrapper.style.position = 'relative';
                         wrapper.style.display = 'inline-block';
                         wrapper.style.margin = '8px';
+                        wrapper.style.border = '2px solid #007bff';
+                        wrapper.style.borderRadius = '8px';
+                        wrapper.style.padding = '4px';
                         wrapper.dataset.filename = file.name;
                         wrapper.dataset.isThumbnail = '0';
 
                         var img = document.createElement('img');
                         img.src = ev.target.result;
                         img.alt = file.name;
-                        img.style.width = '160px';
-                        img.style.height = '160px';
+                        img.style.width = '150px';
+                        img.style.height = '150px';
                         img.style.objectFit = 'cover';
-                        img.style.borderRadius = '8px';
+                        img.style.borderRadius = '4px';
+                        img.style.display = 'block';
                         wrapper.appendChild(img);
 
                         var label = document.createElement('div');
-                        label.style.fontSize = '12px';
-                        label.style.marginTop = '6px';
+                        label.style.fontSize = '11px';
+                        label.style.marginTop = '4px';
                         label.style.textAlign = 'center';
-                        label.textContent = file.name;
+                        label.style.color = '#007bff';
+                        label.style.fontWeight = 'bold';
+                        label.textContent = 'Ảnh mới';
                         wrapper.appendChild(label);
+
+                        var btnContainer = document.createElement('div');
+                        btnContainer.style.display = 'flex';
+                        btnContainer.style.gap = '4px';
+                        btnContainer.style.marginTop = '4px';
+                        btnContainer.style.justifyContent = 'center';
 
                         var thumbBtn = document.createElement('button');
                         thumbBtn.className = 'btn btn-primary';
                         thumbBtn.type = 'button';
-                        thumbBtn.style.position = 'absolute';
-                        thumbBtn.style.bottom = '6px';
-                        thumbBtn.style.left = '6px';
+                        thumbBtn.style.fontSize = '11px';
+                        thumbBtn.style.padding = '4px 8px';
                         thumbBtn.textContent = 'Thumbnail';
                         thumbBtn.addEventListener('click', function (evt) {
                             evt.preventDefault();
-                            var items = imagePreviewGrid.querySelectorAll('.image-preview-item');
-                            Array.prototype.forEach.call(items, function (it) {
-                                it.dataset.isThumbnail = '0';
-                                var iimg = it.querySelector('img');
-                                if (iimg) iimg.style.outline = '';
-                            });
-                            wrapper.dataset.isThumbnail = '1';
-                            img.style.outline = '3px solid #640100';
+                            setThumbnailForImage(wrapper);
                         });
-                        wrapper.appendChild(thumbBtn);
+                        btnContainer.appendChild(thumbBtn);
 
                         var removeBtn = document.createElement('button');
                         removeBtn.className = 'btn btn-secondary';
                         removeBtn.type = 'button';
-                        removeBtn.style.position = 'absolute';
-                        removeBtn.style.bottom = '6px';
-                        removeBtn.style.right = '6px';
+                        removeBtn.style.fontSize = '11px';
+                        removeBtn.style.padding = '4px 8px';
                         removeBtn.textContent = 'Xóa';
                         removeBtn.addEventListener('click', function (evt) {
                             evt.preventDefault();
                             wrapper.remove();
                         });
-                        wrapper.appendChild(removeBtn);
+                        btnContainer.appendChild(removeBtn);
 
+                        wrapper.appendChild(btnContainer);
                         imagePreviewGrid.appendChild(wrapper);
                     };
                     reader.readAsDataURL(file);
@@ -1058,7 +1258,10 @@
             });
         }
 
-        // Product Form Submit
+        // ============================================
+        // ✅ PRODUCT FORM SUBMIT - XỬ LÝ CẢ ADD VÀ EDIT
+        // ============================================
+
         if (addProductForm) {
             addProductForm.addEventListener('submit', function (e) {
                 e.preventDefault();
@@ -1074,35 +1277,84 @@
                     modalSubmitBtn.textContent = 'Đang lưu...';
                 }
 
-                var oldInputs = addProductForm.querySelectorAll('input[name="productImageAlt[]"], input[name="productImageIsThumb[]"]');
+                // Xóa hidden inputs cũ
+                var oldInputs = addProductForm.querySelectorAll(
+                    'input[name="productImageAlt[]"], ' +
+                    'input[name="productImageIsThumb[]"], ' +
+                    'input[name="keepImageId[]"], ' +
+                    'input[name="product-id"]'
+                );
                 Array.prototype.forEach.call(oldInputs, function (input) {
                     input.remove();
                 });
 
+                // Kiểm tra EDIT mode
+                var editId = addProductForm.dataset.editId;
+                var isEditMode = editId && editId.trim() !== '';
+
+                console.log('Submit mode:', isEditMode ? 'EDIT' : 'ADD', 'ID:', editId);
+
+                // Nếu EDIT → thêm product-id
+                if (isEditMode) {
+                    var productIdInput = document.createElement('input');
+                    productIdInput.type = 'hidden';
+                    productIdInput.name = 'product-id';
+                    productIdInput.value = editId;
+                    addProductForm.appendChild(productIdInput);
+                }
+
+                // Process images
                 var previewItems = imagePreviewGrid.querySelectorAll('.image-preview-item');
+
                 if (previewItems.length > 0) {
                     Array.prototype.forEach.call(previewItems, function (item) {
-                        var fname = item.dataset.filename || '';
-                        var alt = item.querySelector('img') ? item.querySelector('img').alt : fname;
-                        var isThumb = item.dataset.isThumbnail === '1' ? '1' : '0';
+                        var isExisting = item.classList.contains('existing-image');
 
-                        var altInput = document.createElement('input');
-                        altInput.type = 'hidden';
-                        altInput.name = 'productImageAlt[]';
-                        altInput.value = alt;
-                        addProductForm.appendChild(altInput);
+                        if (isExisting) {
+                            // EXISTING IMAGE → keepImageId[]
+                            var imageId = item.dataset.imageId;
+                            if (imageId) {
+                                var keepInput = document.createElement('input');
+                                keepInput.type = 'hidden';
+                                keepInput.name = 'keepImageId[]';
+                                keepInput.value = imageId;
+                                addProductForm.appendChild(keepInput);
+                                console.log('Keep image:', imageId);
+                            }
+                        } else {
+                            // NEW IMAGE → alt[] & thumb[]
+                            var fname = item.dataset.filename || '';
+                            var img = item.querySelector('img');
+                            var alt = img ? img.alt : fname;
+                            var isThumb = item.dataset.isThumbnail === '1' ? '1' : '0';
 
-                        var thumbInput = document.createElement('input');
-                        thumbInput.type = 'hidden';
-                        thumbInput.name = 'productImageIsThumb[]';
-                        thumbInput.value = isThumb;
-                        addProductForm.appendChild(thumbInput);
+                            var altInput = document.createElement('input');
+                            altInput.type = 'hidden';
+                            altInput.name = 'productImageAlt[]';
+                            altInput.value = alt;
+                            addProductForm.appendChild(altInput);
+
+                            var thumbInput = document.createElement('input');
+                            thumbInput.type = 'hidden';
+                            thumbInput.name = 'productImageIsThumb[]';
+                            thumbInput.value = isThumb;
+                            addProductForm.appendChild(thumbInput);
+
+                            console.log('New image:', fname, 'thumb:', isThumb);
+                        }
                     });
                 }
 
                 var formData = new FormData(addProductForm);
 
-                fetch(CTX + '/admin/product/add', {
+                // URL khác cho ADD vs EDIT
+                var url = isEditMode
+                    ? CTX + '/admin/product/update'
+                    : CTX + '/admin/product/add';
+
+                console.log('Submitting to:', url);
+
+                fetch(url, {
                     method: 'POST',
                     body: formData
                 })
@@ -1116,7 +1368,10 @@
                     })
                     .then(function (data) {
                         if (data && data.success) {
-                            alert('Thêm sản phẩm thành công!');
+                            var message = isEditMode
+                                ? 'Cập nhật sản phẩm thành công!'
+                                : 'Thêm sản phẩm thành công!';
+                            alert(message);
                             closeModal(addProductModal);
                             resetProductForm();
                             loadProducts();
@@ -1128,28 +1383,55 @@
                     .finally(function () {
                         if (modalSubmitBtn) {
                             modalSubmitBtn.disabled = false;
-                            modalSubmitBtn.textContent = 'Lưu Sản phẩm';
+                            var btnText = isEditMode
+                                ? 'Cập nhật Sản phẩm'
+                                : 'Lưu Sản phẩm';
+                            modalSubmitBtn.textContent = btnText;
                         }
                     });
             });
         }
 
+        // ============================================
+        // ✅ RESET PRODUCT FORM
+        // ============================================
+
         function resetProductForm() {
-            addProductForm.reset();
+            if (addProductForm) {
+                addProductForm.reset();
+
+                // Xóa editId
+                delete addProductForm.dataset.editId;
+            }
+
+            // Reset title & button
+            var productModalTitle = document.getElementById('productModalTitle');
+            if (productModalTitle) {
+                productModalTitle.textContent = 'Thêm Sản phẩm';
+            }
+
+            if (modalSubmitBtn) {
+                modalSubmitBtn.textContent = 'Lưu Sản phẩm';
+                modalSubmitBtn.style.backgroundColor = '';
+                modalSubmitBtn.disabled = false;
+            }
+
+            // Reset variants
             if (variantsContainer) {
                 variantsContainer.innerHTML = '';
                 createVariantRow();
             }
+
+            // Reset images
             if (imagePreviewGrid) {
                 imagePreviewGrid.innerHTML = '';
             }
-            if (modalSubmitBtn) {
-                modalSubmitBtn.disabled = false;
-                modalSubmitBtn.textContent = 'Lưu Sản phẩm';
-            }
         }
 
-        // Search Function
+        // ============================================
+        // SEARCH FUNCTION
+        // ============================================
+
         var searchInput = document.getElementById('globalSearchInput');
         if (searchInput) {
             searchInput.addEventListener('input', function () {
@@ -1171,9 +1453,14 @@
             });
         }
 
-        // Load data on page load
+        // ============================================
+        // LOAD DATA ON PAGE LOAD
+        // ============================================
+
         loadCategories();
         loadProducts();
+
+        console.log('✅ Product management loaded');
     });
 
 </script>

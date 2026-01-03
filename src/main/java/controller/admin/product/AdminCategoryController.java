@@ -1,4 +1,4 @@
-package controller;
+package controller.admin.product;
 
 import com.google.gson.Gson;
 import dao.CategoryDao;
