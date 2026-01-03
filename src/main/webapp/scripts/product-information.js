@@ -1,3 +1,4 @@
+let MAX_QTY = 1;
 function updateVariant(element, sizeName) {
     // Active size
     document.querySelectorAll('.size-btn')
@@ -20,10 +21,70 @@ function updateVariant(element, sizeName) {
     if (skuDisplay && sku) {
         skuDisplay.innerText = sku;
     }
+    // color
+    const color = element.dataset.color;
+    const colorEl = document.getElementById('selected-color');
+    if (colorEl && color) colorEl.innerText = color;
+    MAX_QTY = parseInt(element.dataset.stock);
+    if (isNaN(MAX_QTY)) MAX_QTY = 0;
+    updateStockUI(MAX_QTY);
+
+    // reset quantity nếu vượt stock
+    const qtyInput = document.getElementById('product-quantity');
+    if (MAX_QTY === 0) {
+        qtyInput.value = 1;
+    } else if (parseInt(qtyInput.value) > MAX_QTY) {
+        qtyInput.value = MAX_QTY;
+    }
+
+}
+function updateStockUI(stock) {
+    const addToCartBtn = document.getElementById('them-vao-gio-hang');
+    const buyNowBtn = document.getElementById('mua-ngay');
+    const outOfStockBtn = document.getElementById('het-hang');
+    const qtyInput = document.getElementById('product-quantity');
+
+    if (stock > 0) {
+
+        addToCartBtn.style.display = 'inline-block';
+        buyNowBtn.style.display = 'inline-block';
+        outOfStockBtn.style.display = 'none';
+
+        qtyInput.value = 1;
+    } else {
+
+        addToCartBtn.style.display = 'none';
+        buyNowBtn.style.display = 'none';
+        outOfStockBtn.style.display = 'inline-block';
+
+        qtyInput.value = 1;
+    }
 }
 
 
+
 document.addEventListener('DOMContentLoaded', function() {
+    const qtyInput = document.getElementById('product-quantity');
+    const btnMinus = document.querySelector('.qty-minus');
+    const btnPlus = document.querySelector('.qty-plus');
+
+    if (!qtyInput || !btnMinus || !btnPlus) return;
+
+    const MIN_QTY = 1;
+
+    btnPlus.addEventListener('click', () => {
+        let qty = parseInt(qtyInput.value) || MIN_QTY;
+        if (qty < MAX_QTY) {
+            qtyInput.value = qty + 1;
+        }
+    });
+
+    btnMinus.addEventListener('click', () => {
+        let qty = parseInt(qtyInput.value) || MIN_QTY;
+        if (qty > MIN_QTY) {
+            qtyInput.value = qty - 1;
+        }
+    });
 
     const mainImage = document.getElementById('mainImg');
     const thumbnails = document.querySelectorAll('.thumbnail');

@@ -156,23 +156,28 @@
                 <button class="size-btn ${status.first ? 'active' : ''}"
                         data-price="${variant.currentPrice}"
                         data-sku="${variant.sku}"
+                        data-color="${variant.color}"
+                        data-stock="${variant.stock}"
                         onclick="updateVariant(this, '${variant.size}')">
                         ${variant.size}
                 </button>
-
             </c:forEach>
         </div>
-        <div class="section-title">Màu sắc: Hồng nhành hoa hồng</div>
+
+        <div class="section-title">
+            Màu sắc: <span id="selected-color">${p.variants[0].color}</span>
+        </div>
         <div class="purchase-actions">
             <div class="quantity-control">
-                <button type="button" class="qty-btn">-</button>
+                <button type="button" class="qty-btn qty-minus">-</button>
                 <input type="text" name="quantity" id="product-quantity" value="1" readonly>
-            <button type="button" class="qty-btn">+</button>
+                <button type="button" class="qty-btn qty-plus">+</button>
             </div>
+
             <button class="add-to-cart-btn" id="them-vao-gio-hang">THÊM VÀO GIỎ</button>
         </div>
         <button class="buy-now-btn"><a href="thanhtoan.jsp">MUA NGAY</a></button>
-<!--        <button class="het_hang">Hết hàng</button>-->
+        <button id="het-hang" class="het_hang" style="display:none;">Hết hàng </button>
         <hr class="dashed-line">
         <div class="shipping">
             <p><span><i class="fa-solid fa-truck-fast"></i></span><span>Giao hàng toàn quốc - quốc tế</span></p>
