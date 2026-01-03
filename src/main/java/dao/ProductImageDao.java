@@ -91,26 +91,76 @@ public class ProductImageDao extends BaseDao {
      * ✅ MỚI: Update thumbnail status
      */
     public boolean updateThumbnail(int imageId, boolean isThumbnail) {
-        return get().withHandle(handle -> {
-            String sql = "UPDATE Product_images SET is_thumbnail = :isThumbnail WHERE id = :id";
-            int affected = handle.createUpdate(sql)
-                    .bind("id", imageId)
-                    .bind("isThumbnail", isThumbnail ? 1 : 0)
-                    .execute();
-            return affected > 0;
-        });
+        return get().withHandle(handle -> updateThumbnail(handle, imageId, isThumbnail));
+    }
+
+    public boolean updateThumbnail(Handle handle, int imageId, boolean isThumbnail) {
+        String sql = "UPDATE Product_images SET is_thumbnail = :isThumbnail WHERE id = :id";
+        int affected = handle.createUpdate(sql)
+                .bind("id", imageId)
+                .bind("isThumbnail", isThumbnail ? 1 : 0)
+                .execute();
+        return affected > 0;
     }
 
     /**
      * ✅ MỚI: Unset all thumbnails for a product
      */
     public void unsetAllThumbnails(int productId) {
-        get().withHandle(handle -> {
-            String sql = "UPDATE Product_images SET is_thumbnail = 0 WHERE product_id = :productId";
-            handle.createUpdate(sql)
-                    .bind("productId", productId)
-                    .execute();
-            return null;
-        });
+        get().useHandle(handle -> unsetAllThumbnails(handle, productId));
     }
+
+    public void unsetAllThumbnails(Handle handle, int productId) {
+        String sql = "UPDATE Product_images SET is_thumbnail = 0 WHERE product_id = :productId";
+        handle.createUpdate(sql)
+                .bind("productId", productId)
+                .execute();
+    }
+
+    public ProductImage getThumbnail(int productId) {
+        String sql = "SELECT * FROM Product_images WHERE product_id = :productId AND is_thumbnail = 1 LIMIT 1";
+        return get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("productId", productId)
+                        .mapToBean(ProductImage.class)
+                        .findFirst()
+                        .orElse(null)
+        );
+    }
+
+    public void deleteExcept(Handle handle, int productId, List<Integer> keepImageIds) {
+        if (keepImageIds == null || keepImageIds.isEmpty()) {
+            // Delete all if no keep list
+            deleteByProductId(handle, productId);
+            return;
+        }
+        StringBuilder placeholders = new StringBuilder();
+        for (int i = 0; i < keepImageIds.size(); i++) {
+            if (i > 0) placeholders.append(",");
+            placeholders.append(":id").append(i);
+        }
+
+        String sql = "DELETE FROM Product_images WHERE product_id = :productId AND id NOT IN (" + placeholders + ")";
+
+        var update = handle.createUpdate(sql)
+                .bind("productId", productId);
+
+        // Bind all keep IDs
+        for (int i = 0; i < keepImageIds.size(); i++) {
+            update.bind("id" + i, keepImageIds.get(i));
+        }
+
+        update.execute();
+    }
+
+    public int countByProductId(int productId) {
+        String sql = "SELECT COUNT(*) FROM Product_images WHERE product_id = :productId";
+        return get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("productId", productId)
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
+
 }
