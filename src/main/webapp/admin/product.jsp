@@ -673,7 +673,14 @@
 
     function editProduct(product) {
         console.log('Editing product:', product);
-
+        var productModalTitle = document.getElementById('modalTitle');
+        var modalSubmitBtn = document.getElementById('modalSubmitBtn');
+        var addProductForm = document.getElementById('addProductForm');
+        if (!productModalTitle || !modalSubmitBtn || !addProductForm) {
+            console.error('❌ Missing required elements');
+            alert('Lỗi: Không tìm thấy elements trong form');
+            return;
+        }
         // Đổi title và button
         document.getElementById('productModalTitle').textContent = 'Chỉnh sửa Sản phẩm';
         var modalSubmitBtn = document.getElementById('modalSubmitBtn');

@@ -23,11 +23,13 @@ import java.io.InputStream;
 import java.util.*;
 
 /**
- * AdminProductController - LIST, ADD, DELETE
+ * AdminProductController - LIST, ADD, DELETE, UPDATE, GET
  * <p>
  * GET  /admin/product/add    -> Trả về JSON danh sách products (list)
+ * GET  /admin/product/get    -> Lấy chi tiết 1 product (✨ MỚI)
  * POST /admin/product/add    -> Thêm product mới
- * POST /admin/product/delete -> Xóa product (hoặc dùng query param ?action=delete)
+ * POST /admin/product/update -> Cập nhật product (✨ MỚI)
+ * POST /admin/product/delete -> Xóa product
  */
 @WebServlet(name = "AdminProductController", urlPatterns = {
         "/admin/product/add",
@@ -82,15 +84,24 @@ public class AdminProductController extends HttpServlet {
     }
 
     /**
-     * GET -> Trả về JSON danh sách products
+     * GET -> Trả về JSON danh sách products HOẶC chi tiết 1 product
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        System.out.println("=== doGet AdminProductController (LIST) ===");
-
         addCorsHeaders(resp);
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("application/json;charset=UTF-8");
+
+        String uri = req.getRequestURI();
+
+        // ✅ MỚI: Kiểm tra nếu là /get thì lấy chi tiết
+        if (uri != null && uri.contains("/get")) {
+            handleGetProduct(req, resp);
+            return;
+        }
+
+        // Mặc định: List products
+        System.out.println("=== doGet AdminProductController (LIST) ===");
 
         try {
             if (productService == null) {
@@ -116,7 +127,7 @@ public class AdminProductController extends HttpServlet {
     }
 
     /**
-     * POST -> Thêm product mới HOẶC xóa product
+     * POST -> Thêm product mới HOẶC xóa product HOẶC update product
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -126,10 +137,17 @@ public class AdminProductController extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
 
-        // ✅ Kiểm tra URI để phân biệt ADD vs DELETE
         String uri = req.getRequestURI();
+
+        // ✅ Kiểm tra URI để phân biệt
         if (uri != null && uri.contains("/delete")) {
             handleDelete(req, resp);
+            return;
+        }
+
+        // ✅ MỚI: Kiểm tra /update
+        if (uri != null && uri.contains("/update")) {
+            handleUpdate(req, resp);
             return;
         }
 
@@ -140,7 +158,7 @@ public class AdminProductController extends HttpServlet {
             return;
         }
 
-        // ✅ Nếu không phải delete → Xử lý ADD
+        // ✅ Mặc định: ADD
         handleAdd(req, resp);
     }
 
@@ -154,7 +172,205 @@ public class AdminProductController extends HttpServlet {
     }
 
     /**
-     * ✅ MỚI: Xử lý DELETE product
+     * ✅ MỚI: Xử lý GET product detail
+     */
+    private void handleGetProduct(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        System.out.println("=== handleGetProduct AdminProductController ===");
+
+        resp.setContentType("application/json;charset=UTF-8");
+
+        try {
+            String idStr = req.getParameter("id");
+
+            if (idStr == null || idStr.trim().isEmpty()) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().write("{\"success\":false, \"error\":\"ID là bắt buộc\"}");
+                return;
+            }
+
+            int productId;
+            try {
+                productId = Integer.parseInt(idStr.trim());
+            } catch (NumberFormatException e) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.getWriter().write("{\"success\":false, \"error\":\"ID không hợp lệ\"}");
+                return;
+            }
+
+            System.out.println("Getting product ID: " + productId);
+
+            // Lấy product với variants & images
+            Product product = productService.getProduct(productId);
+
+            if (product == null) {
+                resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                resp.getWriter().write("{\"success\":false, \"error\":\"Sản phẩm không tồn tại\"}");
+                return;
+            }
+
+            // Convert to JSON
+            String json = gson.toJson(product);
+            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.getWriter().write(json);
+
+            System.out.println("✅ Product returned: " + product.getNameProduct());
+
+        } catch (Exception ex) {
+            System.err.println("❌ Error getting product: " + ex.getMessage());
+            ex.printStackTrace();
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.getWriter().write("{\"success\":false, \"error\":\"" + escapeJson(ex.getMessage()) + "\"}");
+        }
+    }
+
+    /**
+     * ✅ MỚI: Xử lý UPDATE product
+     */
+    private void handleUpdate(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        System.out.println("=== handleUpdate AdminProductController ===");
+
+        String contentType = req.getContentType();
+        if (contentType == null || !contentType.toLowerCase().startsWith("multipart/")) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Yêu cầu multipart/form-data");
+            return;
+        }
+
+        try {
+            // 1) Parse product ID
+            String idStr = req.getParameter("product-id");
+            if (idStr == null || idStr.trim().isEmpty()) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.setContentType("application/json;charset=UTF-8");
+                resp.getWriter().write("{\"success\":false,\"error\":\"Product ID là bắt buộc\"}");
+                return;
+            }
+
+            int productId = Integer.parseInt(idStr.trim());
+            System.out.println("UPDATE - Product ID: " + productId);
+
+            // 2) Đọc parameters (giống handleAdd)
+            String name = safe(req.getParameter("product-name"));
+            String code = safe(req.getParameter("product-code"));
+            String description = safe(req.getParameter("product-description"));
+            String status = safe(req.getParameter("product-status"));
+            String cat = safe(req.getParameter("product-category"));
+
+            System.out.println("Params: name=" + name + ", code=" + code + ", cat=" + cat);
+
+            if (name.isEmpty()) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.setContentType("application/json;charset=UTF-8");
+                resp.getWriter().write("{\"success\":false,\"error\":\"Tên sản phẩm bắt buộc\"}");
+                return;
+            }
+
+            int categoryId = 0;
+            if (!cat.isEmpty()) {
+                try {
+                    categoryId = Integer.parseInt(cat);
+                } catch (Exception e) {
+                }
+            }
+
+            Product product = new Product(productId);
+            product.setNameProduct(name);
+            product.setProductCode(code);
+            product.setDescription(description);
+            product.setStatusProduct(status.isEmpty() ? "active" : status);
+            product.setCategoryId(categoryId);
+
+            // 3) Variants (giống handleAdd)
+            List<ProductVariant> variants = new ArrayList<>();
+            String[] skus = optional(req.getParameterValues("variant-sku[]"), req.getParameterValues("variant-sku"));
+
+            if (skus != null) {
+                String[] sizes = optional(req.getParameterValues("variant-size[]"), req.getParameterValues("variant-size"));
+                String[] colors = optional(req.getParameterValues("variant-color[]"), req.getParameterValues("variant-color"));
+                String[] prices = optional(req.getParameterValues("variant-price[]"), req.getParameterValues("variant-price"));
+                String[] stocks = optional(req.getParameterValues("variant-quantity[]"), req.getParameterValues("variant-quantity"));
+
+                for (int i = 0; i < skus.length; i++) {
+                    String sku = get(skus, i);
+                    if (sku == null || sku.isEmpty()) continue;
+
+                    ProductVariant v = new ProductVariant(0);
+                    v.setSku(sku);
+                    v.setSize(get(sizes, i));
+                    v.setColor(get(colors, i));
+
+                    double price = 0;
+                    try {
+                        price = Double.parseDouble(get(prices, i));
+                    } catch (Exception e) {
+                    }
+                    v.setCurrentPrice(price);
+
+                    int stock = 0;
+                    try {
+                        stock = Integer.parseInt(get(stocks, i));
+                    } catch (Exception e) {
+                    }
+                    v.setStockQuantity(stock);
+
+                    variants.add(v);
+                }
+            }
+            System.out.println("Variants: " + variants.size());
+
+            // 4) ✨ Parse keepImageId[] - KHÁC với handleAdd
+            List<Integer> keepImageIds = new ArrayList<>();
+            String[] keepIds = optional(req.getParameterValues("keepImageId[]"), req.getParameterValues("keepImageId"));
+            if (keepIds != null) {
+                for (String kid : keepIds) {
+                    try {
+                        keepImageIds.add(Integer.parseInt(kid.trim()));
+                    } catch (Exception e) {
+                        System.err.println("Invalid keepImageId: " + kid);
+                    }
+                }
+            }
+            System.out.println("Keep images: " + keepImageIds);
+
+            // 5) Images mới (giống handleAdd)
+            List<ImageUpload> uploads = new ArrayList<>();
+            String[] alts = optional(req.getParameterValues("productImageAlt[]"), req.getParameterValues("productImageAlt"));
+            String[] thumbs = optional(req.getParameterValues("productImageIsThumb[]"), req.getParameterValues("productImageIsThumb"));
+
+            int idx = 0;
+            for (Part part : req.getParts()) {
+                if (!"productImages".equals(part.getName())) continue;
+                if (part.getSize() == 0) continue;
+
+                String filename = getFilename(part);
+                InputStream is = part.getInputStream();
+                String alt = get(alts, idx);
+                boolean thumb = "1".equals(get(thumbs, idx));
+
+                uploads.add(new ImageUpload(is, filename, alt, thumb));
+                idx++;
+            }
+            System.out.println("New images: " + uploads.size());
+
+            // 6) ✨ Update product (GỌI method MỚI)
+            boolean success = productService.updateProduct(product, variants, uploads, keepImageIds);
+            System.out.println("✅ Updated product ID: " + productId);
+
+            resp.setContentType("application/json;charset=UTF-8");
+            resp.getWriter().write("{\"success\":true,\"id\":" + productId + "}");
+            resp.setStatus(HttpServletResponse.SC_OK);
+
+        } catch (Exception ex) {
+            System.err.println("❌ Error in handleUpdate: " + ex.getMessage());
+            ex.printStackTrace();
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.setContentType("application/json;charset=UTF-8");
+            resp.getWriter().write("{\"success\":false,\"error\":\"" + escapeJson(ex.getMessage()) + "\"}");
+        }
+    }
+
+    /**
+     * ✅ Xử lý DELETE product
      */
     private void handleDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         System.out.println("=== handleDelete AdminProductController ===");
