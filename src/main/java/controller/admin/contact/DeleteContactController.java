@@ -7,7 +7,7 @@ import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
 
-@WebServlet(name = "DeleteContactController", value = "/DeleteContactController")
+@WebServlet(name = "DeleteContactController", value = "/delete_message")
 public class DeleteContactController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -21,7 +21,6 @@ public class DeleteContactController extends HttpServlet {
             ContactDao dao = new ContactDao();
             dao.delete(id);
 
-            // LƯU Ý: Dùng Session để thông báo sau khi chuyển trang
             request.getSession().setAttribute("message", "Đã xóa thành công!");
             request.getSession().setAttribute("messageType", "success");
 
@@ -31,8 +30,7 @@ public class DeleteContactController extends HttpServlet {
             request.getSession().setAttribute("messageType", "error");
         }
 
-        // QUAN TRỌNG: Chuyển hướng quay lại trang danh sách
-        response.sendRedirect(request.getContextPath() + "/admin/contact-list");
+        response.sendRedirect(request.getContextPath() + "/contactus-admin");
 
     }
 }
