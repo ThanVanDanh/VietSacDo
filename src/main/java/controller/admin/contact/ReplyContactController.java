@@ -25,7 +25,7 @@ public class ReplyContactController extends HttpServlet {
         request.getSession().setAttribute("message", "Đã gửi email phản hồi!");
         request.getSession().setAttribute("messageType", "success");
 
-        response.sendRedirect(request.getContextPath() + "/admin/contact-list");
+        response.sendRedirect(request.getContextPath() + "/contactus-admin");
 
     }
 }
