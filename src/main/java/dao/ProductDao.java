@@ -177,8 +177,7 @@ public class ProductDao extends BaseDao {
                 "product_code = ?, " +
                 "description = ?, " +
                 "status_product = ?, " +
-                "category_id = ?, " +
-                "updated_at = NOW() " +
+                "category_id = ? " +
                 "WHERE id = ?";
 
         int rows = handle.createUpdate(sql)
