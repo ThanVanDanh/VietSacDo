@@ -80,33 +80,7 @@
             </div>
         </header>
 
-        <!-- Category Section -->
-        <section class="category-section" style="margin-bottom: 40px;">
-            <div class="category-list-header"
-                 style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-                <h2>Danh sách Danh mục</h2>
-                <div class="actions-row">
-                    <a href="#" class="btn btn-primary" id="addCategoryBtnTop">
-                        <i class="fas fa-folder-plus"></i> Thêm Danh mục
-                    </a>
-                </div>
-            </div>
 
-            <table class="product-table">
-                <thead>
-                <tr>
-                    <th>Tên Danh mục</th>
-                    <th style="width: 200px;">Slug</th>
-                    <th>Mô tả</th>
-                    <th style="width: 100px; text-align: center">Số SP</th>
-                    <th style="width: 120px; text-align: center">Cài đặt</th>
-                </tr>
-                </thead>
-                <tbody id="categoryTableBody">
-                <!-- Categories will be loaded here -->
-                </tbody>
-            </table>
-        </section>
 
         <!-- Product Section -->
         <section class="product-section">
@@ -152,7 +126,33 @@
                 <a href="#">Sau</a>
             </div>
         </section>
+        <!-- Category Section -->
+        <section class="category-section" style="margin-bottom: 40px;">
+            <div class="category-list-header"
+                 style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                <h2>Danh sách Danh mục</h2>
+                <div class="actions-row">
+                    <a href="#" class="btn btn-primary" id="addCategoryBtnTop">
+                        <i class="fas fa-folder-plus"></i> Thêm Danh mục
+                    </a>
+                </div>
+            </div>
 
+            <table class="product-table">
+                <thead>
+                <tr>
+                    <th>Tên Danh mục</th>
+                    <th style="width: 200px;">Slug</th>
+                    <th>Mô tả</th>
+                    <th style="width: 100px; text-align: center">Số SP</th>
+                    <th style="width: 120px; text-align: center">Cài đặt</th>
+                </tr>
+                </thead>
+                <tbody id="categoryTableBody">
+                <!-- Categories will be loaded here -->
+                </tbody>
+            </table>
+        </section>
         <!-- Add/Edit Product Modal -->
         <div id="addProductModal" class="modal-overlay" aria-hidden="true">
             <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
@@ -351,52 +351,6 @@
             });
     }
 
-    function refreshCategorySelects(categories) {
-        var productCategorySelect = document.getElementById('product-category');
-        var categoryParentSelect = document.getElementById('category-parent');
-        var editForm = document.getElementById('addCategoryForm');
-
-        var editingCategoryId = editForm && editForm.dataset.editId
-            ? parseInt(editForm.dataset.editId)
-            : null;
-
-        if (productCategorySelect) {
-            var currentValue = productCategorySelect.value;
-            productCategorySelect.innerHTML = '<option value="">-- Chọn danh mục --</option>';
-
-            if (categories && categories.length > 0) {
-                categories.forEach(function (cat) {
-                    var opt = document.createElement('option');
-                    opt.value = cat.id;
-                    opt.textContent = cat.nameCategory;
-                    productCategorySelect.appendChild(opt);
-                });
-            }
-
-            if (currentValue) productCategorySelect.value = currentValue;
-        }
-
-        if (categoryParentSelect) {
-            var currentValue = categoryParentSelect.value;
-            categoryParentSelect.innerHTML = '<option value="">-- Không --</option>';
-
-            if (categories && categories.length > 0) {
-                categories.forEach(function (cat) {
-                    if (editingCategoryId && cat.id === editingCategoryId) {
-                        return;
-                    }
-
-                    var opt = document.createElement('option');
-                    opt.value = cat.id;
-                    opt.textContent = cat.nameCategory;
-                    categoryParentSelect.appendChild(opt);
-                });
-            }
-
-            if (currentValue) categoryParentSelect.value = currentValue;
-        }
-    }
-
     function displayCategoriesTable(categories) {
         var tbody = document.getElementById('categoryTableBody');
         if (!tbody) return;
@@ -409,53 +363,63 @@
         }
 
         var categoryMap = {};
+        var rootCategories = [];
+
         categories.forEach(function (cat) {
             categoryMap[cat.id] = cat;
+            cat.children = []; // Initialize children array
         });
-
-        var parentCategories = [];
-        var childrenByParent = {};
 
         categories.forEach(function (cat) {
             if (!cat.parentCategoryId || cat.parentCategoryId === null) {
-                parentCategories.push(cat);
+                rootCategories.push(cat);
             } else {
-                if (!childrenByParent[cat.parentCategoryId]) {
-                    childrenByParent[cat.parentCategoryId] = [];
+                var parent = categoryMap[cat.parentCategoryId];
+                if (parent) {
+                    parent.children.push(cat);
                 }
-                childrenByParent[cat.parentCategoryId].push(cat);
             }
         });
 
-        parentCategories.forEach(function (parent) {
-            renderCategoryRow(tbody, parent, 0);
-
-            var children = childrenByParent[parent.id];
-            if (children && children.length > 0) {
-                children.forEach(function (child) {
-                    renderCategoryRow(tbody, child, 1);
-                });
-            }
+        rootCategories.forEach(function (rootCat) {
+            renderCategoryRecursive(tbody, rootCat, 0);
         });
     }
 
+    function renderCategoryRecursive(tbody, category, level) {
+        // Render category itself
+        renderCategoryRow(tbody, category, level);
+
+        // Render all children recursively
+        if (category.children && category.children.length > 0) {
+            category.children.forEach(function (child) {
+                renderCategoryRecursive(tbody, child, level + 1);
+            });
+        }
+    }
     function renderCategoryRow(tbody, category, level) {
         var row = document.createElement('tr');
         row.className = 'category-row';
 
+        // NAME CELL với indent theo level
         var nameCell = document.createElement('td');
         var nameDiv = document.createElement('div');
         nameDiv.className = 'category-name-cell';
+        nameDiv.style.display = 'flex';
+        nameDiv.style.alignItems = 'center';
 
+        // ✅ INDENT theo level (20px mỗi level)
         if (level > 0) {
             var indent = document.createElement('span');
             indent.className = 'category-indent';
+            indent.style.marginLeft = (level * 20) + 'px';
             indent.innerHTML = '└─';
             nameDiv.appendChild(indent);
         }
 
         var icon = document.createElement('i');
         icon.className = level === 0 ? 'fas fa-folder category-icon' : 'fas fa-folder-open category-icon';
+        icon.style.marginRight = '8px';
         nameDiv.appendChild(icon);
 
         var nameSpan = document.createElement('span');
@@ -534,6 +498,100 @@
         row.appendChild(actionCell);
 
         tbody.appendChild(row);
+    }
+
+
+    function refreshCategorySelects(categories) {
+        var productCategorySelect = document.getElementById('product-category');
+        var categoryParentSelect = document.getElementById('category-parent');
+        var editForm = document.getElementById('addCategoryForm');
+
+        var editingCategoryId = editForm && editForm.dataset.editId
+            ? parseInt(editForm.dataset.editId)
+            : null;
+
+        if (productCategorySelect) {
+            var currentValue = productCategorySelect.value;
+            productCategorySelect.innerHTML = '<option value="">-- Chọn danh mục --</option>';
+
+            if (categories && categories.length > 0) {
+                var tree = buildCategoryTree(categories);
+
+                tree.forEach(function (rootCat) {
+                    appendCategoryOption(productCategorySelect, rootCat, 0);
+                });
+            }
+
+            if (currentValue) productCategorySelect.value = currentValue;
+        }
+
+        if (categoryParentSelect) {
+            var currentValue = categoryParentSelect.value;
+            categoryParentSelect.innerHTML = '<option value="">-- Không --</option>';
+
+            if (categories && categories.length > 0) {
+                var tree = buildCategoryTree(categories);
+
+                tree.forEach(function (rootCat) {
+                    appendCategoryOption(categoryParentSelect, rootCat, 0, editingCategoryId);
+                });
+            }
+
+            if (currentValue) categoryParentSelect.value = currentValue;
+        }
+    }
+
+    function buildCategoryTree(categories) {
+        var categoryMap = {};
+        var roots = [];
+
+        // Create map
+        categories.forEach(function (cat) {
+            categoryMap[cat.id] = Object.assign({}, cat);
+            categoryMap[cat.id].children = [];
+        });
+
+        // Build tree
+        categories.forEach(function (cat) {
+            if (!cat.parentCategoryId || cat.parentCategoryId === null) {
+                roots.push(categoryMap[cat.id]);
+            } else {
+                var parent = categoryMap[cat.parentCategoryId];
+                if (parent) {
+                    parent.children.push(categoryMap[cat.id]);
+                }
+            }
+        });
+
+        return roots;
+    }
+
+    function appendCategoryOption(select, category, level, excludeId) {
+        // Skip if this is the category being edited
+        if (excludeId && category.id === excludeId) {
+            return;
+        }
+
+        var opt = document.createElement('option');
+        opt.value = category.id;
+
+        // Add indent prefix
+        var prefix = '';
+        for (var i = 0; i < level; i++) {
+            prefix += '　'; // Full-width space for indent
+        }
+        if (level > 0) {
+            prefix += '└─ ';
+        }
+
+        opt.textContent = prefix + category.nameCategory;
+        select.appendChild(opt);
+
+        if (category.children && category.children.length > 0) {
+            category.children.forEach(function (child) {
+                appendCategoryOption(select, child, level + 1, excludeId);
+            });
+        }
     }
 
     function editCategory(category) {
