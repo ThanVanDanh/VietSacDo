@@ -336,18 +336,19 @@
 .form-group-modal {
     display: flex;
     flex-direction: column;
-    gap: 6px
+    gap: 6px;
+    margin:20px;
 }
 
 .form-group-modal label {
     font-weight: 600;
     color: #333;
-    font-size: 14px
+    font-size: 14px;
 }
 
 .form-group-modal input[type="text"], .form-group-modal input[type="number"], .form-group-modal select, .form-group-modal textarea, .form-group-modal input[type="datetime-local"] {
-    width: 100%;
-    padding: 10px 12px;
+    /*width: 100%;*/
+    padding: 10px;
     border-radius: 8px;
     border: 1px solid #e6e7ea;
     background: #fff;
@@ -423,7 +424,7 @@
 
 .variant-row {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 120px 92px 70px;
+    grid-template-columns: 150px 100px 100px 100px 92px 70px;
     gap: 8px;
     align-items: center
 }

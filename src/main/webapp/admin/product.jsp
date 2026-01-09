@@ -731,17 +731,20 @@
 
     function editProduct(product) {
         console.log('Editing product:', product);
-        var productModalTitle = document.getElementById('modalTitle');
+
+        // ✅ ĐÚNG ID
+        var modalTitle = document.getElementById('modalTitle');
         var modalSubmitBtn = document.getElementById('modalSubmitBtn');
         var addProductForm = document.getElementById('addProductForm');
-        if (!productModalTitle || !modalSubmitBtn || !addProductForm) {
+
+        if (!modalTitle || !modalSubmitBtn || !addProductForm) {
             console.error('❌ Missing required elements');
             alert('Lỗi: Không tìm thấy elements trong form');
             return;
         }
-        // Đổi title và button
-        document.getElementById('productModalTitle').textContent = 'Chỉnh sửa Sản phẩm';
-        var modalSubmitBtn = document.getElementById('modalSubmitBtn');
+
+        // ✅ Đổi title và button
+        modalTitle.textContent = 'Chỉnh sửa Sản phẩm';
         modalSubmitBtn.textContent = 'Cập nhật Sản phẩm';
         modalSubmitBtn.style.backgroundColor = '#ff8c00';
 
@@ -762,7 +765,6 @@
                 document.getElementById('product-category').value = productDetail.categoryId || '';
 
                 // Lưu product ID
-                var addProductForm = document.getElementById('addProductForm');
                 addProductForm.dataset.editId = product.id;
 
                 // Load variants
@@ -1054,10 +1056,74 @@
         });
     }
 
-    // ============================================
-    // DOM READY
-    // ============================================
+    function resetProductForm() {
+        var addProductForm = document.getElementById('addProductForm');
+        var modalSubmitBtn = document.getElementById('modalSubmitBtn');
+        var variantsContainer = document.getElementById('variantsContainer');  // ✅ GET từ DOM
+        var imagePreviewGrid = document.getElementById('imagePreviewGrid');    // ✅ GET từ DOM
 
+        if (addProductForm) {
+            addProductForm.reset();
+            delete addProductForm.dataset.editId;
+        }
+
+        var modalTitle = document.getElementById('modalTitle');
+        if (modalTitle) {
+            modalTitle.textContent = 'Thêm Sản phẩm';
+        }
+
+        if (modalSubmitBtn) {
+            modalSubmitBtn.textContent = 'Lưu Sản phẩm';
+            modalSubmitBtn.style.backgroundColor = '';
+            modalSubmitBtn.disabled = false;
+        }
+
+        if (variantsContainer) {
+            variantsContainer.innerHTML = '';
+            createVariantRow();
+        }
+
+        if (imagePreviewGrid) {
+            imagePreviewGrid.innerHTML = '';
+        }
+    }
+
+    function createVariantRow(data) {
+        data = data || {sku: '', size: '', color: '', price: '', stock: ''};
+
+        var variantsContainer = document.getElementById('variantsContainer');  // ✅ GET từ DOM
+
+        if (!variantsContainer) {
+            console.error('❌ variantsContainer not found');
+            return null;
+        }
+
+        var row = document.createElement('div');
+        row.className = 'variant-row';
+
+        var html = '';
+        html += '<input name="variant-sku[]" placeholder="SKU" class="variant-sku" value="' + escapeHtml(data.sku) + '" />';
+        html += '<input name="variant-size[]" placeholder="Size" class="variant-size" value="' + escapeHtml(data.size) + '" />';
+        html += '<input name="variant-color[]" placeholder="Color" class="variant-color" value="' + escapeHtml(data.color) + '" />';
+        html += '<input name="variant-price[]" type="number" step="0.01" placeholder="Giá" class="variant-price" value="' + escapeHtml(data.price) + '" />';
+        html += '<input name="variant-quantity[]" type="number" placeholder="Tồn" class="variant-stock" value="' + escapeHtml(data.stock) + '" />';
+        html += '<button class="btn btn-secondary btn-remove-variant" type="button">Xóa</button>';
+
+        row.innerHTML = html;
+
+        var btnRemove = row.querySelector('.btn-remove-variant');
+        if (btnRemove) {
+            btnRemove.addEventListener('click', function (e) {
+                e.preventDefault();
+                if (confirm('Xóa variant này?')) {
+                    row.remove();
+                }
+            });
+        }
+
+        variantsContainer.appendChild(row);
+        return row;
+    }
     document.addEventListener('DOMContentLoaded', function () {
         var addProductModal = document.getElementById('addProductModal');
         var addProductBtn = document.getElementById('addProductBtn');
@@ -1203,35 +1269,7 @@
         // VARIANT MANAGEMENT
         // ============================================
 
-        function createVariantRow(data) {
-            data = data || {sku: '', size: '', color: '', price: '', stock: ''};
 
-            var row = document.createElement('div');
-            row.className = 'variant-row';
-
-            var html = '';
-            html += '<input name="variant-sku[]" placeholder="SKU" class="variant-sku" value="' + escapeHtml(data.sku) + '" />';
-            html += '<input name="variant-size[]" placeholder="Size" class="variant-size" value="' + escapeHtml(data.size) + '" />';
-            html += '<input name="variant-color[]" placeholder="Color" class="variant-color" value="' + escapeHtml(data.color) + '" />';
-            html += '<input name="variant-price[]" type="number" step="0.01" placeholder="Giá" class="variant-price" value="' + escapeHtml(data.price) + '" />';
-            html += '<input name="variant-quantity[]" type="number" placeholder="Tồn" class="variant-stock" value="' + escapeHtml(data.stock) + '" />';
-            html += '<button class="btn btn-secondary btn-remove-variant" type="button">Xóa</button>';
-
-            row.innerHTML = html;
-
-            var btnRemove = row.querySelector('.btn-remove-variant');
-            if (btnRemove) {
-                btnRemove.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    if (confirm('Xóa variant này?')) {
-                        row.remove();
-                    }
-                });
-            }
-
-            variantsContainer.appendChild(row);
-            return row;
-        }
 
         if (addVariantBtn) {
             addVariantBtn.addEventListener('click', function (e) {
@@ -1457,41 +1495,8 @@
             });
         }
 
-        // ============================================
-        // ✅ RESET PRODUCT FORM
-        // ============================================
 
-        function resetProductForm() {
-            if (addProductForm) {
-                addProductForm.reset();
 
-                // Xóa editId
-                delete addProductForm.dataset.editId;
-            }
-
-            // Reset title & button
-            var productModalTitle = document.getElementById('productModalTitle');
-            if (productModalTitle) {
-                productModalTitle.textContent = 'Thêm Sản phẩm';
-            }
-
-            if (modalSubmitBtn) {
-                modalSubmitBtn.textContent = 'Lưu Sản phẩm';
-                modalSubmitBtn.style.backgroundColor = '';
-                modalSubmitBtn.disabled = false;
-            }
-
-            // Reset variants
-            if (variantsContainer) {
-                variantsContainer.innerHTML = '';
-                createVariantRow();
-            }
-
-            // Reset images
-            if (imagePreviewGrid) {
-                imagePreviewGrid.innerHTML = '';
-            }
-        }
 
         // ============================================
         // SEARCH FUNCTION
