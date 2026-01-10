@@ -180,6 +180,31 @@
         </div>
     </section>
 </main>
+<div class="modal-overlay" id="verifyModal">
+    <div class="modal-box">
+        <span class="close-modal-x">&times;</span>
+        <div class="modal-icon">
+            <i class="fa-regular fa-envelope-open"></i> </div>
+        <div class="modal-title">Đăng ký thành công!</div>
+        <div class="modal-message">
+            Xin chào, tài khoản của bạn đã được tạo.<br>
+            Vui lòng kiểm tra email <b><span id="userEmailDisplay"></span></b> và nhấp vào liên kết để kích hoạt tài khoản trước khi đăng nhập.
+        </div>
+        <button class="modal-btn">Đã hiểu</button>
+    </div>
+    <%
+        Boolean showPopup = (Boolean) session.getAttribute("showVerifyPopup");
+        String registeredEmail = (String) session.getAttribute("registeredEmail");
+        if (showPopup != null && showPopup) {
+    %>
+    <input type="hidden" id="bridge-show-popup" value="true">
+    <input type="hidden" id="bridge-user-email" value="<%= (registeredEmail != null) ? registeredEmail : "" %>">
+    <%
+            session.removeAttribute("showVerifyPopup");
+            session.removeAttribute("registeredEmail");
+        }
+    %>
+</div>
 <jsp:include page="footer.jsp" />
 </body>
 </html>

@@ -155,6 +155,45 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    //Popup Đăng ký thành công
+    const bridgeShowPopup = document.getElementById('bridge-show-popup');
+    const bridgeUserEmail = document.getElementById('bridge-user-email');
+    const verifyModal = document.getElementById('verifyModal');
+    const userEmailDisplay = document.getElementById('userEmailDisplay');
+
+    if (bridgeShowPopup && verifyModal) {
+        if (bridgeUserEmail && userEmailDisplay) {
+            userEmailDisplay.innerText = bridgeUserEmail.value;
+        }
+        verifyModal.style.display = 'flex';
+        setTimeout(() => {
+            verifyModal.classList.add('active');
+        }, 50);
+    }
+
+    function closeVerifyPopup() {
+        if (verifyModal) {
+            verifyModal.classList.remove('active');
+            setTimeout(() => {
+                verifyModal.style.display = 'none';
+            }, 300);
+        }
+    }
+
+    const closeX = document.querySelector('.close-modal-x');
+    if (closeX) {
+        closeX.addEventListener('click', closeVerifyPopup);
+    }
+    const confirmBtn = document.querySelector('.modal-btn');
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', closeVerifyPopup);
+    }
+    window.addEventListener('click', function(e) {
+        if (e.target === verifyModal) {
+            closeVerifyPopup();
+        }
+    });
+
     // chuyển tab
     const accountInfo = document.getElementById('nav-details');
     const address = document.getElementById('nav-addresses');
