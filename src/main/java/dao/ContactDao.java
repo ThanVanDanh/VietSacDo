@@ -24,7 +24,7 @@ public class ContactDao extends BaseDao {
 
     }
     public ContactUs getById(int id) {
-        String sql = "SELECT * FROM contacts WHERE id = :id";
+        String sql = "SELECT * FROM Contact_messages WHERE id = :id";
         return get().withHandle(handle ->
                 handle.createQuery(sql)
                         .bind("id", id)
@@ -34,7 +34,7 @@ public class ContactDao extends BaseDao {
         );
     }
     public void delete(int id) {
-        String sql = "DELETE FROM contacts WHERE id = :id";
+        String sql = "DELETE FROM Contact_messages WHERE id = :id";
         get().withHandle(handle ->
                 handle.createUpdate(sql)
                         .bind("id", id)

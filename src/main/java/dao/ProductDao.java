@@ -32,9 +32,7 @@ public class ProductDao extends BaseDao {
                 "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
                 // SKU từ variant đầu tiên
                 "(SELECT sku FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS sku, " +
-                // ✅ Đếm số variants (COALESCE để trả về 0 nếu null)
                 "COALESCE((SELECT COUNT(*) FROM Product_variants WHERE product_id = p.id), 0) AS variantCount, " +
-                // ✅ Tổng tồn kho (COALESCE để trả về 0 nếu null)
                 "COALESCE((SELECT SUM(stock_quantity) FROM Product_variants WHERE product_id = p.id), 0) AS totalStock " +
                 "FROM Products p " +
                 "LEFT JOIN Categories c ON p.category_id = c.id " +
@@ -57,7 +55,7 @@ public class ProductDao extends BaseDao {
 
             if (product != null) {
                 // Lấy variants
-                product.setVariants(handle.createQuery("SELECT * FROM Product_variants WHERE product_id = :id")
+                product.setVariants(handle.createQuery("SELECT * FROM Product_variants WHERE product_id = :id ORDER BY FIELD(size, 'S', 'M', 'L', 'XL', 'XXL');")
                         .bind("id", id)
                         .mapToBean(ProductVariant.class)
                         .list());
@@ -84,6 +82,45 @@ public class ProductDao extends BaseDao {
         return get().withHandle(handle ->
                 handle.createQuery(sql)
                         .bind("categoryId", categoryId)
+                        .mapToBean(ProductListDTO.class)
+                        .list()
+        );
+    }
+    public List<ProductListDTO> getViewedProducts(List<Integer> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return new java.util.ArrayList<>();
+        }
+
+        String sql = "SELECT p.id, p.name_product, " +
+                "(SELECT current_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS price, " +
+                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
+                "(SELECT sku FROM Product_variants WHERE product_id = p.id LIMIT 1) AS sku " +
+                "FROM Products p " +
+                "WHERE p.id IN (<listId>)";
+
+        return get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bindList("listId", ids)
+                        .mapToBean(ProductListDTO.class)
+                        .list()
+        );
+    }
+    public List<ProductListDTO> getRelatedProducts(int categoryId, int currentProductId, int limit) {
+        String sql = "SELECT p.id, p.name_product, " +
+                "(SELECT current_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS price, " +
+                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
+                "(SELECT sku FROM Product_variants WHERE product_id = p.id LIMIT 1) AS sku " +
+                "FROM Products p " +
+                "WHERE p.category_id = :categoryId " +
+                "AND p.id != :currentProductId " +
+                "ORDER BY RAND() " +
+                "LIMIT :limit";
+
+        return get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("categoryId", categoryId)
+                        .bind("currentProductId", currentProductId)
+                        .bind("limit", limit)
                         .mapToBean(ProductListDTO.class)
                         .list()
         );
@@ -163,5 +200,32 @@ public class ProductDao extends BaseDao {
         return get().withHandle(handle ->
                 handle.createQuery(sql).bind("productId", productId).mapTo(Integer.class).one()
         );
+    }
+
+    public boolean update(Product product) {
+        return get().withHandle(handle -> {
+            return update(handle, product);
+        });
+    }
+
+    public boolean update(Handle handle, Product product) {
+        String sql = "UPDATE Products SET " +
+                "name_product = ?, " +
+                "product_code = ?, " +
+                "description = ?, " +
+                "status_product = ?, " +
+                "category_id = ? " +
+                "WHERE id = ?";
+
+        int rows = handle.createUpdate(sql)
+                .bind(0, product.getNameProduct())
+                .bind(1, product.getProductCode())
+                .bind(2, product.getDescription())
+                .bind(3, product.getStatusProduct())
+                .bind(4, product.getCategoryId() > 0 ? product.getCategoryId() : null)
+                .bind(5, product.getId())
+                .execute();
+
+        return rows > 0;
     }
 }

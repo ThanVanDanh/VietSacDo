@@ -59,6 +59,10 @@ public class CategoryController extends HttpServlet {
                     page = 1;
                 }
             }
+            String sortBy = request.getParameter("sort-by");
+            if (sortBy == null || sortBy.isEmpty()) {
+                sortBy = "alpha-asc"; // Giá trị mặc định
+            }
 
             int totalProducts = categoryDao.countProductsByCategory(currentCategory.getId());
             int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
@@ -66,14 +70,39 @@ public class CategoryController extends HttpServlet {
             if (page < 1) page = 1;
             if (page > totalPages && totalPages > 0) page = totalPages;
 
-            List<ProductListDTO> list = categoryDao.getProductsByCategoryPayload(currentCategory.getId(), page, pageSize);
+            List<ProductListDTO> list = categoryDao.getProductsByCategoryPayload(currentCategory.getId(), page, pageSize, sortBy);
 
             request.setAttribute("currentCategory", currentCategory);
             request.setAttribute("list", list);
 
             request.setAttribute("currentPage", page);
             request.setAttribute("totalPages", totalPages);
+            request.setAttribute("sortBy", sortBy);
+//            cookie san pham da xem
+            String txt = "";
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie c : cookies) {
+                    if (c.getName().equals("viewed_products")) {
+                        txt = java.net.URLDecoder.decode(c.getValue(), java.nio.charset.StandardCharsets.UTF_8);
+                        break;
+                    }
+                }
+            }
 
+            List<Integer> listIds = new java.util.ArrayList<>();
+            if (!txt.isEmpty()) {
+                try {
+                    for (String s : txt.split(",")) {
+                        if(!s.trim().isEmpty()) listIds.add(Integer.parseInt(s.trim()));
+                    }
+                } catch (Exception e) {}
+            }
+
+            if (!listIds.isEmpty()) {
+                List<model.product.ProductListDTO> viewedList = productDao.getViewedProducts(listIds);
+                request.setAttribute("viewedProducts", viewedList);
+            }
             request.getRequestDispatcher("/list-product.jsp").forward(request, response);
 
         } catch (Exception e) {

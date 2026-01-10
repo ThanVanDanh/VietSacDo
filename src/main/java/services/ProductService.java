@@ -25,7 +25,6 @@ public class ProductService {
     private final ProductImageDao imageDao;
 
 
-
     public ProductService(Jdbi jdbi, CloudinaryService cloudinary) {
         this.jdbi = Objects.requireNonNull(jdbi);
         this.cloudinary = Objects.requireNonNull(cloudinary);
@@ -57,11 +56,25 @@ public class ProductService {
             this.isThumbnail = isThumbnail;
         }
 
-        public InputStream getInputStream() { return inputStream; }
-        public File getFile() { return file; }
-        public String getFilename() { return filename; }
-        public String getAltText() { return altText; }
-        public boolean isThumbnail() { return isThumbnail; }
+        public InputStream getInputStream() {
+            return inputStream;
+        }
+
+        public File getFile() {
+            return file;
+        }
+
+        public String getFilename() {
+            return filename;
+        }
+
+        public String getAltText() {
+            return altText;
+        }
+
+        public boolean isThumbnail() {
+            return isThumbnail;
+        }
     }
 
     // internal holder
@@ -70,6 +83,7 @@ public class ProductService {
         final String publicId;
         final String altText;
         final boolean isThumbnail;
+
         UploadedImage(String secureUrl, String publicId, String altText, boolean isThumbnail) {
             this.secureUrl = secureUrl;
             this.publicId = publicId;
@@ -81,13 +95,14 @@ public class ProductService {
     public List<ProductListDTO> getListProduct() {
         return productDao.getListProduct();
     }
+
     public List<ProductListDTO> getProductsByCategory(int categoryId) {
         return productDao.getProductsByCategory(categoryId);
     }
-    public Product getProduct(int id){
+
+    public Product getProduct(int id) {
         return productDao.getProduct(id);
     }
-
 
 
 //    // Xóa danh sách ảnh đã upload (dùng publicId)
@@ -165,8 +180,183 @@ public class ProductService {
         if (uploaded == null) return;
         for (UploadedImage u : uploaded) {
             if (u.publicId != null) {
-                try { cloudinary.deleteByPublicId(u.publicId); } catch (Exception ignore) {}
+                try {
+                    cloudinary.deleteByPublicId(u.publicId);
+                } catch (Exception ignore) {
+                }
             }
+        }
+    }
+
+    public boolean updateProduct(Product product,
+                                 List<ProductVariant> variants,
+                                 List<ImageUpload> newImageUploads,
+                                 List<Integer> keepImageIds) throws Exception {
+
+        System.out.println("=== ProductService.updateProduct ===");
+        System.out.println("Product ID: " + product.getId());
+        System.out.println("New Variants: " + (variants != null ? variants.size() : 0));
+        System.out.println("Keep Images: " + (keepImageIds != null ? keepImageIds.size() : 0));
+        System.out.println("New Images: " + (newImageUploads != null ? newImageUploads.size() : 0));
+
+        // 1. Upload new images to Cloudinary first
+        List<UploadedImage> uploaded = new ArrayList<>();
+
+        if (newImageUploads != null && !newImageUploads.isEmpty()) {
+            for (ImageUpload iu : newImageUploads) {
+                try {
+                    CloudinaryService.UploadedImage u;
+                    if (iu.getInputStream() != null) {
+                        u = cloudinary.upload(iu.getInputStream(), iu.getFilename());
+                    } else {
+                        u = cloudinary.upload(iu.getFile());
+                    }
+
+                    if (u == null || u.getSecureUrl() == null) {
+                        throw new RuntimeException("Upload failed: " + iu.getFilename());
+                    }
+
+                    uploaded.add(new UploadedImage(
+                            u.getSecureUrl(),
+                            u.getPublicId(),
+                            iu.getAltText(),
+                            iu.isThumbnail()
+                    ));
+
+                    System.out.println("✅ Uploaded new image: " + u.getSecureUrl());
+
+                } catch (Exception e) {
+                    System.err.println("❌ Upload failed: " + iu.getFilename() + " - " + e.getMessage());
+
+                    // Cleanup uploaded images
+                    cleanupUploaded(uploaded);
+                    throw new Exception("Failed to upload image: " + iu.getFilename(), e);
+                }
+            }
+        }
+
+        // 2. Update database in transaction
+        List<String> imagesToDelete = new ArrayList<>();
+
+        try {
+            boolean success = jdbi.inTransaction(handle -> {
+                // 2.1. Update product basic info
+                boolean updated = productDao.update(handle, product);
+                if (!updated) {
+                    throw new RuntimeException("Failed to update product");
+                }
+                System.out.println("✅ Product updated");
+
+                // 2.2. Delete all old variants
+                variantDao.deleteByProductId(handle, product.getId());
+                System.out.println("✅ Old variants deleted");
+
+                // 2.3. Insert new variants
+                if (variants != null && !variants.isEmpty()) {
+                    for (ProductVariant v : variants) {
+                        v.setProductId(product.getId());
+                        variantDao.insert(handle, v);
+                    }
+                    System.out.println("✅ New variants inserted: " + variants.size());
+                }
+
+                // 2.4. Get existing images to determine which to delete
+                List<ProductImage> existingImages = imageDao.getByProductId(handle, product.getId());
+
+                for (ProductImage img : existingImages) {
+                    boolean shouldKeep = keepImageIds != null && keepImageIds.contains(img.getId());
+                    if (!shouldKeep) {
+                        // Mark for deletion from Cloudinary
+                        imagesToDelete.add(img.getImageUrl());
+                    }
+                }
+
+                System.out.println("✅ Images to delete from Cloudinary: " + imagesToDelete.size());
+
+                // 2.5. Delete images NOT in keepImageIds
+                if (keepImageIds == null || keepImageIds.isEmpty()) {
+                    imageDao.deleteByProductId(handle, product.getId());
+                    System.out.println("✅ All images deleted");
+                } else {
+                    imageDao.deleteExcept(handle, product.getId(), keepImageIds);
+                    System.out.println("✅ Images deleted except: " + keepImageIds);
+                }
+
+                // 2.6. Insert new images
+                if (!uploaded.isEmpty()) {
+                    for (UploadedImage u : uploaded) {
+                        ProductImage img = new ProductImage(0);
+                        img.setProductId(product.getId());
+                        img.setImageUrl(u.secureUrl);
+                        img.setAltText(u.altText);
+                        img.setThumbnail(u.isThumbnail);
+
+                        imageDao.insert(handle, img);
+                    }
+                    System.out.println("✅ New images inserted: " + uploaded.size());
+                }
+
+                return true;
+            });
+
+            if (!success) {
+                throw new Exception("Transaction failed");
+            }
+
+        } catch (Exception e) {
+            System.err.println("❌ Transaction failed: " + e.getMessage());
+            e.printStackTrace();
+
+            // Cleanup newly uploaded images from Cloudinary
+            cleanupUploaded(uploaded);
+
+            throw new Exception("Failed to update product", e);
+        }
+
+        // 3. Delete old images from Cloudinary (after successful transaction)
+        if (!imagesToDelete.isEmpty()) {
+            for (String url : imagesToDelete) {
+                try {
+                    String publicId = extractPublicId(url);
+                    if (publicId != null) {
+                        cloudinary.deleteByPublicId(publicId);
+                        System.out.println("✅ Deleted from Cloudinary: " + publicId);
+                    }
+                } catch (Exception e) {
+                    System.err.println("⚠️ Failed to delete from Cloudinary: " + url + " - " + e.getMessage());
+                    // Don't throw, just log
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private String extractPublicId(String url) {
+        if (url == null || url.isEmpty()) return null;
+
+        try {
+            // Find "/upload/" and extract everything after it
+            int uploadIndex = url.indexOf("/upload/");
+            if (uploadIndex == -1) return null;
+
+            String afterUpload = url.substring(uploadIndex + 8); // "/upload/".length() = 8
+
+            // Remove version (v1234567890/)
+            int slashIndex = afterUpload.indexOf('/');
+            if (slashIndex == -1) return null;
+
+            String withExtension = afterUpload.substring(slashIndex + 1);
+
+            // Remove file extension
+            int dotIndex = withExtension.lastIndexOf('.');
+            if (dotIndex == -1) return withExtension;
+
+            return withExtension.substring(0, dotIndex);
+
+        } catch (Exception e) {
+            System.err.println("Failed to extract public_id from: " + url);
+            return null;
         }
     }
 }
