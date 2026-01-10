@@ -88,6 +88,25 @@ public class ProductDao extends BaseDao {
                         .list()
         );
     }
+    public List<ProductListDTO> getViewedProducts(List<Integer> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return new java.util.ArrayList<>();
+        }
+
+        String sql = "SELECT p.id, p.name_product, " +
+                "(SELECT current_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS price, " +
+                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
+                "(SELECT sku FROM Product_variants WHERE product_id = p.id LIMIT 1) AS sku " +
+                "FROM Products p " +
+                "WHERE p.id IN (<listId>)";
+
+        return get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bindList("listId", ids)
+                        .mapToBean(ProductListDTO.class)
+                        .list()
+        );
+    }
 
     public int insert(Product product) {
         return get().withHandle(handle -> insert(handle, product));

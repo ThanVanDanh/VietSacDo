@@ -43,12 +43,14 @@ function updateStockUI(stock) {
     const buyNowBtn = document.getElementById('mua-ngay');
     const outOfStockBtn = document.getElementById('het-hang');
     const qtyInput = document.getElementById('product-quantity');
+    const quality = document.getElementById('quality');
 
     if (stock > 0) {
 
         addToCartBtn.style.display = 'inline-block';
         buyNowBtn.style.display = 'inline-block';
         outOfStockBtn.style.display = 'none';
+        quality.style.display ='inline-block';
 
         qtyInput.value = 1;
     } else {
@@ -56,6 +58,7 @@ function updateStockUI(stock) {
         addToCartBtn.style.display = 'none';
         buyNowBtn.style.display = 'none';
         outOfStockBtn.style.display = 'inline-block';
+        quality.style.display ='none';
 
         qtyInput.value = 1;
     }
