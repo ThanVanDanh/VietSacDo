@@ -120,13 +120,35 @@ public class CategoryDao extends BaseDao {
         );
     }
 
-    public List<ProductListDTO> getProductsByCategoryPayload(int categoryId, int page, int pageSize) {
+    public List<ProductListDTO> getProductsByCategoryPayload(int categoryId, int page, int pageSize,String sortBy) {
+        String orderByClause = "ORDER BY p.name_product ASC"; //Tên A-Z
+
+        if (sortBy != null) {
+            switch (sortBy) {
+                case "alpha-desc":
+                    orderByClause = "ORDER BY p.name_product DESC";
+                    break;
+                case "price-asc":
+
+                    orderByClause = "ORDER BY price ASC";
+                    break;
+                case "price-desc":
+                    orderByClause = "ORDER BY price DESC";
+                    break;
+                case "created-desc":
+                    orderByClause = "ORDER BY p.id DESC";
+                    break;
+                default:
+                    orderByClause = "ORDER BY p.name_product ASC";
+            }
+        }
         String sql = "SELECT p.id, p.name_product, " +
                 "(SELECT current_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS price, " +
                 "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
                 "(SELECT sku FROM Product_variants WHERE product_id = p.id LIMIT 1) AS sku " +
                 "FROM Products p " +
                 "WHERE p.category_id = :categoryId " +
+                orderByClause + " " +
                 "LIMIT :limit OFFSET :offset";
 
         int offset = (page - 1) * pageSize;
@@ -158,7 +180,7 @@ public class CategoryDao extends BaseDao {
                     .bind("nameCategory", category.getNameCategory())
                     .bind("slug", category.getSlug())
                     .bind("description", category.getDescription())
-                    .bind("parentId", parentId) // ✅ Sử dụng biến đã xử lý
+                    .bind("parentId", parentId)
                     .execute();
             return affected > 0;
         });
@@ -198,10 +220,7 @@ public class CategoryDao extends BaseDao {
             return counts;
         });
     }
-    /**
-     * Xóa category (có validation)
-     * @throws IllegalStateException nếu không thể xóa
-     */
+
     public boolean delete(int id) {
         int childCount = countChildCategories(id);
         int productCount = countProducts(id);

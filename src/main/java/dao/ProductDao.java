@@ -32,9 +32,7 @@ public class ProductDao extends BaseDao {
                 "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
                 // SKU từ variant đầu tiên
                 "(SELECT sku FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS sku, " +
-                // ✅ Đếm số variants (COALESCE để trả về 0 nếu null)
                 "COALESCE((SELECT COUNT(*) FROM Product_variants WHERE product_id = p.id), 0) AS variantCount, " +
-                // ✅ Tổng tồn kho (COALESCE để trả về 0 nếu null)
                 "COALESCE((SELECT SUM(stock_quantity) FROM Product_variants WHERE product_id = p.id), 0) AS totalStock " +
                 "FROM Products p " +
                 "LEFT JOIN Categories c ON p.category_id = c.id " +
