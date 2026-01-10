@@ -28,8 +28,8 @@ public class UserDao extends BaseDao {
         );
     }
     public int insert(User user) {
-        String sql = "INSERT INTO Users (full_name, phone_number, email, password_hash, role_user, auth_provider, firebase_uid) " +
-                "VALUES (:fullName, :phone, :email, :password, :role, :authProvider, :firebaseUID)";
+        String sql = "INSERT INTO Users (full_name, phone_number, email, password_hash, role_user, auth_provider, firebase_uid, account_status, verify_token) " +
+                "VALUES (:fullName, :phone, :email, :password, :role, :authProvider, :firebaseUID, :status, :verifyToken)";
         return get().withHandle(handle ->
                 handle.createUpdate(sql)
                         .bindBean(user)
@@ -46,6 +46,12 @@ public class UserDao extends BaseDao {
                         .execute() > 0
         );
     }
-
+    public boolean activateUser(String token) {
+        return get().withHandle(handle ->
+                handle.createUpdate("UPDATE Users SET account_status = 'ACTIVE', verify_token = NULL WHERE verify_token = :token")
+                        .bind("token", token)
+                        .execute() > 0
+        );
+    }
 }
 

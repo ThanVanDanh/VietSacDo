@@ -59,6 +59,10 @@ public class CategoryController extends HttpServlet {
                     page = 1;
                 }
             }
+            String sortBy = request.getParameter("sort-by");
+            if (sortBy == null || sortBy.isEmpty()) {
+                sortBy = "alpha-asc"; // Giá trị mặc định
+            }
 
             int totalProducts = categoryDao.countProductsByCategory(currentCategory.getId());
             int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
@@ -66,13 +70,14 @@ public class CategoryController extends HttpServlet {
             if (page < 1) page = 1;
             if (page > totalPages && totalPages > 0) page = totalPages;
 
-            List<ProductListDTO> list = categoryDao.getProductsByCategoryPayload(currentCategory.getId(), page, pageSize);
+            List<ProductListDTO> list = categoryDao.getProductsByCategoryPayload(currentCategory.getId(), page, pageSize, sortBy);
 
             request.setAttribute("currentCategory", currentCategory);
             request.setAttribute("list", list);
 
             request.setAttribute("currentPage", page);
             request.setAttribute("totalPages", totalPages);
+            request.setAttribute("sortBy", sortBy);
 //            cookie san pham da xem
             String txt = "";
             Cookie[] cookies = request.getCookies();
