@@ -1,5 +1,6 @@
-package model;
+package model.article;
 
+import model.AId;
 import model.voucher.Voucher;
 import org.jdbi.v3.core.mapper.reflect.ColumnName;
 
