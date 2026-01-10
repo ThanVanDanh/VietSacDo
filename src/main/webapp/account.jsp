@@ -1,4 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,14 +9,12 @@
     <title>Việt Sắc Đỏ - Thông tin</title>
     <link rel="icon" href="image/logoaodai.jpg" type="image/jpeg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="style/auth.css">
-    <script src="scripts/auth.js"></script>
+    <link rel="stylesheet" href="style/account.css">
+    <script src="scripts/account.js"></script>
     <link rel="stylesheet" href="style/style-header.css">
     <link rel="stylesheet" href="style/footer.css">
     <link rel="stylesheet" href="style/breadcrumb.css">
-    <link rel="stylesheet" href="style/aodai.css">
     <script src="scripts/home.js"></script>
-    <link rel="stylesheet" href="style/account.css">
 </head>
 <body>
 <div class="search-overlay-container" id="searchOverlay">
@@ -104,7 +104,7 @@
     <div class="account-container">
         <nav class="account-nav">
             <h2>TRANG TÀI KHOẢN</h2>
-            <p>Xin chào, Phùng Thư</p>
+            <p>Xin chào, ${user.fullName}</p>
             <ul>
                 <li>
                     <a class="active tab-btn" id="nav-details">Thông tin tài khoản</a>
@@ -113,16 +113,16 @@
                     <a class="tab-btn" id="nav-addresses">Sổ địa chỉ (1)</a>
                 </li>
                 <li>
-                    <a href="login.jsp">Đăng xuất</a>
+                    <a href="Logout">Đăng xuất</a>
                 </li>
             </ul>
         </nav>
         <div class="account-content">
             <div class="content-section" id="account-details">
                 <h3>TÀI KHOẢN</h3>
-                <p><strong>Tên tài khoản:</strong> Phùng Thư</p>
-                <p><strong>Địa chỉ:</strong> TP Thủ Đức,Vietnam</p>
-                <p><strong>Điện thoại:</strong> 0333333333</p>
+                <c:if test="${not empty user}">
+                    <p><strong>Tên tài khoản:</strong> ${user.fullName}</p> <p><strong>Email:</strong> ${user.email}</p>
+                    <p><strong>Điện thoại:</strong> ${user.phone}</p> </c:if>
 
                 <hr class="account-divider">
 
@@ -134,44 +134,70 @@
                             <th>Mã đơn hàng</th>
                             <th>Ngày đặt</th>
                             <th>Thành tiền</th>
-                            <th>Thông tin thanh toán</th>
-                            <th>Thông tin vận chuyển</th>
+                            <th>Trạng thái</th>
+                            <th>Vận chuyển</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>DH001</td>
-                            <td>10/10/2025</td>
-                            <td>500.000₫</td>
-                            <td>Đã thanh toán</td>
-                            <td>Đang vận chuyển</td>
-                        </tr>
-                        <tr>
-                            <td>DH002</td>
-                            <td>08/10/2025</td>
-                            <td>1.200.000₫</td>
-                            <td>Chưa thanh toán</td>
-                            <td>Chưa vận chuyển</td>
-                        </tr>
-                        <tr>
-                            <td colspan="5">Không có đơn hàng nào khác.</td>
-                        </tr>
+                        <c:choose>
+                            <c:when test="${not empty orders}">
+                                <c:forEach var="order" items="${orders}">
+                                    <tr>
+                                        <td>${order.id}</td>
+                                        <td>${order.orderDate}</td>
+                                        <td>
+                                            <fmt:formatNumber value="${order.totalPrice}" type="currency" currencySymbol="₫"/>
+                                        </td>
+                                        <td>${order.status}</td>
+                                        <td>${order.shippingStatus}</td>
+                                    </tr>
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <tr>
+                                    <td colspan="5" style="text-align: center;">Bạn chưa có đơn hàng nào.</td>
+                                </tr>
+                            </c:otherwise>
+                        </c:choose>
                         </tbody>
                     </table>
                 </div>
             </div>
+
             <div class="content-section" id="account-addresses" style="display: none;">
                 <h3>ĐỊA CHỈ CỦA BẠN</h3>
                 <button type="button" class="btn-primary open-modal" id="add-address-btn">Thêm địa chỉ</button>
 
-                <div class="address-card">
-                    <p><strong>Họ tên:</strong> Phùng Thư <span class="default-badge">Địa chỉ mặc định</span></p>
-                    <p><strong>Địa chỉ:</strong> TP Thủ Đức, Vietnam</p>
-                    <p><strong>Số điện thoại:</strong> 0333333333</p>
-                    <a href="#" class="edit-address-link open-modal" id="edit-address-btn">Chỉnh sửa địa chỉ</a>
-                </div>
-            </div>
+                <c:if test="${empty addresses}">
+                    <p style="margin-top: 15px;">Bạn chưa lưu địa chỉ nào.</p>
+                </c:if>
 
+                <c:forEach var="addr" items="${addresses}">
+                    <div class="address-card">
+                        <p>
+                            <strong>Họ tên:</strong> ${addr.recipientName}
+                            <c:if test="${addr.isDefault}">
+                                <span class="default-badge">Địa chỉ mặc định</span>
+                            </c:if>
+                        </p>
+                        <p><strong>Địa chỉ:</strong> ${addr.addressLine}, ${addr.cityProvince}, ${addr.country}</p>
+                        <p><strong>Số điện thoại:</strong> ${addr.recipientPhone}</p>
+
+                        <a href="#" class="edit-address-link open-modal"
+                           data-id="${addr.id}"
+                           data-name="${addr.recipientName}"
+                           data-phone="${addr.recipientPhone}"
+                           data-addr="${addr.addressLine}"
+                           data-city="${addr.cityProvince}"
+                           data-default="${addr.isDefault}"> Chỉnh sửa địa chỉ
+                        </a>
+
+                        <a href="#" class="link-delete delete-address-link" data-id="${addr.id}">
+                            Xóa
+                        </a>
+                    </div>
+                </c:forEach>
+            </div>
         </div>
     </div>
 </main>
@@ -179,101 +205,119 @@
     <div class="modal-content">
         <button class="modal-close" id="close-add-modal">&times;</button>
         <h4>THÊM ĐỊA CHỈ MỚI</h4>
-        <form>
-            <div class="form-row">
-                <div class="form-group half-width">
-                    <label for="add-ho">Họ</label>
-                    <input type="text" id="add-ho">
+        <form method="POST" action="add-address">
+                <div class="form-row">
+                    <div class="form-group half-width">
+                        <label for="add-ho">Họ</label>
+                        <input type="text" id="add-ho" name="ho" required>
+                    </div>
+                    <div class="form-group half-width">
+                        <label for="add-ten">Tên</label>
+                        <input type="text" id="add-ten" name="ten" required>
+                    </div>
                 </div>
-                <div class="form-group half-width">
-                    <label for="add-ten">Tên</label>
-                    <input type="text" id="add-ten">
+                <div class="form-group">
+                    <label for="add-sdt">Số điện thoại</label>
+                    <input type="text" id="add-sdt" name="sdt" required>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="add-sdt">Số điện thoại</label>
-                <input type="text" id="add-sdt">
-            </div>
-            <div class="form-group">
-                <label for="add-congty">Công ty</label>
-                <input type="text" id="add-congty">
-            </div>
-            <div class="form-group">
-                <label for="add-diachi">Địa chỉ</label>
-                <input type="text" id="add-diachi">
-            </div>
-            <div class="form-row">
-                <div class="form-group half-width">
-                    <label for="add-quocgia">Quốc gia</label>
-                    <select id="add-quocgia">
-                        <option value="">- Please Select -</option>
-                        <option value="Vietnam">Vietnam</option>
-                    </select>
+                <div class="form-group">
+                    <label for="add-diachi">Địa chỉ</label>
+                    <input type="text" id="add-diachi" name="diachi" required>
                 </div>
-                <div class="form-group half-width">
-                    <label for="add-tinhthanh">Tỉnh thành</label>
-                    <select id="add-tinhthanh">
-                        <option value="">- Please Select -</option>
-                        <option value="HCM">Hồ Chí Minh</option>
-                    </select>
+                <div class="form-row">
+                    <div class="form-group half-width">
+                        <label for="add-quocgia">Quốc gia</label>
+                        <select id="add-quocgia" name="quocgia">
+                            <option value="Vietnam">Vietnam</option>
+                        </select>
+                    </div>
+                    <div class="form-group half-width">
+                        <label for="add-tinhthanh">Tỉnh thành</label>
+                        <select id="add-tinhthanh" name="tinhthanh">
+                            <option value="HCM">Hồ Chí Minh</option>
+                            <option value="HN">Hà Nội</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group-checkbox">
-                <input type="checkbox" id="add-default">
-                <label for="add-default">Đặt làm địa chỉ mặc định?</label>
-            </div>
-            <div class="modal-actions">
-                <button type="button" class="btn-secondary modal-close" id="cancel-add-modal">Hủy</button>
-                <button type="submit" class="btn-primary">Thêm địa chỉ</button>
-            </div>
-        </form>
+                <div class="form-group-checkbox">
+                    <input type="checkbox" id="add-default" name="macdinh" value="true">
+                    <label for="add-default">Đặt làm địa chỉ mặc định?</label>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary modal-close" id="cancel-add-modal">Hủy</button>
+                    <button type="submit" class="btn-primary">Thêm địa chỉ</button>
+                </div>
+            </form>
     </div></div>
 <div class="modal-overlay" id="edit-address-modal" style="display: none;">
     <div class="modal-content">
         <button class="modal-close" id="close-edit-modal">&times;</button>
         <h4>SỬA ĐỊA CHỈ</h4>
-        <form>
+        <form action="edit-address" method="POST">
+            <input type="hidden" id="edit-id" name="id">
+
             <div class="form-row">
                 <div class="form-group half-width">
                     <label for="edit-ho">Họ</label>
-                    <input type="text" id="edit-ho" value="Phùng">
+                    <input type="text" id="edit-ho" name="ho" required>
                 </div>
                 <div class="form-group half-width">
                     <label for="edit-ten">Tên</label>
-                    <input type="text" id="edit-ten" value="Thư">
+                    <input type="text" id="edit-ten" name="ten" required>
                 </div>
             </div>
             <div class="form-group">
                 <label for="edit-sdt">Số điện thoại</label>
-                <input type="text" id="edit-sdt" value="0333333333">
+                <input type="text" id="edit-sdt" name="sdt" required>
             </div>
             <div class="form-group">
                 <label for="edit-congty">Công ty</label>
-                <input type="text" id="edit-congty">
+                <input type="text" id="edit-congty" name="congty">
             </div>
             <div class="form-group">
                 <label for="edit-diachi">Địa chỉ</label>
-                <input type="text" id="edit-diachi">
+                <input type="text" id="edit-diachi" name="diachi" required>
             </div>
             <div class="form-row">
                 <div class="form-group half-width">
                     <label for="edit-quocgia">Quốc gia</label>
-                    <select id="edit-quocgia">
-                        <option value="Vietnam" selected>Vietnam</option>
+                    <select id="edit-quocgia" name="quocgia">
+                        <option value="Vietnam">Vietnam</option>
                     </select>
                 </div>
                 <div class="form-group half-width">
                     <label for="edit-tinhthanh">Tỉnh thành</label>
-                    <select id="edit-tinhthanh">
+                    <select id="edit-tinhthanh" name="tinhthanh">
                         <option value="HCM">Hồ Chí Minh</option>
+                        <option value="HN">Hà Nội</option>
                     </select>
                 </div>
             </div>
+            <div class="form-group-checkbox">
+                <input type="checkbox" id="edit-default" name="macdinh" value="true">
+                <label for="edit-default">Đặt làm địa chỉ mặc định?</label>
+            </div>
+
             <div class="modal-actions">
                 <button type="button" class="btn-secondary modal-close" id="cancel-edit-modal">Hủy</button>
                 <button type="submit" class="btn-primary">Cập nhật địa chỉ</button>
             </div>
         </form>
+    </div>
+</div>
+<div class="modal-overlay" id="delete-address-modal" style="display: none;">
+    <div class="modal-content confirm-modal">
+        <button class="modal-close">&times;</button>
+
+        <h4 class="text-danger">XÁC NHẬN XÓA</h4>
+
+        <p>Bạn có chắc chắn muốn xóa địa chỉ này khỏi sổ địa chỉ không?</p>
+        <p class="text-muted">Hành động này không thể hoàn tác.</p>
+
+        <div class="modal-actions center">
+            <button type="button" class="btn-secondary modal-close">Hủy bỏ</button>
+            <a href="#" id="confirm-delete-btn" class="btn-danger">Xóa ngay</a>
+        </div>
     </div>
 </div>
 <jsp:include page="footer.jsp" />
