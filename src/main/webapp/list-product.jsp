@@ -117,12 +117,12 @@
             <div class="sort-by-wrapper">
                 <label for="sort-by">Sắp xếp:</label>
                 <div class="custom-select-wrapper">
-                    <select id="sort-by" name="sort-by">
-                        <option value="alpha-asc">Tên A → Z</option>
-                        <option value="alpha-desc">Tên Z → A</option>
-                        <option value="price-asc">Giá tăng dần</option>
-                        <option value="price-desc">Giá giảm dần</option>
-                        <option value="created-desc">Hàng mới</option>
+                    <select id="sort-by" name="sort-by" onchange="location.href='?page=1&sort-by='+this.value">
+                        <option value="alpha-asc" ${sortBy == 'alpha-asc' ? 'selected' : ''}>Tên A → Z</option>
+                        <option value="alpha-desc" ${sortBy == 'alpha-desc' ? 'selected' : ''}>Tên Z → A</option>
+                        <option value="price-asc" ${sortBy == 'price-asc' ? 'selected' : ''}>Giá tăng dần</option>
+                        <option value="price-desc" ${sortBy == 'price-desc' ? 'selected' : ''}>Giá giảm dần</option>
+                        <option value="created-desc" ${sortBy == 'created-desc' ? 'selected' : ''}>Hàng mới</option>
                     </select>
                     <span class="custom-arrow"></span>
                 </div>
@@ -160,20 +160,19 @@
 <!--        phân trang-->
         <div class="pagination">
             <c:if test="${currentPage > 1}">
-                <a href="?page=${currentPage - 1}&sort-by=${param['sort-by']}">
+                <a href="?page=${currentPage - 1}&sort-by=${sortBy}">
                     <img src="${pageContext.request.contextPath}/image/chevron_left.png" alt="Prev">
                 </a>
             </c:if>
 
             <c:forEach begin="1" end="${totalPages}" var="i">
-                <a href="?page=${i}&sort-by=${param['sort-by']}"
-                   class="${currentPage == i ? 'active' : ''}">
+                <a href="?page=${i}&sort-by=${sortBy}" class="${currentPage == i ? 'active' : ''}">
                         ${i}
                 </a>
             </c:forEach>
 
             <c:if test="${currentPage < totalPages}">
-                <a href="?page=${currentPage + 1}&sort-by=${param['sort-by']}">
+                <a href="?page=${currentPage + 1}&sort-by=${sortBy}">
                     <img src="${pageContext.request.contextPath}/image/chevron_right.png" alt="Next">
                 </a>
             </c:if>
