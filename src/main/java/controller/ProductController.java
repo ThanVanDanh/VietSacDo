@@ -47,6 +47,14 @@ public class ProductController extends HttpServlet {
 
             Product product = productService.getProduct(id);
             request.setAttribute("p", product);
+//            san pham cung loai
+            if (product != null) {
+                ProductDao dao = new ProductDao();
+
+                List<ProductListDTO> relatedProducts = dao.getRelatedProducts(product.getCategoryId(), id, 5);
+
+                request.setAttribute("relatedProducts", relatedProducts);
+            }
 
             // côkie san pham da xem
             String txt = "";
@@ -87,6 +95,7 @@ public class ProductController extends HttpServlet {
 
                 request.setAttribute("viewedProducts", sortedViewedList);
             }
+
 
 
             request.getRequestDispatcher("product-information.jsp").forward(request, response);
