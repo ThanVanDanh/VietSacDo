@@ -11,6 +11,7 @@ public class User extends AId implements Serializable {
     @ColumnName("phone_number")
     private String phone;
     private String email;
+    @ColumnName("password_hash")
     private String password;
     @ColumnName("created_at")
     private LocalDateTime createdAt;
@@ -22,6 +23,8 @@ public class User extends AId implements Serializable {
     private String authProvider;
     @ColumnName("firebase_uid")
     private String firebaseUID;
+    @ColumnName("verify_token")
+    private String verifyToken;
 
     public User(int id, String fullName, String phone, String email, String password, LocalDateTime createdAt, String status, String role, String authProvider, String firebaseUID) {
         super(id);
@@ -43,7 +46,7 @@ public class User extends AId implements Serializable {
     public String getFullName() {
         return fullName;
     }
-
+    @ColumnName("phone_number")
     public String getPhone() {
         return phone;
     }
@@ -51,7 +54,7 @@ public class User extends AId implements Serializable {
     public String getEmail() {
         return email;
     }
-    @ColumnName("password_hash")
+//    @ColumnName("password_hash")
     public String getPassword() {
         return password;
     }
@@ -59,7 +62,7 @@ public class User extends AId implements Serializable {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-
+    @ColumnName("account_status")
     public String getStatus() {
         return status;
     }
@@ -79,7 +82,7 @@ public class User extends AId implements Serializable {
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
-
+    @ColumnName("phone_number")
     public void setPhone(String phone) {
         this.phone = phone;
     }
@@ -95,7 +98,7 @@ public class User extends AId implements Serializable {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-
+    @ColumnName("account_status")
     public void setStatus(String status) {
         this.status = status;
     }
@@ -110,5 +113,13 @@ public class User extends AId implements Serializable {
 
     public void setFirebaseUID(String firebaseUID) {
         this.firebaseUID = firebaseUID;
+    }
+
+    public String getVerifyToken() {
+        return verifyToken;
+    }
+
+    public void setVerifyToken(String verifyToken) {
+        this.verifyToken = verifyToken;
     }
 }
