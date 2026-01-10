@@ -73,7 +73,31 @@ public class CategoryController extends HttpServlet {
 
             request.setAttribute("currentPage", page);
             request.setAttribute("totalPages", totalPages);
+//            cookie san pham da xem
+            String txt = "";
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie c : cookies) {
+                    if (c.getName().equals("viewed_products")) {
+                        txt = java.net.URLDecoder.decode(c.getValue(), java.nio.charset.StandardCharsets.UTF_8);
+                        break;
+                    }
+                }
+            }
 
+            List<Integer> listIds = new java.util.ArrayList<>();
+            if (!txt.isEmpty()) {
+                try {
+                    for (String s : txt.split(",")) {
+                        if(!s.trim().isEmpty()) listIds.add(Integer.parseInt(s.trim()));
+                    }
+                } catch (Exception e) {}
+            }
+
+            if (!listIds.isEmpty()) {
+                List<model.product.ProductListDTO> viewedList = productDao.getViewedProducts(listIds);
+                request.setAttribute("viewedProducts", viewedList);
+            }
             request.getRequestDispatcher("/list-product.jsp").forward(request, response);
 
         } catch (Exception e) {
