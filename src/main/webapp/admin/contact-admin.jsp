@@ -9,8 +9,9 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/admin.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/dashboard.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/contact-admin.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/alert.css">
 
-    <script src="${pageContext.request.contextPath}/scripts/contact.js"></script>
+
 </head>
 <body>
 <div class="admin-container">
@@ -36,9 +37,13 @@
         </nav>
     </div>
     <c:if test="${not empty sessionScope.message}">
-        <div class="alert alert-${sessionScope.messageType == 'success' ? 'success' : 'danger'}"
-             style="padding: 10px; background: #d4edda; color: #155724; margin-bottom: 15px;">
-                ${sessionScope.message}
+        <div id="alert-message"
+             class="alert-toast ${sessionScope.messageType == 'success' ? 'alert-toast-success' : 'alert-toast-danger'}">
+            <i class="fas ${sessionScope.messageType == 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"
+               style="margin-right: 10px;"></i>
+
+            <span>${sessionScope.message}</span>
+            <span id="close-alert" onclick="this.parentElement.remove()" style="margin-left: auto; cursor: pointer; font-weight: bold; padding-left: 15px; pointer-events: auto;">&times;</span>
         </div>
         <% session.removeAttribute("message"); %>
     </c:if>
@@ -131,7 +136,7 @@
         <p>Bạn có chắc muốn xóa tin nhắn của: <strong id="delete-name"></strong>?</p>
         <p>ID tin nhắn: <strong id="delete-id-display"></strong></p>
 
-        <form action="${pageContext.request.contextPath}/admin/contact-delete" method="post">
+        <form action="${pageContext.request.contextPath}/delete_message" method="post">
             <input type="hidden" name="id" id="input-delete-id">
 
             <div class="modal-actions">
@@ -163,6 +168,6 @@
         </form>
     </div>
 </div>
-
+<script src="${pageContext.request.contextPath}/scripts/contact.js"></script>
 </body>
 </html>
