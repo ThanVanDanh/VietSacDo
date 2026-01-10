@@ -39,11 +39,12 @@ public class SignupController extends HttpServlet {
             request.getRequestDispatcher("signup.jsp").forward(request, response);
             return;
         }
-        // 1. Lấy domain hiện tại (ví dụ: http://localhost:8080/VietSacDo)
+
         String domain = request.getRequestURL().toString().replace(request.getRequestURI(), "") + request.getContextPath();
         boolean isRegistered = userService.register(fullName, phone, email, password, domain);
         if (isRegistered) {
-            request.getSession().setAttribute("successMessage", "Đăng ký thành công!");
+            request.getSession().setAttribute("showVerifyPopup", true);
+            request.getSession().setAttribute("registeredEmail", email);
             response.sendRedirect("login.jsp");
         } else {
             request.setAttribute("error", "Đăng ký thất bại! Email hoặc số điện thoại đã tồn tại.");
