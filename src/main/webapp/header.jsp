@@ -79,7 +79,7 @@
                 <a><i class="fa-regular fa-user"></i></a>
                 <ul class="user">
                     <% if (session.getAttribute("account") != null) { %>
-                    <li><a href="${pageContext.request.contextPath}/account.jsp">Tài khoản</a></li>
+                    <li><a href="${pageContext.request.contextPath}/account">Tài khoản</a></li>
                     <li><a href="${pageContext.request.contextPath}/Logout">Đăng xuất</a></li>
                     <% } else { %>
                     <li><a href="${pageContext.request.contextPath}/login.jsp">Đăng nhập</a></li>
