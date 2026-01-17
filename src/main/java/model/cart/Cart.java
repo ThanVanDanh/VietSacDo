@@ -9,55 +9,61 @@ import java.util.List;
 import java.util.Map;
 
 public class Cart {
-    Map<Integer, CartItem> items;
+    Map<String, CartItem> cartItemMap;
     private User user;
-    public Cart() { items = new HashMap<>(); }
-    public void addItem(Product product, int quantity,double price) {
-        if (quantity <= 0)
-            quantity = 1;
-        CartItem item = items.get(product.getId());
+    public Cart() { cartItemMap = new HashMap<>(); }
+    public void addItem(Product product, int quantity, double price, String sku, String size) {
+        if (quantity <= 0) quantity = 1;
+        if (sku == null) sku = "";
+        if (size == null) size = "";
+
+        // Key duy nhất vẫn là ProductID + SKU
+        String key = product.getId() + "-" + sku;
+
+        CartItem item = cartItemMap.get(key);
         if (item != null) {
             item.upQuantity(quantity);
         } else {
-            item = new CartItem(quantity, product, price);
-            items.put(product.getId(), item);
+            cartItemMap.put(key, new CartItem(quantity, product, price, sku, size));
         }
     }
-    public void updateQuantity(int productId, int quantity) {
-        CartItem item = items.get(productId);
+    public void updateQuantity(int productId, String sku, int quantity) {
+        if (sku == null) sku = "";
+        String key = productId + "-" + sku;
+
+        CartItem item = cartItemMap.get(key);
         if (item != null) {
-            if (quantity <= 0) {
-                items.remove(productId);
-            } else {
-                item.setQuantity(quantity);
-            }
+            if (quantity <= 0) cartItemMap.remove(key);
+            else item.setQuantity(quantity);
         }
     }
     public double getTotalPrice() {
         double total = 0;
-        for (CartItem item : items.values()) {
+        for (CartItem item : cartItemMap.values()) {
             total += item.getTotalPrice();
         }
         return total;
     }
     public int getTotalQuantity() {
         int total = 0;
-        for (CartItem item : items.values()) {
+        for (CartItem item : cartItemMap.values()) {
             total += item.getQuantity();
         }
         return total;
     }
     public void clear() {
-        items.clear();
+        cartItemMap.clear();
     }
-    public void remove(int productId) {
-        items.remove(productId);
+    public void remove(int productId, String sku) {
+        if (sku == null) sku = "";
+        String key = productId + "-" + sku;
+        cartItemMap.remove(key);
     }
-    public CartItem get(int id) {
-        return items.get(id);
+    public CartItem get(String key) {
+        return cartItemMap.get(key);
     }
     public List<CartItem> getItems() {
-        return new ArrayList<>(items.values());
+        return new ArrayList<>(cartItemMap.values());
     }
     public User getUser() {
         return user;
