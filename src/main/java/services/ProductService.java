@@ -103,6 +103,14 @@ public class ProductService {
     public Product getProduct(int id) {
         return productDao.getProduct(id);
     }
+    public double getPriceById(int productId) {
+        List<ProductVariant> variants = variantDao.getByProductId(productId);
+
+        if (variants != null && !variants.isEmpty()) {
+            return variants.get(0).getCurrentPrice();
+        }
+        return 0.0;
+    }
 
 
 //    // Xóa danh sách ảnh đã upload (dùng publicId)
