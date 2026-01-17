@@ -4,9 +4,21 @@ document.addEventListener("DOMContentLoaded", () => {
     if (modal) {
         const customerViewBtn = document.querySelectorAll('.customer-table .btn-view');
         const  customerClose = modal.querySelector('.close-modal');
-        //Xem
+       //Xem
         customerViewBtn.forEach(nut => {
             nut.addEventListener('click', () => {
+                document.getElementById('modal-fullName').textContent = nut.getAttribute('data-fullname') || '';
+                document.getElementById('modal-email').textContent = nut.getAttribute('data-email') || '';
+                document.getElementById('modal-phone').textContent = nut.getAttribute('data-phone') || '';
+                document.getElementById('modal-address').textContent = nut.getAttribute('data-address') || '';
+                document.getElementById('modal-createdAt').textContent = nut.getAttribute('data-createdat') || '';
+                // Trạng thái tài khoản
+                const status = nut.getAttribute('data-status');
+                let statusText = '';
+                if (status === 'active') statusText = 'Hoạt động';
+                else if (status === 'banned') statusText = 'Bị khóa';
+                else statusText = 'Chưa kích hoạt';
+                document.getElementById('modal-status').textContent = statusText;
                 modal.style.display = 'flex';
             });
         });
