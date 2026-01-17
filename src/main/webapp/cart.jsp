@@ -147,8 +147,12 @@
                                 <ul class="cart-items-list-sp">
                                     <c:forEach var="item" items="${sessionScope.cart.items}">
                                         <li class="cart-item-sp">
-                                            // Trong cart.js
-                                            <a href="CartController?action=remove&id=${item.product.id}&sku=${item.sku}" class="remove-item">...
+                                            <c:url value="/cart" var="removeUrlCart">
+                                                <c:param name="action" value="remove"/>
+                                                <c:param name="id" value="${item.product.id}"/>
+                                                <c:param name="sku" value="${item.sku}"/>
+                                            </c:url>
+                                            <a href="${removeUrlCart}" class="remove-item" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
                                                 <i class="fa-solid fa-xmark"></i>
                                             </a>
 
@@ -166,7 +170,7 @@
                                                 </div>
 
                                                 <form action="cart" method="post" class="quatity-sp" style="display: flex; align-items: center;">
-                                                    <input type="hidden" name="acremove-itemtion" value="update">
+                                                    <input type="hidden" name="action" value="update">
                                                     <input type="hidden" name="id" value="${item.product.id}">
 
                                                     <button type="submit" name="quantity" value="${item.quantity - 1}" class="btn-minus"><i class="fa-solid fa-minus"></i></button>

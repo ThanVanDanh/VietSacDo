@@ -92,7 +92,7 @@
             </div>
 
             <div class="mini-cart-menu">
-                <a href="${pageContext.request.contextPath}/giohang.jsp" title="Giỏ hàng">
+                <a href="${pageContext.request.contextPath}/cart" title="Giỏ hàng">
                     <i class="fa-solid fa-cart-shopping"></i>
                     <span class="mini-count_item count_item_pr">
                         ${sessionScope.cart == null ? 0 : sessionScope.cart.totalQuantity}
@@ -133,8 +133,14 @@
                                             <span class="mini-quantity">x${item.quantity}</span>
                                         </div>
 
-                                        <a href="${pageContext.request.contextPath}/CartController?action=remove&id=${item.product.id}&sku=${item.sku}"
-                                           class="remove-item" onclick="return confirm('Xóa sản phẩm này?')">
+                                        <c:url value="/cart" var="removeUrl">
+                                            <c:param name="action" value="remove"/>
+                                            <c:param name="id" value="${item.product.id}"/>
+                                            <c:param name="sku" value="${item.sku}"/>
+                                        </c:url>
+                                        <a href="${removeUrl}"
+                                           class="remove-item"
+                                           onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
                                             <i class="fa-solid fa-xmark"></i>
                                         </a>
                                     </li>
@@ -150,7 +156,7 @@
                                     </strong>
                                 </span>
                             </div>
-                            <a href="${pageContext.request.contextPath}/giohang.jsp" class="btn-pay">Tiến hành thanh toán</a>
+                            <a href="${pageContext.request.contextPath}/cart" class="btn-pay">Tiến hành thanh toán</a>
                         </div>
                     </div>
                 </div>
@@ -182,7 +188,7 @@
             </div>
 
             <div class="mini-cart-menu">
-                <a href="${pageContext.request.contextPath}/giohang.jsp" title="Giỏ hàng">
+                <a href="${pageContext.request.contextPath}/cart" title="Giỏ hàng">
                     <i class="fa-solid fa-cart-shopping"></i>
                     <span class="mini-count_item count_item_pr">
                         ${sessionScope.cart == null ? 0 : sessionScope.cart.totalQuantity}
@@ -223,7 +229,12 @@
                                             <span class="mini-quantity">x${item.quantity}</span>
                                         </div>
 
-                                        <a href="${pageContext.request.contextPath}/CartController?action=remove&id=${item.product.id}&sku=${item.sku}"
+                                        <c:url value="/cart" var="removeUrlOverlay">
+                                            <c:param name="action" value="remove"/>
+                                            <c:param name="id" value="${item.product.id}"/>
+                                            <c:param name="sku" value="${item.sku}"/>
+                                        </c:url>
+                                        <a href="${removeUrlOverlay}"
                                            class="remove-item" onclick="return confirm('Xóa sản phẩm này?')">
                                             <i class="fa-solid fa-xmark"></i>
                                         </a>
@@ -240,7 +251,7 @@
                                     </strong>
                                 </span>
                             </div>
-                            <a href="${pageContext.request.contextPath}/giohang.jsp" class="btn-pay">Tiến hành thanh toán</a>
+                            <a href="${pageContext.request.contextPath}/cảp" class="btn-pay">Tiến hành thanh toán</a>
                         </div>
                     </div>
                 </div>

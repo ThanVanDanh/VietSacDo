@@ -30,6 +30,9 @@ public class CartController extends HttpServlet {
 
         @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            System.out.println("DEBUG: Đã vào doGet. Action = " + request.getParameter("action") + " | SKU = " + request.getParameter("sku"));
             String action = request.getParameter("action");
 
             if (action != null && action.equals("remove")) {
@@ -84,7 +87,7 @@ public class CartController extends HttpServlet {
             }
 
             String referer = request.getHeader("Referer");
-            response.sendRedirect(referer != null ? referer : "giohang.jsp");
+            response.sendRedirect(referer != null ? referer : "cart");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,11 +113,18 @@ public class CartController extends HttpServlet {
             response.sendRedirect("cart.jsp");
         }
     }
-
     private void removeFromCart(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             String idParam = request.getParameter("id");
             String sku = request.getParameter("sku");
+
+            // --- THÊM LOG DEBUG TẠI ĐÂY ---
+            System.out.println("=== DEBUG CartController.removeFromCart() ===");
+            System.out.println("Raw ID: " + idParam);
+            System.out.println("Raw SKU: [" + sku + "]");
+            // ------------------------------
+
+            if (sku == null) sku = "";
 
             if (idParam != null) {
                 int productId = Integer.parseInt(idParam);
@@ -122,10 +132,20 @@ public class CartController extends HttpServlet {
                 Cart cart = (Cart) session.getAttribute("cart");
 
                 if (cart != null) {
+                    // In ra danh sách Key hiện có để so sánh
+                    System.out.println("Current Keys in Cart: " + cart.getItems().stream().map(i -> i.getProduct().getId() + "-" + i.getSku()).toList());
+
                     cart.remove(productId, sku);
+                    session.setAttribute("cart", cart);
+                    System.out.println(" Called cart.remove()");
+                } else {
+                    System.out.println(" Cart is NULL in Session");
                 }
             }
-            response.sendRedirect("cart.jsp");
+
+            String referer = request.getHeader("Referer");
+            response.sendRedirect(referer != null ? referer : "cart.jsp");
+
         } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect("cart.jsp");
