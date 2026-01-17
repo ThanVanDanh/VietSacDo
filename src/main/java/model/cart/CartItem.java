@@ -8,11 +8,22 @@ public class CartItem implements Serializable {
     private int quantity;
     private Product product;
     private double price;
+    private String sku;
+    private String size;
 
-    public CartItem(int quantity, Product product, double price) {
+    public CartItem(int quantity, Product product, double price,String sku, String size) {
         this.quantity = quantity;
         this.product = product;
         this.price = price;
+        this.sku = sku;
+        this.size = size;
+    }
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
     }
 
     public int getQuantity() {
@@ -43,6 +54,13 @@ public class CartItem implements Serializable {
     }
     public double getTotalPrice() {
         return this.quantity * this.price;
+    }
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 
 

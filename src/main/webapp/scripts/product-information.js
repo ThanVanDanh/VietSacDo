@@ -1,43 +1,59 @@
 let MAX_QTY = 1;
 function updateVariant(element, sizeName) {
-    // Active size
+    // 1. Active size button
     document.querySelectorAll('.size-btn')
         .forEach(btn => btn.classList.remove('active'));
     element.classList.add('active');
 
     const sizeDisplay = document.getElementById('selected-size');
     if (sizeDisplay) sizeDisplay.innerText = sizeName;
+    const sizeInput = document.getElementById('selectedVariantSize');
+    if (sizeInput) {
+        sizeInput.value = sizeName;
+    }
 
-    //price
     const price = element.getAttribute('data-price');
     const priceDisplay = document.querySelector('.current-price');
     if (priceDisplay && price) {
-        priceDisplay.innerText =
-            parseFloat(price).toLocaleString('vi-VN') + '₫';
+        priceDisplay.innerText = parseFloat(price).toLocaleString('vi-VN') + '₫';
     }
-    // sku
+
+    const priceInput = document.getElementById('selectedVariantPrice');
+    if (priceInput && price) {
+        priceInput.value = price;
+    }
+
     const sku = element.getAttribute('data-sku');
     const skuDisplay = document.getElementById('sku-value');
     if (skuDisplay && sku) {
         skuDisplay.innerText = sku;
     }
-    // color
+
+    const skuInput = document.getElementById('selectedVariantSku');
+    if (skuInput && sku) {
+        skuInput.value = sku;
+    }
+    // ----------------------------------------------------------------
+
+    // 4. Cập nhật Color
     const color = element.dataset.color;
     const colorEl = document.getElementById('selected-color');
     if (colorEl && color) colorEl.innerText = color;
+
+    // 5. Cập nhật Stock
     MAX_QTY = parseInt(element.dataset.stock);
     if (isNaN(MAX_QTY)) MAX_QTY = 0;
     updateStockUI(MAX_QTY);
 
-    // reset quantity nếu vượt stock
+    // Reset quantity nếu vượt stock
     const qtyInput = document.getElementById('product-quantity');
     if (MAX_QTY === 0) {
         qtyInput.value = 1;
     } else if (parseInt(qtyInput.value) > MAX_QTY) {
         qtyInput.value = MAX_QTY;
     }
-
 }
+
 function updateStockUI(stock) {
     const addToCartBtn = document.getElementById('them-vao-gio-hang');
     const buyNowBtn = document.getElementById('mua-ngay');
@@ -46,20 +62,16 @@ function updateStockUI(stock) {
     const quality = document.getElementById('quality');
 
     if (stock > 0) {
-
         addToCartBtn.style.display = 'inline-block';
         buyNowBtn.style.display = 'inline-block';
         outOfStockBtn.style.display = 'none';
         quality.style.display ='inline-block';
-
-        qtyInput.value = 1;
+        // Không reset về 1 ở đây để tránh UX xấu khi user đang chọn số lượng
     } else {
-
         addToCartBtn.style.display = 'none';
         buyNowBtn.style.display = 'none';
         outOfStockBtn.style.display = 'inline-block';
         quality.style.display ='none';
-
         qtyInput.value = 1;
     }
 }
@@ -121,17 +133,16 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // --- XỬ LÝ POPUP GIỎ HÀNG ---
     const btnAdd = document.getElementById('them-vao-gio-hang');
     const popup = document.getElementById('success-add-shopping');
     const btnClose = document.getElementById('close-success-popup');
 
-    if (btnAdd && popup) {
-        btnAdd.onclick = (e) => {
-            e.preventDefault();
-            popup.classList.add('active');
-        };
-    }
+    // if (btnAdd && popup) {
+    //     btnAdd.onclick = (e) => {
+    //         e.preventDefault();
+    //         popup.classList.add('active');
+    //     };
+    // }
 
     if (btnClose) btnClose.onclick = () => popup.classList.remove('active');
 
