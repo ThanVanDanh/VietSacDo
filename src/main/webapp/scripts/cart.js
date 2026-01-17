@@ -76,8 +76,8 @@ function addToCart(productId) {
                                 <span class="mini-item-price">${formatCurrency(item.price)}</span>
                                 <span class="mini-quantity">x${item.quantity}</span>
                             </div>
-                            <a href="cart?action=remove&id=${item.product.id}&sku=${item.sku}" class="remove-item" onclick="return confirm('Xóa sản phẩm này?')"><i class="fa-solid fa-xmark"></i></a>
-                        </li>`;
+                            <a href="${removeUrl}" class="remove-item" onclick="return confirm('Xóa sản phẩm này?')"><i class="fa-solid fa-xmark"></i> </a>
+                       </li>`;
                     });
                 }
 

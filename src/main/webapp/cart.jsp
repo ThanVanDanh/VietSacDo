@@ -147,12 +147,8 @@
                                 <ul class="cart-items-list-sp">
                                     <c:forEach var="item" items="${sessionScope.cart.items}">
                                         <li class="cart-item-sp">
-                                            <c:url value="/cart" var="removeUrlCart">
-                                                <c:param name="action" value="remove"/>
-                                                <c:param name="id" value="${item.product.id}"/>
-                                                <c:param name="sku" value="${item.sku}"/>
-                                            </c:url>
-                                            <a href="${removeUrlCart}" class="remove-item" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
+                                            <a href="cart?action=remove&id=${item.product.id}&sku=${item.sku}"
+                                               class="remove-item" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
                                                 <i class="fa-solid fa-xmark"></i>
                                             </a>
 
