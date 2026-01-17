@@ -10,6 +10,10 @@
     <link rel="stylesheet" href="../style/customers.css">
     <link rel="stylesheet" href="../style/charts.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // App context path for AJAX endpoints (set by server)
+        var APP_CTX = '${pageContext.request.contextPath}';
+    </script>
     <script src="../scripts/admin.js"></script>
 </head>
 <body>
@@ -114,21 +118,40 @@
                             <span class="status-badge status-active" style="${user.status eq 'active' ? '' : 'display:none;'}">Hoạt động</span>
                             <span class="status-badge status-blocked" style="${user.status eq 'banned' ? '' : 'display:none;'}">Bị khóa</span>
                             <span class="status-badge status-inactive" style="${user.status eq 'inactive' ? '' : 'display:none;'}">Chưa kích hoạt</span>
-                        </td>   
+                        </td>
                         <td class="table-actions">
-                            <button 
-                                class="btn-action btn-view" 
-                                title="Xem"
-                                data-fullname="${user.fullName}"
-                                data-email="${user.email}"
-                                data-phone="${user.phone}"
-                                data-address="${user.authProvider}"
-                                data-createdat="${user.createdAt}"
-                                data-status="${user.status}"
-                            ><i class="fas fa-eye"></i></button>
-                            <button class="btn-action btn-block" title="Khóa"><i class="fas fa-ban"></i></button>
-                            <button class="btn-action btn-unlock" title="Mở khóa" style="display: none;"><i class="fas fa-check-circle"></i></button>
-                            <button class="btn-action btn-delete" title="Xóa"><i class="fas fa-trash-alt"></i></button>
+                            <button class="btn-action btn-view"
+                                    title="Xem"
+                                    data-fullname="${user.fullName}"
+                                    data-email="${user.email}"
+                                    data-phone="${user.phone}"
+                                    data-address="${user.authProvider}"
+                                    data-createdat="${user.createdAt}"
+                                    data-status="${user.status}">
+                                <i class="fas fa-eye"></i>
+                            </button>
+
+                            <button class="btn-action btn-block"
+                                    title="Khóa"
+                                    data-id="${user.id}"
+                                    data-name="${user.fullName}"
+                                    style="${user.status eq 'banned' ? 'display: none;' : ''}">
+                                <i class="fas fa-ban"></i>
+                            </button>
+
+                            <button class="btn-action btn-unlock"
+                                    title="Mở khóa"
+                                    data-id="${user.id}"
+                                    data-name="${user.fullName}"  style="${user.status eq 'banned' ? '' : 'display: none;'}">
+                                <i class="fas fa-check-circle"></i>
+                            </button>
+
+                            <button class="btn-action btn-delete"
+                                    title="Xóa"
+                                    data-id="${user.id}"
+                                    data-name="${user.fullName}">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
                         </td>
                     </tr>
                 </c:forEach>
@@ -206,7 +229,7 @@
     <div class="modal-content">
         <span class="close-modal">&times;</span>
         <h2>Xác nhận xóa</h2>
-        <p>Bạn có chắc chắn muốn xóa khách hàng <strong id="customer-name-to-delete">Phùng Thị Minh Thư</strong> không?</p>
+        <p>Bạn có chắc chắn muốn xóa khách hàng <strong id="customer-name-to-delete">${user.fullName}</strong> không?</p>
         <p>Hành động này không thể hoàn tác.</p>
 
         <div class="confirm-actions">
@@ -215,16 +238,18 @@
         </div>
     </div>
 </div>
-<div id="block-confirm-modal" class="modal" style="display: none;">
+<div id="status-confirm-modal" class="modal" style="display: none;">
     <div class="modal-content">
         <span class="close-modal">&times;</span>
-        <h2>Xác nhận khóa tài khoản</h2>
-        <p>Bạn có chắc chắn muốn <strong>khóa</strong> khách hàng
-            <strong id="customer-name-to-block">Phùng Thị Minh Thư</strong> không?</p>
+
+        <h2 id="modal-status-title">Xác nhận thay đổi</h2>
+
+        <p>Bạn có chắc chắn muốn <strong id="modal-action-text" style="color: #d9534f;">...</strong>
+            tài khoản của khách hàng <strong id="modal-customer-name">...</strong> không?</p>
 
         <div class="confirm-actions">
-            <button id="btn-cancel-block" class="btn-secondary">Hủy bỏ</button>
-            <button id="btn-confirm-block" class="btn-danger">Xác nhận Khóa</button>
+            <button id="btn-cancel-status" class="btn-secondary">Hủy bỏ</button>
+            <button id="btn-confirm-status" class="btn-danger">Xác nhận</button>
         </div>
     </div>
 </div>

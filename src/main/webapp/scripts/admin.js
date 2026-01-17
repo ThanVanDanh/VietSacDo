@@ -86,6 +86,8 @@ document.addEventListener("DOMContentLoaded", () => {
         deleteModalBtn.forEach(button => {
             button.addEventListener('click', function() {
                 rowToDelete = this.closest('tr');
+                const userName = this.getAttribute('data-name');
+                document.getElementById('customer-name-to-delete').textContent = userName;
                 deleteModal.style.display = 'flex';
             });
         });
@@ -100,20 +102,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
         confirmDeleteBtn.addEventListener('click', () => {
             if (rowToDelete) {
-                // Hiệu ứng mờ dần (Optional - cho mượt)
-                rowToDelete.style.transition = "opacity 0.5s";
-                rowToDelete.style.opacity = "0";
+                // Lấy ID từ nút delete trong dòng đang chọn
+                const btn = rowToDelete.querySelector('.btn-delete');
+                const userId = btn.getAttribute('data-id');
 
-                setTimeout(() => {
-                    // Xóa dòng khỏi DOM (Giao diện)
-                    rowToDelete.remove();
-
-                    const tbody = document.querySelector('.table-general tbody');
-                    checkEmptyTable(tbody);
-                    // Đóng modal
-                    deleteModal.style.display = 'none';
-                    rowToDelete = null;
-                }, 100);
+                // GỌI SERVER ĐỂ XÓA
+                fetch('delete-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `id=${userId}`
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // Nếu Server xóa thành công thì mới xóa trên giao diện
+                            rowToDelete.style.transition = "opacity 0.5s";
+                            rowToDelete.style.opacity = "0";
+                            setTimeout(() => {
+                                rowToDelete.remove();
+                                const tbody = document.querySelector('.table-general tbody');
+                                checkEmptyTable(tbody);
+                                deleteModal.style.display = 'none';
+                                rowToDelete = null;
+                            }, 100);
+                        } else {
+                            alert("Không thể xóa khách hàng này (có thể do dính líu đến đơn hàng cũ).");
+                            deleteModal.style.display = 'none';
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert("Lỗi kết nối server.");
+                    });
             }
         });
     }
@@ -142,57 +161,77 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Xác nhận block
-    const blockModal = document.getElementById('block-confirm-modal');
-    if (blockModal) {
-        const blockButtons = document.querySelectorAll('.btn-block');
-        const unlockButtons = document.querySelectorAll('.btn-unlock'); // Thêm dòng này để bắt nút Mở khóa
+    const statusModal = document.getElementById('status-confirm-modal');
+    if (statusModal) {
+        const actionButtons = document.querySelectorAll('.btn-block, .btn-unlock');
+        const confirmBtn = document.getElementById('btn-confirm-status');
+        const cancelBtn = document.getElementById('btn-cancel-status');
+        const closeModal = statusModal.querySelector('.close-modal');
 
-        const blockClose = blockModal.querySelector('.close-modal');
-        const cancelBlockBtn = document.getElementById('btn-cancel-block');
-        const confirmBlockBtn = document.getElementById('btn-confirm-block');
-        const nameSpan = document.getElementById('customer-name-to-block'); // Chỗ hiển thị tên trong modal
+        const modalTitle = document.getElementById('modal-status-title');
+        const modalActionText = document.getElementById('modal-action-text');
+        const modalCusName = document.getElementById('modal-customer-name');
 
-        let rowAction = null;
+        let targetRow = null;
+        let targetId = null;
+        let targetAction = null;
 
-        // 2. Xử lý nút KHÓA
-        blockButtons.forEach(btn => {
+        actionButtons.forEach(btn => {
             btn.addEventListener('click', function() {
-                rowAction = this.closest('tr');
-                blockModal.style.display = 'flex';
+                targetRow = this.closest('tr');
+                targetId = this.getAttribute('data-id');
+                const name = this.getAttribute('data-name'); // Nhớ thêm data-name vào cả nút unlock ở JSP
+
+                // Kiểm tra xem đang bấm nút nào
+                if (this.classList.contains('btn-block')) {
+                    // Logic cho KHÓA
+                    targetAction = 'block';
+                    modalTitle.textContent = "Xác nhận Khóa tài khoản";
+                    modalActionText.textContent = "KHÓA";
+                } else {
+                    // Logic cho MỞ KHÓA
+                    targetAction = 'unlock';
+                    modalTitle.textContent = "Xác nhận Mở khóa";
+                    modalActionText.textContent = "MỞ KHÓA";
+                }
+
+                modalCusName.textContent = name;
+                statusModal.style.display = 'flex';
             });
         });
 
-        // 3. Xử lý nút XÁC NHẬN
-        confirmBlockBtn.addEventListener('click', () => {
-            if (rowAction) {
-                toggleLockStatus(rowAction, 'blocked');
-                blockModal.style.display = 'none';
-                rowAction = null;
+        confirmBtn.addEventListener('click', () => {
+            if (targetId && targetAction) {
+                // Gọi API chung
+                fetch('block-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `id=${targetId}&action=${targetAction}`
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // Cập nhật giao diện dựa trên hành động vừa làm
+                            const newStatus = (targetAction === 'block') ? 'blocked' : 'active';
+                            toggleLockStatus(targetRow, newStatus);
+
+                            statusModal.style.display = 'none';
+                        } else {
+                            alert("Có lỗi xảy ra, vui lòng thử lại!");
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert("Lỗi kết nối server.");
+                    });
             }
         });
 
-        // 4. Xử lý nút MỞ KHÓA (Click là mở luôn, ko cần modal)
-        unlockButtons.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const row = this.closest('tr');
-                toggleLockStatus(row, 'active');
-            });
-        });
-
-        blockClose.addEventListener('click', () => {
-            blockModal.style.display = 'none';
-            rowAction = null;
-        });
-        cancelBlockBtn.addEventListener('click', () => {
-            blockModal.style.display = 'none';
-            rowAction = null;
-        });
-        // Thêm: Click ra ngoài để đóng
+        // 3. Đóng Modal
+        const closeFunc = () => { statusModal.style.display = 'none'; };
+        closeModal.addEventListener('click', closeFunc);
+        cancelBtn.addEventListener('click', closeFunc);
         window.addEventListener('click', (e) => {
-            if (e.target === blockModal) {
-                blockModal.style.display = 'none';
-                rowAction = null;
-            }
+            if (e.target === statusModal) closeFunc();
         });
 
         // --- HÀM PHỤ TRỢ: Đổi trạng thái hiển thị (Ẩn/Hiện) ---
@@ -204,11 +243,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (status === 'blocked') {
                 // Nếu muốn KHÓA:
-                if(badgeActive) badgeActive.style.display = 'none';         // Ẩn Hoạt động
-                if(badgeBlocked) badgeBlocked.style.display = 'inline-block'; // Hiện Bị khóa
+                if(badgeActive) badgeActive.style.display = 'none';
+                if(badgeBlocked) badgeBlocked.style.display = 'inline-block';
 
-                if(btnBlock) btnBlock.style.display = 'none';             // Ẩn nút Khóa
-                if(btnUnlock) btnUnlock.style.display = 'inline-block';   // Hiện nút Mở khóa
+                if(btnBlock) btnBlock.style.display = 'none';
+                if(btnUnlock) btnUnlock.style.display = 'inline-block';
             } else {
                 // Nếu muốn MỞ KHÓA (Active):
                 if(badgeActive) badgeActive.style.display = 'inline-block';
