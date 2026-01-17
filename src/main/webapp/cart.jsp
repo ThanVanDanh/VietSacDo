@@ -1,3 +1,4 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -109,91 +110,94 @@
                 <div class="header-cart-sp">
                     <h1>GIỎ HÀNG</h1>
                 </div>
-                <div id="empty-cart-message" style="display: none; text-align: center; padding: 50px 20px;">
-                    <img src="./image/empty_cart.png" alt="Giỏ hàng trống" style="width: 100px; margin-bottom: 20px; opacity: 0.5;">
-                    <h3>Giỏ hàng của bạn đang trống</h3>
-                    <p>Hãy dạo một vòng và chọn những món đồ ưng ý nhé!</p>
-                    <a href="all-product.jsp" class="btn-pay" style=" margin-top: 20px; text-decoration: none;">Tiếp tục mua sắm</a>
-                </div>
-                <div class="content-sp" id="cart-data-container">
-                    <div class="cart-content-sp">
-                        <div class="upsell-card-sp">
-                            <div class="progress-bar-sp">
-                                <div class="progress-sp" style="width: 100%; background-color: darkgreen;"></div>
-                                <span class="percent-sp">100%</span>
-                            </div>
-                            <p>🎉 Chúc mừng! Đơn hàng của bạn đã đủ điều kiện được Freeship!</p>
+                <c:choose>
+                    <c:when test="${empty sessionScope.cart or sessionScope.cart.totalQuantity == 0}">
+                        <div id="empty-cart-message" style="text-align: center; padding: 50px 20px;">
+                            <img src="./image/empty_cart.png" alt="Giỏ hàng trống" style="width: 100px; margin-bottom: 20px; opacity: 0.5;">
+                            <h3>Giỏ hàng của bạn đang trống</h3>
+                            <p>Hãy dạo một vòng và chọn những món đồ ưng ý nhé!</p>
+                            <a href="all-product.jsp" class="btn-pay" style="margin-top: 20px; text-decoration: none;">Tiếp tục mua sắm</a>
                         </div>
-                        <ul class="cart-items-list-sp">
-                            <li class="cart-item-sp">
-                                <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
-                                <img src="image/truyenthong1.png" alt="Áo dài truyền thống Quỳnh Hân">
-                                <div class="item-info-sp">
-                                    <a href="" class="item-name-sp">Áo dài truyền thống Quỳnh Hân</a>
-                                    <span class="item-meta-sp">Size A / Quỳnh Hân</span>
-                                </div>
-                                <div class="box-quantity-sp">
-                                    <div class="item-price-sp">
-                                        <span>711,000₫</span>
-                                    </div>
-                                    <div class="quatity-sp">
-                                        <button type="button" class="btn-minus"><i class="fa-solid fa-minus"></i></button>
-                                        <input type="text" value="1" class="quantity-input">
-                                        <button type="button" class="btn-plus"><i class="fa-solid fa-plus"></i></button>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="cart-item-sp">
-                                <div><button class="remove-item"><i class="fa-solid fa-xmark"></i></button></div>
+                    </c:when>
 
-                                <img src="image/truyenthong3.png" alt="Áo dài truyền thống Phúc Hương">
-                                <div class="item-info-sp">
-                                    <a href="" class="item-name-sp">Áo dài truyền thống Phúc Hương</a>
-                                    <span class="item-meta-sp">Size A / Phúc Hương</span>
-                                </div>
-                                <div class="box-quantity-sp">
-                                    <div class="item-price-sp">
-                                        <span>880,000₫</span>
+                    <c:otherwise>
+                        <div class="content-sp" id="cart-data-container">
+                            <div class="cart-content-sp">
+
+                                <div class="upsell-card-sp">
+                                    <c:set var="percent" value="${(sessionScope.cart.totalPrice / 1000000) * 100}" />
+                                    <c:if test="${percent > 100}"><c:set var="percent" value="100"/></c:if>
+
+                                    <div class="progress-bar-sp">
+                                        <div class="progress-sp" style="width: ${percent}%; background-color: darkgreen;"></div>
+                                        <span class="percent-sp">${Math.round(percent)}%</span>
                                     </div>
-                                    <div class="quatity-sp">
-                                        <button type="button" class="btn-minus"><i class="fa-solid fa-minus"></i></button>
-                                        <input type="text" value="1" class="quantity-input">
-                                        <button type="button" class="btn-plus"><i class="fa-solid fa-plus"></i></button>
-                                    </div>
+                                    <p>
+                                        <c:choose>
+                                            <c:when test="${sessionScope.cart.totalPrice >= 1000000}">
+                                                🎉 Chúc mừng! Đơn hàng của bạn đã đủ điều kiện được Freeship!
+                                            </c:when>
+                                            <c:otherwise>
+                                                Mua thêm <fmt:formatNumber value="${1000000 - sessionScope.cart.totalPrice}" type="currency"/> để được Freeship!
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </p>
                                 </div>
-                            </li>
-                            <li class="cart-item-sp">
-                                <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
-                                <img src="image/truyenthong4.png" alt="Áo dài truyền thống Quỳnh Châu">
-                                <div class="item-info-sp">
-                                    <a href="" class="item-name-sp">Áo dài truyền thống Quỳnh Châu</a>
-                                    <span class="item-meta-sp">Size A / Quỳnh Châu</span>
+
+                                <ul class="cart-items-list-sp">
+                                    <c:forEach var="item" items="${sessionScope.cart.items}">
+                                        <li class="cart-item-sp">
+                                            // Trong cart.js
+                                            <a href="CartController?action=remove&id=${item.product.id}&sku=${item.sku}" class="remove-item">...
+                                                <i class="fa-solid fa-xmark"></i>
+                                            </a>
+
+                                            <img src="${not empty item.product.images ? item.product.images[0].imageUrl : 'image/no-image.png'}"
+                                                 alt="${item.product.nameProduct}">
+
+                                            <div class="item-info-sp">
+                                                <a href="product-detail?id=${item.product.id}" class="item-name-sp">${item.product.nameProduct}</a>
+                                                <span class="item-meta-sp">Mã: ${item.product.productCode}</span>
+                                            </div>
+
+                                            <div class="box-quantity-sp">
+                                                <div class="item-price-sp">
+                                                    <span><fmt:formatNumber value="${item.price}" pattern="#,###"/>₫</span>
+                                                </div>
+
+                                                <form action="cart" method="post" class="quatity-sp" style="display: flex; align-items: center;">
+                                                    <input type="hidden" name="acremove-itemtion" value="update">
+                                                    <input type="hidden" name="id" value="${item.product.id}">
+
+                                                    <button type="submit" name="quantity" value="${item.quantity - 1}" class="btn-minus"><i class="fa-solid fa-minus"></i></button>
+
+                                                    <input type="text" value="${item.quantity}" class="quantity-input" readonly>
+
+                                                    <button type="submit" name="quantity" value="${item.quantity + 1}" class="btn-plus"><i class="fa-solid fa-plus"></i></button>
+                                                </form>
+                                            </div>
+                                        </li>
+                                    </c:forEach>
+                                </ul>
+
+                                <div class="cart-note-sp">
+                                    <label>Ghi chú đơn hàng</label>
+                                    <textarea rows="2" name="note" placeholder="Ghi chú cho người bán..."></textarea>
                                 </div>
-                                <div class="box-quantity-sp">
-                                    <div class="item-price-sp">
-                                        <span>790,000₫</span>
-                                    </div>
-                                    <div class="quatity-sp">
-                                        <button type="button" class="btn-minus"><i class="fa-solid fa-minus"></i></button>
-                                        <input type="text" value="1" class="quantity-input">
-                                        <button type="button" class="btn-plus"><i class="fa-solid fa-plus"></i></button>
-                                    </div>
+                            </div>
+
+                            <div class="cart-price-sp" id="cart-summary">
+                                <div class="total-sp">
+                                    <h3>Tổng cộng</h3>
+                                    <span><fmt:formatNumber value="${sessionScope.cart.totalPrice}" pattern="#,###"/>đ</span>
                                 </div>
-                            </li>
-                        </ul>
-                        <div class="cart-note-sp">
-                            <label>Ghi chú đơn hàng</label>
-                            <textarea rows="2"></textarea>
+                                <div>
+                                    <button><span><a href="checkout.jsp" style="color: white; text-decoration: none;">Thanh toán</a></span></button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="cart-price-sp" id="cart-summary">
-                        <div class="total-sp">
-                            <h3>Tổng cộng</h3>
-                            <span>2,281,000đ</span>
-                        </div>
-                        <div><button ><span><a href="thanhtoan.jsp">Thanh toán</a></span></button></div>
-                    </div>
-                </div>
+                    </c:otherwise>
+                </c:choose>
             </form>
         </div>
     </section>
@@ -429,5 +433,6 @@
 <button onclick="scrollToTop()" id="backToTopBtn" title="Trở về đầu trang">
     <i class="fas fa-chevron-up"></i>
 </button>
+
 </body>
 </html>
