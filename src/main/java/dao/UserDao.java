@@ -1,8 +1,8 @@
 package dao;
 
+import java.util.List;
+
 import model.user.User;
-import org.jdbi.v3.core.Handle;
-import java.util.Optional;
 
 public class UserDao extends BaseDao {
     public User findByEmailOrPhone(String key) {
@@ -48,9 +48,41 @@ public class UserDao extends BaseDao {
     }
     public boolean activateUser(String token) {
         return get().withHandle(handle ->
-                handle.createUpdate("UPDATE Users SET account_status = 'ACTIVE', verify_token = NULL WHERE verify_token = :token")
+                handle.createUpdate("UPDATE Users SET account_status = 'active', verify_token = NULL WHERE verify_token = :token")
                         .bind("token", token)
                         .execute() > 0
+        );
+    }
+    public List<User> findAll() {
+        return get().withHandle(handle ->
+                handle.createQuery("SELECT * FROM Users")
+                        .mapToBean(User.class)
+                        .list()
+        );
+    }
+    public void updateRole(int userId, String role) {
+        get().useHandle(handle ->
+                handle.createUpdate("UPDATE Users SET role_user = :role WHERE id = :id")
+                        .bind("role", role)
+                        .bind("id", userId)
+                        .execute()
+         );
+    }
+        // Đếm tổng số khách hàng
+    public int countAll() {
+        return get().withHandle(handle ->
+            handle.createQuery("SELECT COUNT(*) FROM Users")
+                .mapTo(int.class)
+                .one()
+        );
+    }
+
+    // Đếm số khách mới trong tuần
+    public int countNewThisWeek() {
+        return get().withHandle(handle ->
+            handle.createQuery("SELECT COUNT(*) FROM Users WHERE YEARWEEK(created_at, 1) = YEARWEEK(CURDATE(), 1)")
+                .mapTo(int.class)
+                .one()
         );
     }
 }
