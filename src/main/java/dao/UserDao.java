@@ -61,12 +61,12 @@ public class UserDao extends BaseDao {
         );
     }
     public void updateRole(int userId, String role) {
-        get().useHandle(handle ->
-                handle.createUpdate("UPDATE Users SET role_user = :role WHERE id = :id")
-                        .bind("role", role)
-                        .bind("id", userId)
-                        .execute()
-         );
+        get().useHandle(handle -> {
+            handle.createUpdate("UPDATE Users SET role_user = :role WHERE id = :id")
+                .bind("role", role)
+                .bind("id", userId)
+                .execute();
+         });
     }
         // Đếm tổng số khách hàng
     public int countAll() {
@@ -83,6 +83,23 @@ public class UserDao extends BaseDao {
             handle.createQuery("SELECT COUNT(*) FROM Users WHERE YEARWEEK(created_at, 1) = YEARWEEK(CURDATE(), 1)")
                 .mapTo(int.class)
                 .one()
+        );
+    }
+
+    public boolean updateStatus(int userId, String status) {
+        return get().withHandle(handle -> {
+            return handle.createUpdate("UPDATE Users SET account_status = :status WHERE id = :id")
+                .bind("status", status)
+                .bind("id", userId)
+                .execute() > 0;
+        });
+    }
+
+    public boolean delete(int userId) {
+        return get().withHandle(handle ->
+                handle.createUpdate("DELETE FROM Users WHERE id = :id")
+                        .bind("id", userId)
+                        .execute() > 0
         );
     }
 }
