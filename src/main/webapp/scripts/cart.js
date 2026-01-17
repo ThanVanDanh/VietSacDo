@@ -57,8 +57,7 @@ function addToCart(productId) {
                         let itemSku = item.sku || "";
                         let itemSize = item.size || "";
 
-                        let removeUrl = `CartController?action=remove&id=${product.id}&sku=${encodeURIComponent(itemSku)}`;
-
+                        let removeUrl = `cart?action=remove&id=${product.id}&sku=${encodeURIComponent(itemSku)}`;
                         listHtml += `
                         <li class="item-cart-row">
                             <div class="img-container">
@@ -77,9 +76,7 @@ function addToCart(productId) {
                                 <span class="mini-item-price">${formatCurrency(item.price)}</span>
                                 <span class="mini-quantity">x${item.quantity}</span>
                             </div>
-                            <a href="${removeUrl}" class="remove-item" onclick="return confirm('Xóa sản phẩm này?')">
-                                <i class="fa-solid fa-xmark"></i>
-                            </a>
+                            <a href="cart?action=remove&id=${item.product.id}&sku=${item.sku}" class="remove-item" onclick="return confirm('Xóa sản phẩm này?')"><i class="fa-solid fa-xmark"></i></a>
                         </li>`;
                     });
                 }

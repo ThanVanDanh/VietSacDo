@@ -16,9 +16,19 @@ public class Cart {
         if (quantity <= 0) quantity = 1;
         if (sku == null) sku = "";
         if (size == null) size = "";
+        
+        // Trim khoảng trắng
+        sku = sku.trim();
+        size = size.trim();
 
         // Key duy nhất vẫn là ProductID + SKU
         String key = product.getId() + "-" + sku;
+
+        System.out.println("=== DEBUG Cart.addItem() ===");
+        System.out.println("Product ID: " + product.getId());
+        System.out.println("SKU: [" + sku + "]");
+        System.out.println("Size: [" + size + "]");
+        System.out.println("Key: [" + key + "]");
 
         CartItem item = cartItemMap.get(key);
         if (item != null) {
@@ -55,9 +65,22 @@ public class Cart {
         cartItemMap.clear();
     }
     public void remove(int productId, String sku) {
+
         if (sku == null) sku = "";
-        String key = productId + "-" + sku;
-        cartItemMap.remove(key);
+        sku = sku.trim();
+        String keyToRemove = productId + "-" + sku;
+
+        System.out.println("=== DEBUG Cart.remove() ===");
+        System.out.println("Trying to remove Key: [" + keyToRemove + "]");
+        boolean exists = cartItemMap.containsKey(keyToRemove);
+        System.out.println("Key exists in map? " + exists);
+
+        if (cartItemMap.containsKey(keyToRemove)) {
+            cartItemMap.remove(keyToRemove);
+            System.out.println("Successfully removed!");
+        } else {
+            System.out.println("Key NOT FOUND in cart!");
+        }
     }
     public CartItem get(String key) {
         return cartItemMap.get(key);
