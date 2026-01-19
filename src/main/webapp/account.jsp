@@ -96,7 +96,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="index.jsp">Trang Chủ</a></li>
-           <li class="breadcrumb-item active" aria-current="page">Tài khoản</li>
+            <li class="breadcrumb-item active" aria-current="page">Tài khoản</li>
         </ol>
     </nav>
 </div>
@@ -206,48 +206,48 @@
         <button class="modal-close" id="close-add-modal">&times;</button>
         <h4>THÊM ĐỊA CHỈ MỚI</h4>
         <form method="POST" action="add-address">
-                <div class="form-row">
-                    <div class="form-group half-width">
-                        <label for="add-ho">Họ</label>
-                        <input type="text" id="add-ho" name="ho" required>
-                    </div>
-                    <div class="form-group half-width">
-                        <label for="add-ten">Tên</label>
-                        <input type="text" id="add-ten" name="ten" required>
-                    </div>
+            <div class="form-row">
+                <div class="form-group half-width">
+                    <label for="add-ho">Họ</label>
+                    <input type="text" id="add-ho" name="ho" required>
                 </div>
-                <div class="form-group">
-                    <label for="add-sdt">Số điện thoại</label>
-                    <input type="text" id="add-sdt" name="sdt" required>
+                <div class="form-group half-width">
+                    <label for="add-ten">Tên</label>
+                    <input type="text" id="add-ten" name="ten" required>
                 </div>
-                <div class="form-group">
-                    <label for="add-diachi">Địa chỉ</label>
-                    <input type="text" id="add-diachi" name="diachi" required>
+            </div>
+            <div class="form-group">
+                <label for="add-sdt">Số điện thoại</label>
+                <input type="text" id="add-sdt" name="sdt" required>
+            </div>
+            <div class="form-group">
+                <label for="add-diachi">Địa chỉ</label>
+                <input type="text" id="add-diachi" name="diachi" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group half-width">
+                    <label for="add-quocgia">Quốc gia</label>
+                    <select id="add-quocgia" name="quocgia">
+                        <option value="Vietnam">Vietnam</option>
+                    </select>
                 </div>
-                <div class="form-row">
-                    <div class="form-group half-width">
-                        <label for="add-quocgia">Quốc gia</label>
-                        <select id="add-quocgia" name="quocgia">
-                            <option value="Vietnam">Vietnam</option>
-                        </select>
-                    </div>
-                    <div class="form-group half-width">
-                        <label for="add-tinhthanh">Tỉnh thành</label>
-                        <select id="add-tinhthanh" name="tinhthanh">
-                            <option value="HCM">Hồ Chí Minh</option>
-                            <option value="HN">Hà Nội</option>
-                        </select>
-                    </div>
+                <div class="form-group half-width">
+                    <label for="add-tinhthanh">Tỉnh thành</label>
+                    <select id="add-tinhthanh" name="tinhthanh">
+                        <option value="HCM">Hồ Chí Minh</option>
+                        <option value="HN">Hà Nội</option>
+                    </select>
                 </div>
-                <div class="form-group-checkbox">
-                    <input type="checkbox" id="add-default" name="macdinh" value="true">
-                    <label for="add-default">Đặt làm địa chỉ mặc định?</label>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" class="btn-secondary modal-close" id="cancel-add-modal">Hủy</button>
-                    <button type="submit" class="btn-primary">Thêm địa chỉ</button>
-                </div>
-            </form>
+            </div>
+            <div class="form-group-checkbox">
+                <input type="checkbox" id="add-default" name="macdinh" value="true">
+                <label for="add-default">Đặt làm địa chỉ mặc định?</label>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-secondary modal-close" id="cancel-add-modal">Hủy</button>
+                <button type="submit" class="btn-primary">Thêm địa chỉ</button>
+            </div>
+        </form>
     </div></div>
 <div class="modal-overlay" id="edit-address-modal" style="display: none;">
     <div class="modal-content">
