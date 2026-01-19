@@ -36,7 +36,10 @@ public class Cart {
         }
     }
     public void updateQuantity(int productId, String sku, int quantity) {
-        String key = buildKey(productId, sku);
+        if (sku == null) sku = "";
+        sku = sku.trim();
+        String key = productId + "-" + sku;
+
 
         CartItem item = cartItemMap.get(key);
         if (item != null) {
