@@ -36,6 +36,10 @@ function addToCart(productId) {
                 document.querySelectorAll(".count_item_pr").forEach(el => {
                     el.innerText = data.totalQuantity;
                 });
+                // Một số trang dùng class mini-count_item riêng
+                document.querySelectorAll(".mini-count_item").forEach(el => {
+                    el.innerText = data.totalQuantity;
+                });
                 let allEmptyCarts = document.querySelectorAll(".js-mini-cart-empty");
                 let allHasItemCarts = document.querySelectorAll(".js-mini-cart-has-item");
 
@@ -57,8 +61,7 @@ function addToCart(productId) {
                         let itemSku = item.sku || "";
                         let itemSize = item.size || "";
 
-                        let removeUrl = `CartController?action=remove&id=${product.id}&sku=${encodeURIComponent(itemSku)}`;
-
+                        let removeUrl = `cart?action=remove&id=${product.id}&sku=${encodeURIComponent(itemSku)}`;
                         listHtml += `
                         <li class="item-cart-row">
                             <div class="img-container">
@@ -77,10 +80,8 @@ function addToCart(productId) {
                                 <span class="mini-item-price">${formatCurrency(item.price)}</span>
                                 <span class="mini-quantity">x${item.quantity}</span>
                             </div>
-                            <a href="${removeUrl}" class="remove-item" onclick="return confirm('Xóa sản phẩm này?')">
-                                <i class="fa-solid fa-xmark"></i>
-                            </a>
-                        </li>`;
+                            <a href="${removeUrl}" class="remove-item" onclick="return confirm('Xóa sản phẩm này?')"><i class="fa-solid fa-xmark"></i> </a>
+                       </li>`;
                     });
                 }
 
@@ -89,6 +90,19 @@ function addToCart(productId) {
 
                 let allTotalPrices = document.querySelectorAll(".js-mini-total-price");
                 allTotalPrices.forEach(el => el.innerText = formatCurrency(data.totalPrice));
+
+                // FIX: Khi giỏ hàng ban đầu trống, home.js có thể đã set inline style (display:none)
+                // cho list/footer. Lần thêm đầu tiên cần ép lại trạng thái để hover hoạt động ngay.
+                const hasItems = itemsArray.length > 0;
+                document.querySelectorAll('.mini-cart-menu').forEach(menu => {
+                    const listEl = menu.querySelector('.mini-cart-items-list');
+                    const footerEl = menu.querySelector('.mini-cart-footer');
+                    const emptyEl = menu.querySelector('.mini-empty-cart');
+
+                    if (listEl) listEl.style.display = hasItems ? 'block' : 'none';
+                    if (footerEl) footerEl.style.display = hasItems ? 'block' : 'none';
+                    if (emptyEl) emptyEl.style.display = hasItems ? 'none' : 'block';
+                });
 
                 showSuccessPopup(quantity, currentSize, currentSku, data);
 

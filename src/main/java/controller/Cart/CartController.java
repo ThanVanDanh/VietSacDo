@@ -24,19 +24,20 @@ public class CartController extends HttpServlet {
             CloudinaryService cloudinary = new CloudinaryService();
             this.productService = new ProductService(jdbi, cloudinary);
         } catch (Exception ex) {
-            throw new ServletException("Khởi tạo ProductController thất bại: " + ex.getMessage(), ex);
+            throw new ServletException(" " + ex.getMessage(), ex);
         }
     }
 
         @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+            request.setCharacterEncoding("UTF-8");
+            response.setCharacterEncoding("UTF-8");
             String action = request.getParameter("action");
 
             if (action != null && action.equals("remove")) {
                 removeFromCart(request, response);
             } else {
-                // Nếu vào trang /cart mà không có action gì -> Chuyển sang trang xem giỏ hàng
-                request.getRequestDispatcher("cart.jsp").forward(request, response);
+                request.getRequestDispatcher("/cart.jsp").forward(request, response);
             }
     }
 
@@ -73,22 +74,31 @@ public class CartController extends HttpServlet {
                 if (sku == null) sku = "";
                 String size = request.getParameter("size");
                 if (size == null) size = "";
-                double price = 0;
-                List<ProductVariant> variants = product.getVariants();
+                double price =0;
+                if (price == 0) {
+                    List<ProductVariant> variants = product.getVariants();
+                    if (variants != null) {
+                        for (ProductVariant v : variants) {
 
-                if (variants != null && !variants.isEmpty()) {
-                    price = variants.get(0).getCurrentPrice();
+                            if ((!sku.isEmpty() && sku.equals(v.getSku())) ||
+                                    (!size.isEmpty() && size.equals(v.getSize()))) {
+                                price = v.getCurrentPrice();
+                                break;
+                            }
+                        }
+                        if (price == 0 && !variants.isEmpty()) price = variants.get(0).getCurrentPrice();
+                    }
                 }
 
-                cart.addItem(product, quantity, price,sku,size);
+                cart.addItem(product, quantity, price, sku, size);
             }
 
             String referer = request.getHeader("Referer");
-            response.sendRedirect(referer != null ? referer : "giohang.jsp");
+            response.sendRedirect(referer != null ? referer : "cart");
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("cart.jsp");
+            response.sendRedirect(request.getContextPath() + "/cart");
         }
     }
 
@@ -104,17 +114,20 @@ public class CartController extends HttpServlet {
             if (cart != null) {
                 cart.updateQuantity(productId, sku, quantity);
             }
-            response.sendRedirect("cart.jsp");
+            response.sendRedirect(request.getContextPath() + "/cart");
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("cart.jsp");
+            response.sendRedirect(request.getContextPath() + "/cart");
         }
     }
-
     private void removeFromCart(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             String idParam = request.getParameter("id");
             String sku = request.getParameter("sku");
+
+
+
+            if (sku == null) sku = "";
 
             if (idParam != null) {
                 int productId = Integer.parseInt(idParam);
@@ -122,13 +135,21 @@ public class CartController extends HttpServlet {
                 Cart cart = (Cart) session.getAttribute("cart");
 
                 if (cart != null) {
+
                     cart.remove(productId, sku);
+                    session.setAttribute("cart", cart);
+                    System.out.println(" Called cart.remove()");
+                } else {
+                    System.out.println(" Cart is NULL in Session");
                 }
             }
-            response.sendRedirect("cart.jsp");
+
+            String referer = request.getHeader("Referer");
+            response.sendRedirect(referer != null ? referer : (request.getContextPath() + "/cart"));
+
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect("cart.jsp");
+            response.sendRedirect(request.getContextPath() + "/cart");
         }
     }
 
