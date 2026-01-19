@@ -132,15 +132,8 @@
                                             </span>
                                             <span class="mini-quantity">x${item.quantity}</span>
                                         </div>
-
-                                        <c:url value="/cart" var="removeUrl">
-                                            <c:param name="action" value="remove"/>
-                                            <c:param name="id" value="${item.product.id}"/>
-                                            <c:param name="sku" value="${item.sku}"/>
-                                        </c:url>
-                                        <a href="${removeUrl}"
-                                           class="remove-item"
-                                           onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
+                                        <a href="${pageContext.request.contextPath}/cart?action=remove&id=${item.product.id}&sku=${item.sku}"
+                                           class="remove-item" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
                                             <i class="fa-solid fa-xmark"></i>
                                         </a>
                                     </li>
@@ -228,14 +221,8 @@
                                             </span>
                                             <span class="mini-quantity">x${item.quantity}</span>
                                         </div>
-
-                                        <c:url value="/cart" var="removeUrlOverlay">
-                                            <c:param name="action" value="remove"/>
-                                            <c:param name="id" value="${item.product.id}"/>
-                                            <c:param name="sku" value="${item.sku}"/>
-                                        </c:url>
-                                        <a href="${removeUrlOverlay}"
-                                           class="remove-item" onclick="return confirm('Xóa sản phẩm này?')">
+                                        <a href="${pageContext.request.contextPath}/cart?action=remove&id=${item.product.id}&sku=${item.sku}"
+                                           class="remove-item" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
                                             <i class="fa-solid fa-xmark"></i>
                                         </a>
                                     </li>
@@ -251,7 +238,7 @@
                                     </strong>
                                 </span>
                             </div>
-                            <a href="${pageContext.request.contextPath}/cảp" class="btn-pay">Tiến hành thanh toán</a>
+                            <a href="${pageContext.request.contextPath}/cart" class="btn-pay">Tiến hành thanh toán</a>
                         </div>
                     </div>
                 </div>

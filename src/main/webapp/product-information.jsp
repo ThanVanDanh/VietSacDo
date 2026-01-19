@@ -35,7 +35,6 @@
     </nav>
 </div>
 <div class="product-container">
-
     <div class="product-image-gallery">
         <div class="thumbnails">
             <c:forEach items="${p.images}" var="img" varStatus="status">
