@@ -34,7 +34,6 @@
 <main>
     <section class="shopping-cart">
         <div class="container-sp">
-            <form action="">
                 <div class="header-cart-sp">
                     <h1>GIỎ HÀNG</h1>
                 </div>
@@ -51,27 +50,28 @@
                     <c:otherwise>
                         <div class="content-sp" id="cart-data-container">
                             <div class="cart-content-sp">
-
                                 <div class="upsell-card-sp">
                                     <c:set var="percent" value="${(sessionScope.cart.totalPrice / 1000000) * 100}" />
-                                    <c:if test="${percent > 100}"><c:set var="percent" value="100"/></c:if>
-
+                                    <c:if test="${percent > 100}">
+                                        <c:set var="percent" value="100" />
+                                    </c:if>
                                     <div class="progress-bar-sp">
-                                        <div class="progress-sp" style="width: ${percent}%; background-color: darkgreen;"></div>
-                                        <span class="percent-sp">${Math.round(percent)}%</span>
+                                        <div class="progress-sp"
+                                             style="width: <fmt:formatNumber value='${percent}' maxFractionDigits='0'/>%; background-color: darkgreen;">
+                                        </div>
+                                        <span class="percent-sp"><fmt:formatNumber value="${percent}" maxFractionDigits="0"/>%</span>
                                     </div>
-                                    <p>
+                                    <p style="margin-top: 10px;">
                                         <c:choose>
                                             <c:when test="${sessionScope.cart.totalPrice >= 1000000}">
-                                                🎉 Chúc mừng! Đơn hàng của bạn đã đủ điều kiện được Freeship!
+                                                 Chúc mừng! Đơn hàng của bạn đã đủ điều kiện được <strong>Freeship!</strong>
                                             </c:when>
                                             <c:otherwise>
-                                                Mua thêm <fmt:formatNumber value="${1000000 - sessionScope.cart.totalPrice}" type="currency"/> để được Freeship!
+                                                Mua thêm <strong><fmt:formatNumber value="${1000000 - sessionScope.cart.totalPrice}" pattern="#,###"/>₫</strong> để được Freeship!
                                             </c:otherwise>
                                         </c:choose>
                                     </p>
                                 </div>
-
                                 <ul class="cart-items-list-sp">
                                     <c:forEach var="item" items="${sessionScope.cart.items}">
                                         <li class="cart-item-sp">
@@ -97,9 +97,7 @@
                                                     <input type="hidden" name="action" value="update">
                                                     <input type="hidden" name="id" value="${item.product.id}">
                                                     <input type="hidden" name="sku" value="${item.sku}">
-
                                                     <button type="submit" name="quantity" value="${item.quantity - 1}" class="btn-minus"><i class="fa-solid fa-minus"></i></button>
-
                                                     <input type="text" value="${item.quantity}" class="quantity-input" readonly>
 
                                                     <button type="submit" name="quantity" value="${item.quantity + 1}" class="btn-plus"><i class="fa-solid fa-plus"></i></button>
@@ -109,10 +107,6 @@
                                     </c:forEach>
                                 </ul>
 
-                                <div class="cart-note-sp">
-                                    <label>Ghi chú đơn hàng</label>
-                                    <textarea rows="2" name="note" placeholder="Ghi chú cho người bán..."></textarea>
-                                </div>
                             </div>
 
                             <div class="cart-price-sp" id="cart-summary">
@@ -124,133 +118,9 @@
                                     <button><span><a href="checkout.jsp" style="color: white; text-decoration: none;">Thanh toán</a></span></button>
                                 </div>
                             </div>
-                        </div>
+                    </div>
                     </c:otherwise>
                 </c:choose>
-            </form>
-        </div>
-    </section>
-    <section class="product-showcase tab-component">
-        <div class="title-h1-linen">
-            <h1>CÓ THỂ BẠN SẼ THÍCH</h1>
-        </div>
-        <div class="product-grid">
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.jsp"><img src="image/truyenthong1.png" alt="Áo dài truyền thống Quỳnh Hân"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="#" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.jsp"><p class="product-name">Áo dài truyền thống Quỳnh Hân</p></a>
-                    <div class="product-price">
-                        <span class="current-price">711,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.jsp"><img src="image/truyenthong6.png" alt="Áo dài truyền thống Gấm Khuê Gia - Trắng dệt hoa"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.jsp" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.jsp"><p class="product-name">Áo dài truyền thống Gấm Khuê Gia - Trắng dệt hoa</p></a>
-                    <div class="product-price">
-                        <span class="current-price">720,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.jsp"><img src="image/truyenthong3.png" alt="Áo dài truyền thống Phúc Hương"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.jsp" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-                <div class="product-info">
-                    <a href="product-information.jsp"><p class="product-name">Áo dài truyền thống Phúc Hương</p></a>
-                    <div class="product-price">
-                        <span class="current-price">880,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.jsp"><img src="image/truyenthong4.png" alt="Áo dài truyền thống Quỳnh Châu"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.jsp" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.jsp"><p class="product-name">Áo dài truyền thống Quỳnh Châu</p></a>
-                    <div class="product-price">
-                        <span class="current-price">790,000₫</span>
-                    </div>
-                </div>
-            </div>
-            <div class="product-card">
-                <div class="product-image-wrapper">
-                    <div class="product-image">
-                        <a href="product-information.jsp"><img src="image/truyenthong8.png" alt="Áo dài truyền thống khảm hoa Cát Tường"></a>
-                    </div>
-                    <div class="product-overlay">
-                        <a href="product-information.jsp" class="icon-button" title="Tùy chọn">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                        </a>
-                        <a href="#" class="icon-button" title="Xem nhanh">
-                            <i class="fa-solid fa-eye"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="product-info">
-                    <a href="product-information.jsp"><p class="product-name">Áo dài truyền thống khảm hoa Cát Tường</p></a>
-                    <div class="product-price">
-                        <span class="current-price">671,500₫</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="pagination">
-            <a href="#"><img src="image/chevron_left.png" alt=""></a>
-            <a href="#" class="active">1</a>
-            <a href="#">2</a>
-            <a href="#">3</a>
-            <a href="#"><img src="image/chevron_right.png" alt=""></a>
         </div>
     </section>
 </main>
@@ -331,33 +201,6 @@
         <button id="close-model" class="model-remove-item"><i class="fa-solid fa-xmark"></i></button>
     </div>
 </div>
-<%--<div id="success-add-shopping" class="model-success-overlay">--%>
-<%--    <div class="success-content-model">--%>
-<%--        <button id="close-success-popup" class="model-remove-item"><i class="fa-solid fa-xmark"></i></button>--%>
-<%--        <div class="success-header">--%>
-<%--            <i class="fa-solid fa-check-circle"></i>--%>
-<%--            <span>Thêm vào giỏ hàng thành công</span>--%>
-<%--        </div>--%>
-<%--        <div class="success-product-info">--%>
-<%--            <img src="image/truyenthong1.png" alt="Áo dài truyền thống Quỳnh Hân">--%>
-<%--            <div class="item-info">--%>
-<%--                <a href="" class="item-name">Áo dài truyền thống Quỳnh Hân</a>--%>
-<%--                <span class="item-meta">Size A / Quỳnh Hân</span>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--        <div class="success-box-quantity">--%>
-<%--            <span>Giỏ hàng hiện có</span>--%>
-<%--            <div class="item-price">--%>
-<%--                <span>711,000₫</span>--%>
-<%--                <small>(1) sản phẩm</small>--%>
-<%--            </div>--%>
-<%--        </div>--%>
-<%--        <div class="success-footer">--%>
-<%--            <a href="thanhtoan.jsp" class="checkout-btn">Thanh toán</a>--%>
-<%--            <a href="giohang.html" class="success-btn">Xem giỏ hàng</a>--%>
-<%--        </div>--%>
-<%--    </div>--%>
-<%--</div>--%>
 <jsp:include page="footer.jsp" />
 <button onclick="scrollToTop()" id="backToTopBtn" title="Trở về đầu trang">
     <i class="fas fa-chevron-up"></i>
