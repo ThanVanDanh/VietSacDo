@@ -66,7 +66,6 @@ function updateStockUI(stock) {
         buyNowBtn.style.display = 'inline-block';
         outOfStockBtn.style.display = 'none';
         quality.style.display ='inline-block';
-        // Không reset về 1 ở đây để tránh UX xấu khi user đang chọn số lượng
     } else {
         addToCartBtn.style.display = 'none';
         buyNowBtn.style.display = 'none';
@@ -105,6 +104,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const thumbnails = document.querySelectorAll('.thumbnail');
     const prevBtn = document.querySelector('.fa-chevron-left');
     const nextBtn = document.querySelector('.fa-chevron-right');
+    const defaultActiveBtn = document.querySelector('.size-btn.active') || document.querySelector('.size-btn');
+
+    if (defaultActiveBtn) {
+        let stock = parseInt(defaultActiveBtn.getAttribute('data-stock'));
+        if (isNaN(stock)) stock = 0;
+        MAX_QTY = stock;
+        updateStockUI(MAX_QTY);
+
+        if (!document.querySelector('.size-btn.active')) {
+            defaultActiveBtn.click();
+        }
+    }
 
     if (mainImage && thumbnails.length > 0) {
         const imagePaths = Array.from(thumbnails).map(thumb => thumb.src);
