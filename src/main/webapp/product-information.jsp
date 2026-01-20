@@ -105,7 +105,6 @@
                 <input type="text" name="quantity" id="product-quantity" value="1" readonly>
                 <button type="button" class="qty-btn qty-plus">+</button>
             </div>
-
             <button class="add-to-cart-btn" id="them-vao-gio-hang" onclick="addToCart(${p.id})">THÊM VÀO GIỎ</button>
         </div>
         <button class="buy-now-btn" id="mua-ngay"><a href="thanhtoan.jsp">MUA NGAY</a></button>
@@ -198,7 +197,7 @@
                         <div class="product-price">
                             <span class="current-price">
                                 <%-- Format giá tiền --%>
-                                <fmt:formatNumber value="${rp.price}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                <fmt:formatNumber value="${rp.price}" pattern="#,###"/>₫
                             </span>
                         </div>
                     </div>
@@ -243,7 +242,7 @@
                             </a>
                             <div class="product-price">
                                 <span class="current-price">
-                                    <fmt:formatNumber value="${vp.price}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                    <fmt:formatNumber value="${vp.price}" pattern="#,###"/>₫
                                 </span>
                             </div>
                         </div>
@@ -334,6 +333,36 @@
             </div>
         </div>
         <button id="close-model" class="model-remove-item"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+</div>
+<div id="success-add-shopping" class="model-success-overlay">
+    <div class="success-content-model">
+        <button id="close-success-popup" class="model-remove-item" onclick="closeSuccessPopup()"><i class="fa-solid fa-xmark"></i></button>
+
+        <div class="success-header">
+            <i class="fa-solid fa-check-circle"></i>
+            <span>Thêm vào giỏ hàng thành công</span>
+        </div>
+
+        <div class="success-product-info">
+            <img id="popup-img" src="" alt="">
+            <div class="item-info">
+                <a href="#" class="item-name" id="popup-name"></a>
+                <span class="item-meta" id="popup-meta"></span>
+            </div>
+        </div>
+
+        <div class="success-box-quantity">
+            <span>Giỏ hàng hiện có</span>
+            <div class="item-price">
+                <span id="popup-total-price"></span>
+                <small>(<span id="popup-total-quantity"></span>) sản phẩm</small>
+            </div>
+        </div>
+
+        <div class="success-footer">
+            <a href="thanhtoan.jsp" class="checkout-btn">Thanh toán</a>
+            <a href="cart.jsp" class="success-btn">Xem giỏ hàng</a> </div>
     </div>
 </div>
 <jsp:include page="footer.jsp" />
