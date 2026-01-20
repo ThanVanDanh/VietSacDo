@@ -74,6 +74,7 @@ section {
     -webkit-box-orient: vertical;
     overflow: hidden;
     min-height: 2.4em;
+
 }
 .product-price {
     font-size: 14px;

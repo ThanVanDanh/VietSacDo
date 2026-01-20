@@ -43,6 +43,8 @@ public class CategoryController extends HttpServlet {
         String slug = pathInfo.substring(1);
 
         try {
+            List<Category> listCategories = categoryDao.getAll();
+            request.setAttribute("listCategories", listCategories);
 //            danh muc
             Category currentCategory = categoryDao.getCategoryBySlug(slug);
             if (currentCategory == null) {
