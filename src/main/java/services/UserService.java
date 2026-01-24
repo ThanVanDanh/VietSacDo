@@ -1,8 +1,9 @@
 package services;
 
+import org.mindrot.jbcrypt.BCrypt;
+
 import dao.UserDao;
 import model.user.User;
-import org.mindrot.jbcrypt.BCrypt;
 
 public class UserService {
     private final UserDao userDao;
@@ -22,7 +23,7 @@ public class UserService {
         if (user == null) {
             return null;
         }
-        if (!"ACTIVE".equals(user.getStatus())) {
+        if (!"active".equals(user.getStatus())) {
             return null;
         }
         if (user.getPassword() != null && BCrypt.checkpw(password, user.getPassword())) {
@@ -44,7 +45,7 @@ public class UserService {
         user.setPassword(BCrypt.hashpw(password, BCrypt.gensalt(12)));
         user.setRole("user");
         user.setAuthProvider("local");
-        user.setStatus("PENDING");
+        user.setStatus("inactive");
         user.setVerifyToken(token);
 
         int id = userDao.insert(user);

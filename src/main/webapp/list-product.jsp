@@ -26,79 +26,6 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/quick-view.css">
 </head>
 <body>
-<div class="search-overlay-container" id="searchOverlay">
-
-    <div class="search-overlay-header">
-        <div class="logo">
-            <a href="index.jsp">
-                <img src="image/logo.png" alt="Logo Việt Sắc Đỏ">
-            </a>
-        </div>
-
-        <form class="search-overlay-form">
-            <input type="text" id="searchInput" placeholder="áo dài truyền thống, quần áo dài, vòng tay...">
-            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-        </form>
-        <div class="icons">
-            <div class="user-menu">
-                <a><i class="fa-regular fa-user"></i></a>
-                <ul class="user">
-                    <li><a href="login.jsp">Đăng nhập</a></li>
-                    <li><a href="signup.jsp">Đăng ký</a></li>
-                </ul>
-            </div>
-            <div class="mini-cart-menu">
-                <a href="giohang.jsp" title="Giỏ hàng">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                    <span class="mini-count_item count_item_pr">3</span>
-                </a>
-                <div class="mini-cart-content">
-                    <div class="mini-empty-cart">
-                        <p>Chưa có sản phẩm trong giỏ hàng</p>
-                    </div>
-                    <ul class="mini-cart-items-list">
-                        <li> <img src="image/truyenthong1.png" alt="Áo dài truyền thống Quỳnh Hân">
-                            <div class="mini-item-info">
-                                <a href="product-information.jsp" class="mini-item-name">Áo dài truyền thống Quỳnh Hân</a>
-                                <span class="mini-item-meta">Size A / Quỳnh Hân</span>
-                                <span class="mini-item-price">711,000₫</span>
-                                <span class="mini-quantity">x1</span>
-                            </div>
-                            <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
-                        </li>
-                        <li> <img src="image/truyenthong3.png" alt="Áo dài truyền thống Phúc Hương">
-                            <div class="mini-item-info">
-                                <a href="product-information.jsp" class="mini-item-name">Áo dài truyền thống Phúc Hương</a>
-                                <span class="mini-item-meta">Size A / Phúc Hương</span>
-                                <span class="mini-item-price">880,000₫</span>
-                                <span class="mini-quantity">x1</span>
-                            </div>
-                            <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
-                        </li>
-                        <li> <img src="image/truyenthong4.png" alt="Áo dài truyền thống Quỳnh Châu">
-                            <div class="mini-item-info">
-                                <a href="product-information.jsp" class="mini-item-name">Áo dài truyền thống Quỳnh Châu</a>
-                                <span class="mini-item-meta">Size A / Quỳnh Châu</span>
-                                <span class="mini-item-price">790,000₫</span>
-                                <span class="mini-quantity">x1</span>
-                            </div>
-                            <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
-                        </li>
-                    </ul>
-                    <div class="mini-cart-footer">
-                        <div class="mini-cart-total">
-                            <span >Tổng tiền tạm tính: <strong class="mini-total-price">2,281,000₫</strong></span>
-                        </div>
-                        <a href="giohang.jsp" class="btn-pay">Tiến hành thanh toán</a>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="search-overlay-close-area" id="searchCloseArea"></div>
-</div>
 <jsp:include page="header.jsp" />
 <div class="breadcrumb-container">
     <nav aria-label="breadcrumb">
@@ -298,33 +225,6 @@
             </div>
         </div>
         <button id="close-model" class="model-remove-item"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-</div>
-<div id="success-add-shopping" class="model-success-overlay">
-    <div class="success-content-model">
-        <button id="close-success-popup" class="model-remove-item"><i class="fa-solid fa-xmark"></i></button>
-        <div class="success-header">
-            <i class="fa-solid fa-check-circle"></i>
-            <span>Thêm vào giỏ hàng thành công</span>
-        </div>
-        <div class="success-product-info">
-            <img src="image/truyenthong1.png" alt="Áo dài truyền thống Quỳnh Hân">
-            <div class="item-info">
-                <a href="" class="item-name">Áo dài truyền thống Quỳnh Hân</a>
-                <span class="item-meta">Size A / Quỳnh Hân</span>
-            </div>
-        </div>
-        <div class="success-box-quantity">
-            <span>Giỏ hàng hiện có</span>
-            <div class="item-price">
-                <span>711,000₫</span>
-                <small>(1) sản phẩm</small>
-            </div>
-        </div>
-        <div class="success-footer">
-            <a href="thanhtoan.jsp" class="checkout-btn">Thanh toán</a>
-            <a href="giohang.jsp" class="success-btn">Xem giỏ hàng</a>
-        </div>
     </div>
 </div>
 <jsp:include page="footer.jsp" />

@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,6 +11,11 @@
     <link rel="stylesheet" href="../style/charts.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../scripts/admin/admin.js"></script>
+    <script>
+        // App context path for AJAX endpoints (set by server)
+        var APP_CTX = '${pageContext.request.contextPath}';
+    </script>
+    <script src="../scripts/admin.js"></script>
 </head>
 <body>
 <div class="admin-container">
@@ -48,7 +54,7 @@
                 </div>
                 <div class="card-info">
                     <h4>Tổng số khách hàng</h4>
-                    <p>1,240</p>
+                    <p>${totalCustomers}</p>
                 </div>
             </div>
             <div class="stat-card-customer">
@@ -57,7 +63,7 @@
                 </div>
                 <div class="card-info">
                     <h4>Khách mới trong tuần</h4>
-                    <p>35</p>
+                    <p>${newCustomersThisWeek}</p>
                 </div>
             </div>
         </section>
@@ -84,63 +90,77 @@
                     <th>Email</th>
                     <th>Điện thoại</th>
                     <th>Ngày đăng ký</th>
+                    <th>Địa chỉ</th>
                     <th>Số đơn hàng</th>
+                    <th>Tài khoản</th>
                     <th>Trạng thái tài khoản</th>
                     <th>Hành động</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Phùng Thị Minh Thư</td>
-                    <td>23130317@st.hcmuaf.edu.vn</td>
-                    <td>0338012575</td>
-                    <td>2024-10-25</td>
-                    <td>5</td>
-                    <td>
-                        <span class="status-badge status-active">Hoạt động</span>
-                        <span class="status-badge status-blocked" style="display: none;">Bị khóa</span>
-                    </td>
-                    <td class="table-actions">
-                        <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
-                        <button class="btn-action btn-block" title="Khóa"><i class="fas fa-ban"></i></button>
-                        <button class="btn-action btn-unlock" title="Mở khóa" style="display: none;"><i class="fas fa-check-circle"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Lại Thị Hoa</td>
-                    <td>23130111@st.hcmuaf.edu.vn</td>
-                    <td>0987654321</td>
-                    <td>2023-11-15</td>
-                    <td>2</td>
-                    <td>
-                        <span class="status-badge status-active">Hoạt động</span>
-                        <span class="status-badge status-blocked" style="display: none;">Bị khóa</span>
-                    </td>
-                    <td class="table-actions">
-                        <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
-                        <button class="btn-action btn-block" title="Khóa"><i class="fas fa-ban"></i></button>
-                        <button class="btn-action btn-unlock" title="Mở khóa" style="display: none;"><i class="fas fa-check-circle"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Thân Văn Danh</td>
-                    <td>23130043@st.hcmuaf.edu.vn</td>
-                    <td>0123456789</td>
-                    <td>2024-09-15</td>
-                    <td>0</td>
-                    <td>
-                        <span class="status-badge status-active">Hoạt động</span>
-                        <span class="status-badge status-blocked" style="display: none;">Bị khóa</span>
-                    </td>
-                    <td class="table-actions">
-                        <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
-                        <button class="btn-action btn-block" title="Khóa"><i class="fas fa-ban"></i></button>
-                        <button class="btn-action btn-unlock" title="Mở khóa" style="display: none;"><i class="fas fa-check-circle"></i></button>
-                    </td>
-                </tr>
-                <tr class="empty-state-row" style="display: none;">
-                    <td colspan="7" style="text-align: center; padding: 40px; color: #666;">Hiện tại không có khách hàng nào.</td>
-                </tr>
+                <c:forEach var="user" items="${users}">
+                    <tr>
+                        <td>${user.fullName}</td>
+                        <td>${user.email}</td>
+                        <td>${user.phone}</td>
+                        <td>${user.createdAt}</td>
+                        <td>${user.authProvider}</td>
+                        <td>0</td>
+                        <td>
+                            <form method="post" action="update-role" style="margin:0;">
+                                <input type="hidden" name="userId" value="${user.id}" />
+                                <select name="role" onchange="this.form.submit()">
+                                    <option value="user" ${user.role eq 'user' ? 'selected' : ''}>User</option>
+                                    <option value="admin" ${user.role eq 'admin' ? 'selected' : ''}>Admin</option>
+                                </select>
+                            </form>
+                        </td>
+                        <td>
+                            <span class="status-badge status-active" style="${user.status eq 'active' ? '' : 'display:none;'}">Hoạt động</span>
+                            <span class="status-badge status-blocked" style="${user.status eq 'banned' ? '' : 'display:none;'}">Bị khóa</span>
+                            <span class="status-badge status-inactive" style="${user.status eq 'inactive' ? '' : 'display:none;'}">Chưa kích hoạt</span>
+                        </td>
+                        <td class="table-actions">
+                            <button class="btn-action btn-view"
+                                    title="Xem"
+                                    data-fullname="${user.fullName}"
+                                    data-email="${user.email}"
+                                    data-phone="${user.phone}"
+                                    data-address="${user.authProvider}"
+                                    data-createdat="${user.createdAt}"
+                                    data-status="${user.status}">
+                                <i class="fas fa-eye"></i>
+                            </button>
+
+                            <button class="btn-action btn-block"
+                                    title="Khóa"
+                                    data-id="${user.id}"
+                                    data-name="${user.fullName}"
+                                    style="${user.status eq 'banned' ? 'display: none;' : ''}">
+                                <i class="fas fa-ban"></i>
+                            </button>
+
+                            <button class="btn-action btn-unlock"
+                                    title="Mở khóa"
+                                    data-id="${user.id}"
+                                    data-name="${user.fullName}"  style="${user.status eq 'banned' ? '' : 'display: none;'}">
+                                <i class="fas fa-check-circle"></i>
+                            </button>
+
+                            <button class="btn-action btn-delete"
+                                    title="Xóa"
+                                    data-id="${user.id}"
+                                    data-name="${user.fullName}">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </c:forEach>
+                <c:if test="${empty users}">
+                    <tr class="empty-state-row">
+                        <td colspan="7" style="text-align: center; padding: 40px; color: #666;">Hiện tại không có khách hàng nào.</td>
+                    </tr>
+                </c:if>
                 </tbody>
             </table>
             <div class="pagination">
@@ -157,7 +177,7 @@
 <div id="customer-modal" class="modal" style="display: none;">
     <div class="modal-content">
         <span class="close-modal">&times;</span>
-        <h2>Chi tiết khách hàng: Phùng Thị Minh Thư</h2>
+        <h2>Chi tiết khách hàng: <span id="modal-fullName"></span></h2>
         <div class="modal-body">
             <div class="modal-tabs">
                 <button class="tab-link active" data-tab="tab-info">Thông tin cá nhân</button>
@@ -166,51 +186,51 @@
             </div>
             <div id="tab-info" class="tab-content active">
                 <h3>Thông tin cá nhân</h3>
-                <p><strong>Email:</strong> 23130317@st.hcmuaf.edu.vn</p>
-                <p><strong>Điện thoại:</strong> 0338012575</p>
-                <p><strong>Địa chỉ:</strong> 77/50, Phường Hiệp Phú, TP. HCM</p>
-                <p><strong>Ngày đăng ký:</strong> 2024-10-25</p>
-                <p><strong>Trạng thái tài khoản:</strong> Hoạt động</p>
+                <p><strong>Email:</strong> <span id="modal-email"></span></p>
+                <p><strong>Điện thoại:</strong> <span id="modal-phone"></span></p>
+                <p><strong>Địa chỉ:</strong> <span id="modal-address"></span></p>
+                <p><strong>Ngày đăng ký:</strong> <span id="modal-createdAt"></span></p>
+                <p><strong>Trạng thái tài khoản:</strong> <span id="modal-status"></span></p>
             </div>
-            <div id="tab-history" class="tab-content">
-                <h3>Lịch sử đơn hàng (5)</h3>
-                <ul>
-                    <li>Đơn hàng #1052 _ 2025-03-28 _ <strong class="status-complete">Hoàn tất</strong>
-                        <p>Áo dài truyền thống Phúc Hương - <strong>880,000₫</strong></p>
-                    </li>
-                    <li>Đơn hàng #1044 _ 2024-12-26 _ <strong class="status-cancel">Đã hủy</strong>
-                        <p>Hoa tai NK-185 hoa hồng phối trái mâm xôi rũ - <strong>80,750₫</strong></p>
-                    </li>
-                    <li>Đơn hàng #1032 _ 2024-11-15 _ <strong class="status-complete">Hoàn tất</strong>
-                        <p>Vòng tay VO-092 Phụng Nghi đỏ hoa xanh trắng vân vàng - 10mm - <strong>153,000₫</strong></p>
-                    </li>
-                    <li>Đơn hàng #1020 _ 2024-11-05 _ <strong class="status-complete">Hoàn tất</strong>
-                        <p>Mấn Trơn Hai Sợi Phối Dây Hạt Ngọc (Hạt to) - <strong>212,500₫</strong></p>
-                    </li>
-                    <li>Đơn hàng #1003 _ 2024-10-26 _ <strong class="status-cancel">Đã hủy</strong>
-                        <p>Guốc gỗ Đế cao bọc vải Phụng Lan - Đỏ - <strong>212,500₫</strong></p>
-                    </li>
-                </ul>
-            </div>
-            <div id="tab-log" class="tab-content">
-                <h3>Hoạt động tài khoản</h3>
-                <ul>
-                    <li>2025-03-28 20:00: Đặt đơn hàng #1052</li>
-                    <li>2024-12-26 22:20: Đặt đơn hàng #1044</li>
-                    <li>2024-11-15 10:40: Đặt đơn hàng #1032</li>
-                    <li>2024-11-05 08:30: Đặt đơn hàng #1020</li>
-                    <li>2024-10-26 15:20: Đặt đơn hàng #1003</li>
-                    <li>2024-10-25 09:15: Tạo tài khoản</li>
-                </ul>
-            </div>
-        </div>
+                    <div id="tab-history" class="tab-content">
+                        <h3>Lịch sử đơn hàng (5)</h3>
+                        <ul>
+                            <li>Đơn hàng #1052 _ 2025-03-28 _ <strong class="status-complete">Hoàn tất</strong>
+                                <p>Áo dài truyền thống Phúc Hương - <strong>880,000₫</strong></p>
+                            </li>
+                            <li>Đơn hàng #1044 _ 2024-12-26 _ <strong class="status-cancel">Đã hủy</strong>
+                                <p>Hoa tai NK-185 hoa hồng phối trái mâm xôi rũ - <strong>80,750₫</strong></p>
+                            </li>
+                            <li>Đơn hàng #1032 _ 2024-11-15 _ <strong class="status-complete">Hoàn tất</strong>
+                                <p>Vòng tay VO-092 Phụng Nghi đỏ hoa xanh trắng vân vàng - 10mm - <strong>153,000₫</strong></p>
+                            </li>
+                            <li>Đơn hàng #1020 _ 2024-11-05 _ <strong class="status-complete">Hoàn tất</strong>
+                                <p>Mấn Trơn Hai Sợi Phối Dây Hạt Ngọc (Hạt to) - <strong>212,500₫</strong></p>
+                            </li>
+                            <li>Đơn hàng #1003 _ 2024-10-26 _ <strong class="status-cancel">Đã hủy</strong>
+                                <p>Guốc gỗ Đế cao bọc vải Phụng Lan - Đỏ - <strong>212,500₫</strong></p>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="tab-log" class="tab-content">
+                        <h3>Hoạt động tài khoản</h3>
+                        <ul>
+                            <li>2025-03-28 20:00: Đặt đơn hàng #1052</li>
+                            <li>2024-12-26 22:20: Đặt đơn hàng #1044</li>
+                            <li>2024-11-15 10:40: Đặt đơn hàng #1032</li>
+                            <li>2024-11-05 08:30: Đặt đơn hàng #1020</li>
+                            <li>2024-10-26 15:20: Đặt đơn hàng #1003</li>
+                            <li>2024-10-25 09:15: Tạo tài khoản</li>
+                        </ul>
+                    </div>
+                </div>
     </div>
 </div>
 <div id="delete-confirm-modal" class="modal" style="display: none;">
     <div class="modal-content">
         <span class="close-modal">&times;</span>
         <h2>Xác nhận xóa</h2>
-        <p>Bạn có chắc chắn muốn xóa khách hàng <strong id="customer-name-to-delete">Phùng Thị Minh Thư</strong> không?</p>
+        <p>Bạn có chắc chắn muốn xóa khách hàng <strong id="customer-name-to-delete">${user.fullName}</strong> không?</p>
         <p>Hành động này không thể hoàn tác.</p>
 
         <div class="confirm-actions">
@@ -219,16 +239,18 @@
         </div>
     </div>
 </div>
-<div id="block-confirm-modal" class="modal" style="display: none;">
+<div id="status-confirm-modal" class="modal" style="display: none;">
     <div class="modal-content">
         <span class="close-modal">&times;</span>
-        <h2>Xác nhận khóa tài khoản</h2>
-        <p>Bạn có chắc chắn muốn <strong>khóa</strong> khách hàng
-            <strong id="customer-name-to-block">Phùng Thị Minh Thư</strong> không?</p>
+
+        <h2 id="modal-status-title">Xác nhận thay đổi</h2>
+
+        <p>Bạn có chắc chắn muốn <strong id="modal-action-text" style="color: #d9534f;">...</strong>
+            tài khoản của khách hàng <strong id="modal-customer-name">...</strong> không?</p>
 
         <div class="confirm-actions">
-            <button id="btn-cancel-block" class="btn-secondary">Hủy bỏ</button>
-            <button id="btn-confirm-block" class="btn-danger">Xác nhận Khóa</button>
+            <button id="btn-cancel-status" class="btn-secondary">Hủy bỏ</button>
+            <button id="btn-confirm-status" class="btn-danger">Xác nhận</button>
         </div>
     </div>
 </div>

@@ -5,7 +5,10 @@
   Time: 16:45
   To change this template use File | Settings | File Templates.
 --%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
 <header>
     <div class="header">
         <div class="logo">
@@ -87,56 +90,160 @@
                     <% } %>
                 </ul>
             </div>
+
             <div class="mini-cart-menu">
-                <a href="${pageContext.request.contextPath}/giohang.jsp" title="Giỏ hàng">
+                <a href="${pageContext.request.contextPath}/cart" title="Giỏ hàng">
                     <i class="fa-solid fa-cart-shopping"></i>
-                    <span class="mini-count_item count_item_pr">3</span>
+                    <span class="mini-count_item count_item_pr">
+                        ${sessionScope.cart == null ? 0 : sessionScope.cart.totalQuantity}
+                    </span>
                 </a>
+
                 <div class="mini-cart-content">
-                    <div class="mini-empty-cart">
+                    <%-- KHỐI 1: GIỎ HÀNG TRỐNG --%>
+                    <div class="mini-empty-cart js-mini-cart-empty"
+                         style="display: ${sessionScope.cart == null || sessionScope.cart.totalQuantity == 0 ? 'block' : 'none'}; text-align: center; padding: 20px;">
                         <p>Chưa có sản phẩm trong giỏ hàng</p>
                     </div>
-                    <ul class="mini-cart-items-list">
-                        <li>
-                            <img src="${pageContext.request.contextPath}/image/truyenthong1.png" alt="Áo dài truyền thống Quỳnh Hân">
-                            <div class="mini-item-info">
-                                <a href="${pageContext.request.contextPath}/product-information.jsp" class="mini-item-name">Áo dài truyền thống Quỳnh Hân</a>
-                                <span class="mini-item-meta">Size A / Quỳnh Hân</span>
-                                <span class="mini-item-price">711,000₫</span>
-                                <span class="mini-quantity">x1</span>
-                            </div>
-                            <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
-                        </li>
-                        <li>
-                            <img src="${pageContext.request.contextPath}/image/truyenthong3.png" alt="Áo dài truyền thống Phúc Hương">
-                            <div class="mini-item-info">
-                                <a href="${pageContext.request.contextPath}/product-information.jsp" class="mini-item-name">Áo dài truyền thống Phúc Hương</a>
-                                <span class="mini-item-meta">Size A / Phúc Hương</span>
-                                <span class="mini-item-price">880,000₫</span>
-                                <span class="mini-quantity">x1</span>
-                            </div>
-                            <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
-                        </li>
-                        <li>
-                            <img src="${pageContext.request.contextPath}/image/truyenthong4.png" alt="Áo dài truyền thống Quỳnh Châu">
-                            <div class="mini-item-info">
-                                <a href="${pageContext.request.contextPath}/product-information.jsp" class="mini-item-name">Áo dài truyền thống Quỳnh Châu</a>
-                                <span class="mini-item-meta">Size A / Quỳnh Châu</span>
-                                <span class="mini-item-price">790,000₫</span>
-                                <span class="mini-quantity">x1</span>
-                            </div>
-                            <button class="remove-item"><i class="fa-solid fa-xmark"></i></button>
-                        </li>
-                    </ul>
-                    <div class="mini-cart-footer">
-                        <div class="mini-cart-total">
-                            <span >Tổng tiền tạm tính: <strong class="mini-total-price">2,281,000₫</strong></span>
-                        </div>
-                        <a href="${pageContext.request.contextPath}/giohang.jsp" class="btn-pay">Tiến hành thanh toán</a>
-                    </div>
 
+                    <%-- KHỐI 2: CÓ SẢN PHẨM --%>
+                    <div class="js-mini-cart-has-item"
+                         style="display: ${sessionScope.cart != null && sessionScope.cart.totalQuantity > 0 ? 'block' : 'none'};">
+
+                        <ul class="mini-cart-items-list js-mini-cart-list">
+                            <c:if test="${sessionScope.cart != null}">
+                                <c:forEach var="item" items="${sessionScope.cart.items}">
+                                    <li class="item-cart-row">
+                                        <div class="img-container">
+                                            <img src="${not empty item.product.images ? item.product.images[0].imageUrl : pageContext.request.contextPath.concat('/image/no-image.png')}"
+                                                 alt="${item.product.nameProduct}">
+                                        </div>
+
+                                        <div class="mini-item-info">
+                                            <a href="${pageContext.request.contextPath}/product-detail?id=${item.product.id}" class="mini-item-name">
+                                                    ${item.product.nameProduct}
+                                            </a>
+                                            <div class="mini-item-meta" style="font-size: 12px; color: #666; margin-bottom: 5px;">
+                                                <c:if test="${not empty item.size}">Size: <strong>${item.size}</strong></c:if>
+                                                <c:if test="${not empty item.sku}"> / Mã: ${item.sku}</c:if>
+                                            </div>
+                                            <span class="mini-item-price">
+                                                <fmt:formatNumber value="${item.price}" pattern="#,###"/>₫
+                                            </span>
+                                            <span class="mini-quantity">x${item.quantity}</span>
+                                        </div>
+                                        <a href="${pageContext.request.contextPath}/cart?action=remove&id=${item.product.id}&sku=${item.sku}"
+                                           class="remove-item" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
+                                            <i class="fa-solid fa-xmark"></i>
+                                        </a>
+                                    </li>
+                                </c:forEach>
+                            </c:if>
+                        </ul>
+
+                        <div class="mini-cart-footer">
+                            <div class="mini-cart-total">
+                                <span>Tổng tiền tạm tính:
+                                    <strong class="mini-total-price js-mini-total-price">
+                                        <fmt:formatNumber value="${sessionScope.cart.totalPrice}" pattern="#,###"/>₫
+                                    </strong>
+                                </span>
+                            </div>
+                            <a href="${pageContext.request.contextPath}/cart" class="btn-pay">Tiến hành thanh toán</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </header>
+
+<div class="search-overlay-container" id="searchOverlay">
+    <div class="search-overlay-header">
+        <div class="logo">
+            <a href="${pageContext.request.contextPath}/index.jsp">
+                <img src="${pageContext.request.contextPath}/image/logo.png" alt="Logo Việt Sắc Đỏ">
+            </a>
+        </div>
+
+        <form class="search-overlay-form">
+            <input type="text" id="searchInput" placeholder="áo dài truyền thống, quần áo dài, vòng tay...">
+            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </form>
+
+        <div class="icons">
+            <div class="user-menu">
+                <a><i class="fa-regular fa-user"></i></a>
+                <ul class="user">
+                    <li><a href="${pageContext.request.contextPath}/login.jsp">Đăng nhập</a></li>
+                    <li><a href="${pageContext.request.contextPath}/signup.jsp">Đăng ký</a></li>
+                </ul>
+            </div>
+
+            <div class="mini-cart-menu">
+                <a href="${pageContext.request.contextPath}/cart" title="Giỏ hàng">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="mini-count_item count_item_pr">
+                        ${sessionScope.cart == null ? 0 : sessionScope.cart.totalQuantity}
+                    </span>
+                </a>
+
+                <div class="mini-cart-content">
+                    <%-- KHỐI 1: GIỎ HÀNG TRỐNG --%>
+                    <div class="mini-empty-cart js-mini-cart-empty"
+                         style="display: ${sessionScope.cart == null || sessionScope.cart.totalQuantity == 0 ? 'block' : 'none'}; text-align: center; padding: 20px;">
+                        <p>Chưa có sản phẩm trong giỏ hàng</p>
+                    </div>
+
+                    <%-- KHỐI 2: CÓ SẢN PHẨM --%>
+                    <div class="js-mini-cart-has-item"
+                         style="display: ${sessionScope.cart != null && sessionScope.cart.totalQuantity > 0 ? 'block' : 'none'};">
+
+                        <ul class="mini-cart-items-list js-mini-cart-list">
+                            <c:if test="${sessionScope.cart != null}">
+                                <c:forEach var="item" items="${sessionScope.cart.items}">
+                                    <li class="item-cart-row">
+                                        <div class="img-container">
+                                            <img src="${not empty item.product.images ? item.product.images[0].imageUrl : pageContext.request.contextPath.concat('/image/no-image.png')}"
+                                                 alt="${item.product.nameProduct}">
+                                        </div>
+
+                                        <div class="mini-item-info">
+                                            <a href="${pageContext.request.contextPath}/product-detail?id=${item.product.id}" class="mini-item-name">
+                                                    ${item.product.nameProduct}
+                                            </a>
+                                            <div class="mini-item-meta" style="font-size: 12px; color: #666; margin-bottom: 5px;">
+                                                <c:if test="${not empty item.size}">Size: <strong>${item.size}</strong></c:if>
+                                                <c:if test="${not empty item.sku}"> / Mã: ${item.sku}</c:if>
+                                            </div>
+                                            <span class="mini-item-price">
+                                                <fmt:formatNumber value="${item.price}" pattern="#,###"/>₫
+                                            </span>
+                                            <span class="mini-quantity">x${item.quantity}</span>
+                                        </div>
+                                        <a href="${pageContext.request.contextPath}/cart?action=remove&id=${item.product.id}&sku=${item.sku}"
+                                           class="remove-item" onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
+                                            <i class="fa-solid fa-xmark"></i>
+                                        </a>
+                                    </li>
+                                </c:forEach>
+                            </c:if>
+                        </ul>
+
+                        <div class="mini-cart-footer">
+                            <div class="mini-cart-total">
+                                <span>Tổng tiền tạm tính:
+                                    <strong class="mini-total-price js-mini-total-price">
+                                        <fmt:formatNumber value="${sessionScope.cart.totalPrice}" pattern="#,###"/>₫
+                                    </strong>
+                                </span>
+                            </div>
+                            <a href="${pageContext.request.contextPath}/cart" class="btn-pay">Tiến hành thanh toán</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="search-overlay-close-area" id="searchCloseArea"></div>
+</div>

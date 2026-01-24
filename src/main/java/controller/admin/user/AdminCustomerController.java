@@ -1,0 +1,41 @@
+package controller.admin.user;
+
+import java.io.IOException;
+import java.util.List;
+
+import dao.AddressDao;
+import dao.UserDao;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import model.user.Address;
+import model.user.User;
+
+@WebServlet("/admin/customers")
+public class AdminCustomerController extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        UserDao userDao = new UserDao();
+        List<User> users = userDao.findAll();
+        AddressDao addressDao = new AddressDao();
+        for (User user : users) {
+            List<Address> addresses = addressDao.findByUserId(user.getId());
+            String defaultAddress = "";
+            for (Address addr : addresses) {
+                if (addr.getIsDefault()) {
+                    defaultAddress = addr.getAddressLine();
+                    break;
+                }
+            }
+            user.setAuthProvider(defaultAddress);
+        }
+        int totalCustomers = userDao.countAll();
+        int newCustomersThisWeek = userDao.countNewThisWeek();
+        req.setAttribute("users", users);
+        req.setAttribute("totalCustomers", totalCustomers);
+        req.setAttribute("newCustomersThisWeek", newCustomersThisWeek);
+        req.getRequestDispatcher("/admin/customers.jsp").forward(req, resp);
+    }
+}
