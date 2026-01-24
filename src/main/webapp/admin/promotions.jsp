@@ -56,46 +56,7 @@
             </button>
         </div>
 
-        <style>
-            .tab-navigation {
-                display: flex;
-                gap: 10px;
-                padding: 0 20px;
-            }
 
-            .tab-button {
-                padding: 12px 24px;
-                border: none;
-                background: transparent;
-                cursor: pointer;
-                font-size: 15px;
-                font-weight: 500;
-                color: #666;
-                border-bottom: 3px solid transparent;
-                transition: all 0.3s;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-            }
-
-            .tab-button:hover {
-                color: var(--brand, #640100);
-                background: #f8f9fa;
-            }
-
-            .tab-button.active {
-                color: var(--brand, #640100);
-                border-bottom-color: var(--brand, #640100);
-            }
-
-            .tab-content {
-                display: none;
-            }
-
-            .tab-content.active {
-                display: block;
-            }
-        </style>
 
         <!-- Articles Tab Content -->
         <div id="articles-tab" class="tab-content active">
