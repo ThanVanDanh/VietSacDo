@@ -64,7 +64,8 @@ body {
     display: flex;
     align-items: center;
 }
-.nav-item i{
+
+.nav-item i {
     margin-right: 10px;
 }
 
@@ -100,7 +101,8 @@ body {
     color: var(--color-primary);
     margin: 0;
 }
-.main-content h1{
+
+.main-content h1 {
     font-size: 1.2rem;
 }
 
@@ -115,6 +117,7 @@ body {
     text-decoration: none;
 
 }
+
 .btn-primary:hover {
     background-color: var(--color-secondary);
 }
