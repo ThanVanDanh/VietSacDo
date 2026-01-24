@@ -135,7 +135,7 @@
 
             setTimeout(() => {
                 searchInput.focus();
-            }, 400); // 400ms (phải khớp với transition 0.4s trong CSS)
+            }, 400);
         });
 
         searchCloseArea.addEventListener('click', function() {
@@ -232,15 +232,21 @@
                 }
             });
         }
-        //LOGIC XÓA SẢN PHẨM KHỎI GIỎ HÀNG
         const removeButtons = document.querySelectorAll('.remove-item');
         removeButtons.forEach(btn => {
-            btn.addEventListener('click', function(e) {
+            btn.addEventListener('click', function (e) {
+                const href = (this.getAttribute('href') || '').trim();
+
+                const isRealLink = href && href !== '#' && !href.toLowerCase().startsWith('javascript:');
+                if (isRealLink) {
+                    return;
+                }
+
                 e.preventDefault();
                 const item = this.closest('li');
                 if (item) {
                     item.remove();
-                    updateMiniCartCount()
+                    updateMiniCartCount();
                     checkEmptyCart();
                     checkMiniCart();
                 }
@@ -304,8 +310,16 @@
                 const countElement = menu.querySelector('.mini-count_item');
 
                 if (cartList && countElement) {
-                    const itemCount = cartList.querySelectorAll('li').length;
-                    countElement.textContent = itemCount;
+                    let totalQty = 0;
+                    // Tìm tất cả các thẻ hiển thị số lượng (ví dụ: x1, x2...)
+                    const quantityElements = cartList.querySelectorAll('.mini-quantity');
+
+                    quantityElements.forEach(el => {
+                        let text = el.textContent.replace('x', '').trim();
+                        let qty = parseInt(text) || 0;
+                        totalQty += qty;
+                    });
+                    countElement.textContent = totalQty;
                 }
             });
         }
