@@ -5,163 +5,200 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chương trình Khuyến Mãi</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="icon" href="image/logoaodai.jpg" type="image/jpeg">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="style/promotion.css">
-    <link rel="stylesheet" href="style/style-header.css">
-    <link rel="stylesheet" href="style/backtop.css">
-    <script src="scripts/backtop.js"></script>
-    <link rel="stylesheet" href="style/footer.css">
-    <script src="scripts/home.js"></script>
-    <link rel="stylesheet" href="style/breadcrumb.css">
-    <link rel="stylesheet" href="style/style.css">
-    <script src="scripts/product-information.js"></script>
-    <script src="scripts/auth.js"></script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles.css">
+    <link rel="icon" href="${pageContext.request.contextPath}/image/logoaodai.jpg" type="image/jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+          integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/promotion.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/style-header.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/backtop.css">
+    <script src="${pageContext.request.contextPath}/scripts/backtop.js"></script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/footer.css">
+    <script src="${pageContext.request.contextPath}/scripts/home.js"></script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/breadcrumb.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/style/style.css">
+    <script src="${pageContext.request.contextPath}/scripts/product-information.js"></script>
+    <script src="${pageContext.request.contextPath}/scripts/auth.js"></script>
 </head>
 <body>
 
-<jsp:include page="header.jsp" />
+<jsp:include page="header.jsp"/>
+
 <div class="breadcrumb-container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="index.jsp">Trang Chủ</a></li>
-            <li class="breadcrumb-item"><a href="login.jsp">Tài khoản</a></li> <li class="breadcrumb-item active" aria-current="page">Chương trình Khuyến mãi</li>
+            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/index.jsp">Trang Chủ</a></li>
+            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/login.jsp">Tài khoản</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Chương trình Khuyến mãi</li>
         </ol>
     </nav>
-<div class="promotion-container">
-    <h1>Chương trình Khuyến Mãi</h1>
 
-    <div class="articles-list">
+    <div class="promotion-container">
+        <h1>Chương trình Khuyến Mãi</h1>
 
-        <article class="article-item">
-            <div class="article-image">
-                <a href="promotionsPost.jsp">
-                    <img src="image/aodai1.png" alt="Giảm 100k cho mỗi áo Áo gấm Hố Điệp">
-                </a>
+        <div class="articles-list" id="articlesContainer">
+            <div style="text-align:center; padding:40px;">
+                <i class="fas fa-spinner fa-spin" style="font-size:32px; color:#320000;"></i>
+                <p>Đang tải danh sách khuyến mãi...</p>
             </div>
-            <div class="article-content">
-                <h3>
-                    <a href="promotionsPost.jsp">
-                        Giảm 100k cho mỗi áo Áo gấm Hố Điệp phối tơ bay</a>
-                </h3>
-                <div class="meta">
-                    <span><i class="far fa-calendar-alt"></i> Th 2 19/08/2025</span>
-                    <span><i class="far fa-clock"></i> 3 phút đọc</span>
-                </div>
-                <p>[mới] Áo gấm Hố Điệp phối tơ bay! Vải em gầy guộc nhè nhẹ, như cánh vạc bay* Ưu đãi mua sắm: giảm 100k cho mỗi áo...</p>
-                <a href="promotionsPost.jsp" class="read-more">Đọc tiếp</a>
-            </div>
-        </article>
+        </div>
 
-        <article class="article-item">
-            <div class="article-image">
-                <a href="promotionsPost.jsp">
-                    <img src="image/aodai2.png" alt="Tặng vòng-cổ-handmade">
-                </a>
-            </div>
-            <div class="article-content">
-                <h3>
-                    <a href="promotionsPost.jsp">
-                        [Tặng vòng-cổ-handmade] cho tất cả đơn hàng áo yếm mùa hè từ 700k</a>
-                </h3>
-                <div class="meta">
-                    <span><i class="far fa-calendar-alt"></i> CN 04/05/2025</span>
-                    <span><i class="far fa-clock"></i> 3 phút đọc</span>
-                </div>
-                <p>[Tặng vòng-cổ-handmade] cho tất cả đơn hàng áo yếm mùa hè từ 700k Áp dụng cho mọi kênh bán của chúng mình với màu sắc ngẫu nhiên...</p>
-                <a href="promotionsPost.jsp" class="read-more">Đọc tiếp</a>
-            </div>
-        </article>
-
-        <article class="article-item">
-            <div class="article-image">
-                <a href="promotionsPost.jsp">
-                    <img src="image/aodai3.png" alt="CLEARANCE SALE">
-                </a>
-            </div>
-            <div class="article-content">
-                <h3>
-                    <a href="promotionsPost.jsp">[CLEARANCE SALE] ĐỒNG GIÁ TỪ 99K - DỊP DUY NHẤT TRONG NĂM</a>
-                </h3>
-                <div class="meta">
-                    <span><i class="far fa-calendar-alt"></i> Th 5 27/02/2025</span>
-                    <span><i class="far fa-clock"></i> 1 phút đọc</span>
-                </div>
-                <p>Thông báo cho chị em mình chung, Sumire Store chuẩn bị ra mắt ưu đãi thật đặc biệt - như một món quà tri ân vô giá...</p>
-                <a href="promotionsPost.jsp" class="read-more">Đọc tiếp</a>
-            </div>
-        </article>
-
+        <nav class="pagination" id="paginationContainer" style="display:none;">
+        </nav>
     </div>
-
-    <article class="article-item">
-        <div class="article-image">
-            <a href="promotionsPost.jsp">
-                <img src="image/aodai4.png" alt="VỪA NHẮM MẮT VỪA MỞ TÚI XUÂN">
-            </a>
-        </div>
-        <div class="article-content">
-            <h3>
-                <a href="promotionsPost.jsp">🌸 VỪA NHẮM MẮT VỪA MỞ TÚI XUÂN 🌸 voucher lên đến 500k cùng quà tặng phụ kiện xinh xắn</a>
-            </h3>
-            <div class="meta">
-                <span><i class="far fa-calendar-alt"></i> Th 6 03/01/2025</span>
-                <span><i class="far fa-clock"></i> 2 phút đọc</span>
-            </div>
-            <p>[Ưu-đãi-đầu-năm] VỪA NHẮM MẮT VỪA MỞ TÚI XUÂN voucher lên đến 500k cùng quà tặng phụ kiện xinh xắn đầu xuân...</p>
-            <a href="promotionsPost.jsp" class="read-more">Đọc tiếp</a>
-        </div>
-    </article>
-
-    <article class="article-item">
-        <div class="article-image">
-            <a href="promotionsPost.jsp">
-                <img src="image/aodai5.png" alt="Giảm 10% Album Mới">
-            </a>
-        </div>
-        <div class="article-content">
-            <h3>
-                <a href="promotionsPost.jsp">Giảm 10% Album Mới & Tặng Quạt gỗ kèm dây charm Hố điệp</a>
-            </h3>
-            <div class="meta">
-                <span><i class="far fa-calendar-alt"></i> Th 3 24/12/2024</span>
-                <span><i class="far fa-clock"></i> 3 phút đọc</span>
-            </div>
-            <p>[Mới-mới-mới] Áo khoác Tứ thân cách tân & Đầm cổ yếm "Nhan vô Huyên cơ". Mua sắm hoặc Pre-order từ hôm nay để nhận ưu đãi...</p>
-            <a href="/promotionsPost.jsp" class="read-more">Đọc tiếp</a>
-        </div>
-    </article>
-
-    <article class="article-item">
-        <div class="article-image">
-            <a href="promotionsPost.jsp">
-                <img src="image/aodai6.jpg" alt="Sale ưu đãi đến 60%">
-            </a>
-        </div>
-        <div class="article-content">
-            <h3>
-                <a href="promotionsPost.jsp">Sale ưu đãi đến 60% từ ngày 11 đến 15/12/2024</a>
-            </h3>
-            <div class="meta">
-                <span><i class="far fa-calendar-alt"></i> Th 4 11/12/2024</span>
-                <span><i class="far fa-clock"></i> 1 phút đọc</span>
-            </div>
-            <p>Dưới đây là danh sách các sản phẩm sale. Chị/bạn truy cập vào từng link để xem nhé. Chúc Chị/bạn lựa được sản phẩm ưng ý....</p>
-            <a href="promotionsPost.jsp" class="read-more">Đọc tiếp</a>
-        </div>
-    </article>
-
-</div> <nav class="pagination">
-    <a href="#" class="page-number active">1</a>
-    <a href="#" class="page-number">2</a>
-    <a href="#" class="page-number">3</a>
-</nav>
-
 </div>
-<jsp:include page="footer.jsp" />
+
+<jsp:include page="footer.jsp"/>
+
 <button onclick="scrollToTop()" id="backToTopBtn" title="Trở về đầu trang">
     <i class="fas fa-chevron-up"></i>
 </button>
+
+<script>
+    const CTX = '${pageContext.request.contextPath}';
+
+    function formatDateTime(dateStr) {
+        if (!dateStr) return 'N/A';
+        var date = new Date(dateStr);
+        if (isNaN(date.getTime())) return 'N/A';
+
+        var days = ['CN', 'Th 2', 'Th 3', 'Th 4', 'Th 5', 'Th 6', 'Th 7'];
+        var day = days[date.getDay()];
+        var d = String(date.getDate()).padStart(2, '0');
+        var m = String(date.getMonth() + 1).padStart(2, '0');
+        var y = date.getFullYear();
+
+        return day + ' ' + d + '/' + m + '/' + y;
+    }
+
+    function stripHtml(html) {
+        var tmp = document.createElement('DIV');
+        tmp.innerHTML = html;
+        return tmp.textContent || tmp.innerText || '';
+    }
+
+    function truncateText(text, maxLength) {
+        if (!text) return '';
+        if (text.length <= maxLength) return text;
+        return text.substring(0, maxLength) + '...';
+    }
+
+
+    function loadArticles() {
+        fetch(CTX + '/admin/article/list')
+            .then(function (response) {
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.json();
+            })
+            .then(function (articles) {
+                displayArticles(articles);
+            })
+            .catch(function (error) {
+                console.error('Error loading articles:', error);
+                var container = document.getElementById('articlesContainer');
+                container.innerHTML = '<div style="text-align:center; padding:40px; color:#e74c3c;">' +
+                    '<i class="fas fa-exclamation-triangle" style="font-size:32px;"></i>' +
+                    '<p>Không thể tải danh sách khuyến mãi. Vui lòng thử lại sau.</p>' +
+                    '</div>';
+            });
+    }
+
+    function displayArticles(articles) {
+        var container = document.getElementById('articlesContainer');
+
+        if (!articles || articles.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:40px;">' +
+                '<i class="fas fa-inbox" style="font-size:48px; color:#ccc;"></i>' +
+                '<p style="color:#999; margin-top:20px;">Hiện chưa có chương trình khuyến mãi nào.</p>' +
+                '</div>';
+            return;
+        }
+
+        var publishedArticles = articles.filter(function (article) {
+            return article.statusArticles === 'published';
+        });
+
+        publishedArticles.sort(function (a, b) {
+            var dateA = new Date(a.startDate || a.createdAt);
+            var dateB = new Date(b.startDate || b.createdAt);
+            return dateB - dateA;
+        });
+
+        if (publishedArticles.length === 0) {
+            container.innerHTML = '<div style="text-align:center; padding:40px;">' +
+                '<i class="fas fa-inbox" style="font-size:48px; color:#ccc;"></i>' +
+                '<p style="color:#999; margin-top:20px;">Hiện chưa có chương trình khuyến mãi nào được công bố.</p>' +
+                '</div>';
+            return;
+        }
+
+        container.innerHTML = '';
+
+        publishedArticles.forEach(function (article) {
+            var articleHtml = createArticleHTML(article);
+            container.innerHTML += articleHtml;
+        });
+    }
+
+    function createArticleHTML(article) {
+        var title = article.title || 'Chương trình khuyến mãi';
+        var bannerUrl = article.bannerImageUrl || (CTX + '/image/default-promotion.jpg');
+        var content = article.content || '';
+        var plainText = stripHtml(content);
+        var excerpt = truncateText(plainText, 150);
+        var publishDate = formatDateTime(article.startDate || article.createdAt);
+        var detailUrl = CTX + '/promotionsPost.jsp?id=' + article.id;
+
+        var voucherBadge = '';
+        if (article.voucherCode) {
+            voucherBadge = '<span style="display:inline-block; background:#e74c3c; color:white; padding:4px 8px; ' +
+                'border-radius:4px; font-size:12px; font-weight:bold; margin-left:10px;">' +
+                '<i class="fas fa-ticket-alt"></i> ' + article.voucherCode +
+                '</span>';
+        }
+
+        var html = '<article class="article-item">' +
+            '<div class="article-image">' +
+            '<a href="' + detailUrl + '">' +
+            '<img src="' + bannerUrl + '" alt="' + escapeHtml(title) + '" ' +
+            'onerror="this.src=\'' + CTX + '/image/default-promotion.jpg\'">' +
+            '</a>' +
+            '</div>' +
+            '<div class="article-content">' +
+            '<h3>' +
+            '<a href="' + detailUrl + '">' + escapeHtml(title) + '</a>' +
+            voucherBadge +
+            '</h3>' +
+            '<div class="meta">' +
+            '<span><i class="far fa-calendar-alt"></i> ' + publishDate + '</span>' +
+            '</div>' +
+            '<p>' + escapeHtml(excerpt) + '</p>' +
+            '<a href="' + detailUrl + '" class="read-more">Đọc thông tin chi tiết...</a>' +
+            '</div>' +
+            '</article>';
+
+        return html;
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        var map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return String(text).replace(/[&<>"']/g, function (m) {
+            return map[m];
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        loadArticles();
+    });
+</script>
+
 </body>
 </html>
