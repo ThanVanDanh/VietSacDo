@@ -19,6 +19,7 @@ public class ProductVariant extends AId implements Serializable {
     private int stockQuantity;
 
 
+
     public ProductVariant(int id) {
         super(id);
     }
@@ -26,13 +27,14 @@ public class ProductVariant extends AId implements Serializable {
     public ProductVariant() {
     }
 
-    public ProductVariant(int id, int productId, String sku, String size, String color, double currentPrice, int stockQuantity) {
+    public ProductVariant(int id, int productId, String sku, String size, String color, double currentPrice, double discountedPrice, int stockQuantity) {
         super(id);
         this.productId = productId;
         this.sku = sku;
         this.size = size;
         this.color = color;
         this.currentPrice = currentPrice;
+        this.discountedPrice = discountedPrice;
         this.stockQuantity = stockQuantity;
     }
 
