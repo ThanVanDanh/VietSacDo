@@ -40,7 +40,7 @@ public abstract class BaseDao {
             String url = String.format(
                     "jdbc:mysql://%s:%s/%s?" +
                             "useSSL=false&" +                    // Tắt SSL để đơn giản
-                            "serverTimezone=UTC&" +              // Set timezone
+                            "serverTimezone=Asia/Ho_Chi_Minh&" + // Set timezone VN
                             "allowPublicKeyRetrieval=true&" +    // Cho phép authentication
                             "autoReconnect=true&" +              // Tự động reconnect
                             "maxReconnects=3&" +                 // Số lần retry
