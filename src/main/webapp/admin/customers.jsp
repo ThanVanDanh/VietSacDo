@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../style/customers.css">
     <link rel="stylesheet" href="../style/charts.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../scripts/admin/admin.js"></script>
     <script>
         // App context path for AJAX endpoints (set by server)
         var APP_CTX = '${pageContext.request.contextPath}';

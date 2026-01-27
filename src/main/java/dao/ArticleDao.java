@@ -2,6 +2,7 @@ package dao;
 
 import model.article.Article;
 import model.article.ArticleListDTO;
+import model.voucher.Voucher;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 
@@ -66,31 +67,31 @@ public class ArticleDao extends BaseDao {
     }
 
     public Article getById(int id) {
-        String sql = "SELECT * FROM Articles WHERE id = :id";
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("id", id)
-                        .mapToBean(Article.class)
-                        .findFirst()
-                        .orElse(null)
-        );
-    }
-
-    public Article getByIdWithVoucher(int id) {
         return jdbi.withHandle(handle -> {
+            // Get article first
             Article article = handle.createQuery("SELECT * FROM Articles WHERE id = :id")
                     .bind("id", id)
                     .mapToBean(Article.class)
                     .findFirst()
                     .orElse(null);
 
+            // If article has voucher, fetch and populate it
             if (article != null && article.getVoucherId() != null) {
-                VoucherDao voucherDao = new VoucherDao();
-                article.setVoucher(voucherDao.getById(article.getVoucherId()));
+                Voucher voucher = handle.createQuery("SELECT * FROM Vouchers WHERE id = :voucherId")
+                        .bind("voucherId", article.getVoucherId())
+                        .mapToBean(Voucher.class)
+                        .findFirst()
+                        .orElse(null);
+
+                article.setVoucher(voucher);
             }
 
             return article;
         });
+    }
+
+    public Article getByIdWithVoucher(int id) {
+        return getById(id);
     }
 
     public int insert(Article article) {

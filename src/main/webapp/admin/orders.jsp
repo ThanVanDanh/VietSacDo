@@ -12,7 +12,7 @@
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <link rel="stylesheet" href="../style/charts.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../scripts/admin.js"></script>
+    <script src="../scripts/admin/admin.js"></script>
 </head>
 <body>
 <div class="admin-container">
