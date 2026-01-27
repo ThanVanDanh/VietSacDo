@@ -95,4 +95,99 @@ public class ProductVariantDao extends BaseDao {
                 .execute();
         return affected > 0;
     }
+
+    /**
+     * Cập nhật discounted_price cho các variants của một product
+     */
+    public boolean updateDiscountedPriceByProductId(int productId, Double discountedPrice) {
+        String sql = "UPDATE Product_variants SET discounted_price = :discountedPrice WHERE product_id = :productId";
+        return get().withHandle(handle ->
+                handle.createUpdate(sql)
+                        .bind("discountedPrice", discountedPrice)
+                        .bind("productId", productId)
+                        .execute() > 0
+        );
+    }
+
+    /**
+     * Cập nhật discounted_price cho tất cả variants của products trong các categories
+     */
+    public int updateDiscountedPriceByCategoryIds(List<Integer> categoryIds, Double discountedPrice) {
+        if (categoryIds == null || categoryIds.isEmpty()) return 0;
+
+        String sql = "UPDATE Product_variants pv " +
+                "INNER JOIN Products p ON pv.product_id = p.id " +
+                "SET pv.discounted_price = :discountedPrice " +
+                "WHERE p.category_id IN (<categoryIds>)";
+
+        return get().withHandle(handle ->
+                handle.createUpdate(sql)
+                        .bind("discountedPrice", discountedPrice)
+                        .bindList("categoryIds", categoryIds)
+                        .execute()
+        );
+    }
+
+    /**
+     * Cập nhật discounted_price cho một variant cụ thể theo ID
+     */
+    public boolean updateDiscountedPrice(int variantId, double discountedPrice) {
+        String sql = "UPDATE Product_variants SET discounted_price = :discountedPrice WHERE id = :id";
+        return get().withHandle(handle ->
+                handle.createUpdate(sql)
+                        .bind("discountedPrice", discountedPrice)
+                        .bind("id", variantId)
+                        .execute() > 0
+        );
+    }
+
+    /**
+     * Lấy variant theo SKU
+     */
+    public ProductVariant getVariantBySku(String sku) {
+        String sql = "SELECT * FROM Product_variants WHERE sku = :sku LIMIT 1";
+        
+        return get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("sku", sku)
+                        .mapToBean(ProductVariant.class)
+                        .findFirst()
+                        .orElse(null)
+        );
+    }
+
+    /**
+     * Lấy variant đầu tiên của product theo product code hoặc SKU
+     */
+    public ProductVariant getFirstVariantByProductCode(String code) {
+        // Thử tìm theo SKU trước
+        String sqlBySku = "SELECT * FROM Product_variants WHERE sku = :code ORDER BY id LIMIT 1";
+        
+        ProductVariant variant = get().withHandle(handle ->
+                handle.createQuery(sqlBySku)
+                        .bind("code", code)
+                        .mapToBean(ProductVariant.class)
+                        .findFirst()
+                        .orElse(null)
+        );
+        
+        // Nếu tìm thấy theo SKU thì return
+        if (variant != null) {
+            return variant;
+        }
+        
+        // Nếu không tìm thấy, thử tìm theo product_code
+        String sqlByProductCode = "SELECT pv.* FROM Product_variants pv " +
+                "INNER JOIN Products p ON pv.product_id = p.id " +
+                "WHERE p.product_code = :code " +
+                "ORDER BY pv.id LIMIT 1";
+
+        return get().withHandle(handle ->
+                handle.createQuery(sqlByProductCode)
+                        .bind("code", code)
+                        .mapToBean(ProductVariant.class)
+                        .findFirst()
+                        .orElse(null)
+        );
+    }
 }

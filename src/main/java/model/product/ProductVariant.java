@@ -13,6 +13,8 @@ public class ProductVariant extends AId implements Serializable {
     private String color;
     @ColumnName("current_price")
     private double currentPrice;
+    @ColumnName("discounted_price")
+    private double discountedPrice;
     @ColumnName("stock_quantity")
     private int stockQuantity;
 
@@ -20,7 +22,9 @@ public class ProductVariant extends AId implements Serializable {
     public ProductVariant(int id) {
         super(id);
     }
-    public  ProductVariant(){}
+
+    public ProductVariant() {
+    }
 
     public ProductVariant(int id, int productId, String sku, String size, String color, double currentPrice, int stockQuantity) {
         super(id);
@@ -78,5 +82,13 @@ public class ProductVariant extends AId implements Serializable {
 
     public void setStockQuantity(int stockQuantity) {
         this.stockQuantity = stockQuantity;
+    }
+
+    public double getDiscountedPrice() {
+        return discountedPrice;
+    }
+
+    public void setDiscountedPrice(double discountedPrice) {
+        this.discountedPrice = discountedPrice;
     }
 }
