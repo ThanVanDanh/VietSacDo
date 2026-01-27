@@ -5,19 +5,8 @@ import org.jdbi.v3.core.Jdbi;
 
 import java.sql.SQLException;
 
-/**
- * BaseDao - FIX: Connection closed issue
- *
- * VẤN ĐỀ CŨ:
- * - Mỗi lần gọi get() tạo DataSource mới
- * - Connection bị close ngay sau khi dùng
- *
- * GIẢI PHÁP:
- * - Dùng static JDBI để tái sử dụng
- * - Cấu hình connection properties đúng
- */
 public abstract class BaseDao {
-    private static Jdbi jdbi; // ✅ Static - tái sử dụng cho tất cả requests
+    private static Jdbi jdbi;
 
     public Jdbi get() {
         if (jdbi == null) {
@@ -36,7 +25,6 @@ public abstract class BaseDao {
 
             MysqlDataSource ds = new MysqlDataSource();
 
-            // Build connection URL với parameters quan trọng
             String url = String.format(
                     "jdbc:mysql://%s:%s/%s?" +
                             "useSSL=false&" +                    // Tắt SSL để đơn giản
@@ -56,30 +44,21 @@ public abstract class BaseDao {
             ds.setUser(DBProperties.username);
             ds.setPassword(DBProperties.password);
 
-            // ✅ Các settings quan trọng
             ds.setUseCompression(true);
-
-            // ✅ Tạo JDBI instance
             jdbi = Jdbi.create(ds);
 
-            System.out.println("✅ JDBI created: " + jdbi);
 
-            // ✅ Test connection ngay
             jdbi.useHandle(handle -> {
                 Integer result = handle.createQuery("SELECT 1 as test")
                         .mapTo(Integer.class)
                         .one();
-                System.out.println("✅ Connection test result: " + result);
             });
 
-            System.out.println("✅ Database connection ready!");
 
         } catch (SQLException e) {
-            System.err.println("❌ SQL Exception: " + e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("Database connection failed: " + e.getMessage(), e);
         } catch (Exception e) {
-            System.err.println("❌ Exception: " + e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("Cannot initialize database: " + e.getMessage(), e);
         }
