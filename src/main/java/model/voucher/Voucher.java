@@ -7,25 +7,15 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class Voucher extends AId implements Serializable {
-    @ColumnName("voucher_code")
     private String voucherCode;
-    @ColumnName("discount_type")
     private String discountType; // "percentage" hoặc "fixed"
-    @ColumnName("discount_value")
     private double discountValue;
-    @ColumnName("min_order_amount")
     private double minOrderAmount;
-    @ColumnName("max_usage")
     private int maxUsage;
-    @ColumnName("current_usage")
     private int currentUsage;
-    @ColumnName("valid_from")
     private LocalDateTime validFrom;
-    @ColumnName("valid_to")
     private LocalDateTime validTo;
-    @ColumnName("is_active")
     private boolean isActive;
-    @ColumnName("created_at")
     private LocalDateTime createdAt;
 
     public Voucher() {
@@ -35,7 +25,9 @@ public class Voucher extends AId implements Serializable {
         super(id);
     }
 
-    public Voucher(int id, LocalDateTime createdAt, boolean isActive, LocalDateTime validTo, LocalDateTime validFrom, int currentUsage, int maxUsage, double minOrderAmount, double discountValue, String discountType, String voucherCode) {
+    public Voucher(int id, LocalDateTime createdAt, boolean isActive, LocalDateTime validTo, LocalDateTime validFrom,
+            int currentUsage, int maxUsage, double minOrderAmount, double discountValue, String discountType,
+            String voucherCode) {
         super(id);
         this.createdAt = createdAt;
         this.isActive = isActive;
@@ -53,6 +45,7 @@ public class Voucher extends AId implements Serializable {
         return voucherCode;
     }
 
+    @ColumnName("voucher_code")
     public void setVoucherCode(String voucherCode) {
         this.voucherCode = voucherCode;
     }
@@ -61,6 +54,7 @@ public class Voucher extends AId implements Serializable {
         return discountType;
     }
 
+    @ColumnName("discount_type")
     public void setDiscountType(String discountType) {
         this.discountType = discountType;
     }
@@ -69,6 +63,7 @@ public class Voucher extends AId implements Serializable {
         return discountValue;
     }
 
+    @ColumnName("discount_value")
     public void setDiscountValue(double discountValue) {
         this.discountValue = discountValue;
     }
@@ -77,6 +72,7 @@ public class Voucher extends AId implements Serializable {
         return minOrderAmount;
     }
 
+    @ColumnName("min_order_amount")
     public void setMinOrderAmount(double minOrderAmount) {
         this.minOrderAmount = minOrderAmount;
     }
@@ -85,6 +81,7 @@ public class Voucher extends AId implements Serializable {
         return maxUsage;
     }
 
+    @ColumnName("max_usage")
     public void setMaxUsage(int maxUsage) {
         this.maxUsage = maxUsage;
     }
@@ -93,6 +90,7 @@ public class Voucher extends AId implements Serializable {
         return currentUsage;
     }
 
+    @ColumnName("current_usage")
     public void setCurrentUsage(int currentUsage) {
         this.currentUsage = currentUsage;
     }
@@ -101,6 +99,7 @@ public class Voucher extends AId implements Serializable {
         return validFrom;
     }
 
+    @ColumnName("valid_from")
     public void setValidFrom(LocalDateTime validFrom) {
         this.validFrom = validFrom;
     }
@@ -109,6 +108,7 @@ public class Voucher extends AId implements Serializable {
         return validTo;
     }
 
+    @ColumnName("valid_to")
     public void setValidTo(LocalDateTime validTo) {
         this.validTo = validTo;
     }
@@ -117,6 +117,7 @@ public class Voucher extends AId implements Serializable {
         return isActive;
     }
 
+    @ColumnName("is_active")
     public void setActive(boolean active) {
         isActive = active;
     }
@@ -125,6 +126,7 @@ public class Voucher extends AId implements Serializable {
         return createdAt;
     }
 
+    @ColumnName("created_at")
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
