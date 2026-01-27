@@ -258,48 +258,25 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     }
+    const navItems = document.querySelectorAll('.sidebar-nav .nav-item');
+    const currentPath = window.location.pathname;
 
-    //------Chart------------
-            //------ Biểu đồ khách hàng ------------
-    const ctx1 = document.getElementById('customerOrdersChart');
-    if (ctx1) {
-        new Chart(ctx1, {
-            type: 'bar',
-            data: {
-                labels: ['Minh Thư', 'Lại Thị Hoa', 'Văn Danh', 'Văn Đô', 'Văn Điền', 'Minh Hoài'],
-                datasets: [{label: 'Số đơn hàng', data: [8, 6, 5, 1, 4, 1], backgroundColor: '#640100'}]
-            },
-            options: {responsive: true, scales: {y: {beginAtZero: true}}, plugins: {legend: {display: false}}}
+    navItems.forEach(item => {
+        const link = item.querySelector('a');
+        const href = link.getAttribute('href');
+
+        // 1. Xử lý click thủ công (nếu không load lại trang)
+        item.addEventListener('click', function() {
+            navItems.forEach(i => i.classList.remove('active'));
+            this.classList.add('active');
         });
-    }
-            //------Biểu đồ đơn hàng-----
-    const ctx2 = document.getElementById('revenueChart');
-    if (ctx2) {
-        new Chart(ctx2, {
-            type: 'line',
-            data: {
-                labels: ['Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11'],
-                datasets: [{
-                    label: 'Doanh thu (VNĐ)',
-                    data: [9500000, 12300000, 8800000, 14500000, 15500000, 15500000],
-                    borderColor: '#640100',
-                    backgroundColor: 'rgba(100,1,0,0.1)',
-                    fill: true, tension: 0.3, pointRadius: 4, pointBackgroundColor: '#640100'
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {callback: v => v.toLocaleString('vi-VN') + '₫'}
-                    }
-                },
-                plugins: {
-                    legend: {display: true, position: 'bottom'},
-                    tooltip: {callbacks: {label: ctx => ctx.parsed.y.toLocaleString('vi-VN') + '₫'}}
-                }
-            }
-        });
-    }
+
+        // 2. Tự động giữ trạng thái active dựa trên URL hiện tại
+        // Kiểm tra xem href của link có khớp với URL hiện tại không
+        if (currentPath.includes(href) && href !== "#") {
+            navItems.forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+        }
+    });
+
 });

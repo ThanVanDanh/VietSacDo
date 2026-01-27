@@ -14,27 +14,8 @@
 <body>
 <div class="admin-container">
     <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <a href="dashboard.jsp">
-                <img src="${pageContext.request.contextPath}/image/logo.png" alt="Logo Việt Sắc Đỏ">
-            </a>
-            <h2>Trang Admin</h2>
-        </div>
-        <nav class="sidebar-nav">
-            <ul>
-                <li class="nav-item"><a href="dashboard.jsp"><i class="fas fa-tachometer-alt"></i> Tổng quan</a></li>
-                <li class="nav-item"><a href="product.jsp"><i class="fas fa-box-open"></i> Quản lý Sản phẩm</a></li>
-                <li class="nav-item"><a href="orders.jsp"><i class="fas fa-shopping-cart"></i> Quản lý Đơn hàng</a></li>
-                <li class="nav-item"><a href="customers.jsp"><i class="fas fa-users"></i> Quản lý Khách hàng</a></li>
-                <li class="nav-item"><a href="contact-admin.jsp"><i class="fa-regular fa-address-book"></i> Quản lý Liên hệ</a></li>
-                <li class="nav-item active"><a href="promotions.jsp"><i class="fas fa-tags"></i> Khuyến mãi</a></li>
-                <li class="nav-item">
-                    <a href="${pageContext.request.contextPath}/index.jsp"><i class="fas fa-sign-out-alt"></i> Trở về Trang Chủ</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+    <jsp:include page="sidebar.jsp" />
+
 
     <!-- Main Content -->
     <main class="main-content">
@@ -1073,6 +1054,6 @@
 
     console.log('✅ Promotion management loaded');
 </script>
-
+<script src="${pageContext.request.contextPath}/scripts/admin.js"></script>
 </body>
 </html>
