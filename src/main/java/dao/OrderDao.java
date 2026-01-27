@@ -71,4 +71,12 @@ public class OrderDao extends BaseDao {
                 .findFirst()
                 .orElse(null));
     }
+
+    public List<Order> getOrdersByUserId(int userId) {
+        return jdbi.withHandle(
+                handle -> handle.createQuery("SELECT * FROM Orders WHERE user_id = :userId ORDER BY created_at DESC")
+                        .bind("userId", userId)
+                        .mapToBean(Order.class)
+                        .list());
+    }
 }

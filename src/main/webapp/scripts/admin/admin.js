@@ -3,8 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
     //Chi tiết khách hàng
     if (modal) {
         const customerViewBtn = document.querySelectorAll('.customer-table .btn-view');
-        const  customerClose = modal.querySelector('.close-modal');
-       //Xem
+        const customerClose = modal.querySelector('.close-modal');
+        //Xem
         customerViewBtn.forEach(nut => {
             nut.addEventListener('click', () => {
                 document.getElementById('modal-fullName').textContent = nut.getAttribute('data-fullname') || '';
@@ -19,6 +19,70 @@ document.addEventListener("DOMContentLoaded", () => {
                 else if (status === 'banned') statusText = 'Bị khóa';
                 else statusText = 'Chưa kích hoạt';
                 document.getElementById('modal-status').textContent = statusText;
+
+                // Clear old history
+                const historyList = document.getElementById('order-history-list');
+                historyList.innerHTML = '<li style="text-align:center;">Đang tải...</li>';
+
+                // Fetch Orders
+                const userId = nut.getAttribute('data-id'); // Make sure button has data-id
+                if (userId) {
+                    fetch('get-customer-orders?userId=' + userId)
+                        .then(res => res.json())
+                        .then(orders => {
+                            historyList.innerHTML = '';
+                            if (!orders || orders.length === 0) {
+                                historyList.innerHTML = '<li>Khách hàng chưa có đơn hàng nào.</li>';
+                                return;
+                            }
+                            orders.forEach(o => {
+                                const li = document.createElement('li');
+                                li.classList.add('order-history-item'); // Add class for styling
+                                let statusClass = 'status-processing';
+                                let statusText = 'Đang xử lý'; // Default status text
+                                if (o.orderStatus === 'hoàn thành') {
+                                    statusClass = 'status-complete';
+                                    statusText = 'Hoàn thành';
+                                } else if (o.orderStatus === 'đã hủy') {
+                                    statusClass = 'status-cancel';
+                                    statusText = 'Đã hủy';
+                                } else if (o.orderStatus === 'đang giao') {
+                                    statusClass = 'status-shipping';
+                                    statusText = 'Đang giao';
+                                }
+
+                                // Format currency
+                                const total = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(o.totalAmount);
+                                const dateDisplay = o.created_at || o.createdAt;
+
+                                // Timeline HTML Structure
+                                let html = `
+                                    <div class="timeline-date">${dateDisplay}</div>
+                                    <div class="timeline-content">
+                                        <div class="timeline-header">
+                                            <span class="order-code">#${o.orderCode || 'ORD...'}</span>
+                                            <span class="${statusClass}">${statusText}</span>
+                                        </div>
+                                        <div class="timeline-body">
+                                            <div class="order-total">${total}</div>
+                                        </div>
+                                `;
+
+                                if (o.orderStatus === 'đã hủy' && o.cancelReason) {
+                                    html += `<span class="cancel-reason">Lý do: ${o.cancelReason}</span>`;
+                                }
+
+                                html += `</div>`; // Close timeline-content
+                                li.innerHTML = html;
+                                historyList.appendChild(li);
+                            });
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            historyList.innerHTML = '<li style="color:red;">Lỗi tải lịch sử đơn hàng.</li>';
+                        });
+                }
+
                 modal.style.display = 'flex';
             });
         });
@@ -48,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
         //Đóng
         orderClose.addEventListener('click', () => {
             order.style.display = 'none';
-            });
+        });
         // Click vào vùng nền mờ bên ngoài
         order.addEventListener('click', (e) => {
             if (e.target === order) {
@@ -84,7 +148,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let rowToDelete = null;
 
         deleteModalBtn.forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 rowToDelete = this.closest('tr');
                 const userName = this.getAttribute('data-name');
                 document.getElementById('customer-name-to-delete').textContent = userName;
@@ -177,7 +241,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let targetAction = null;
 
         actionButtons.forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 targetRow = this.closest('tr');
                 targetId = this.getAttribute('data-id');
                 const name = this.getAttribute('data-name'); // Nhớ thêm data-name vào cả nút unlock ở JSP
@@ -243,18 +307,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (status === 'blocked') {
                 // Nếu muốn KHÓA:
-                if(badgeActive) badgeActive.style.display = 'none';
-                if(badgeBlocked) badgeBlocked.style.display = 'inline-block';
+                if (badgeActive) badgeActive.style.display = 'none';
+                if (badgeBlocked) badgeBlocked.style.display = 'inline-block';
 
-                if(btnBlock) btnBlock.style.display = 'none';
-                if(btnUnlock) btnUnlock.style.display = 'inline-block';
+                if (btnBlock) btnBlock.style.display = 'none';
+                if (btnUnlock) btnUnlock.style.display = 'inline-block';
             } else {
                 // Nếu muốn MỞ KHÓA (Active):
-                if(badgeActive) badgeActive.style.display = 'inline-block';
-                if(badgeBlocked) badgeBlocked.style.display = 'none';
+                if (badgeActive) badgeActive.style.display = 'inline-block';
+                if (badgeBlocked) badgeBlocked.style.display = 'none';
 
-                if(btnBlock) btnBlock.style.display = 'inline-block';
-                if(btnUnlock) btnUnlock.style.display = 'none';
+                if (btnBlock) btnBlock.style.display = 'inline-block';
+                if (btnUnlock) btnUnlock.style.display = 'none';
             }
         }
     }
