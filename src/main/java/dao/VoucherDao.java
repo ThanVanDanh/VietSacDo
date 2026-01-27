@@ -16,13 +16,11 @@ public class VoucherDao extends BaseDao {
     public List<Voucher> getAll() {
         // Tự động deactivate các voucher đã hết hạn
         deactivateExpiredVouchers();
-        
+
         String sql = "SELECT * FROM Vouchers ORDER BY created_at DESC";
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .mapToBean(Voucher.class)
-                        .list()
-        );
+        return jdbi.withHandle(handle -> handle.createQuery(sql)
+                .mapToBean(Voucher.class)
+                .list());
     }
 
     public List<Voucher> getActiveVouchers() {
@@ -33,33 +31,27 @@ public class VoucherDao extends BaseDao {
                 "AND current_usage < max_usage " +
                 "ORDER BY created_at DESC";
 
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .mapToBean(Voucher.class)
-                        .list()
-        );
+        return jdbi.withHandle(handle -> handle.createQuery(sql)
+                .mapToBean(Voucher.class)
+                .list());
     }
 
     public Voucher getById(int id) {
         String sql = "SELECT * FROM Vouchers WHERE id = :id";
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("id", id)
-                        .mapToBean(Voucher.class)
-                        .findFirst()
-                        .orElse(null)
-        );
+        return jdbi.withHandle(handle -> handle.createQuery(sql)
+                .bind("id", id)
+                .mapToBean(Voucher.class)
+                .findFirst()
+                .orElse(null));
     }
 
     public Voucher getByCode(String code) {
         String sql = "SELECT * FROM Vouchers WHERE voucher_code = :code";
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("code", code)
-                        .mapToBean(Voucher.class)
-                        .findFirst()
-                        .orElse(null)
-        );
+        return jdbi.withHandle(handle -> handle.createQuery(sql)
+                .bind("code", code)
+                .mapToBean(Voucher.class)
+                .findFirst()
+                .orElse(null));
     }
 
     public int insert(Voucher voucher) {
@@ -121,20 +113,16 @@ public class VoucherDao extends BaseDao {
 
     public boolean delete(int id) {
         String sql = "DELETE FROM Vouchers WHERE id = :id";
-        return jdbi.withHandle(handle ->
-                handle.createUpdate(sql)
-                        .bind("id", id)
-                        .execute() > 0
-        );
+        return jdbi.withHandle(handle -> handle.createUpdate(sql)
+                .bind("id", id)
+                .execute() > 0);
     }
 
     public boolean incrementUsage(int voucherId) {
         String sql = "UPDATE Vouchers SET current_usage = current_usage + 1 WHERE id = :id";
-        return jdbi.withHandle(handle ->
-                handle.createUpdate(sql)
-                        .bind("id", voucherId)
-                        .execute() > 0
-        );
+        return jdbi.withHandle(handle -> handle.createUpdate(sql)
+                .bind("id", voucherId)
+                .execute() > 0);
     }
 
     /**
@@ -143,32 +131,26 @@ public class VoucherDao extends BaseDao {
     public int deactivateExpiredVouchers() {
         String sql = "UPDATE Vouchers SET is_active = 0 " +
                 "WHERE is_active = 1 AND valid_to < NOW()";
-        
-        return jdbi.withHandle(handle ->
-                handle.createUpdate(sql).execute()
-        );
+
+        return jdbi.withHandle(handle -> handle.createUpdate(sql).execute());
     }
 
     public boolean existsByCode(String code) {
         String sql = "SELECT COUNT(*) FROM Vouchers WHERE voucher_code = :code";
-        Integer count = jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("code", code)
-                        .mapTo(Integer.class)
-                        .one()
-        );
+        Integer count = jdbi.withHandle(handle -> handle.createQuery(sql)
+                .bind("code", code)
+                .mapTo(Integer.class)
+                .one());
         return count > 0;
     }
 
     public boolean existsByCodeExcept(String code, int excludeId) {
         String sql = "SELECT COUNT(*) FROM Vouchers WHERE voucher_code = :code AND id != :id";
-        Integer count = jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("code", code)
-                        .bind("id", excludeId)
-                        .mapTo(Integer.class)
-                        .one()
-        );
+        Integer count = jdbi.withHandle(handle -> handle.createQuery(sql)
+                .bind("code", code)
+                .bind("id", excludeId)
+                .mapTo(Integer.class)
+                .one());
         return count > 0;
     }
 }
