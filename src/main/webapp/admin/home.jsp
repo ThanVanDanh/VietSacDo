@@ -26,6 +26,30 @@
         </header>
         <div class="home-config-container">
             <div id="alert-container"></div>
+            
+            <!-- Banner Management Section -->
+            <div class="banner-management-section">
+                <div class="section-card">
+                    <div class="section-header">
+                        <h3><i class="fas fa-images"></i> Quản lý Banner Slideshow</h3>
+                        <button class="btn-add-banner" onclick="openBannerModal()">
+                            <i class="fas fa-plus"></i> Thêm Banner
+                        </button>
+                    </div>
+                    <div class="section-body">
+                        <div id="banner-list" class="banner-list">
+                            <div class="empty-state" id="banner-empty-state">
+                                <i class="fas fa-image"></i>
+                                <p>Đang tải danh sách banner...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="section-divider">
+            
+            <!-- Section Management -->
             <button class="btn-add-section" onclick="addNewSection()">
                 <i class="fas fa-plus-circle"></i> Thêm Section Mới
             </button>
@@ -37,6 +61,54 @@
             </div>
         </div>
     </main>
+</div>
+
+<!-- Banner Modal -->
+<div id="bannerModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="bannerModalTitle"><i class="fas fa-image"></i> Thêm Banner Mới</h3>
+            <button class="modal-close" onclick="closeBannerModal()">&times;</button>
+        </div>
+        <form id="bannerForm" enctype="multipart/form-data">
+            <input type="hidden" id="bannerId" name="bannerId">
+            <div class="form-group">
+                <label><i class="fas fa-image"></i> Ảnh Banner <span class="required">*</span></label>
+                <div class="image-upload-area" id="bannerImageUpload">
+                    <input type="file" id="bannerImage" name="image" accept="image/*" onchange="previewBannerImage(this)">
+                    <div class="upload-placeholder" id="uploadPlaceholder">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Kéo thả hoặc click để chọn ảnh</p>
+                        <span>PNG, JPG, JPEG (Khuyến nghị: 1920x600px)</span>
+                    </div>
+                    <img id="bannerPreview" class="image-preview" style="display:none;">
+                </div>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-heading"></i> Mô tả (Alt Text)</label>
+                <input type="text" id="bannerAltText" name="altText" placeholder="Mô tả ngắn về banner...">
+            </div>
+            <div class="form-row">
+                <div class="form-group half">
+                    <label><i class="fas fa-sort-numeric-up"></i> Thứ tự hiển thị</label>
+                    <input type="number" id="bannerSortOrder" name="sortOrder" min="1" value="1">
+                </div>
+                <div class="form-group half">
+                    <label><i class="fas fa-toggle-on"></i> Trạng thái</label>
+                    <select id="bannerIsActive" name="isActive">
+                        <option value="true">Hiển thị</option>
+                        <option value="false">Ẩn</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeBannerModal()">Hủy</button>
+                <button type="submit" class="btn-save" id="btnSaveBanner">
+                    <i class="fas fa-save"></i> Lưu Banner
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script>
@@ -59,10 +131,201 @@
             showAlert('Chưa có danh mục nào. Vui lòng tạo danh mục trước.', 'danger');
         }
         
+        // Load banners
+        loadBanners();
+        
         DEFAULT_SECTIONS.forEach(function(key) {
             loadSection(key);
         });
     });
+
+    // ========== BANNER MANAGEMENT ==========
+    function loadBanners() {
+        fetch(CTX + '/admin/banner/api')
+            .then(function(response) { 
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status);
+                }
+                return response.json(); 
+            })
+            .then(function(data) {
+                if (data.success) {
+                    renderBannerList(data.banners);
+                } else {
+                    showAlert('Lỗi tải banner: ' + data.error, 'danger');
+                }
+            })
+            .catch(function(error) {
+                console.error('Error loading banners:', error);
+                document.getElementById('banner-empty-state').innerHTML = 
+                    '<i class="fas fa-exclamation-triangle"></i><p>Không thể tải danh sách banner</p>';
+            });
+    }
+
+    function renderBannerList(banners) {
+        var container = document.getElementById('banner-list');
+        
+        if (!banners || banners.length === 0) {
+            container.innerHTML = '<div class="empty-state"><i class="fas fa-image"></i><p>Chưa có banner nào. Hãy thêm banner mới!</p></div>';
+            return;
+        }
+        
+        var html = '<div class="banner-grid">';
+        banners.forEach(function(banner) {
+            var statusClass = banner.isActive ? 'active' : 'inactive';
+            var statusText = banner.isActive ? 'Hiển thị' : 'Ẩn';
+            html += '<div class="banner-item" data-id="' + banner.id + '">' +
+                '<div class="banner-image-wrapper">' +
+                    '<img src="' + banner.imageUrl + '" alt="' + (banner.altText || 'Banner') + '">' +
+                    '<div class="banner-overlay">' +
+                        '<button class="btn-icon" onclick="editBanner(' + banner.id + ')" title="Sửa"><i class="fas fa-edit"></i></button>' +
+                        '<button class="btn-icon btn-danger" onclick="deleteBanner(' + banner.id + ')" title="Xóa"><i class="fas fa-trash"></i></button>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="banner-info">' +
+                    '<span class="banner-order">#' + banner.sortOrder + '</span>' +
+                    '<span class="banner-status ' + statusClass + '">' + statusText + '</span>' +
+                '</div>' +
+                '<p class="banner-alt">' + (banner.altText || 'Không có mô tả') + '</p>' +
+            '</div>';
+        });
+        html += '</div>';
+        
+        container.innerHTML = html;
+    }
+
+    function openBannerModal(bannerId) {
+        var modal = document.getElementById('bannerModal');
+        var form = document.getElementById('bannerForm');
+        var title = document.getElementById('bannerModalTitle');
+        
+        form.reset();
+        document.getElementById('bannerId').value = '';
+        document.getElementById('bannerPreview').style.display = 'none';
+        document.getElementById('uploadPlaceholder').style.display = 'flex';
+        document.getElementById('bannerImage').required = true;
+        
+        if (bannerId) {
+            title.innerHTML = '<i class="fas fa-edit"></i> Chỉnh sửa Banner';
+            document.getElementById('bannerImage').required = false;
+            loadBannerForEdit(bannerId);
+        } else {
+            title.innerHTML = '<i class="fas fa-image"></i> Thêm Banner Mới';
+        }
+        
+        modal.style.display = 'flex';
+    }
+
+    function closeBannerModal() {
+        document.getElementById('bannerModal').style.display = 'none';
+    }
+
+    function loadBannerForEdit(bannerId) {
+        fetch(CTX + '/admin/banner/api/' + bannerId)
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                if (data.success && data.banner) {
+                    var b = data.banner;
+                    document.getElementById('bannerId').value = b.id;
+                    document.getElementById('bannerAltText').value = b.altText || '';
+                    document.getElementById('bannerSortOrder').value = b.sortOrder;
+                    document.getElementById('bannerIsActive').value = b.isActive ? 'true' : 'false';
+                    
+                    if (b.imageUrl) {
+                        document.getElementById('bannerPreview').src = b.imageUrl;
+                        document.getElementById('bannerPreview').style.display = 'block';
+                        document.getElementById('uploadPlaceholder').style.display = 'none';
+                    }
+                }
+            });
+    }
+
+    function previewBannerImage(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('bannerPreview').src = e.target.result;
+                document.getElementById('bannerPreview').style.display = 'block';
+                document.getElementById('uploadPlaceholder').style.display = 'none';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function editBanner(id) {
+        openBannerModal(id);
+    }
+
+    function deleteBanner(id) {
+        if (!confirm('Bạn có chắc muốn xóa banner này?')) return;
+        
+        fetch(CTX + '/admin/banner/api/' + id, { method: 'DELETE' })
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    showAlert('Xóa banner thành công!', 'success');
+                    loadBanners();
+                } else {
+                    showAlert('Lỗi: ' + data.error, 'danger');
+                }
+            })
+            .catch(function(error) {
+                showAlert('Lỗi kết nối server', 'danger');
+            });
+    }
+
+    document.getElementById('bannerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        var bannerId = document.getElementById('bannerId').value;
+        var formData = new FormData(this);
+        
+        var btnSave = document.getElementById('btnSaveBanner');
+        var originalHtml = btnSave.innerHTML;
+        btnSave.disabled = true;
+        btnSave.innerHTML = '<span class="loading"></span> Đang lưu...';
+        
+        var url = CTX + '/admin/banner/api';
+        var method = 'POST';
+        
+        if (bannerId) {
+            url = CTX + '/admin/banner/api/' + bannerId;
+            method = 'PUT';
+        }
+        
+        fetch(url, {
+            method: method,
+            body: formData
+        })
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
+            if (data.success) {
+                showAlert(bannerId ? 'Cập nhật banner thành công!' : 'Thêm banner thành công!', 'success');
+                closeBannerModal();
+                loadBanners();
+            } else {
+                showAlert('Lỗi: ' + data.error, 'danger');
+            }
+        })
+        .catch(function(error) {
+            console.error('Error:', error);
+            showAlert('Lỗi kết nối server', 'danger');
+        })
+        .finally(function() {
+            btnSave.disabled = false;
+            btnSave.innerHTML = originalHtml;
+        });
+    });
+
+    // Click outside modal to close
+    window.addEventListener('click', function(e) {
+        var modal = document.getElementById('bannerModal');
+        if (e.target === modal) {
+            closeBannerModal();
+        }
+    });
+
+    // ========== SECTION MANAGEMENT ==========
 
     function loadSection(sectionKey) {
         if (loadedSections[sectionKey]) return;
