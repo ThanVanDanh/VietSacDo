@@ -339,7 +339,7 @@
 </script>
 
 <script src="../scripts/admin/product.js"></script>
-<script src="${pageContext.request.contextPath}/scripts/admin.js"></script>
 <script src="../scripts/admin/product-discount.js"></script>
+<script src="${pageContext.request.contextPath}/scripts/admin/admin.js"></script>
 </body>
 </html>
