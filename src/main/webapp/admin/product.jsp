@@ -44,6 +44,17 @@
                                placeholder="Tìm theo tên, mã, danh mục..." aria-label="Tìm sản phẩm">
                     </div>
 
+                    <div class="sort-wrapper" style="margin-right:12px;">
+                        <select id="sort-select" class="search-input" style="width: 150px; padding: 6px 12px;">
+                            <option value="id-desc">Mới nhất</option>
+                            <option value="id-asc">Cũ nhất</option>
+                            <option value="name-asc">Tên A → Z</option>
+                            <option value="name-desc">Tên Z → A</option>
+                            <option value="price-asc">Giá tăng dần</option>
+                            <option value="price-desc">Giá giảm dần</option>
+                        </select>
+                    </div>
+
                     <div class="actions-row">
                         <a href="#" class="btn btn-primary" id="addProductBtn">
                             <i class="fas fa-plus"></i> Thêm Sản phẩm
@@ -61,7 +72,6 @@
                         <th>Tên / Mã</th>
                         <th>Danh mục</th>
                         <th>Trạng thái</th>
-                        <th>Biến thể</th>
                         <th>Tồn kho</th>
                         <th>Giá</th>
                         <th>Ngày tạo</th>

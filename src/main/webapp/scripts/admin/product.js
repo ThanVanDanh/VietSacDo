@@ -359,14 +359,25 @@ function deleteCategory(category) {
         });
 }
 
-function loadProducts() {
-    fetch(CTX + '/admin/product/add')
+var currentProductPage = 1;
+var totalProductPages = 1;
+var currentSort = 'id-desc';
+
+function loadProducts(page, sortBy) {
+    if (!page) page = 1;
+    if (!sortBy) sortBy = currentSort;
+    currentProductPage = page;
+    currentSort = sortBy;
+
+    var url = CTX + '/admin/product/add?page=' + page + '&sort=' + sortBy;
+    
+    fetch(url)
         .then(function (response) {
             if (!response.ok) throw new Error('HTTP ' + response.status);
             return response.json();
         })
-        .then(function (products) {
-            displayProducts(products);
+        .then(function (data) {
+            displayProducts(data);
         })
         .catch(function (error) {
             alert('Không thể tải danh sách sản phẩm: ' + error.message);
@@ -572,7 +583,11 @@ function setThumbnailForImage(selectedWrapper) {
     if (thumbBtn) thumbBtn.textContent = '★ Thumb';
 }
 
-function displayProducts(products) {
+function displayProducts(data) {
+    var products = data.products || [];
+    currentProductPage = data.currentPage || 1;
+    totalProductPages = data.totalPages || 1;
+
     var tbody = document.getElementById('productTableBody');
     if (!tbody) return;
 
@@ -580,6 +595,7 @@ function displayProducts(products) {
 
     if (!products || products.length === 0) {
         tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:40px;">Chưa có sản phẩm nào</td></tr>';
+        updateProductPagination();
         return;
     }
 
@@ -653,9 +669,6 @@ function displayProducts(products) {
         statusCell.appendChild(badge);
         row.appendChild(statusCell);
 
-        var variantCell = document.createElement('td');
-        variantCell.textContent = product.variantCount || 0;
-        row.appendChild(variantCell);
 
         var stockCell = document.createElement('td');
         if (product.totalStock !== null && product.totalStock !== undefined) {
@@ -717,6 +730,108 @@ function displayProducts(products) {
 
         tbody.appendChild(row);
     });
+
+    updateProductPagination();
+}
+
+function updateProductPagination() {
+    var paginationDiv = document.querySelector('#products-tab .pagination');
+    if (!paginationDiv) return;
+
+    paginationDiv.innerHTML = '';
+
+    if (totalProductPages <= 1) {
+        paginationDiv.style.display = 'none';
+        return;
+    }
+
+    paginationDiv.style.display = 'flex';
+
+    var prevLink = document.createElement('a');
+    prevLink.href = '#';
+    prevLink.textContent = 'Trước';
+    if (currentProductPage === 1) {
+        prevLink.style.pointerEvents = 'none';
+        prevLink.style.opacity = '0.5';
+    } else {
+        prevLink.onclick = function (e) {
+            e.preventDefault();
+            loadProducts(currentProductPage - 1, currentSort);
+        };
+    }
+    paginationDiv.appendChild(prevLink);
+
+    var startPage = Math.max(1, currentProductPage - 2);
+    var endPage = Math.min(totalProductPages, currentProductPage + 2);
+
+    if (startPage > 1) {
+        var firstLink = document.createElement('a');
+        firstLink.href = '#';
+        firstLink.textContent = '1';
+        firstLink.onclick = function (e) {
+            e.preventDefault();
+            loadProducts(1, currentSort);
+        };
+        paginationDiv.appendChild(firstLink);
+
+        if (startPage > 2) {
+            var dots = document.createElement('span');
+            dots.textContent = '...';
+            dots.style.padding = '8px';
+            paginationDiv.appendChild(dots);
+        }
+    }
+
+    for (var i = startPage; i <= endPage; i++) {
+        var pageLink = document.createElement('a');
+        pageLink.href = '#';
+        pageLink.textContent = i;
+        pageLink.dataset.page = i;
+
+        if (i === currentProductPage) {
+            pageLink.className = 'active';
+        } else {
+            pageLink.onclick = (function (page) {
+                return function (e) {
+                    e.preventDefault();
+                    loadProducts(page, currentSort);
+                };
+            })(i);
+        }
+        paginationDiv.appendChild(pageLink);
+    }
+
+    if (endPage < totalProductPages) {
+        if (endPage < totalProductPages - 1) {
+            var dots = document.createElement('span');
+            dots.textContent = '...';
+            dots.style.padding = '8px';
+            paginationDiv.appendChild(dots);
+        }
+
+        var lastLink = document.createElement('a');
+        lastLink.href = '#';
+        lastLink.textContent = totalProductPages;
+        lastLink.onclick = function (e) {
+            e.preventDefault();
+            loadProducts(totalProductPages, currentSort);
+        };
+        paginationDiv.appendChild(lastLink);
+    }
+
+    var nextLink = document.createElement('a');
+    nextLink.href = '#';
+    nextLink.textContent = 'Sau';
+    if (currentProductPage === totalProductPages) {
+        nextLink.style.pointerEvents = 'none';
+        nextLink.style.opacity = '0.5';
+    } else {
+        nextLink.onclick = function (e) {
+            e.preventDefault();
+            loadProducts(currentProductPage + 1, currentSort);
+        };
+    }
+    paginationDiv.appendChild(nextLink);
 }
 
 function resetProductForm() {
@@ -1075,6 +1190,14 @@ document.addEventListener('DOMContentLoaded', function () {
                             keepInput.name = 'keepImageId[]';
                             keepInput.value = imageId;
                             addProductForm.appendChild(keepInput);
+
+                            // Gửi thông tin thumbnail cho ảnh existing
+                            var isThumb = item.dataset.isThumbnail === '1' ? '1' : '0';
+                            var keepThumbInput = document.createElement('input');
+                            keepThumbInput.type = 'hidden';
+                            keepThumbInput.name = 'keepImageIsThumb[]';
+                            keepThumbInput.value = isThumb;
+                            addProductForm.appendChild(keepThumbInput);
                         }
                     } else {
                         var fname = item.dataset.filename || '';
@@ -1159,6 +1282,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 e.preventDefault();
                 searchInput.focus();
             }
+        });
+    }
+
+    var sortSelect = document.getElementById('sort-select');
+    if (sortSelect) {
+        sortSelect.addEventListener('change', function () {
+            currentSort = this.value;
+            loadProducts(1, currentSort);
         });
     }
 
