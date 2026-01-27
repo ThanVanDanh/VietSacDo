@@ -11,33 +11,24 @@ import java.util.Map;
 
 import java.util.List;
 
-/**
- * CategoryDao - FIXED
- * <p>
- * VẤN ĐỀ CŨ: Gọi get() mỗi lần dùng -> tạo connection mới
- * GIẢI PHÁP: Lưu JDBI instance
- */
+
 public class CategoryDao extends BaseDao {
 
     private final Jdbi jdbi;
 
-    // ✅ Constructor lưu JDBI instance
     public CategoryDao() {
         this.jdbi = get();
         System.out.println("CategoryDao created with JDBI: " + this.jdbi);
     }
 
-    // Insert đơn giản (ngoài transaction)
     public int insert(Category category) {
         return jdbi.withHandle(handle -> insert(handle, category));
     }
-
     // Insert sử dụng Handle (dùng trong transaction nếu cần)
     public int insert(Handle handle, Category category) {
         String sql = "INSERT INTO Categories (name_category, slug, description, parent_category_id) " +
                 "VALUES (:nameCategory, :slug, :description, :parentId)";
 
-        // Nếu parentId = 0 nghĩa là không có parent -> lưu NULL
         Integer parent = (category.getParentId() != null && category.getParentId() == 0) ? null : category.getParentId();
 
         return handle.createUpdate(sql)
@@ -50,27 +41,31 @@ public class CategoryDao extends BaseDao {
                 .one();
     }
 
-    // ✅ FIXED: Dùng jdbi instance thay vì gọi get()
     public List<Category> getAll() {
         System.out.println("CategoryDao.getAll() called");
-        System.out.println("Using JDBI: " + this.jdbi);
 
-        String sql = "SELECT id, name_category AS nameCategory, slug, description, " +
-                "parent_category_id AS parentId FROM Categories ORDER BY name_category";
+        String sql = "SELECT id, name_category, slug, description, parent_category_id FROM Categories ORDER BY name_category";
 
         try {
             List<Category> result = jdbi.withHandle(handle -> {
                 System.out.println("Inside withHandle, executing query...");
                 return handle.createQuery(sql)
-                        .mapToBean(Category.class)
+                        .map((rs, ctx) -> {
+                            Category c = new Category();
+                            c.setId(rs.getInt("id"));
+                            c.setNameCategory(rs.getString("name_category"));
+                            c.setSlug(rs.getString("slug"));
+                            c.setDescription(rs.getString("description"));
+                            c.setParentId(rs.getObject("parent_category_id", Integer.class));
+                            return c;
+                        })
                         .list();
             });
 
-            System.out.println("Query executed successfully, found " + result.size() + " categories");
             return result;
 
         } catch (Exception e) {
-            System.err.println("❌ Error in getAll(): " + e.getMessage());
+            System.err.println(" Error in getAll(): " + e.getMessage());
             e.printStackTrace();
             throw e;
         }
@@ -78,13 +73,28 @@ public class CategoryDao extends BaseDao {
 
     public Category getById(int id) {
         String sql = "SELECT id, name_category, slug, description, parent_category_id FROM Categories WHERE id = :id";
-        return jdbi.withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("id", id)
-                        .mapToBean(Category.class)
-                        .findOne()
-                        .orElse(null)
-        );
+        try {
+            Category result = jdbi.withHandle(handle ->
+                    handle.createQuery(sql)
+                            .bind("id", id)
+                            .map((rs, ctx) -> {
+                                Category c = new Category();
+                                c.setId(rs.getInt("id"));
+                                c.setNameCategory(rs.getString("name_category"));
+                                c.setSlug(rs.getString("slug"));
+                                c.setDescription(rs.getString("description"));
+                                c.setParentId(rs.getObject("parent_category_id", Integer.class));
+                                return c;
+                            })
+                            .findOne()
+                            .orElse(null)
+            );
+            return result;
+        } catch (Exception e) {
+            System.err.println(" Error in CategoryDao.getById: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public boolean existsBySlug(String slug) {
