@@ -115,7 +115,7 @@
                                     <span><fmt:formatNumber value="${sessionScope.cart.totalPrice}" pattern="#,###"/>đ</span>
                                 </div>
                                 <div>
-                                    <button><span><a href="checkout.jsp" style="color: white; text-decoration: none;">Thanh toán</a></span></button>
+                                    <button><span><a href="checkout" style="color: white; text-decoration: none;">Thanh toán</a></span></button>
                                 </div>
                             </div>
                     </div>
