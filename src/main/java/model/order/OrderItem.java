@@ -10,6 +10,7 @@ public class OrderItem extends AId implements Serializable {
     private int orderId;
     @ColumnName("variant_id")
     private int variantId;
+    @ColumnName("quantity")
     private int quantity;
     @ColumnName("price_at_purchase")
     private double priceAtPurchase;
@@ -54,5 +55,33 @@ public class OrderItem extends AId implements Serializable {
 
     public void setPriceAtPurchase(double priceAtPurchase) {
         this.priceAtPurchase = priceAtPurchase;
+    }
+
+    private String productName;
+    private String productImage;
+    private String size;
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(String productImage) {
+        this.productImage = productImage;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 }

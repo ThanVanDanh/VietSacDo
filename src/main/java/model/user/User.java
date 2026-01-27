@@ -1,4 +1,5 @@
 package model.user;
+
 import model.AId;
 import org.jdbi.v3.core.mapper.reflect.ColumnName;
 
@@ -26,7 +27,8 @@ public class User extends AId implements Serializable {
     @ColumnName("verify_token")
     private String verifyToken;
 
-    public User(int id, String fullName, String phone, String email, String password, LocalDateTime createdAt, String status, String role, String authProvider, String firebaseUID) {
+    public User(int id, String fullName, String phone, String email, String password, LocalDateTime createdAt,
+            String status, String role, String authProvider, String firebaseUID) {
         super(id);
         this.fullName = fullName;
         this.phone = phone;
@@ -46,6 +48,7 @@ public class User extends AId implements Serializable {
     public String getFullName() {
         return fullName;
     }
+
     @ColumnName("phone_number")
     public String getPhone() {
         return phone;
@@ -54,7 +57,8 @@ public class User extends AId implements Serializable {
     public String getEmail() {
         return email;
     }
-//    @ColumnName("password_hash")
+
+    // @ColumnName("password_hash")
     public String getPassword() {
         return password;
     }
@@ -62,10 +66,12 @@ public class User extends AId implements Serializable {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
     @ColumnName("account_status")
     public String getStatus() {
         return status;
     }
+
     @ColumnName("role_user")
     public String getRole() {
         return role;
@@ -82,6 +88,7 @@ public class User extends AId implements Serializable {
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
+
     @ColumnName("phone_number")
     public void setPhone(String phone) {
         this.phone = phone;
@@ -90,6 +97,7 @@ public class User extends AId implements Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
+
     @ColumnName("password_hash")
     public void setPassword(String password) {
         this.password = password;
@@ -98,10 +106,12 @@ public class User extends AId implements Serializable {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
     @ColumnName("account_status")
     public void setStatus(String status) {
         this.status = status;
     }
+
     @ColumnName("role_user")
     public void setRole(String role) {
         this.role = role;
@@ -121,5 +131,11 @@ public class User extends AId implements Serializable {
 
     public void setVerifyToken(String verifyToken) {
         this.verifyToken = verifyToken;
+    }
+
+    public String getFormattedCreatedAt() {
+        if (createdAt == null)
+            return "";
+        return createdAt.format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
     }
 }

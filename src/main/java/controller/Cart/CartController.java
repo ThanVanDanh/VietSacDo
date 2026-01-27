@@ -194,14 +194,44 @@ public class CartController extends HttpServlet {
                 }
 
                 cart.addItem(product, quantity, price, sku, size);
+
+                // Save cart to session
+                session.setAttribute("cart", cart);
             }
 
-            String referer = request.getHeader("Referer");
-            response.sendRedirect(referer != null ? referer : "cart");
+            // Check if this is an AJAX request (for Buy Now functionality)
+            String ajaxHeader = request.getHeader("X-Requested-With");
+            boolean isAjax = "XMLHttpRequest".equals(ajaxHeader) ||
+                    request.getContentType() != null
+                            && request.getContentType().contains("application/x-www-form-urlencoded");
+
+            if (isAjax) {
+                // Return JSON for AJAX requests
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write("{\"success\":true, \"message\":\"Đã thêm vào giỏ hàng\"}");
+            } else {
+                // Traditional redirect for non-AJAX requests
+                String referer = request.getHeader("Referer");
+                response.sendRedirect(referer != null ? referer : "cart");
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
-            response.sendRedirect(request.getContextPath() + "/cart");
+
+            // Check if AJAX to return appropriate response
+            String ajaxHeader = request.getHeader("X-Requested-With");
+            boolean isAjax = "XMLHttpRequest".equals(ajaxHeader) ||
+                    request.getContentType() != null
+                            && request.getContentType().contains("application/x-www-form-urlencoded");
+
+            if (isAjax) {
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write("{\"success\":false, \"message\":\"Lỗi: " + e.getMessage() + "\"}");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/cart");
+            }
         }
     }
 

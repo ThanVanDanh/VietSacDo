@@ -13,8 +13,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.user.Address;
 import model.user.User;
 
-@WebServlet("/admin/customers")
-public class AdminCustomerController extends HttpServlet {
+@WebServlet("/admin/users")
+public class AdminUserController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         UserDao userDao = new UserDao();
@@ -36,6 +36,6 @@ public class AdminCustomerController extends HttpServlet {
         req.setAttribute("users", users);
         req.setAttribute("totalCustomers", totalCustomers);
         req.setAttribute("newCustomersThisWeek", newCustomersThisWeek);
-        req.getRequestDispatcher("/admin/customers.jsp").forward(req, resp);
+        req.getRequestDispatcher("/admin/users.jsp").forward(req, resp);
     }
 }

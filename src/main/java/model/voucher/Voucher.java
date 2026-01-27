@@ -7,15 +7,25 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class Voucher extends AId implements Serializable {
+    @ColumnName("voucher_code")
     private String voucherCode;
-    private String discountType; // "percentage" hoặc "fixed"
+    @ColumnName("discount_type")
+    private String discountType;
+    @ColumnName("discount_value")
     private double discountValue;
+    @ColumnName("min_order_amount")
     private double minOrderAmount;
+    @ColumnName("max_usage")
     private int maxUsage;
+    @ColumnName("current_usage")
     private int currentUsage;
+    @ColumnName("valid_from")
     private LocalDateTime validFrom;
+    @ColumnName("valid_to")
     private LocalDateTime validTo;
+    @ColumnName("is_active")
     private boolean isActive;
+    @ColumnName("created_at")
     private LocalDateTime createdAt;
 
     public Voucher() {
@@ -142,5 +152,23 @@ public class Voucher extends AId implements Serializable {
                 ", validTo=" + validTo +
                 ", isActive=" + isActive +
                 '}';
+    }
+
+    public String getFormattedValidFrom() {
+        if (validFrom == null)
+            return "";
+        return validFrom.format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+    }
+
+    public String getFormattedValidTo() {
+        if (validTo == null)
+            return "";
+        return validTo.format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
+    }
+
+    public String getFormattedCreatedAt() {
+        if (createdAt == null)
+            return "";
+        return createdAt.format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
     }
 }

@@ -38,7 +38,12 @@ public class AccountController extends HttpServlet {
         // 5. Đẩy danh sách địa chỉ vào request
         req.setAttribute("addresses", addresses);
 
-        // 6. Forward sang trang JSP hiển thị
+        // 6. Lấy danh sách đơn hàng
+        dao.OrderDao orderDao = new dao.OrderDao();
+        java.util.List<model.order.Order> orders = orderDao.getOrdersByUserId(user.getId());
+        req.setAttribute("orders", orders);
+
+        // 7. Forward sang trang JSP hiển thị
         req.getRequestDispatcher("account.jsp").forward(req, resp);
     }
 }

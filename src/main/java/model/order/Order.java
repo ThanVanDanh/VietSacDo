@@ -21,6 +21,8 @@ public class Order extends AId implements Serializable {
     private String shippingAddress;
     @ColumnName("customer_note")
     private String customerNote;
+    @ColumnName("cancel_reason")
+    private String cancelReason;
     @ColumnName("subtotal_amount")
     private double subtotalAmount;
     @ColumnName("shipping_fee")
@@ -42,6 +44,9 @@ public class Order extends AId implements Serializable {
     @ColumnName("updated_at")
     private LocalDateTime updatedAt;
 
+    // Field for JSON serialization (not transient so Gson can serialize it)
+    private String formattedCreatedAt;
+
     public Order() {
     }
 
@@ -49,6 +54,7 @@ public class Order extends AId implements Serializable {
         return userId;
     }
 
+    @ColumnName("user_id")
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
@@ -57,6 +63,7 @@ public class Order extends AId implements Serializable {
         return orderCode;
     }
 
+    @ColumnName("order_code")
     public void setOrderCode(String orderCode) {
         this.orderCode = orderCode;
     }
@@ -65,6 +72,7 @@ public class Order extends AId implements Serializable {
         return customerFullname;
     }
 
+    @ColumnName("customer_fullname")
     public void setCustomerFullname(String customerFullname) {
         this.customerFullname = customerFullname;
     }
@@ -73,6 +81,7 @@ public class Order extends AId implements Serializable {
         return customerEmail;
     }
 
+    @ColumnName("customer_email")
     public void setCustomerEmail(String customerEmail) {
         this.customerEmail = customerEmail;
     }
@@ -81,6 +90,7 @@ public class Order extends AId implements Serializable {
         return customerPhone;
     }
 
+    @ColumnName("customer_phone")
     public void setCustomerPhone(String customerPhone) {
         this.customerPhone = customerPhone;
     }
@@ -89,6 +99,7 @@ public class Order extends AId implements Serializable {
         return shippingAddress;
     }
 
+    @ColumnName("shipping_address")
     public void setShippingAddress(String shippingAddress) {
         this.shippingAddress = shippingAddress;
     }
@@ -97,14 +108,25 @@ public class Order extends AId implements Serializable {
         return customerNote;
     }
 
+    @ColumnName("customer_note")
     public void setCustomerNote(String customerNote) {
         this.customerNote = customerNote;
+    }
+
+    public String getCancelReason() {
+        return cancelReason;
+    }
+
+    @ColumnName("cancel_reason")
+    public void setCancelReason(String cancelReason) {
+        this.cancelReason = cancelReason;
     }
 
     public double getSubtotalAmount() {
         return subtotalAmount;
     }
 
+    @ColumnName("subtotal_amount")
     public void setSubtotalAmount(double subtotalAmount) {
         this.subtotalAmount = subtotalAmount;
     }
@@ -113,6 +135,7 @@ public class Order extends AId implements Serializable {
         return shippingFee;
     }
 
+    @ColumnName("shipping_fee")
     public void setShippingFee(double shippingFee) {
         this.shippingFee = shippingFee;
     }
@@ -121,6 +144,7 @@ public class Order extends AId implements Serializable {
         return discountAmount;
     }
 
+    @ColumnName("discount_amount")
     public void setDiscountAmount(double discountAmount) {
         this.discountAmount = discountAmount;
     }
@@ -129,6 +153,7 @@ public class Order extends AId implements Serializable {
         return totalAmount;
     }
 
+    @ColumnName("total_amount")
     public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
     }
@@ -137,6 +162,7 @@ public class Order extends AId implements Serializable {
         return voucherId;
     }
 
+    @ColumnName("voucher_id")
     public void setVoucherId(Integer voucherId) {
         this.voucherId = voucherId;
     }
@@ -145,6 +171,7 @@ public class Order extends AId implements Serializable {
         return orderStatus;
     }
 
+    @ColumnName("order_status")
     public void setOrderStatus(String orderStatus) {
         this.orderStatus = orderStatus;
     }
@@ -153,6 +180,7 @@ public class Order extends AId implements Serializable {
         return paymentMethod;
     }
 
+    @ColumnName("payment_method")
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
@@ -161,6 +189,7 @@ public class Order extends AId implements Serializable {
         return paymentStatus;
     }
 
+    @ColumnName("payment_status")
     public void setPaymentStatus(String paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
@@ -169,6 +198,7 @@ public class Order extends AId implements Serializable {
         return createdAt;
     }
 
+    @ColumnName("created_at")
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
@@ -177,7 +207,20 @@ public class Order extends AId implements Serializable {
         return updatedAt;
     }
 
+    @ColumnName("updated_at")
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getFormattedCreatedAt() {
+        if (createdAt == null)
+            return "Không rõ";
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter
+                .ofPattern("dd-MM-yyyy HH:mm:ss");
+        return createdAt.format(formatter);
+    }
+
+    public void setFormattedCreatedAt(String formattedCreatedAt) {
+        this.formattedCreatedAt = formattedCreatedAt;
     }
 }

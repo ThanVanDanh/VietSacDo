@@ -21,6 +21,7 @@ public class GsonUtil {
     private static Gson createGson() {
         return new GsonBuilder()
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer())
+                .registerTypeAdapter(java.time.LocalDate.class, new LocalDateSerializer())
                 .create();
     }
 
@@ -29,7 +30,6 @@ public class GsonUtil {
     }
 
     /**
-     * Serializer cho LocalDateTime
      * Format: yyyy-MM-dd HH:mm:ss
      */
     private static class LocalDateTimeSerializer implements JsonSerializer<LocalDateTime> {
@@ -37,6 +37,18 @@ public class GsonUtil {
 
         @Override
         public JsonElement serialize(LocalDateTime src, Type typeOfSrc, JsonSerializationContext context) {
+            return new JsonPrimitive(src.format(FORMATTER));
+        }
+    }
+
+    /**
+     * Format: yyyy-MM-dd
+     */
+    private static class LocalDateSerializer implements JsonSerializer<java.time.LocalDate> {
+        private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        @Override
+        public JsonElement serialize(java.time.LocalDate src, Type typeOfSrc, JsonSerializationContext context) {
             return new JsonPrimitive(src.format(FORMATTER));
         }
     }
