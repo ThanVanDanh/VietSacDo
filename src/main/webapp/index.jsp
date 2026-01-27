@@ -31,21 +31,32 @@
             <div class="sixteen columns">
                 <div id="myCarousel" class="carousel slide" data-interval="false">
                     <div class="carousel-inner">
-                        <div class="item active">
-                            <a href="${pageContext.request.contextPath}/promotionsPost.jsp">
-                                <img src="${pageContext.request.contextPath}/image/aodai.png" alt="Banner 1">
-                            </a>
-                        </div>
-                        <div class="item">
-                            <a href="${pageContext.request.contextPath}/promotion.jsp">
-                                <img src="${pageContext.request.contextPath}/image/linen.png" alt="Banner 2">
-                            </a>
-                        </div>
-                        <div class="item">
-                            <a href="${pageContext.request.contextPath}/promotion.jsp">
-                                <img src="${pageContext.request.contextPath}/image/phukien.png" alt="Banner 3">
-                            </a>
-                        </div>
+                        <c:choose>
+                            <c:when test="${not empty banners}">
+                                <c:forEach var="banner" items="${banners}" varStatus="status">
+                                    <div class="item ${status.index == 0 ? 'active' : ''}">
+                                        <img src="${banner.imageUrl}" alt="${not empty banner.altText ? banner.altText : 'Banner'}">
+                                    </div>
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="item active">
+                                    <a href="${pageContext.request.contextPath}/promotionsPost.jsp">
+                                        <img src="${pageContext.request.contextPath}/image/aodai.png" alt="Banner 1">
+                                    </a>
+                                </div>
+                                <div class="item">
+                                    <a href="${pageContext.request.contextPath}/promotion.jsp">
+                                        <img src="${pageContext.request.contextPath}/image/linen.png" alt="Banner 2">
+                                    </a>
+                                </div>
+                                <div class="item">
+                                    <a href="${pageContext.request.contextPath}/promotion.jsp">
+                                        <img src="${pageContext.request.contextPath}/image/phukien.png" alt="Banner 3">
+                                    </a>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
                     <a class="left carousel-control fui-arrow-left" href="#myCarousel" data-slide="prev">
                         <i class="fa-solid fa-chevron-left"></i>

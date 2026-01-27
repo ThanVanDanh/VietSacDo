@@ -42,13 +42,10 @@ public class CategoryDao extends BaseDao {
     }
 
     public List<Category> getAll() {
-        System.out.println("CategoryDao.getAll() called");
-
         String sql = "SELECT id, name_category, slug, description, parent_category_id FROM Categories ORDER BY name_category";
 
         try {
             List<Category> result = jdbi.withHandle(handle -> {
-                System.out.println("Inside withHandle, executing query...");
                 return handle.createQuery(sql)
                         .map((rs, ctx) -> {
                             Category c = new Category();
