@@ -12,13 +12,13 @@
 <header>
     <div class="header">
         <div class="logo">
-            <a href="${pageContext.request.contextPath}/index.jsp">
+            <a href="${pageContext.request.contextPath}/home">
                 <img src="${pageContext.request.contextPath}/image/logo.png" alt="Logo Việt Sắc Đỏ">
             </a>
         </div>
         <nav>
             <ul class="menu">
-                <li><a href="${pageContext.request.contextPath}/index.jsp">Trang Chủ</a></li>
+                <li><a href="${pageContext.request.contextPath}/home">Trang Chủ</a></li>
 
                 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
                 <c:set var="menuAll" value="${requestScope.menuAllCategories}"/>
@@ -42,8 +42,19 @@
                     <c:choose>
                         <c:when test="${hasChildren}">
 
+                            <c:set var="hasGrandChild" value="${false}"/>
+                            <c:forEach var="child" items="${menuAll}">
+                                <c:if test="${child.parentId == cat.id}">
+                                    <c:forEach var="grand" items="${menuAll}">
+                                        <c:if test="${grand.parentId == child.id}">
+                                            <c:set var="hasGrandChild" value="${true}"/>
+                                        </c:if>
+                                    </c:forEach>
+                                </c:if>
+                            </c:forEach>
+
                             <c:choose>
-                                <c:when test="${cat.slug == 'quan-phu-kien'}">
+                                <c:when test="${hasGrandChild}">
                                     <li class="has-megamenu">
                                         <c:choose>
                                             <c:when test="${empty cat.slug}">
@@ -57,7 +68,6 @@
                                         <ul class="sub-menu">
                                             <div class="mega-menu-container">
                                                 <div class="mega-menu-content">
-
                                                     <c:forEach var="col" items="${menuAll}">
                                                         <c:if test="${col.parentId == cat.id}">
                                                             <div class="category-column">
@@ -100,13 +110,11 @@
                                                             </div>
                                                         </c:if>
                                                     </c:forEach>
-
                                                 </div>
                                             </div>
                                         </ul>
                                     </li>
                                 </c:when>
-
                                 <c:otherwise>
                                     <li>
                                         <c:choose>
@@ -117,7 +125,6 @@
                                                 <a href="${ctx}/danh-muc/${cat.slug}">${cat.nameCategory}<i class="fa-solid fa-chevron-down"></i></a>
                                             </c:otherwise>
                                         </c:choose>
-
                                         <ul class="sub-menu">
                                             <c:forEach var="child" items="${menuAll}">
                                                 <c:if test="${child.parentId == cat.id}">

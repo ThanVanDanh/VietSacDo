@@ -18,7 +18,6 @@ public class CategoryDao extends BaseDao {
 
     public CategoryDao() {
         this.jdbi = get();
-        System.out.println("CategoryDao created with JDBI: " + this.jdbi);
     }
 
     public int insert(Category category) {
@@ -117,7 +116,7 @@ public class CategoryDao extends BaseDao {
     }
     // 1. Đếm tổng số sản phẩm trong danh mục (Dùng để tính Total Pages)
     public int countProductsByCategory(int categoryId) {
-        String sql = "SELECT COUNT(*) FROM Products WHERE category_id = :categoryId";
+        String sql = "SELECT COUNT(*) FROM Products WHERE category_id = :categoryId and status_product = 'active'";
 
         return get().withHandle(handle ->
                 handle.createQuery(sql)
@@ -127,34 +126,27 @@ public class CategoryDao extends BaseDao {
         );
     }
 
-    public List<ProductListDTO> getProductsByCategoryPayload(int categoryId, int page, int pageSize,String sortBy) {
-        String orderByClause = "ORDER BY p.name_product ASC"; //Tên A-Z
+    public List<ProductListDTO> getProductsByCategoryPayload(int categoryId, int page, int pageSize, String sortBy) {
+        String orderByClause = "ORDER BY p.name_product ASC";
 
         if (sortBy != null) {
             switch (sortBy) {
-                case "alpha-desc":
-                    orderByClause = "ORDER BY p.name_product DESC";
-                    break;
-                case "price-asc":
-
-                    orderByClause = "ORDER BY price ASC";
-                    break;
-                case "price-desc":
-                    orderByClause = "ORDER BY price DESC";
-                    break;
-                case "created-desc":
-                    orderByClause = "ORDER BY p.id DESC";
-                    break;
-                default:
-                    orderByClause = "ORDER BY p.name_product ASC";
+                case "alpha-desc": orderByClause = "ORDER BY p.name_product DESC"; break;
+                case "price-asc": orderByClause = "ORDER BY price ASC"; break;
+                case "price-desc": orderByClause = "ORDER BY price DESC"; break;
+                case "created-desc": orderByClause = "ORDER BY p.id DESC"; break;
+                default: orderByClause = "ORDER BY p.name_product ASC";
             }
         }
+
+        // CẬP NHẬT: Thêm dòng lấy discounted_price bên dưới
         String sql = "SELECT p.id, p.name_product, " +
                 "(SELECT current_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS price, " +
+                "(SELECT discounted_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS discountedPrice, " + // THÊM DÒNG NÀY
                 "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
                 "(SELECT sku FROM Product_variants WHERE product_id = p.id LIMIT 1) AS sku " +
                 "FROM Products p " +
-                "WHERE p.category_id = :categoryId " +
+                "WHERE p.category_id = :categoryId AND p.status_product = 'active'" +
                 orderByClause + " " +
                 "LIMIT :limit OFFSET :offset";
 

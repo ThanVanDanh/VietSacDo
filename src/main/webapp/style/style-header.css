@@ -211,24 +211,29 @@ header nav ul.menu > li > a:hover::after,
     transform: translateX(-50%);
     top: 100%;
     width: 100vw;
-    background-color: rgba(0, 0, 0, 0.0);
+    background-color: var(--color-primary);
+    display: none;
     justify-content: center;
     z-index: 99;
 }
+
+header nav ul.menu > li.has-megamenu:hover .mega-menu-container {
+    display: flex;
+}
+
 .mega-menu-content {
     display: flex;
-    gap: 40px;
+    justify-content: center;
+    gap: 80px;
     width: 100%;
-    max-width: 1400px;
-    padding: 30px;
-    background-color:var(--color-primary);
-    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-    margin-top: 5px;
+    max-width: 1200px;
+    padding: 40px 20px;
+    background-color: var(--color-primary);
 }
 
 .category-column {
-    min-width: 300px;
-    line-height: 1.6;
+    min-width: 200px;
+    text-align: left;
 }
 
 .category-column h3 {

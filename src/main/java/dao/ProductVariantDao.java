@@ -15,8 +15,8 @@ public class ProductVariantDao extends BaseDao {
     }
 
     public int insert(Handle handle, ProductVariant variant) {
-        String sql = "INSERT INTO Product_variants (product_id, sku, size, color, current_price, stock_quantity) " +
-                "VALUES (:productId, :sku, :size, :color, :currentPrice, :stockQuantity)";
+        String sql = "INSERT INTO Product_variants (product_id, sku, size, color, current_price, stock_quantity, discounted_price) " +
+                "VALUES (:productId, :sku, :size, :color, :currentPrice, :stockQuantity, :discountedPrice)";
 
         return handle.createUpdate(sql)
                 .bind("productId", variant.getProductId())
@@ -25,6 +25,7 @@ public class ProductVariantDao extends BaseDao {
                 .bind("color", variant.getColor())
                 .bind("currentPrice", variant.getCurrentPrice())
                 .bind("stockQuantity", variant.getStockQuantity())
+                .bind("discountedPrice", variant.getDiscountedPrice()) // Bind giá giảm
                 .executeAndReturnGeneratedKeys("id")
                 .mapTo(int.class)
                 .one();
@@ -69,6 +70,7 @@ public class ProductVariantDao extends BaseDao {
                 "size = :size, " +
                 "color = :color, " +
                 "current_price = :currentPrice, " +
+                "discounted_price = :discountedPrice, " +
                 "stock_quantity = :stockQuantity " +
                 "WHERE id = :id";
 
@@ -78,6 +80,7 @@ public class ProductVariantDao extends BaseDao {
                 .bind("size", variant.getSize())
                 .bind("color", variant.getColor())
                 .bind("currentPrice", variant.getCurrentPrice())
+                .bind("discountedPrice", variant.getDiscountedPrice())
                 .bind("stockQuantity", variant.getStockQuantity())
                 .execute();
 

@@ -1,34 +1,30 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-        <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-            <!DOCTYPE html>
-            <html lang="en">
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Việt Sắc Đỏ - Thông tin</title>
+    <link rel="icon" href="image/logoaodai.jpg" type="image/jpeg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style/account.css">
+    <script src="scripts/account.js"></script>
+    <link rel="stylesheet" href="style/style-header.css">
+    <link rel="stylesheet" href="style/footer.css">
+    <link rel="stylesheet" href="style/breadcrumb.css">
+    <script src="scripts/home.js"></script>
+</head>
+<body>
+<div class="search-overlay-container" id="searchOverlay">
 
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Việt Sắc Đỏ - Thông tin</title>
-                <link rel="icon" href="image/logoaodai.jpg" type="image/jpeg">
-                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-                    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-                    crossorigin="anonymous" referrerpolicy="no-referrer" />
-                <link rel="stylesheet" href="style/account.css">
-                <script src="scripts/account.js"></script>
-                <link rel="stylesheet" href="style/style-header.css">
-                <link rel="stylesheet" href="style/footer.css">
-                <link rel="stylesheet" href="style/breadcrumb.css">
-                <script src="scripts/home.js"></script>
-            </head>
-
-            <body>
-                <div class="search-overlay-container" id="searchOverlay">
-
-                    <div class="search-overlay-header">
-                        <div class="logo">
-                            <a href="index.jsp">
-                                <img src="image/logo.png" alt="Logo Việt Sắc Đỏ">
-                            </a>
-                        </div>
+    <div class="search-overlay-header">
+        <div class="logo">
+            <a href="${pageContext.request.contextPath}/home">
+                <img src="image/logo.png" alt="Logo Việt Sắc Đỏ">
+            </a>
+        </div>
 
                         <form class="search-overlay-form">
                             <input type="text" id="searchInput"
@@ -203,7 +199,7 @@
                                                     <tr>
                                                         <td colspan="5"
                                                             style="text-align: center; padding: 30px; color: #777;">
-                                                            Bạn chưa có đơn hàng nào. <a href="index.jsp"
+                                                            Bạn chưa có đơn hàng nào. <a href="${pageContext.request.contextPath}/home"
                                                                 style="color: #d32f2f;">Mua sắm ngay</a>
                                                         </td>
                                                     </tr>
