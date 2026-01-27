@@ -39,13 +39,13 @@ public abstract class BaseDao {
             // Build connection URL với parameters quan trọng
             String url = String.format(
                     "jdbc:mysql://%s:%s/%s?" +
-                            "useSSL=false&" + // Tắt SSL để đơn giản
-                            "serverTimezone=Asia/Ho_Chi_Minh&" + // Set timezone to Vietnam
-                            "allowPublicKeyRetrieval=true&" + // Cho phép authentication
-                            "autoReconnect=true&" + // Tự động reconnect
-                            "maxReconnects=3&" + // Số lần retry
-                            "initialTimeout=10&" + // Timeout cho reconnect
-                            "connectTimeout=30000", // 30s timeout khi connect
+                            "useSSL=false&" +                    // Tắt SSL để đơn giản
+                            "serverTimezone=Asia/Ho_Chi_Minh&" + // Set timezone VN
+                            "allowPublicKeyRetrieval=true&" +    // Cho phép authentication
+                            "autoReconnect=true&" +              // Tự động reconnect
+                            "maxReconnects=3&" +                 // Số lần retry
+                            "initialTimeout=10&" +               // Timeout cho reconnect
+                            "connectTimeout=30000",              // 30s timeout khi connect
                     DBProperties.host,
                     DBProperties.port,
                     DBProperties.dbname);

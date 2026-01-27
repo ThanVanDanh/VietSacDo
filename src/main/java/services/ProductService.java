@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
 public class ProductService {
 
     private final Jdbi jdbi;
@@ -23,7 +22,6 @@ public class ProductService {
     private final ProductDao productDao;
     private final ProductVariantDao variantDao;
     private final ProductImageDao imageDao;
-
 
     public ProductService(Jdbi jdbi, CloudinaryService cloudinary) {
         this.jdbi = Objects.requireNonNull(jdbi);
@@ -103,6 +101,7 @@ public class ProductService {
     public Product getProduct(int id) {
         return productDao.getProduct(id);
     }
+
     public double getPriceById(int productId) {
         List<ProductVariant> variants = variantDao.getByProductId(productId);
 
@@ -112,21 +111,20 @@ public class ProductService {
         return 0.0;
     }
 
-
-//    // Xóa danh sách ảnh đã upload (dùng publicId)
-//    private void cleanupUploaded(List<UploadedImageResult> uploaded) {
-//        if (uploaded == null || uploaded.isEmpty()) return;
-//        for (UploadedImageResult r : uploaded) {
-//            if (r.publicId != null) {
-//                try {
-//                    cloudinary.deleteByPublicId(r.publicId);
-//                } catch (Exception ignored) {
-//                    // nếu xóa fail, ghi log hoặc bỏ qua (không ném tiếp)
-//                    ignored.printStackTrace();
-//                }
-//            }
-//        }
-//    }
+    // // Xóa danh sách ảnh đã upload (dùng publicId)
+    // private void cleanupUploaded(List<UploadedImageResult> uploaded) {
+    // if (uploaded == null || uploaded.isEmpty()) return;
+    // for (UploadedImageResult r : uploaded) {
+    // if (r.publicId != null) {
+    // try {
+    // cloudinary.deleteByPublicId(r.publicId);
+    // } catch (Exception ignored) {
+    // // nếu xóa fail, ghi log hoặc bỏ qua (không ném tiếp)
+    // ignored.printStackTrace();
+    // }
+    // }
+    // }
+    // }
 
     public int createProduct(Product product, List<ProductVariant> variants, List<ImageUpload> uploads) {
         List<UploadedImage> uploaded = new ArrayList<>();
@@ -146,7 +144,8 @@ public class ProductService {
                         cleanupUploaded(uploaded);
                         throw new RuntimeException("Upload ảnh thất bại: " + iu.getFilename());
                     }
-                    uploaded.add(new UploadedImage(u.getSecureUrl(), u.getPublicId(), iu.getAltText(), iu.isThumbnail()));
+                    uploaded.add(
+                            new UploadedImage(u.getSecureUrl(), u.getPublicId(), iu.getAltText(), iu.isThumbnail()));
                 }
             }
 
@@ -185,7 +184,8 @@ public class ProductService {
     }
 
     private void cleanupUploaded(List<UploadedImage> uploaded) {
-        if (uploaded == null) return;
+        if (uploaded == null)
+            return;
         for (UploadedImage u : uploaded) {
             if (u.publicId != null) {
                 try {
@@ -197,9 +197,9 @@ public class ProductService {
     }
 
     public boolean updateProduct(Product product,
-                                 List<ProductVariant> variants,
-                                 List<ImageUpload> newImageUploads,
-                                 List<Integer> keepImageIds) throws Exception {
+            List<ProductVariant> variants,
+            List<ImageUpload> newImageUploads,
+            List<Integer> keepImageIds) throws Exception {
 
         System.out.println("=== ProductService.updateProduct ===");
         System.out.println("Product ID: " + product.getId());
@@ -228,8 +228,7 @@ public class ProductService {
                             u.getSecureUrl(),
                             u.getPublicId(),
                             iu.getAltText(),
-                            iu.isThumbnail()
-                    ));
+                            iu.isThumbnail()));
 
                     System.out.println("✅ Uploaded new image: " + u.getSecureUrl());
 
@@ -255,18 +254,47 @@ public class ProductService {
                 }
                 System.out.println("✅ Product updated");
 
-                // 2.2. Delete all old variants
-                variantDao.deleteByProductId(handle, product.getId());
-                System.out.println("✅ Old variants deleted");
+                // 2.2. & 2.3. Smart Update Variants (Preserve IDs)
+                List<ProductVariant> currentVariants = variantDao.getByProductId(handle, product.getId());
+                List<String> incomingSkus = new ArrayList<>();
 
-                // 2.3. Insert new variants
                 if (variants != null && !variants.isEmpty()) {
                     for (ProductVariant v : variants) {
-                        v.setProductId(product.getId());
-                        variantDao.insert(handle, v);
+                        incomingSkus.add(v.getSku());
+                        boolean exists = false;
+
+                        // Try to find existing variant by SKU
+                        for (ProductVariant existing : currentVariants) {
+                            if (existing.getSku().equalsIgnoreCase(v.getSku())) {
+                                // Update existing
+                                existing.setSize(v.getSize());
+                                existing.setColor(v.getColor());
+                                existing.setCurrentPrice(v.getCurrentPrice());
+                                existing.setStockQuantity(v.getStockQuantity());
+                                variantDao.update(handle, existing);
+                                exists = true;
+                                break;
+                            }
+                        }
+
+                        if (!exists) {
+                            // Insert new
+                            v.setProductId(product.getId());
+                            variantDao.insert(handle, v);
+                        }
                     }
-                    System.out.println("✅ New variants inserted: " + variants.size());
                 }
+
+                // Delete removed variants
+                for (ProductVariant existing : currentVariants) {
+                    if (!incomingSkus.contains(existing.getSku())) {
+                        // Check if used in orders? Ideally yes, but for now simple delete
+                        // Or better: soft delete. But sticking to current behavior (hard delete) only
+                        // for removed ones.
+                        variantDao.delete(handle, existing.getId());
+                    }
+                }
+                System.out.println("✅ Variants synced (Smart Update)");
 
                 // 2.4. Get existing images to determine which to delete
                 List<ProductImage> existingImages = imageDao.getByProductId(handle, product.getId());
@@ -341,30 +369,113 @@ public class ProductService {
     }
 
     private String extractPublicId(String url) {
-        if (url == null || url.isEmpty()) return null;
+        if (url == null || url.isEmpty())
+            return null;
 
         try {
             // Find "/upload/" and extract everything after it
             int uploadIndex = url.indexOf("/upload/");
-            if (uploadIndex == -1) return null;
+            if (uploadIndex == -1)
+                return null;
 
             String afterUpload = url.substring(uploadIndex + 8); // "/upload/".length() = 8
 
             // Remove version (v1234567890/)
             int slashIndex = afterUpload.indexOf('/');
-            if (slashIndex == -1) return null;
+            if (slashIndex == -1)
+                return null;
 
             String withExtension = afterUpload.substring(slashIndex + 1);
 
             // Remove file extension
             int dotIndex = withExtension.lastIndexOf('.');
-            if (dotIndex == -1) return withExtension;
+            if (dotIndex == -1)
+                return withExtension;
 
             return withExtension.substring(0, dotIndex);
 
         } catch (Exception e) {
             System.err.println("Failed to extract public_id from: " + url);
             return null;
+        }
+    }
+
+    /**
+     * Áp dụng giảm giá cho variant theo SKU
+     */
+    public boolean applyDiscountBySku(String sku, String discountType, double discountValue) {
+        try {
+            // Lấy variant theo SKU
+            ProductVariant variant = variantDao.getVariantBySku(sku);
+            if (variant == null) {
+                throw new RuntimeException("Không tìm thấy sản phẩm với SKU: " + sku);
+            }
+
+            // Tính giá giảm
+            double discountedPrice;
+            if ("percentage".equals(discountType)) {
+                discountedPrice = variant.getCurrentPrice() * (1 - discountValue / 100);
+            } else {
+                discountedPrice = variant.getCurrentPrice() - discountValue;
+            }
+
+            // Đảm bảo giá không âm
+            if (discountedPrice < 0)
+                discountedPrice = 0;
+
+            // Cập nhật vào DB qua DAO
+            return variantDao.updateDiscountedPrice(variant.getId(), discountedPrice);
+
+        } catch (Exception e) {
+            System.err.println("Error applying discount: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Áp dụng giảm giá hàng loạt theo danh mục
+     */
+    public int applyDiscountByCategories(List<Integer> categoryIds, String discountType, double discountValue) {
+        try {
+            // Lấy tất cả variants của các categories qua DAO
+            List<ProductVariant> variants = jdbi.withHandle(handle -> {
+                String selectSql = "SELECT pv.* FROM Product_variants pv " +
+                        "INNER JOIN Products p ON pv.product_id = p.id " +
+                        "WHERE p.category_id IN (<categoryIds>)";
+
+                return handle.createQuery(selectSql)
+                        .bindList("categoryIds", categoryIds)
+                        .mapToBean(ProductVariant.class)
+                        .list();
+            });
+
+            if (variants.isEmpty())
+                return 0;
+
+            // Cập nhật từng variant qua DAO
+            int count = 0;
+            for (ProductVariant v : variants) {
+                double discountedPrice;
+                if ("percentage".equals(discountType)) {
+                    discountedPrice = v.getCurrentPrice() * (1 - discountValue / 100);
+                } else {
+                    discountedPrice = v.getCurrentPrice() - discountValue;
+                }
+
+                if (discountedPrice < 0)
+                    discountedPrice = 0;
+
+                // Gọi DAO để update
+                boolean updated = variantDao.updateDiscountedPrice(v.getId(), discountedPrice);
+                if (updated)
+                    count++;
+            }
+
+            return count;
+
+        } catch (Exception e) {
+            System.err.println("Error applying batch discount: " + e.getMessage());
+            return 0;
         }
     }
 }

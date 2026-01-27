@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
             let lastSpaceIndex = fullName.lastIndexOf(" ");
             let ho = "";
             let ten = fullName;
-            if(lastSpaceIndex !== -1) {
+            if (lastSpaceIndex !== -1) {
                 ho = fullName.substring(0, lastSpaceIndex);
                 ten = fullName.substring(lastSpaceIndex + 1);
             }
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Set select option (cần đảm bảo value option khớp với data)
             const citySelect = document.getElementById('edit-tinhthanh');
-            if(citySelect) citySelect.value = city;
+            if (citySelect) citySelect.value = city;
 
             // 4. Hiển thị Modal
             editModal.style.display = 'flex';
@@ -108,3 +108,97 @@ document.addEventListener('DOMContentLoaded', function () {
         if (deleteModal && e.target === deleteModal) deleteModal.style.display = 'none';
     });
 });
+
+// 3. Logic Hủy đơn hàng
+window.cancelOrder = function (orderId) {
+    if (!confirm('Bạn có chắc chắn muốn hủy đơn hàng này không? Hành động này không thể hoàn tác.')) {
+        return;
+    }
+
+    fetch('cancel-order?orderId=' + orderId, {
+        method: 'POST'
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Đã hủy đơn hàng thành công!');
+                location.reload();
+            } else {
+                alert('Lỗi: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Đã xảy ra lỗi kết nối. Vui lòng thử lại.');
+        });
+};
+
+// 4. Logic Xem chi tiết đơn hàng
+window.viewOrderDetails = function (orderId) {
+    const modal = document.getElementById('order-details-modal');
+    const closeBtn = document.getElementById('close-order-details');
+
+    document.getElementById('modal-order-items-body').innerHTML = '<tr><td colspan="4" style="text-align:center;">Đang tải...</td></tr>';
+
+    fetch('order-details?id=' + orderId)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const order = data.order;
+                const items = data.items;
+
+                document.getElementById('modal-order-code').textContent = order.orderCode;
+                document.getElementById('modal-order-date').textContent = order.formattedCreatedAt;
+                document.getElementById('modal-order-status').textContent = order.orderStatus;
+                document.getElementById('modal-order-address').textContent = order.shippingAddress;
+
+                const fmt = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' });
+
+                document.getElementById('modal-subtotal').textContent = fmt.format(order.subtotalAmount);
+                document.getElementById('modal-shipping').textContent = fmt.format(order.shippingFee);
+                document.getElementById('modal-discount').textContent = fmt.format(order.discountAmount);
+                document.getElementById('modal-total').textContent = fmt.format(order.totalAmount);
+
+                const tbody = document.getElementById('modal-order-items-body');
+                tbody.innerHTML = '';
+
+                items.forEach(item => {
+                    const productName = item.productName || '<span style="color: #999; font-style: italic;">Sản phẩm không còn tồn tại</span>';
+                    const size = item.size || 'N/A';
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                    <td style="display: flex; align-items: center; gap: 10px;">
+                        <img src="${productImage}" alt="Product" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px; border: 1px solid #eee;">
+                        <div>
+                            <p style="margin: 0; font-weight: 600; color: #333;">${productName}</p>
+                            <span style="font-size: 0.85em; color: #777;">Size: ${size}</span>
+                        </div>
+                    </td>
+                    <td>${fmt.format(item.priceAtPurchase)}</td>
+                    <td>x${item.quantity}</td>
+                    <td style="font-weight: 600;">${fmt.format(item.priceAtPurchase * item.quantity)}</td>
+                `;
+                    tbody.appendChild(tr);
+                });
+
+                modal.style.display = 'flex';
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('Lỗi tải dữ liệu chi tiết.');
+        });
+
+    // Close
+    closeBtn.onclick = function () {
+        modal.style.display = 'none';
+    }
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+};
