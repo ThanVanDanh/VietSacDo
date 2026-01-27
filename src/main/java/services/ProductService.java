@@ -90,6 +90,18 @@ public class ProductService {
         }
     }
 
+    public int countTotalProducts() {
+        return productDao.countTotalProducts();
+    }
+
+    public List<ProductListDTO> getListProductWithPagination(int limit, int offset) {
+        return productDao.getListProductWithPagination(limit, offset);
+    }
+
+    public List<ProductListDTO> getListProductWithPaginationAndSort(int limit, int offset, String sortBy) {
+        return productDao.getListProductWithPaginationAndSort(limit, offset, sortBy);
+    }
+
     public List<ProductListDTO> getListProduct() {
         return productDao.getListProduct();
     }
@@ -171,6 +183,9 @@ public class ProductService {
                     }
                 }
 
+                // ✨ Đảm bảo chỉ có 1 thumbnail
+                ensureOnlyOneThumbnail(handle, pid);
+
                 return pid;
             });
 
@@ -197,9 +212,10 @@ public class ProductService {
     }
 
     public boolean updateProduct(Product product,
-            List<ProductVariant> variants,
-            List<ImageUpload> newImageUploads,
-            List<Integer> keepImageIds) throws Exception {
+                                 List<ProductVariant> variants,
+                                 List<ImageUpload> newImageUploads,
+                                 List<Integer> keepImageIds,
+                                 List<Boolean> keepImageThumbs) throws Exception {
 
         System.out.println("=== ProductService.updateProduct ===");
         System.out.println("Product ID: " + product.getId());
@@ -318,7 +334,17 @@ public class ProductService {
                     System.out.println("✅ Images deleted except: " + keepImageIds);
                 }
 
-                // 2.6. Insert new images
+                // 2.6. ✨ Update thumbnail cho existing images
+                if (keepImageIds != null && !keepImageIds.isEmpty()) {
+                    for (int i = 0; i < keepImageIds.size(); i++) {
+                        int imageId = keepImageIds.get(i);
+                        boolean isThumb = keepImageThumbs != null && i < keepImageThumbs.size() && keepImageThumbs.get(i);
+                        imageDao.updateThumbnail(handle, imageId, isThumb);
+                    }
+                    System.out.println("✅ Updated thumbnail for existing images");
+                }
+
+                // 2.7. Insert new images
                 if (!uploaded.isEmpty()) {
                     for (UploadedImage u : uploaded) {
                         ProductImage img = new ProductImage(0);
@@ -331,6 +357,32 @@ public class ProductService {
                     }
                     System.out.println("✅ New images inserted: " + uploaded.size());
                 }
+
+                // 2.8. ✨ Đảm bảo chỉ có 1 thumbnail - dùng data từ memory thay vì đọc lại DB
+                Integer selectedThumbnailId = null;
+
+                // Tìm thumbnail từ existing images
+                if (keepImageThumbs != null) {
+                    for (int i = 0; i < keepImageThumbs.size(); i++) {
+                        if (keepImageThumbs.get(i)) {
+                            selectedThumbnailId = keepImageIds.get(i);
+                            break;
+                        }
+                    }
+                }
+
+                // Nếu không có existing thumbnail, tìm trong new images
+                if (selectedThumbnailId == null && !uploaded.isEmpty()) {
+                    for (UploadedImage u : uploaded) {
+                        if (u.isThumbnail) {
+                            // New image thumbnail - sẽ được handle bởi ensureOnlyOneThumbnail
+                            break;
+                        }
+                    }
+                }
+
+                // Gọi enforce để đảm bảo chỉ có 1 thumbnail
+                ensureOnlyOneThumbnail(handle, product.getId());
 
                 return true;
             });
@@ -476,6 +528,43 @@ public class ProductService {
         } catch (Exception e) {
             System.err.println("Error applying batch discount: " + e.getMessage());
             return 0;
+        }
+    }
+
+    private void ensureOnlyOneThumbnail(org.jdbi.v3.core.Handle handle, int productId) {
+        // Đọc tất cả images của product này
+        String selectSql = "SELECT * FROM Product_images WHERE product_id = :productId ORDER BY id";
+        List<ProductImage> images = handle.createQuery(selectSql)
+                .bind("productId", productId)
+                .mapToBean(ProductImage.class)
+                .list();
+
+        // Tìm ảnh đầu tiên có is_thumbnail = 1
+        ProductImage thumbnailImage = null;
+        for (ProductImage img : images) {
+            if (img.isThumbnail()) {
+                thumbnailImage = img;
+                break;
+            }
+        }
+
+        // Reset tất cả về 0
+        String resetSql = "UPDATE Product_images SET is_thumbnail = 0 WHERE product_id = :productId";
+        handle.createUpdate(resetSql)
+                .bind("productId", productId)
+                .execute();
+
+        // Set lại ảnh thumbnail được chọn (hoặc ảnh đầu tiên nếu không có)
+        if (thumbnailImage != null) {
+            String updateSql = "UPDATE Product_images SET is_thumbnail = 1 WHERE id = :id";
+            handle.createUpdate(updateSql)
+                    .bind("id", thumbnailImage.getId())
+                    .execute();
+        } else if (!images.isEmpty()) {
+            String updateSql = "UPDATE Product_images SET is_thumbnail = 1 WHERE id = :id";
+            handle.createUpdate(updateSql)
+                    .bind("id", images.get(0).getId())
+                    .execute();
         }
     }
 }
