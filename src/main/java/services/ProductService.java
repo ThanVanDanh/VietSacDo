@@ -367,4 +367,79 @@ public class ProductService {
             return null;
         }
     }
+
+    /**
+     * Áp dụng giảm giá cho variant theo SKU
+     */
+    public boolean applyDiscountBySku(String sku, String discountType, double discountValue) {
+        try {
+            // Lấy variant theo SKU
+            ProductVariant variant = variantDao.getVariantBySku(sku);
+            if (variant == null) {
+                throw new RuntimeException("Không tìm thấy sản phẩm với SKU: " + sku);
+            }
+
+            // Tính giá giảm
+            double discountedPrice;
+            if ("percentage".equals(discountType)) {
+                discountedPrice = variant.getCurrentPrice() * (1 - discountValue / 100);
+            } else {
+                discountedPrice = variant.getCurrentPrice() - discountValue;
+            }
+
+            // Đảm bảo giá không âm
+            if (discountedPrice < 0) discountedPrice = 0;
+
+            // Cập nhật vào DB qua DAO
+            return variantDao.updateDiscountedPrice(variant.getId(), discountedPrice);
+
+        } catch (Exception e) {
+            System.err.println("Error applying discount: " + e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Áp dụng giảm giá hàng loạt theo danh mục
+     */
+    public int applyDiscountByCategories(List<Integer> categoryIds, String discountType, double discountValue) {
+        try {
+            // Lấy tất cả variants của các categories qua DAO
+            List<ProductVariant> variants = jdbi.withHandle(handle -> {
+                String selectSql = "SELECT pv.* FROM Product_variants pv " +
+                        "INNER JOIN Products p ON pv.product_id = p.id " +
+                        "WHERE p.category_id IN (<categoryIds>)";
+
+                return handle.createQuery(selectSql)
+                        .bindList("categoryIds", categoryIds)
+                        .mapToBean(ProductVariant.class)
+                        .list();
+            });
+
+            if (variants.isEmpty()) return 0;
+
+            // Cập nhật từng variant qua DAO
+            int count = 0;
+            for (ProductVariant v : variants) {
+                double discountedPrice;
+                if ("percentage".equals(discountType)) {
+                    discountedPrice = v.getCurrentPrice() * (1 - discountValue / 100);
+                } else {
+                    discountedPrice = v.getCurrentPrice() - discountValue;
+                }
+
+                if (discountedPrice < 0) discountedPrice = 0;
+
+                // Gọi DAO để update
+                boolean updated = variantDao.updateDiscountedPrice(v.getId(), discountedPrice);
+                if (updated) count++;
+            }
+
+            return count;
+
+        } catch (Exception e) {
+            System.err.println("Error applying batch discount: " + e.getMessage());
+            return 0;
+        }
+    }
 }
