@@ -44,6 +44,9 @@ public class Order extends AId implements Serializable {
     @ColumnName("updated_at")
     private LocalDateTime updatedAt;
 
+    // Field for JSON serialization (not transient so Gson can serialize it)
+    private String formattedCreatedAt;
+
     public Order() {
     }
 
@@ -211,9 +214,13 @@ public class Order extends AId implements Serializable {
 
     public String getFormattedCreatedAt() {
         if (createdAt == null)
-            return "";
+            return "Không rõ";
         java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter
                 .ofPattern("dd-MM-yyyy HH:mm:ss");
         return createdAt.format(formatter);
+    }
+
+    public void setFormattedCreatedAt(String formattedCreatedAt) {
+        this.formattedCreatedAt = formattedCreatedAt;
     }
 }

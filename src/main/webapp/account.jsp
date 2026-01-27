@@ -119,7 +119,7 @@
                                     <a class="active tab-btn" id="nav-details">Thông tin tài khoản</a>
                                 </li>
                                 <li>
-                                    <a class="tab-btn" id="nav-addresses">Sổ địa chỉ (1)</a>
+                                    <a class="tab-btn" id="nav-addresses">Địa chỉ</a>
                                 </li>
                                 <li>
                                     <a href="Logout">Đăng xuất</a>
@@ -139,14 +139,14 @@
 
                                 <h3>ĐƠN HÀNG CỦA BẠN</h3>
                                 <div class="order-history-table">
-                                    <table>
+                                    <table class="table-classic">
                                         <thead>
                                             <tr>
                                                 <th>Mã đơn hàng</th>
-                                                <th>Ngày đặt</th>
-                                                <th>Thành tiền</th>
+                                                <th>Ngày mua</th>
+                                                <th>Tổng thanh toán</th>
                                                 <th>Trạng thái</th>
-                                                <th>Thanh toán</th>
+                                                <th>Thao tác</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -154,21 +154,58 @@
                                                 <c:when test="${not empty orders}">
                                                     <c:forEach var="order" items="${orders}">
                                                         <tr>
-                                                            <td>${order.orderCode}</td>
+                                                            <td><strong>${order.orderCode}</strong></td>
                                                             <td>${order.formattedCreatedAt}</td>
                                                             <td>
-                                                                <fmt:formatNumber value="${order.totalAmount}"
-                                                                    type="currency" currencySymbol="₫" />
+                                                                <strong style="color: #d32f2f;">
+                                                                    <fmt:formatNumber value="${order.totalAmount}"
+                                                                        type="currency" currencySymbol="₫" />
+                                                                </strong>
                                                             </td>
-                                                            <td>${order.orderStatus}</td>
-                                                            <td>${order.paymentStatus}</td>
+                                                            <td>
+                                                                <c:set var="statusClass" value="status-pending" />
+                                                                <c:choose>
+                                                                    <c:when
+                                                                        test="${order.orderStatus.toLowerCase().contains('giao')}">
+                                                                        <c:set var="statusClass"
+                                                                            value="status-shipping" />
+                                                                    </c:when>
+                                                                    <c:when
+                                                                        test="${order.orderStatus.toLowerCase().contains('hoàn thành')}">
+                                                                        <c:set var="statusClass"
+                                                                            value="status-completed" />
+                                                                    </c:when>
+                                                                    <c:when
+                                                                        test="${order.orderStatus.toLowerCase().contains('hủy')}">
+                                                                        <c:set var="statusClass"
+                                                                            value="status-canceled" />
+                                                                    </c:when>
+                                                                </c:choose>
+                                                                <span
+                                                                    class="status-badge ${statusClass}">${order.orderStatus}</span>
+                                                            </td>
+                                                            <td>
+                                                                <c:if
+                                                                    test="${order.orderStatus.toLowerCase().contains('chờ') or order.orderStatus.toLowerCase().contains('đang xử lý')}">
+                                                                    <button onclick="cancelOrder(${order.id})"
+                                                                        class="action-btn-cancel action-link">Hủy
+                                                                        đơn</button>
+                                                                </c:if>
+                                                                <a href="javascript:void(0)"
+                                                                    onclick="viewOrderDetails(${order.id})"
+                                                                    class="action-link action-view"
+                                                                    title="Xem chi tiết"><i class="fas fa-eye"></i></a>
+                                                            </td>
                                                         </tr>
                                                     </c:forEach>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <tr>
-                                                        <td colspan="5" style="text-align: center;">Bạn chưa có đơn hàng
-                                                            nào.</td>
+                                                        <td colspan="5"
+                                                            style="text-align: center; padding: 30px; color: #777;">
+                                                            Bạn chưa có đơn hàng nào. <a href="index.jsp"
+                                                                style="color: #d32f2f;">Mua sắm ngay</a>
+                                                        </td>
                                                     </tr>
                                                 </c:otherwise>
                                             </c:choose>
@@ -326,12 +363,48 @@
 
                         <h4 class="text-danger">XÁC NHẬN XÓA</h4>
 
-                        <p>Bạn có chắc chắn muốn xóa địa chỉ này khỏi sổ địa chỉ không?</p>
+                        <p>Bạn có chắc chắn muốn xóa địa chỉ này không?</p>
                         <p class="text-muted">Hành động này không thể hoàn tác.</p>
 
                         <div class="modal-actions center">
                             <button type="button" class="btn-secondary modal-close">Hủy bỏ</button>
                             <a href="#" id="confirm-delete-btn" class="btn-danger">Xóa ngay</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-overlay" id="order-details-modal" style="display: none;">
+                    <div class="modal-content" style="max-width: 800px;">
+                        <button class="modal-close" id="close-order-details">&times;</button>
+                        <h4>CHI TIẾT ĐƠN HÀNG <span id="modal-order-code" style="color: #d32f2f;"></span></h4>
+
+                        <div class="order-info-summary" style="margin-bottom: 20px; font-size: 13px;">
+                            <p><strong>Ngày đặt:</strong> <span id="modal-order-date"></span></p>
+                            <p><strong>Trạng thái:</strong> <span id="modal-order-status" class="status-badge"></span>
+                            </p>
+                            <p><strong>Địa chỉ nhận hàng:</strong> <span id="modal-order-address"></span></p>
+                        </div>
+
+                        <div style="max-height: 400px; overflow-y: auto; border: 1px solid #eee; border-radius: 4px;">
+                            <table class="table-classic" style="margin-top: 0;">
+                                <thead>
+                                    <tr>
+                                        <th>Sản phẩm</th>
+                                        <th>Đơn giá</th>
+                                        <th>SL</th>
+                                        <th>Thành tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="modal-order-items-body">
+                                    <!-- AJAX Content here -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div style="margin-top: 20px; text-align: right;">
+                            <p>Tạm tính: <span id="modal-subtotal"></span></p>
+                            <p>Phí vận chuyển: <span id="modal-shipping"></span></p>
+                            <p>Giảm giá: <span id="modal-discount" style="color: green;"></span></p>
+                            <h3 style="color: #d32f2f; margin-top: 10px;">TỔNG CỘNG: <span id="modal-total"></span></h3>
                         </div>
                     </div>
                 </div>

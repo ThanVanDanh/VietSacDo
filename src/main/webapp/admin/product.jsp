@@ -48,6 +48,9 @@
                         <a href="#" class="btn btn-primary" id="addProductBtn">
                             <i class="fas fa-plus"></i> Thêm Sản phẩm
                         </a>
+                        <a href="#" class="btn btn-primary" id="discountMarketing">
+                            <i class="fa-solid fa-tags"></i> Giảm giá Marketing
+                        </a>
                     </div>
                 </div>
 
@@ -234,6 +237,100 @@
             </div>
         </div>
 
+        <!-- Discount Marketing Modal -->
+        <div id="discountMarketingModal" class="modal-overlay" aria-hidden="true">
+            <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="discountModalTitle">
+                <div class="modal-header">
+                    <h3 id="discountModalTitle">Giảm giá Marketing</h3>
+                    <span class="close-button" id="closeDiscountModalBtn">&times;</span>
+                </div>
+
+                <div class="modal-body">
+                    <div class="modal-form-grid">
+                        <!-- Chọn phương thức giảm giá -->
+                        <div class="form-group-modal full-width">
+                            <label for="discount-method">Phương thức giảm giá <span style="color:red">*</span></label>
+                            <select id="discount-method" name="discount-method" required>
+                                <option value="">-- Chọn phương thức --</option>
+                                <option value="single">Giảm giá theo mã sản phẩm</option>
+                                <option value="batch">Giảm giá hàng loạt theo danh mục</option>
+                            </select>
+                        </div>
+
+                        <!-- Option 1: Giảm giá theo mã sản phẩm -->
+                        <div id="single-discount-section" class="discount-section full-width" style="display:none;">
+                            <div class="form-group-modal">
+                                <label for="product-code-discount">Mã sản phẩm <span style="color:red">*</span></label>
+                                <input type="text" id="product-code-discount" placeholder="VD: ADTT01">
+                                <button type="button" id="check-product-btn" class="btn btn-secondary" style="margin-top:8px;">
+                                    Kiểm tra giá
+                                </button>
+                            </div>
+
+                            <div class="form-group-modal">
+                                <label for="current-price-display">Giá hiện tại</label>
+                                <input type="text" id="current-price-display" readonly
+                                       placeholder="Nhập mã sản phẩm và bấm 'Kiểm tra giá'"
+                                       style="background-color: #f0f0f0; cursor: not-allowed;">
+                            </div>
+
+                            <div class="form-group-modal">
+                                <label for="single-discount-type">Loại giảm giá</label>
+                                <select id="single-discount-type">
+                                    <option value="percentage">Giảm theo %</option>
+                                    <option value="fixed">Giảm số tiền cố định</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group-modal">
+                                <label for="single-discount-value">
+                                    <span id="single-discount-label">Phần trăm giảm (%)</span>
+                                </label>
+                                <input type="number" id="single-discount-value"
+                                       placeholder="VD: 10" min="0" step="0.01">
+                            </div>
+                        </div>
+
+                        <!-- Option 2: Giảm giá hàng loạt theo danh mục -->
+                        <div id="batch-discount-section" class="discount-section full-width" style="display:none;">
+                            <div class="form-group-modal full-width">
+                                <label>Chọn danh mục <span style="color:red">*</span></label>
+                                <div id="category-checkbox-list" class="checkbox-list"
+                                     style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 4px;">
+                                    <!-- Categories will be loaded here via JavaScript -->
+                                </div>
+                            </div>
+
+                            <div class="form-group-modal">
+                                <label for="batch-discount-type">Loại giảm giá</label>
+                                <select id="batch-discount-type">
+                                    <option value="percentage">Giảm theo %</option>
+                                    <option value="fixed">Giảm số tiền cố định</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group-modal">
+                                <label for="batch-discount-value">
+                                    <span id="batch-discount-label">Phần trăm giảm (%)</span>
+                                </label>
+                                <input type="number" id="batch-discount-value"
+                                       placeholder="VD: 15" min="0" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-modal btn-modal-secondary" id="cancelDiscountModalBtn">
+                        Hủy
+                    </button>
+                    <button type="button" class="btn-modal btn-modal-primary" id="applyDiscountBtn">
+                        Lưu giảm giá
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </main>
 </div>
 
@@ -243,5 +340,6 @@
 
 <script src="../scripts/admin/product.js"></script>
 <script src="${pageContext.request.contextPath}/scripts/admin.js"></script>
+<script src="../scripts/admin/product-discount.js"></script>
 </body>
 </html>
