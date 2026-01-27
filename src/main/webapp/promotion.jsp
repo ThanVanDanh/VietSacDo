@@ -28,7 +28,7 @@
 <div class="breadcrumb-container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/index.jsp">Trang Chủ</a></li>
+            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home">Trang Chủ</a></li>
             <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/login.jsp">Tài khoản</a></li>
             <li class="breadcrumb-item active" aria-current="page">Chương trình Khuyến mãi</li>
         </ol>

@@ -46,13 +46,16 @@ public class ProductController extends HttpServlet {
             int id = Integer.parseInt(idParam);
 
             Product product = productService.getProduct(id);
+            if (product == null || !"active".equalsIgnoreCase(product.getStatusProduct())) {
+                // Nếu sản phẩm không tồn tại hoặc không active, chuyển hướng về trang chủ hoặc báo lỗi
+                response.sendRedirect("index.jsp");
+                return;
+            }
             request.setAttribute("p", product);
 //            san pham cung loai
             if (product != null) {
                 ProductDao dao = new ProductDao();
-
                 List<ProductListDTO> relatedProducts = dao.getRelatedProducts(product.getCategoryId(), id, 5);
-
                 request.setAttribute("relatedProducts", relatedProducts);
             }
 

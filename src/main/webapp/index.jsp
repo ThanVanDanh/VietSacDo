@@ -150,29 +150,7 @@
             </div>
         </section>
     </c:if>
-<%--intagram--%>
-    <section class="sumire-review-section">
-        <div class="instagram-follow">
-            <p class="follow-text">Follow @vietsacdo</p>
-            <div class="instagram-gallery">
-                <c:forEach var="i" begin="1" end="5">
-                    <div class="gallery-item">
-                        <img src="${pageContext.request.contextPath}/image/insta${i}.jpg" alt="Sản phẩm Việt Sắc Đỏ">
-                        <a href="#" class="insta-overlay" target="_blank">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                    </div>
-                </c:forEach>
-            </div>
-        </div>
-
-        <div class="thank-you-message">
-            <p>Cảm ơn bạn và chị đã lựa chọn sản phẩm của Việt Sắc Đỏ</p>
-        </div>
-
-    </section>
 </main>
-
 <div id="quick-view-model" class="model-overlay">
     <div class="quick-content-model">
         <div class="model-image">
