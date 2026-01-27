@@ -14,6 +14,9 @@ public class VoucherDao extends BaseDao {
     }
 
     public List<Voucher> getAll() {
+        // Tự động deactivate các voucher đã hết hạn
+        deactivateExpiredVouchers();
+        
         String sql = "SELECT * FROM Vouchers ORDER BY created_at DESC";
         return jdbi.withHandle(handle ->
                 handle.createQuery(sql)
@@ -131,6 +134,18 @@ public class VoucherDao extends BaseDao {
                 handle.createUpdate(sql)
                         .bind("id", voucherId)
                         .execute() > 0
+        );
+    }
+
+    /**
+     * Tự động cập nhật is_active = 0 cho các voucher đã hết hạn
+     */
+    public int deactivateExpiredVouchers() {
+        String sql = "UPDATE Vouchers SET is_active = 0 " +
+                "WHERE is_active = 1 AND valid_to < NOW()";
+        
+        return jdbi.withHandle(handle ->
+                handle.createUpdate(sql).execute()
         );
     }
 

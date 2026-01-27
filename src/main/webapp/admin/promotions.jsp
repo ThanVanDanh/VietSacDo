@@ -10,6 +10,19 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/admin.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/promitionsStyle.css">
     <script src="https://cdn.ckeditor.com/4.22.1/full-all/ckeditor.js"></script>
+    <style>
+        .cke_notifications_area {
+            display: none !important;
+        }
+
+        .cke_notification {
+            display: none !important;
+        }
+
+        .cke_notification_warning {
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
 <div class="admin-container">
