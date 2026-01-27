@@ -88,6 +88,17 @@ public class OrderDao extends BaseDao {
                         .execute() > 0);
     }
 
+    public boolean cancelOrderWithReason(int orderId, String status, String cancelReason) {
+        return jdbi.withHandle(
+                handle -> handle
+                        .createUpdate(
+                                "UPDATE Orders SET order_status = :status, cancel_reason = :reason WHERE id = :orderId")
+                        .bind("status", status)
+                        .bind("reason", cancelReason)
+                        .bind("orderId", orderId)
+                        .execute() > 0);
+    }
+
     public List<model.order.OrderItem> getOrderItems(int orderId) {
         String sql = "SELECT oi.*, " +
                 "p.name_product AS productName, " +
@@ -103,5 +114,37 @@ public class OrderDao extends BaseDao {
                 .bind("orderId", orderId)
                 .mapToBean(model.order.OrderItem.class)
                 .list());
+    }
+
+    public List<Order> getAllOrders() {
+        return jdbi.withHandle(
+                handle -> handle.createQuery("SELECT * FROM Orders ORDER BY created_at DESC")
+                        .mapToBean(Order.class)
+                        .list());
+    }
+
+    public Order getOrderById(int orderId) {
+        return jdbi.withHandle(
+                handle -> handle.createQuery("SELECT * FROM Orders WHERE id = :orderId")
+                        .bind("orderId", orderId)
+                        .mapToBean(Order.class)
+                        .findFirst()
+                        .orElse(null));
+    }
+
+    public boolean deleteOrder(int orderId) {
+        return jdbi.inTransaction(handle -> {
+            // Delete order items first (foreign key constraint)
+            handle.createUpdate("DELETE FROM Order_items WHERE order_id = :orderId")
+                    .bind("orderId", orderId)
+                    .execute();
+
+            // Delete the order
+            int deleted = handle.createUpdate("DELETE FROM Orders WHERE id = :orderId")
+                    .bind("orderId", orderId)
+                    .execute();
+
+            return deleted > 0;
+        });
     }
 }

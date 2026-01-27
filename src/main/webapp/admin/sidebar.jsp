@@ -10,13 +10,13 @@
             </div>
             <nav class="sidebar-nav">
                 <ul>
-                    <li class="nav-item active"><a href="${pageContext.request.contextPath}/admin/dashboard.jsp"><i
+                    <li class="nav-item active"><a href="${pageContext.request.contextPath}/admin/dashboard"><i
                                 class="fas fa-tachometer-alt"></i> Tổng quan</a></li>
                     <li class="nav-item"><a href="${pageContext.request.contextPath}/admin/product.jsp"><i
                                 class="fas fa-box-open"></i> Quản lý Sản phẩm</a></li>
                     <li class="nav-item"><a href="${pageContext.request.contextPath}/admin/home"><i
                                 class="fas fa-house"></i> Quản lý Trang chủ</a></li>
-                    <li class="nav-item"><a href="${pageContext.request.contextPath}/admin/orders.jsp"><i
+                    <li class="nav-item"><a href="${pageContext.request.contextPath}/admin/orders"><i
                                 class="fas fa-shopping-cart"></i> Quản lý Đơn hàng</a></li>
                     <li class="nav-item"><a href="${pageContext.request.contextPath}/admin/users"><i
                                 class="fas fa-users"></i> Quản lý Tài khoản</a></li>
