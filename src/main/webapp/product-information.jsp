@@ -62,35 +62,22 @@
 
         <div class="product-price">
             <c:set var="v" value="${p.variants[0]}" />
-
             <c:choose>
                 <%-- Trường hợp CÓ giảm giá --%>
                 <c:when test="${v.discountedPrice > 0 && v.discountedPrice < v.currentPrice}">
-            <span class="old-price">
-                <fmt:formatNumber value="${v.currentPrice}" pattern="#,###"/>₫
-            </span>
-                    <span class="current-price" id="display-price">
-                <fmt:formatNumber value="${v.discountedPrice}" pattern="#,###"/>₫
-            </span>
-                    <c:set var="percent" value="${Math.round((1 - v.discountedPrice/v.currentPrice) * 100)}" />
-                    <span class="discount-tag">${percent}%</span>
-                    <p class="saving">
-                        (<span class="save">Tiết kiệm</span>
-                        <span class="price">
-                    <fmt:formatNumber value="${v.currentPrice - v.discountedPrice}" pattern="#,###"/>₫
-                </span>)
-                    </p>
+                    <span class="old-price"><fmt:formatNumber value="${v.currentPrice}" pattern="#,###"/>₫</span>
+                    <span class="current-price" id="display-price"><fmt:formatNumber value="${v.discountedPrice}" pattern="#,###"/>₫</span>
+                        <c:set var="percent" value="${Math.round((1 - v.discountedPrice/v.currentPrice) * 100)}" />
+                            <span class="discount-tag">${percent}%</span>
+                    <p class="saving">(<span class="save">Tiết kiệm</span><span class="price"><fmt:formatNumber value="${v.currentPrice - v.discountedPrice}" pattern="#,###"/>₫</span>)</p>
                 </c:when>
-
                 <%-- Trường hợp KHÔNG giảm giá (giảm giá bằng 0) --%>
                 <c:otherwise>
-            <span class="current-price" id="display-price">
-                <fmt:formatNumber value="${v.currentPrice}" pattern="#,###"/>₫
-            </span>
+                    <span class="current-price" id="display-price"><fmt:formatNumber value="${v.currentPrice}" pattern="#,###"/>₫</span>
                     <%-- Ẩn các cột khác --%>
-                    <span class="old-price" style="display: none;"></span>
-                    <span class="discount-tag" style="display: none;"></span>
-                    <p class="saving" style="display: none;"></p>
+                        <span class="old-price" style="display: none;"></span>
+                        <span class="discount-tag" style="display: none;"></span>
+                        <p class="saving" style="display: none;"></p>
                 </c:otherwise>
             </c:choose>
         </div>
@@ -235,10 +222,31 @@
                                             <p class="product-name">${rp.nameProduct}</p>
                                         </a>
                                         <div class="product-price">
-                                            <span class="current-price">
-                                                <%-- Format giá tiền --%>
-                                                    <fmt:formatNumber value="${rp.price}" pattern="#,###" />₫
-                                            </span>
+                                            <c:choose>
+                                                <%-- CÓ GIẢM GIÁ --%>
+                                                <c:when test="${rp.discountedPrice > 0 && rp.discountedPrice < rp.price}">
+                                                    <div class="current-price">
+                                                        <fmt:formatNumber value="${rp.discountedPrice}" pattern="#,###"/>₫
+                                                    </div>
+
+                                                    <div class="price-meta">
+                                                <span class="old-price">
+                                                    <fmt:formatNumber value="${rp.price}" pattern="#,###"/>₫
+                                                </span>
+                                                        <c:set var="percent" value="${Math.round((1 - rp.discountedPrice/rp.price) * 100)}" />
+                                                        <span class="discount-tag">
+                                                    -${percent}%
+                                                </span>
+                                                    </div>
+                                                </c:when>
+
+                                                <%-- KHÔNG GIẢM GIÁ --%>
+                                                <c:otherwise>
+                                                    <div class="current-price">
+                                                        <fmt:formatNumber value="${rp.price}" pattern="#,###"/>₫
+                                                    </div>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </div>
                                     </div>
                                 </div>
@@ -283,9 +291,31 @@
                                                 <p class="product-name">${vp.nameProduct}</p>
                                             </a>
                                             <div class="product-price">
-                                                <span class="current-price">
-                                                    <fmt:formatNumber value="${vp.price}" pattern="#,###" />₫
+                                                <c:choose>
+                                                    <%-- CÓ GIẢM GIÁ --%>
+                                                    <c:when test="${vp.discountedPrice > 0 && vp.discountedPrice < vp.price}">
+                                                        <div class="current-price">
+                                                            <fmt:formatNumber value="${vp.discountedPrice}" pattern="#,###"/>₫
+                                                        </div>
+
+                                                        <div class="price-meta">
+                                                <span class="old-price">
+                                                    <fmt:formatNumber value="${vp.price}" pattern="#,###"/>₫
                                                 </span>
+                                                            <c:set var="percent" value="${Math.round((1 - vp.discountedPrice/vp.price) * 100)}" />
+                                                            <span class="discount-tag">
+                                                    -${percent}%
+                                                </span>
+                                                        </div>
+                                                    </c:when>
+
+                                                    <%-- KHÔNG GIẢM GIÁ --%>
+                                                    <c:otherwise>
+                                                        <div class="current-price">
+                                                            <fmt:formatNumber value="${vp.price}" pattern="#,###"/>₫
+                                                        </div>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </div>
                                         </div>
                                     </div>

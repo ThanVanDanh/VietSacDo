@@ -133,6 +133,7 @@ public class ProductDao extends BaseDao {
     public List<ProductListDTO> getRelatedProducts(int categoryId, int currentProductId, int limit) {
         String sql = "SELECT p.id, p.name_product, " +
                 "(SELECT current_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS price, " +
+                "(SELECT discounted_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS discountedPrice, " +
                 "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
                 "(SELECT sku FROM Product_variants WHERE product_id = p.id LIMIT 1) AS sku " +
                 "FROM Products p " +
@@ -181,9 +182,7 @@ public class ProductDao extends BaseDao {
         });
     }
 
-    /**
-     * ✅ MỚI: Xóa product (cascade delete variants & images)
-     */
+
     public boolean delete(int productId) {
         return get().withHandle(handle -> {
             // Delete trong transaction để đảm bảo consistency
@@ -208,9 +207,6 @@ public class ProductDao extends BaseDao {
         });
     }
 
-    /**
-     * ✅ MỚI: Đếm số variants của product
-     */
     public int countVariants(int productId) {
         String sql = "SELECT COUNT(*) FROM Product_variants WHERE product_id = :productId";
         return get().withHandle(handle ->

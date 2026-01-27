@@ -18,7 +18,7 @@
         </div>
         <nav>
             <ul class="menu">
-                <li><a href="${pageContext.request.contextPath}/home">Trang Chủ</a></li>
+<%--                <li><a href="${pageContext.request.contextPath}/home">Trang Chủ</a></li>--%>
 
                 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
                 <c:set var="menuAll" value="${requestScope.menuAllCategories}"/>
