@@ -77,7 +77,9 @@
                 <div class="product-info">
                     <a href="${pageContext.request.contextPath}/product-detail?id=${pdto.id}"><p class="product-name">${pdto.nameProduct}</p></a>
                     <div class="product-price">
-                        <span class="current-price">${pdto.price}</span>
+                        <span class="current-price">
+                            <fmt:formatNumber value="${pdto.price}" pattern="#,###"/>₫
+                        </span>
                     </div>
                 </div>
             </div>
@@ -140,7 +142,7 @@
                             </a>
                             <div class="product-price">
                                 <span class="current-price">
-                                    <fmt:formatNumber value="${vp.price}" type="currency" currencySymbol="₫" maxFractionDigits="0"/>
+                                    <fmt:formatNumber value="${vp.price}" pattern="#,###"/>₫
                                 </span>
                             </div>
                         </div>

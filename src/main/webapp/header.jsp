@@ -20,56 +20,140 @@
             <ul class="menu">
                 <li><a href="${pageContext.request.contextPath}/index.jsp">Trang Chủ</a></li>
 
-                <li><a href="#">Áo dài<i class="fa-solid fa-chevron-down"></i></a>
-                    <ul class="sub-menu">
-                        <li><a href="${pageContext.request.contextPath}/danh-muc/ao-dai-truyen-thong">Áo dài truyền thống</a></li>
-                        <li><a href="${pageContext.request.contextPath}/danh-muc/ao-dai-theu-tay">Áo dài thêu tay</a></li>
-                        <li><a href="${pageContext.request.contextPath}/danh-muc/ao-dai-linen">Áo dài linen</a></li>
-                    </ul>
-                </li>
+                <c:set var="ctx" value="${pageContext.request.contextPath}"/>
+                <c:set var="menuAll" value="${requestScope.menuAllCategories}"/>
 
-                <li class="has-megamenu"><a href="#">Quần & Phụ kiện<i class="fa-solid fa-chevron-down"></i></a>
-                    <ul class="sub-menu">
-                        <div class="mega-menu-container">
-                            <div class="mega-menu-content">
+                <c:forEach var="cat" items="${menuAll}">
+                    <c:if test="${cat.parentId == 0 || cat.parentId == null}">
+                        <c:set var="children" value="${null}"/>
+                        <c:forEach var="tmp" items="${menuAll}">
+                            <c:if test="${tmp.parentId == cat.id}">
+                                <c:set var="children" value="${menuAll}"/>
+                            </c:if>
+                        </c:forEach>
 
-                                <div class="category-column">
-                                    <h3>Quần & váy phối áo dài</h3>
-                                    <ul>
-                                        <li><a href="${pageContext.request.contextPath}/danh-muc/chan-vay">Chân Váy</a></li>
-                                        <li><a href="${pageContext.request.contextPath}/danh-muc/quan-phuong-chi">Quần Phương Chi</a></li>
-                                        <li><a href="${pageContext.request.contextPath}/danh-muc/quan-que-chi">Quần Quế Chi</a></li>
-                                        <li><a href="${pageContext.request.contextPath}/danh-muc/quan-van-chi">Quần Vân Chi</a></li>
-                                        <li><a href="${pageContext.request.contextPath}/danh-muc/quan-mai-chi">Quần Mai Chi</a></li>
-                                        <li><a href="${pageContext.request.contextPath}/danh-muc/quan-truc-chi">Quần Trúc Chi</a></li>
-                                    </ul>
-                                </div>
+                        <c:set var="hasChildren" value="${false}"/>
+                        <c:forEach var="tmp2" items="${menuAll}">
+                            <c:if test="${tmp2.parentId == cat.id}">
+                                <c:set var="hasChildren" value="${true}"/>
+                            </c:if>
+                        </c:forEach>
 
-                                <div class="category-column">
-                                    <h3>Phụ kiện</h3>
-                                    <ul>
-                                        <li><a href="${pageContext.request.contextPath}/danh-muc/man-doi-dau">Mấn áo dài</a></li>
-                                        <li><a href="${pageContext.request.contextPath}/danh-muc/vong-tay">Vòng tay</a></li>
-                                        <li><a href="${pageContext.request.contextPath}/danh-muc/hoa-tai">Hoa tai</a></li>
-                                        <li><a href="${pageContext.request.contextPath}/danh-muc/guoc-go">Guốc gỗ</a></li>
-                                        <li><a href="${pageContext.request.contextPath}/danh-muc/tui-xach">Túi xách</a></li>
-                                        <li><a href="${pageContext.request.contextPath}/danh-muc/day-chuyen">Dây chuyền</a></li>
-                                        <li><a href="${pageContext.request.contextPath}/danh-muc/kep-no-cai-toc">Kẹp & nơ cài tóc</a></li>
-                                    </ul>
-                                </div>
+                    <c:choose>
+                        <c:when test="${hasChildren}">
 
-                                <div class="category-column">
-                                    <h3>Nón Lá</h3>
-                                    <ul>
-                                        <li><a href="${pageContext.request.contextPath}/danh-muc/non-la-ho-diep">Nón lá bọc vải Hồ điệp</a></li>
-                                        <li><a href="${pageContext.request.contextPath}/danh-muc/non-la-hoa-buoi">Nón lá bọc vải Chè hoa bưởi</a></li>
-                                    </ul>
-                                </div>
+                            <c:choose>
+                                <c:when test="${cat.slug == 'quan-phu-kien'}">
+                                    <li class="has-megamenu">
+                                        <c:choose>
+                                            <c:when test="${empty cat.slug}">
+                                                <a href="#">${cat.nameCategory}<i class="fa-solid fa-chevron-down"></i></a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="${ctx}/danh-muc/${cat.slug}">${cat.nameCategory}<i class="fa-solid fa-chevron-down"></i></a>
+                                            </c:otherwise>
+                                        </c:choose>
 
-                            </div>
-                        </div>
-                    </ul>
-                </li>
+                                        <ul class="sub-menu">
+                                            <div class="mega-menu-container">
+                                                <div class="mega-menu-content">
+
+                                                    <c:forEach var="col" items="${menuAll}">
+                                                        <c:if test="${col.parentId == cat.id}">
+                                                            <div class="category-column">
+                                                                <h3>${col.nameCategory}</h3>
+                                                                <ul>
+                                                                    <c:set var="hasGrand" value="${false}"/>
+                                                                    <c:forEach var="g" items="${menuAll}">
+                                                                        <c:if test="${g.parentId == col.id}">
+                                                                            <c:set var="hasGrand" value="${true}"/>
+                                                                        </c:if>
+                                                                    </c:forEach>
+
+                                                                    <c:choose>
+                                                                        <c:when test="${hasGrand}">
+                                                                            <c:forEach var="g" items="${menuAll}">
+                                                                                <c:if test="${g.parentId == col.id}">
+                                                                                    <c:choose>
+                                                                                        <c:when test="${empty g.slug}">
+                                                                                            <li><a href="#">${g.nameCategory}</a></li>
+                                                                                        </c:when>
+                                                                                        <c:otherwise>
+                                                                                            <li><a href="${ctx}/danh-muc/${g.slug}">${g.nameCategory}</a></li>
+                                                                                        </c:otherwise>
+                                                                                    </c:choose>
+                                                                                </c:if>
+                                                                            </c:forEach>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <c:choose>
+                                                                                <c:when test="${empty col.slug}">
+                                                                                    <li><a href="#">${col.nameCategory}</a></li>
+                                                                                </c:when>
+                                                                                <c:otherwise>
+                                                                                    <li><a href="${ctx}/danh-muc/${col.slug}">${col.nameCategory}</a></li>
+                                                                                </c:otherwise>
+                                                                            </c:choose>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </ul>
+                                                            </div>
+                                                        </c:if>
+                                                    </c:forEach>
+
+                                                </div>
+                                            </div>
+                                        </ul>
+                                    </li>
+                                </c:when>
+
+                                <c:otherwise>
+                                    <li>
+                                        <c:choose>
+                                            <c:when test="${empty cat.slug}">
+                                                <a href="#">${cat.nameCategory}<i class="fa-solid fa-chevron-down"></i></a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="${ctx}/danh-muc/${cat.slug}">${cat.nameCategory}<i class="fa-solid fa-chevron-down"></i></a>
+                                            </c:otherwise>
+                                        </c:choose>
+
+                                        <ul class="sub-menu">
+                                            <c:forEach var="child" items="${menuAll}">
+                                                <c:if test="${child.parentId == cat.id}">
+                                                    <c:choose>
+                                                        <c:when test="${empty child.slug}">
+                                                            <li><a href="#">${child.nameCategory}</a></li>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <li><a href="${ctx}/danh-muc/${child.slug}">${child.nameCategory}</a></li>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:if>
+                                            </c:forEach>
+                                        </ul>
+                                    </li>
+                                </c:otherwise>
+                            </c:choose>
+
+                        </c:when>
+
+                        <c:otherwise>
+                            <li>
+                                <c:choose>
+                                    <c:when test="${empty cat.slug}">
+                                        <a href="#">${cat.nameCategory}</a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="${ctx}/danh-muc/${cat.slug}">${cat.nameCategory}</a>
+                                    </c:otherwise>
+                                </c:choose>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
+                    </c:if>
+                </c:forEach>
+
                 <li><a href="${pageContext.request.contextPath}/contact_us">Liên Hệ</a></li>
                 <li><a href="${pageContext.request.contextPath}/promotion.jsp">Chương trình khuyến mãi</a></li>
             </ul>

@@ -16,27 +16,8 @@
 </head>
 <body>
 <div class="admin-container">
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <a href="dashboard.jsp">
-                <img src="/image/logo.png" alt="Logo Việt Sắc Đỏ">
-            </a>
-            <h2>Trang Admin</h2>
-        </div>
-        <nav class="sidebar-nav">
-            <ul>
-                <li class="nav-item "><a href="dashboard.jsp"><i class="fas fa-tachometer-alt"></i> Tổng quan</a></li>
-                <li class="nav-item"><a href="product.jsp"><i class="fas fa-box-open"></i> Quản lý Sản phẩm</a></li>
-                <li class="nav-item active"><a href="orders.html"><i class="fas fa-shopping-cart"></i> Quản lý Đơn hàng</a></li>
-                <li class="nav-item"><a href="customers.jsp"><i class="fas fa-users"></i> Quản lý Khách hàng</a></li>
-                <li class="nav-item"><a href="contact-admin.jsp"><i class="fa-regular fa-address-book"></i> Quản lý Liên hệ</a></li>
-                <li class="nav-item"><a href="promotions.jsp"><i class="fas fa-tags"></i> Khuyến mãi</a></li>
-                <li class="nav-item">
-                    <a href="../index.jsp"><i class="fas fa-sign-out-alt"></i> Trở về Trang Chủ</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+    <jsp:include page="sidebar.jsp" />
+
     <main class="main-content">
         <header class="admin-header">
             <div class="header-actions">
@@ -44,39 +25,6 @@
             </div>
         </header>
         <h1>Quản lý Đơn hàng</h1>
-        <!--        <section class="overview-cards-order">-->
-        <!--            <div class="stat-card-order">-->
-        <!--                <div class="card-icon" style="background-color: #e0f7fa;">-->
-        <!--                    <i class="fas fa-box-open" style="color: #00796b;"></i>-->
-        <!--                </div>-->
-        <!--                <div class="card-info">-->
-        <!--                    <h4>Tổng Đơn Hàng</h4>-->
-        <!--                    <p>80</p>-->
-        <!--                </div>-->
-        <!--            </div>-->
-        <!--            <div class="stat-card-order">-->
-        <!--                <div class="card-icon" style="background-color: #e8f5e9;">-->
-        <!--                    <i class="fas fa-dollar-sign" style="color: #388e3c;"></i>-->
-        <!--                </div>-->
-        <!--                <div class="card-info">-->
-        <!--                    <h4>Tổng Doanh Thu</h4>-->
-        <!--                    <p>75.600.000₫</p>-->
-        <!--                </div>-->
-        <!--            </div>-->
-        <!--            <div class="stat-card-order">-->
-        <!--                <div class="card-icon" style="background-color: #fff3e0;">-->
-        <!--                    <i class="fas fa-tshirt" style="color: #f57c00;"></i>-->
-        <!--                </div>-->
-        <!--                <div class="card-info">-->
-        <!--                    <h4>Bán Chạy Nhất (Tháng hiện tại)</h4>-->
-        <!--                    <p>Áo Dài Lụa Trắng</p>-->
-        <!--                </div>-->
-        <!--            </div>-->
-        <!--        </section>-->
-        <section class="chart-container">
-            <h3>Tổng quan Doanh thu (6 tháng)</h3>
-            <canvas id="revenueChart"></canvas>
-        </section>
         <section class="table-container">
             <div class="table-toolbar">
                 <div class="filters">
@@ -295,5 +243,6 @@
         </div>
     </div>
 </div>
+<script src="${pageContext.request.contextPath}/scripts/admin.js"></script>
 </body>
 </html>

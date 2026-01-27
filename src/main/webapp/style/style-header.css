@@ -208,7 +208,7 @@ header nav ul.menu > li > a:hover::after,
 .mega-menu-container {
     position: absolute;
     left: 50%;
-    transform: translateX(-44.4%);
+    transform: translateX(-50%);
     top: 100%;
     width: 100vw;
     background-color: rgba(0, 0, 0, 0.0);
@@ -219,6 +219,7 @@ header nav ul.menu > li > a:hover::after,
     display: flex;
     gap: 40px;
     width: 100%;
+    max-width: 1400px;
     padding: 30px;
     background-color:var(--color-primary);
     box-shadow: 0 8px 15px rgba(0,0,0,0.1);

@@ -9,8 +9,6 @@
     <link rel="stylesheet" href="../style/admin.css">
     <link rel="stylesheet" href="../style/customers.css">
     <link rel="stylesheet" href="../style/charts.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../scripts/admin/admin.js"></script>
     <script>
         // App context path for AJAX endpoints (set by server)
         var APP_CTX = '${pageContext.request.contextPath}';
@@ -19,27 +17,8 @@
 </head>
 <body>
 <div class="admin-container">
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <a href="dashboard.jsp">
-                <img src="/image/logo.png" alt="Logo Việt Sắc Đỏ">
-            </a>
-            <h2>Trang Admin</h2>
-        </div>
-        <nav class="sidebar-nav">
-            <ul>
-                <li class="nav-item "><a href="dashboard.jsp"><i class="fas fa-tachometer-alt"></i> Tổng quan</a></li>
-                <li class="nav-item"><a href="product.jsp"><i class="fas fa-box-open"></i> Quản lý Sản phẩm</a></li>
-                <li class="nav-item"><a href="orders.jsp"><i class="fas fa-shopping-cart"></i> Quản lý Đơn hàng</a></li>
-                <li class="nav-item active"><a href="customers.html"><i class="fas fa-users"></i> Quản lý Khách hàng</a></li>
-                <li class="nav-item"><a href="contact-admin.jsp"><i class="fa-regular fa-address-book"></i> Quản lý Liên hệ</a></li>
-                <li class="nav-item"><a href="promotions.jsp"><i class="fas fa-tags"></i> Khuyến mãi</a></li>
-                <li class="nav-item">
-                    <a href="../index.jsp"><i class="fas fa-sign-out-alt"></i> Trở về Trang Chủ</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+    <jsp:include page="sidebar.jsp" />
+
     <main class="main-content">
         <header class="admin-header">
             <div class="header-actions">
@@ -66,10 +45,6 @@
                     <p>${newCustomersThisWeek}</p>
                 </div>
             </div>
-        </section>
-        <section class="chart-container">
-            <h3>Top khách hàng theo số đơn hàng</h3>
-            <canvas id="customerOrdersChart"></canvas>
         </section>
         <section class="table-container">
             <div class="table-toolbar">
@@ -254,5 +229,6 @@
         </div>
     </div>
 </div>
+<script src="${pageContext.request.contextPath}/scripts/admin.js"></script>
 </body>
 </html>
