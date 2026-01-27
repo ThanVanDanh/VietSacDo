@@ -17,6 +17,7 @@ import services.ProductService;
 import services.ProductService.ImageUpload;
 import org.jdbi.v3.core.Jdbi;
 import util.GsonUtil;
+import util.PaginationUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -108,12 +109,36 @@ public class AdminProductController extends HttpServlet {
                 throw new IllegalStateException("ProductService chưa được khởi tạo");
             }
 
-            // Lấy danh sách products
-            List<ProductListDTO> products = productService.getListProduct();
-            System.out.println("✅ Loaded " + products.size() + " products");
+            // Phân trang: 15 sản phẩm mỗi trang
+            int pageSize = 15;
+            String sortBy = req.getParameter("sort");
+            if (sortBy == null || sortBy.isEmpty()) {
+                sortBy = "id-desc";
+            }
+            
+            int totalProducts = productService.countTotalProducts();
+            PaginationUtils.PageInfo pageInfo = PaginationUtils.calculate(
+                    req.getParameter("page"),
+                    totalProducts,
+                    pageSize
+            );
 
-            // Convert to JSON
-            String json = gson.toJson(products);
+            // Lấy danh sách products với sorting
+            List<ProductListDTO> products = productService.getListProductWithPaginationAndSort(
+                    pageSize, 
+                    pageInfo.getOffset(),
+                    sortBy
+            );
+            System.out.println("✅ Loaded " + products.size() + " products (page " + pageInfo.getCurrentPage() + "/" + pageInfo.getTotalPages() + ", sort: " + sortBy + ")");
+
+            // Convert to JSON với thông tin phân trang
+            Map<String, Object> response = new java.util.HashMap<>();
+            response.put("products", products);
+            response.put("currentPage", pageInfo.getCurrentPage());
+            response.put("totalPages", pageInfo.getTotalPages());
+            response.put("totalProducts", totalProducts);
+
+            String json = gson.toJson(response);
             resp.getWriter().write(json);
             resp.setStatus(HttpServletResponse.SC_OK);
 
@@ -318,19 +343,24 @@ public class AdminProductController extends HttpServlet {
             }
             System.out.println("Variants: " + variants.size());
 
-            // 4) ✨ Parse keepImageId[] - KHÁC với handleAdd
+            // 4) ✨ Parse keepImageId[] + keepImageIsThumb[]
             List<Integer> keepImageIds = new ArrayList<>();
+            List<Boolean> keepImageThumbs = new ArrayList<>();
             String[] keepIds = optional(req.getParameterValues("keepImageId[]"), req.getParameterValues("keepImageId"));
+            String[] keepThumbs = optional(req.getParameterValues("keepImageIsThumb[]"), req.getParameterValues("keepImageIsThumb"));
+            
             if (keepIds != null) {
-                for (String kid : keepIds) {
+                for (int i = 0; i < keepIds.length; i++) {
                     try {
-                        keepImageIds.add(Integer.parseInt(kid.trim()));
+                        keepImageIds.add(Integer.parseInt(keepIds[i].trim()));
+                        boolean isThumb = "1".equals(get(keepThumbs, i));
+                        keepImageThumbs.add(isThumb);
                     } catch (Exception e) {
-                        System.err.println("Invalid keepImageId: " + kid);
+                        System.err.println("Invalid keepImageId: " + keepIds[i]);
                     }
                 }
             }
-            System.out.println("Keep images: " + keepImageIds);
+            System.out.println("Keep images: " + keepImageIds + ", thumbnails: " + keepImageThumbs);
 
             // 5) Images mới (giống handleAdd)
             List<ImageUpload> uploads = new ArrayList<>();
@@ -352,8 +382,8 @@ public class AdminProductController extends HttpServlet {
             }
             System.out.println("New images: " + uploads.size());
 
-            // 6) ✨ Update product (GỌI method MỚI)
-            boolean success = productService.updateProduct(product, variants, uploads, keepImageIds);
+            // 6) ✨ Update product - truyền keepImageThumbs để xử lý thumbnail
+            boolean success = productService.updateProduct(product, variants, uploads, keepImageIds, keepImageThumbs);
             System.out.println("✅ Updated product ID: " + productId);
 
             resp.setContentType("application/json;charset=UTF-8");

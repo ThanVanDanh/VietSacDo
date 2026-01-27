@@ -15,7 +15,7 @@ public class LogoutController extends HttpServlet {
             session.removeAttribute("account");
             session.invalidate();
         }
-        response.sendRedirect(request.getContextPath() + "/index.jsp");
+        response.sendRedirect(request.getContextPath() + "/home");
     }
 
     @Override

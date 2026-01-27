@@ -20,7 +20,7 @@
 <div class="breadcrumb-container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="index.jsp">Trang Chủ</a></li>
+            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home">Trang Chủ</a></li>
             <li class="breadcrumb-item"><a href="login.html">Tài khoản</a></li> <li class="breadcrumb-item active" aria-current="page">Đăng nhập</li>
         </ol>
     </nav>
