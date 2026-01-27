@@ -2,6 +2,7 @@ package services;
 
 import model.user.User;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 import java.util.Random;
 import javax.mail.*;
@@ -78,6 +79,42 @@ public class EmailService {
             Transport.send(message);
         } catch (MessagingException e) {
             e.printStackTrace();
+        }
+    }
+    public boolean sendContactReply(String toEmail, String subject, String messageBody) {
+        String from = "minhthu12575@gmail.com";
+        String password = "vaqq ffcq regn hgpb";
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+
+        Session session = Session.getInstance(props, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(from, password);
+            }
+        });
+
+        try {
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(from, "Việt Sắc Đỏ Support"));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(toEmail));
+            message.setSubject(subject, "UTF-8");
+
+            String htmlContent = "<h3>Xin chào,</h3>"
+                    + "<p>" + messageBody.replace("\n", "<br>") + "</p>"
+                    + "<br><hr>"
+                    + "<p style='color:gray; font-size:12px;'>Trân trọng,<br><b>Đội ngũ Việt Sắc Đỏ</b></p>";
+
+            message.setContent(htmlContent, "text/html; charset=utf-8");
+
+            Transport.send(message);
+            return true;
+        } catch (MessagingException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }
