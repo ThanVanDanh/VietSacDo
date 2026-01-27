@@ -165,12 +165,21 @@
             <div class="user-menu">
                 <a><i class="fa-regular fa-user"></i></a>
                 <ul class="user">
-                    <% if (session.getAttribute("account") != null) { %>
-                    <li><a href="${pageContext.request.contextPath}/account">Tài khoản</a></li>
-                    <li><a href="${pageContext.request.contextPath}/Logout">Đăng xuất</a></li>
+                    <% if (session.getAttribute("account") !=null) { %>
+                    <% model.user.User u=(model.user.User) session.getAttribute("account"); if
+                    ("admin".equals(u.getRole())) { %>
+                    <li><a href="${pageContext.request.contextPath}/admin/dashboard.jsp">Quản trị</a>
+                    </li>
+                    <% } %>
+                    <li><a href="${pageContext.request.contextPath}/account">Tài khoản</a>
+                    </li>
+                    <li><a href="${pageContext.request.contextPath}/Logout">Đăng xuất</a>
+                    </li>
                     <% } else { %>
-                    <li><a href="${pageContext.request.contextPath}/login.jsp">Đăng nhập</a></li>
-                    <li><a href="${pageContext.request.contextPath}/signup.jsp">Đăng ký</a></li>
+                    <li><a href="${pageContext.request.contextPath}/login.jsp">Đăng
+                        nhập</a></li>
+                    <li><a href="${pageContext.request.contextPath}/signup.jsp">Đăng
+                        ký</a></li>
                     <% } %>
                 </ul>
             </div>
@@ -213,7 +222,7 @@
                                             </div>
                                             <span class="mini-item-price">
                                                 <fmt:formatNumber value="${item.price}" pattern="#,###"/>₫
-                                            </span>
+                                                                    </span>
                                             <span class="mini-quantity">x${item.quantity}</span>
                                         </div>
                                         <a href="${pageContext.request.contextPath}/cart?action=remove&id=${item.product.id}&sku=${item.sku}"
@@ -227,11 +236,11 @@
 
                         <div class="mini-cart-footer">
                             <div class="mini-cart-total">
-                                <span>Tổng tiền tạm tính:
-                                    <strong class="mini-total-price js-mini-total-price">
+                                                        <span>Tổng tiền tạm tính:
+                                                            <strong class="mini-total-price js-mini-total-price">
                                         <fmt:formatNumber value="${sessionScope.cart.totalPrice}" pattern="#,###"/>₫
-                                    </strong>
-                                </span>
+                                                            </strong>
+                                                        </span>
                             </div>
                             <a href="${pageContext.request.contextPath}/cart" class="btn-pay">Tiến hành thanh toán</a>
                         </div>
@@ -259,8 +268,22 @@
             <div class="user-menu">
                 <a><i class="fa-regular fa-user"></i></a>
                 <ul class="user">
-                    <li><a href="${pageContext.request.contextPath}/login.jsp">Đăng nhập</a></li>
-                    <li><a href="${pageContext.request.contextPath}/signup.jsp">Đăng ký</a></li>
+                    <% if (session.getAttribute("account") !=null) { %>
+                    <% model.user.User u=(model.user.User) session.getAttribute("account"); if
+                    ("admin".equals(u.getRole())) { %>
+                    <li><a href="${pageContext.request.contextPath}/admin/dashboard.jsp">Quản trị</a>
+                    </li>
+                    <% } %>
+                    <li><a href="${pageContext.request.contextPath}/account">Tài khoản</a>
+                    </li>
+                    <li><a href="${pageContext.request.contextPath}/Logout">Đăng xuất</a>
+                    </li>
+                    <% } else { %>
+                    <li><a href="${pageContext.request.contextPath}/login.jsp">Đăng
+                        nhập</a></li>
+                    <li><a href="${pageContext.request.contextPath}/signup.jsp">Đăng
+                        ký</a></li>
+                    <% } %>
                 </ul>
             </div>
 
@@ -302,7 +325,7 @@
                                             </div>
                                             <span class="mini-item-price">
                                                 <fmt:formatNumber value="${item.price}" pattern="#,###"/>₫
-                                            </span>
+                                                                    </span>
                                             <span class="mini-quantity">x${item.quantity}</span>
                                         </div>
                                         <a href="${pageContext.request.contextPath}/cart?action=remove&id=${item.product.id}&sku=${item.sku}"
@@ -316,11 +339,11 @@
 
                         <div class="mini-cart-footer">
                             <div class="mini-cart-total">
-                                <span>Tổng tiền tạm tính:
-                                    <strong class="mini-total-price js-mini-total-price">
+                                                        <span>Tổng tiền tạm tính:
+                                                            <strong class="mini-total-price js-mini-total-price">
                                         <fmt:formatNumber value="${sessionScope.cart.totalPrice}" pattern="#,###"/>₫
-                                    </strong>
-                                </span>
+                                                            </strong>
+                                                        </span>
                             </div>
                             <a href="${pageContext.request.contextPath}/cart" class="btn-pay">Tiến hành thanh toán</a>
                         </div>

@@ -163,8 +163,8 @@ public class CheckoutController extends HttpServlet {
         order.setDiscountAmount(discountAmount);
         order.setTotalAmount(totalAmount);
         order.setVoucherId(voucherId);
-        order.setOrderStatus("pending");
-        order.setPaymentStatus("unpaid");
+        order.setOrderStatus("chờ xử lý");
+        order.setPaymentStatus("chưa thanh toán");
 
         try {
             int orderId = orderDao.createOrder(order, cart.getItems());
@@ -177,7 +177,7 @@ public class CheckoutController extends HttpServlet {
             session.removeAttribute("appliedVoucher");
             session.removeAttribute("voucherError");
 
-            resp.sendRedirect(req.getContextPath() + "/account.jsp");
+            resp.sendRedirect(req.getContextPath() + "/account");
 
         } catch (Exception e) {
             e.printStackTrace();

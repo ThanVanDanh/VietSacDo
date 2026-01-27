@@ -71,4 +71,37 @@ public class OrderDao extends BaseDao {
                 .findFirst()
                 .orElse(null));
     }
+
+    public List<Order> getOrdersByUserId(int userId) {
+        return jdbi.withHandle(
+                handle -> handle.createQuery("SELECT * FROM Orders WHERE user_id = :userId ORDER BY created_at DESC")
+                        .bind("userId", userId)
+                        .mapToBean(Order.class)
+                        .list());
+    }
+
+    public boolean updateOrderStatus(int orderId, String status) {
+        return jdbi.withHandle(
+                handle -> handle.createUpdate("UPDATE Orders SET order_status = :status WHERE id = :orderId")
+                        .bind("status", status)
+                        .bind("orderId", orderId)
+                        .execute() > 0);
+    }
+
+    public List<model.order.OrderItem> getOrderItems(int orderId) {
+        String sql = "SELECT oi.*, " +
+                "p.name_product AS productName, " +
+                "(SELECT pi.image_url FROM Product_images pi WHERE pi.product_id = p.id AND pi.is_thumbnail = 1 LIMIT 1) AS productImage, "
+                +
+                "pv.size AS size " +
+                "FROM Order_items oi " +
+                "LEFT JOIN Product_variants pv ON oi.variant_id = pv.id " +
+                "LEFT JOIN Products p ON pv.product_id = p.id " +
+                "WHERE oi.order_id = :orderId";
+
+        return jdbi.withHandle(handle -> handle.createQuery(sql)
+                .bind("orderId", orderId)
+                .mapToBean(model.order.OrderItem.class)
+                .list());
+    }
 }

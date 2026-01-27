@@ -65,19 +65,19 @@ function updateStockUI(stock) {
         addToCartBtn.style.display = 'inline-block';
         buyNowBtn.style.display = 'inline-block';
         outOfStockBtn.style.display = 'none';
-        quality.style.display ='inline-block';
+        quality.style.display = 'inline-block';
     } else {
         addToCartBtn.style.display = 'none';
         buyNowBtn.style.display = 'none';
         outOfStockBtn.style.display = 'inline-block';
-        quality.style.display ='none';
+        quality.style.display = 'none';
         qtyInput.value = 1;
     }
 }
 
 
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const qtyInput = document.getElementById('product-quantity');
     const btnMinus = document.querySelector('.qty-minus');
     const btnPlus = document.querySelector('.qty-plus');

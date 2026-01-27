@@ -36,8 +36,7 @@ public abstract class BaseDao {
                             "connectTimeout=30000",              // 30s timeout khi connect
                     DBProperties.host,
                     DBProperties.port,
-                    DBProperties.dbname
-            );
+                    DBProperties.dbname);
 
             System.out.println("Connection URL: " + url);
 
