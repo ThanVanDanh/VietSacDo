@@ -229,6 +229,6 @@
         </div>
     </div>
 </div>
-<script src="${pageContext.request.contextPath}/scripts/admin.js"></script>
+<script src="${pageContext.request.contextPath}/scripts/admin/admin.js"></script>
 </body>
 </html>
