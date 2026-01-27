@@ -107,121 +107,92 @@
                                 <i class="fas fa-eye"></i>
                             </button>
 
-                            <button class="btn-action btn-block"
-                                    title="Khóa"
-                                    data-id="${user.id}"
-                                    data-name="${user.fullName}"
-                                    style="${user.status eq 'banned' ? 'display: none;' : ''}">
-                                <i class="fas fa-ban"></i>
-                            </button>
+                                            <button class="btn-action btn-block" title="Khóa" data-id="${user.id}"
+                                                data-name="${user.fullName}"
+                                                style="${user.status eq 'banned' ? 'display: none;' : ''}">
+                                                <i class="fas fa-ban"></i>
+                                            </button>
 
-                            <button class="btn-action btn-unlock"
-                                    title="Mở khóa"
-                                    data-id="${user.id}"
-                                    data-name="${user.fullName}"  style="${user.status eq 'banned' ? '' : 'display: none;'}">
-                                <i class="fas fa-check-circle"></i>
-                            </button>
+                                            <button class="btn-action btn-unlock" title="Mở khóa" data-id="${user.id}"
+                                                data-name="${user.fullName}"
+                                                style="${user.status eq 'banned' ? '' : 'display: none;'}">
+                                                <i class="fas fa-check-circle"></i>
+                                            </button>
 
-                            <button class="btn-action btn-delete"
-                                    title="Xóa"
-                                    data-id="${user.id}"
-                                    data-name="${user.fullName}">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </c:forEach>
-                <c:if test="${empty users}">
-                    <tr class="empty-state-row">
-                        <td colspan="7" style="text-align: center; padding: 40px; color: #666;">Hiện tại không có khách hàng nào.</td>
-                    </tr>
-                </c:if>
-                </tbody>
-            </table>
-            <div class="pagination">
-                <a href="#">Trước</a>
-                <a href="#" class="active">1</a>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <a href="#">Sau</a>
-            </div>
-        </section>
+                                            <button class="btn-action btn-delete" title="Xóa" data-id="${user.id}"
+                                                data-name="${user.fullName}">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                                <c:if test="${empty users}">
+                                    <tr class="empty-state-row">
+                                        <td colspan="7" style="text-align: center; padding: 40px; color: #666;">Hiện tại
+                                            không có khách hàng nào.</td>
+                                    </tr>
+                                </c:if>
+                            </tbody>
+                        </table>
+                        <div class="pagination">
+                            <a href="#">Trước</a>
+                            <a href="#" class="active">1</a>
+                            <a href="#">2</a>
+                            <a href="#">3</a>
+                            <a href="#">Sau</a>
+                        </div>
+                    </section>
 
-    </main>
-</div>
-<div id="customer-modal" class="modal" style="display: none;">
-    <div class="modal-content">
-        <span class="close-modal">&times;</span>
-        <h2>Chi tiết khách hàng: <span id="modal-fullName"></span></h2>
-        <div class="modal-body">
-            <div class="modal-tabs">
-                <button class="tab-link active" data-tab="tab-info">Thông tin cá nhân</button>
-                <button class="tab-link" data-tab="tab-history">Lịch sử đơn hàng</button>
-                <button class="tab-link" data-tab="tab-log">Hoạt động tài khoản</button>
+                </main>
             </div>
-            <div id="tab-info" class="tab-content active">
-                <h3>Thông tin cá nhân</h3>
-                <p><strong>Email:</strong> <span id="modal-email"></span></p>
-                <p><strong>Điện thoại:</strong> <span id="modal-phone"></span></p>
-                <p><strong>Địa chỉ:</strong> <span id="modal-address"></span></p>
-                <p><strong>Ngày đăng ký:</strong> <span id="modal-createdAt"></span></p>
-                <p><strong>Trạng thái tài khoản:</strong> <span id="modal-status"></span></p>
-            </div>
-                    <div id="tab-history" class="tab-content">
-                        <h3>Lịch sử đơn hàng (5)</h3>
-                        <ul>
-                            <li>Đơn hàng #1052 _ 2025-03-28 _ <strong class="status-complete">Hoàn tất</strong>
-                                <p>Áo dài truyền thống Phúc Hương - <strong>880,000₫</strong></p>
-                            </li>
-                            <li>Đơn hàng #1044 _ 2024-12-26 _ <strong class="status-cancel">Đã hủy</strong>
-                                <p>Hoa tai NK-185 hoa hồng phối trái mâm xôi rũ - <strong>80,750₫</strong></p>
-                            </li>
-                            <li>Đơn hàng #1032 _ 2024-11-15 _ <strong class="status-complete">Hoàn tất</strong>
-                                <p>Vòng tay VO-092 Phụng Nghi đỏ hoa xanh trắng vân vàng - 10mm - <strong>153,000₫</strong></p>
-                            </li>
-                            <li>Đơn hàng #1020 _ 2024-11-05 _ <strong class="status-complete">Hoàn tất</strong>
-                                <p>Mấn Trơn Hai Sợi Phối Dây Hạt Ngọc (Hạt to) - <strong>212,500₫</strong></p>
-                            </li>
-                            <li>Đơn hàng #1003 _ 2024-10-26 _ <strong class="status-cancel">Đã hủy</strong>
-                                <p>Guốc gỗ Đế cao bọc vải Phụng Lan - Đỏ - <strong>212,500₫</strong></p>
-                            </li>
-                        </ul>
-                    </div>
-                    <div id="tab-log" class="tab-content">
-                        <h3>Hoạt động tài khoản</h3>
-                        <ul>
-                            <li>2025-03-28 20:00: Đặt đơn hàng #1052</li>
-                            <li>2024-12-26 22:20: Đặt đơn hàng #1044</li>
-                            <li>2024-11-15 10:40: Đặt đơn hàng #1032</li>
-                            <li>2024-11-05 08:30: Đặt đơn hàng #1020</li>
-                            <li>2024-10-26 15:20: Đặt đơn hàng #1003</li>
-                            <li>2024-10-25 09:15: Tạo tài khoản</li>
-                        </ul>
+            <div id="customer-modal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <h2>Chi tiết khách hàng: <span id="modal-fullName"></span></h2>
+                    <div class="modal-body">
+                        <div class="modal-tabs">
+                            <button class="tab-link active" data-tab="tab-info">Thông tin cá nhân</button>
+                            <button class="tab-link" data-tab="tab-history">Lịch sử đơn hàng</button>
+                        </div>
+                        <div id="tab-info" class="tab-content active">
+                            <h3>Thông tin cá nhân</h3>
+                            <p><strong>Email:</strong> <span id="modal-email"></span></p>
+                            <p><strong>Điện thoại:</strong> <span id="modal-phone"></span></p>
+                            <p><strong>Địa chỉ:</strong> <span id="modal-address"></span></p>
+                            <p><strong>Ngày đăng ký:</strong> <span id="modal-createdAt"></span></p>
+                            <p><strong>Trạng thái tài khoản:</strong> <span id="modal-status"></span></p>
+                        </div>
+                        <div id="tab-history" class="tab-content">
+                            <h3>Lịch sử đơn hàng</h3>
+                            <ul id="order-history-list">
+                                <!-- Javascript will populate this -->
+                            </ul>
+                        </div>
                     </div>
                 </div>
-    </div>
-</div>
-<div id="delete-confirm-modal" class="modal" style="display: none;">
-    <div class="modal-content">
-        <span class="close-modal">&times;</span>
-        <h2>Xác nhận xóa</h2>
-        <p>Bạn có chắc chắn muốn xóa khách hàng <strong id="customer-name-to-delete">${user.fullName}</strong> không?</p>
-        <p>Hành động này không thể hoàn tác.</p>
+            </div>
+            <div id="delete-confirm-modal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
+                    <h2>Xác nhận xóa</h2>
+                    <p>Bạn có chắc chắn muốn xóa khách hàng <strong
+                            id="customer-name-to-delete">${user.fullName}</strong> không?</p>
+                    <p>Hành động này không thể hoàn tác.</p>
 
-        <div class="confirm-actions">
-            <button id="btn-cancel-delete" class="btn-secondary">Hủy bỏ</button>
-            <button id="btn-confirm-delete" class="btn-danger">Xác nhận Xóa</button>
-        </div>
-    </div>
-</div>
-<div id="status-confirm-modal" class="modal" style="display: none;">
-    <div class="modal-content">
-        <span class="close-modal">&times;</span>
+                    <div class="confirm-actions">
+                        <button id="btn-cancel-delete" class="btn-secondary">Hủy bỏ</button>
+                        <button id="btn-confirm-delete" class="btn-danger">Xác nhận Xóa</button>
+                    </div>
+                </div>
+            </div>
+            <div id="status-confirm-modal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close-modal">&times;</span>
 
-        <h2 id="modal-status-title">Xác nhận thay đổi</h2>
+                    <h2 id="modal-status-title">Xác nhận thay đổi</h2>
 
-        <p>Bạn có chắc chắn muốn <strong id="modal-action-text" style="color: #d9534f;">...</strong>
-            tài khoản của khách hàng <strong id="modal-customer-name">...</strong> không?</p>
+                    <p>Bạn có chắc chắn muốn <strong id="modal-action-text" style="color: #d9534f;">...</strong>
+                        tài khoản của khách hàng <strong id="modal-customer-name">...</strong> không?</p>
 
         <div class="confirm-actions">
             <button id="btn-cancel-status" class="btn-secondary">Hủy bỏ</button>
