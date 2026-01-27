@@ -54,7 +54,7 @@ public class CheckoutController extends HttpServlet {
             e.printStackTrace();
         }
 
-        // Lấy voucher đã áp dụng từ session (nếu có)
+        // Lấy voucher đã áp dụng từ session
         model.voucher.Voucher appliedVoucher = (model.voucher.Voucher) session.getAttribute("appliedVoucher");
         if (appliedVoucher != null) {
             request.setAttribute("appliedVoucher", appliedVoucher);
@@ -78,7 +78,7 @@ public class CheckoutController extends HttpServlet {
                     Address defaultAddress = addresses.stream()
                             .filter(Address::isDefault)
                             .findFirst()
-                            .orElse(addresses.get(0)); // Nếu không có địa chỉ mặc định, lấy địa chỉ đầu tiên
+                            .orElse(addresses.get(0));
 
                     session.setAttribute("defaultAddress", defaultAddress);
                 }
@@ -138,7 +138,7 @@ public class CheckoutController extends HttpServlet {
 
         // Calculate Totals
         double subtotal = cart.getTotalPrice();
-        double shippingFee = (subtotal >= 1000000) ? 0 : 30000;
+        double shippingFee = (subtotal >= 300000) ? 0 : 30000;
 
         model.voucher.Voucher voucher = (model.voucher.Voucher) session.getAttribute("appliedVoucher");
         double discountAmount = 0;

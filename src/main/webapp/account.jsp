@@ -1,30 +1,34 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Việt Sắc Đỏ - Thông tin</title>
-    <link rel="icon" href="image/logoaodai.jpg" type="image/jpeg">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="style/account.css">
-    <script src="scripts/account.js"></script>
-    <link rel="stylesheet" href="style/style-header.css">
-    <link rel="stylesheet" href="style/footer.css">
-    <link rel="stylesheet" href="style/breadcrumb.css">
-    <script src="scripts/home.js"></script>
-</head>
-<body>
-<div class="search-overlay-container" id="searchOverlay">
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+        <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+            <!DOCTYPE html>
+            <html lang="en">
 
-    <div class="search-overlay-header">
-        <div class="logo">
-            <a href="${pageContext.request.contextPath}/home">
-                <img src="image/logo.png" alt="Logo Việt Sắc Đỏ">
-            </a>
-        </div>
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Việt Sắc Đỏ - Thông tin</title>
+                <link rel="icon" href="image/logoaodai.jpg" type="image/jpeg">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+                    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+                    crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <link rel="stylesheet" href="style/account.css">
+                <script src="scripts/account.js"></script>
+                <link rel="stylesheet" href="style/style-header.css">
+                <link rel="stylesheet" href="style/footer.css">
+                <link rel="stylesheet" href="style/breadcrumb.css">
+                <script src="scripts/home.js"></script>
+            </head>
+
+            <body>
+                <div class="search-overlay-container" id="searchOverlay">
+
+                    <div class="search-overlay-header">
+                        <div class="logo">
+                            <a href="${pageContext.request.contextPath}/home">
+                                <img src="image/logo.png" alt="Logo Việt Sắc Đỏ">
+                            </a>
+                        </div>
 
                         <form class="search-overlay-form">
                             <input type="text" id="searchInput"
@@ -199,7 +203,8 @@
                                                     <tr>
                                                         <td colspan="5"
                                                             style="text-align: center; padding: 30px; color: #777;">
-                                                            Bạn chưa có đơn hàng nào. <a href="${pageContext.request.contextPath}/home"
+                                                            Bạn chưa có đơn hàng nào. <a
+                                                                href="${pageContext.request.contextPath}/home"
                                                                 style="color: #d32f2f;">Mua sắm ngay</a>
                                                         </td>
                                                     </tr>
@@ -404,6 +409,55 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Cancel Order Modal -->
+                <div id="cancel-order-modal" class="modal-overlay" style="display: none;">
+                    <div class="modal-content" style="max-width: 450px;">
+                        <button class="modal-close">&times;</button>
+                        <h2 style="color: #8B0000; margin-bottom: 20px;">Hủy đơn hàng</h2>
+                        <input type="hidden" id="cancel-order-id" value="">
+
+                        <p style="margin-bottom: 15px;">Vui lòng chọn lý do hủy đơn:</p>
+
+                        <div class="cancel-reasons"
+                            style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="radio" name="cancel-reason" value="Đặt nhầm sản phẩm" checked>
+                                <span>Đặt nhầm sản phẩm</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="radio" name="cancel-reason" value="Đổi ý, không muốn mua nữa">
+                                <span>Đổi ý, không muốn mua nữa</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="radio" name="cancel-reason" value="Muốn thay đổi địa chỉ giao hàng">
+                                <span>Muốn thay đổi địa chỉ giao hàng</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="radio" name="cancel-reason" value="Tìm thấy giá rẻ hơn ở nơi khác">
+                                <span>Tìm thấy giá rẻ hơn ở nơi khác</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="radio" name="cancel-reason" value="other">
+                                <span>Lý do khác</span>
+                            </label>
+                        </div>
+
+                        <div id="other-reason-container" style="display: none; margin-bottom: 15px;">
+                            <textarea id="other-reason-text" placeholder="Nhập lý do của bạn..."
+                                style="width: 100%; height: 80px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; resize: none;"></textarea>
+                        </div>
+
+                        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                            <button id="cancel-modal-close-btn" class="btn-secondary"
+                                style="padding: 10px 20px; border: 1px solid #ddd; background: #f5f5f5; border-radius: 5px; cursor: pointer;">Đóng</button>
+                            <button id="confirm-cancel-btn" class="btn-primary"
+                                style="padding: 10px 20px; background: #8B0000; color: white; border: none; border-radius: 5px; cursor: pointer;">Xác
+                                nhận hủy</button>
+                        </div>
+                    </div>
+                </div>
+
                 <jsp:include page="footer.jsp" />
             </body>
 
