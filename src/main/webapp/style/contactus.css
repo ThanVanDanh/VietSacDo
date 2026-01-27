@@ -19,7 +19,7 @@ section::after {
     left: 0;
     height: 100%;
     width: 100%;
-    background-color: rgba(0,0,0,0.5);
+    background-color:var(--color-background);
     z-index: -1;
 }
 
@@ -29,6 +29,7 @@ section::after {
     margin-right: auto;
     padding-left: 20px;
     padding-right: 20px;
+
 }
 
 .section-header {
@@ -37,7 +38,7 @@ section::after {
 }
 
 .section-header h2 {
-    color: #FFF;
+    color:var(--color-secondary);
     font-weight: bold;
     font-size: 3em;
     margin-bottom: 20px;
@@ -78,16 +79,19 @@ section::after {
 
 .contact-info-content {
     margin-left: 20px;
+    color:var(--color-secondary);
+
 }
 
 .contact-info-content h4 {
-    color: var(--color-background);
+
     font-size: 1.4em;
     margin-bottom: 5px;
 }
 
 .contact-info-content p {
-    color: #FFF;
+    color:var(--color-secondary);
+
     font-size: 1em;
 }
 
@@ -103,7 +107,8 @@ section::after {
     font-weight: bold;
     font-size: 2em;
     margin-bottom: 10px;
-    color: #333;
+    color:var(--color-secondary);
+
 }
 
 .contact-form .input-box {
@@ -152,3 +157,4 @@ section::after {
     background: #FFF;
     color: #000000;
 }
+
