@@ -1,57 +1,56 @@
 let MAX_QTY = 1;
 function updateVariant(element, sizeName) {
-    // 1. Active size button
-    document.querySelectorAll('.size-btn')
-        .forEach(btn => btn.classList.remove('active'));
+    // 1. Quản lý trạng thái Active nút Size
+    document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
     element.classList.add('active');
 
-    const sizeDisplay = document.getElementById('selected-size');
-    if (sizeDisplay) sizeDisplay.innerText = sizeName;
-    const sizeInput = document.getElementById('selectedVariantSize');
-    if (sizeInput) {
-        sizeInput.value = sizeName;
+    // 2. Lấy dữ liệu từ data attributes
+    const discountedPrice = parseFloat(element.getAttribute('data-price')) || 0; // Giá sau giảm
+    const currentPrice = parseFloat(element.getAttribute('data-old-price')) || 0; // Giá gốc
+
+    // 3. Các thành phần giao diện cần cập nhật
+    const priceDisplay = document.getElementById('display-price');
+    const oldPriceDisplay = document.querySelector('.old-price');
+    const discountTag = document.querySelector('.discount-tag');
+    const savingSection = document.querySelector('.saving');
+    const savingPrice = document.querySelector('.saving .price');
+
+    // 4. Logic kiểm tra giảm giá
+    if (discountedPrice > 0 && discountedPrice < currentPrice) {
+        // CÓ GIẢM GIÁ: Hiển thị đầy đủ các cột
+        if (priceDisplay) priceDisplay.innerText = discountedPrice.toLocaleString('vi-VN') + '₫';
+        if (oldPriceDisplay) {
+            oldPriceDisplay.innerText = currentPrice.toLocaleString('vi-VN') + '₫';
+            oldPriceDisplay.style.display = 'inline-block';
+        }
+        if (discountTag) {
+            const percent = Math.round(((currentPrice - discountedPrice) / currentPrice) * 100);
+            discountTag.innerText = percent + '%';
+            discountTag.style.display = 'inline-block';
+        }
+        if (savingSection) {
+            savingSection.style.display = 'block';
+            if (savingPrice) savingPrice.innerText = (currentPrice - discountedPrice).toLocaleString('vi-VN') + '₫';
+        }
+    } else {
+        // KHÔNG GIẢM GIÁ: Giữ nguyên giá gốc và ẩn 2 cột kia
+        if (priceDisplay) priceDisplay.innerText = currentPrice.toLocaleString('vi-VN') + '₫';
+        if (oldPriceDisplay) oldPriceDisplay.style.display = 'none';
+        if (discountTag) discountTag.style.display = 'none';
+        if (savingSection) savingSection.style.display = 'none';
     }
 
-    const price = element.getAttribute('data-price');
-    const priceDisplay = document.querySelector('.current-price');
-    if (priceDisplay && price) {
-        priceDisplay.innerText = parseFloat(price).toLocaleString('vi-VN') + '₫';
-    }
-
-    const priceInput = document.getElementById('selectedVariantPrice');
-    if (priceInput && price) {
-        priceInput.value = price;
-    }
-
+    // 5. Cập nhật các thông tin khác (SKU, Stock, Hidden Input)
     const sku = element.getAttribute('data-sku');
     const skuDisplay = document.getElementById('sku-value');
-    if (skuDisplay && sku) {
-        skuDisplay.innerText = sku;
-    }
+    if (skuDisplay && sku) skuDisplay.innerText = sku;
 
-    const skuInput = document.getElementById('selectedVariantSku');
-    if (skuInput && sku) {
-        skuInput.value = sku;
-    }
-    // ----------------------------------------------------------------
+    const priceInput = document.getElementById('selectedVariantPrice');
+    if (priceInput) priceInput.value = (discountedPrice > 0) ? discountedPrice : currentPrice;
 
-    // 4. Cập nhật Color
-    const color = element.dataset.color;
-    const colorEl = document.getElementById('selected-color');
-    if (colorEl && color) colorEl.innerText = color;
-
-    // 5. Cập nhật Stock
-    MAX_QTY = parseInt(element.dataset.stock);
-    if (isNaN(MAX_QTY)) MAX_QTY = 0;
+    // Cập nhật kho hàng
+    MAX_QTY = parseInt(element.dataset.stock) || 0;
     updateStockUI(MAX_QTY);
-
-    // Reset quantity nếu vượt stock
-    const qtyInput = document.getElementById('product-quantity');
-    if (MAX_QTY === 0) {
-        qtyInput.value = 1;
-    } else if (parseInt(qtyInput.value) > MAX_QTY) {
-        qtyInput.value = MAX_QTY;
-    }
 }
 
 function updateStockUI(stock) {

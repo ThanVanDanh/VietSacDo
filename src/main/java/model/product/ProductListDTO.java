@@ -38,6 +38,8 @@ public class ProductListDTO extends AId {
 
     @ColumnName("totalStock")
     private Integer totalStock;
+    @ColumnName("discounted_price")
+    private double discountedPrice;
 
     public ProductListDTO(int id) {
         super(id);
@@ -78,4 +80,9 @@ public class ProductListDTO extends AId {
 
     public Integer getTotalStock() { return totalStock; }
     public void setTotalStock(Integer totalStock) { this.totalStock = totalStock; }
+    public double getDiscountedPrice() { return discountedPrice; }
+
+    public void setDiscountedPrice(double discountedPrice) {
+        this.discountedPrice = discountedPrice;
+    }
 }
