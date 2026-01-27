@@ -40,61 +40,64 @@
                 <div class="container">
                     <main class="checkout-layout">
                         <div class="left-column">
-                            <div class="card shipping-info">
-                                <h3>Thông tin giao hàng</h3>
-                                <input type="text" placeholder="Nhập họ và tên"
-                                    value="${not empty sessionScope.user ? sessionScope.user.fullName : ''}">
-                                <div class="input-with-icon">
-                                    <input type="tel" placeholder="Nhập số điện thoại"
-                                        value="${not empty sessionScope.user ? sessionScope.user.phone : ''}">
-                                    <span class="flag-icon">🇻🇳</span>
-                                </div>
-                                <input type="email" placeholder="Nhập email"
-                                    value="${not empty sessionScope.user ? sessionScope.user.email : ''}">
-                                <input type="text"
-                                    value="${not empty sessionScope.defaultAddress ? sessionScope.defaultAddress.country : 'Vietnam'}"
-                                    readonly>
-                                <input type="text" placeholder="Địa chỉ, tên đường"
-                                    value="${not empty sessionScope.defaultAddress ? sessionScope.defaultAddress.addressLine : ''}">
-                                <input type="text" placeholder="Tỉnh/TP, Quận/Huyện, Phường/Xã"
-                                    value="${not empty sessionScope.defaultAddress ? sessionScope.defaultAddress.cityProvince : ''}">
-                            </div>
-
-                            <div class="spacer"></div>
-
-                            <div class="card shipping-method">
-                                <h3>Phương thức giao hàng</h3>
-                                <input type="text" placeholder="Nhập địa chỉ để xem các phương thức giao hàng" disabled>
-                            </div>
-
-                            <div class="spacer"></div>
-
-                            <div class="card payment-method">
-                                <h3>Phương thức thanh toán</h3>
-
-                                <label class="radio-option">
-                                    <input type="radio" name="payment" checked>
-                                    Thanh toán online qua Payoo (Thẻ ATM, VISA, Mastercard, v.v...)
-                                    <div class="payment-logos">
-                                        <img src="image/payoo-logo-jpg-inkythuatso.jpg" alt="Payoo"
-                                            style="height: 15px;">
-                                        <i class="fab fa-cc-visa"></i>
-                                        <i class="fab fa-cc-mastercard"></i>
-                                        <i class="fas fa-credit-card"></i>
+                            <form id="checkoutForm" action="checkout" method="post">
+                                <div class="card shipping-info">
+                                    <h3>Thông tin giao hàng</h3>
+                                    <input type="text" name="fullName" placeholder="Nhập họ và tên" required
+                                        value="${not empty sessionScope.account ? sessionScope.account.fullName : ''}">
+                                    <div class="input-with-icon">
+                                        <input type="tel" name="phone" placeholder="Nhập số điện thoại" required
+                                            value="${not empty sessionScope.account ? sessionScope.account.phone : ''}">
+                                        <span class="flag-icon">🇻🇳</span>
                                     </div>
-                                </label>
+                                    <input type="email" name="email" placeholder="Nhập email" required
+                                        value="${not empty sessionScope.account ? sessionScope.account.email : ''}">
+                                    <input type="text" name="country"
+                                        value="${not empty sessionScope.defaultAddress ? sessionScope.defaultAddress.country : 'Vietnam'}"
+                                        readonly>
+                                    <input type="text" name="address" placeholder="Địa chỉ, tên đường" required
+                                        value="${not empty sessionScope.defaultAddress ? sessionScope.defaultAddress.addressLine : ''}">
+                                    <input type="text" name="city" placeholder="Tỉnh/TP, Quận/Huyện, Phường/Xã" required
+                                        value="${not empty sessionScope.defaultAddress ? sessionScope.defaultAddress.cityProvince : ''}">
+                                </div>
 
-                                <label class="radio-option">
-                                    <input type="radio" name="payment">
-                                    Thanh toán khi nhận hàng
-                                </label>
-                            </div>
+                                <div class="spacer"></div>
 
-                            <div class="spacer"></div>
+                                <div class="card shipping-method">
+                                    <h3>Phương thức giao hàng</h3>
+                                    <input type="text" placeholder="Giao hàng nhanh (Mặc định)"
+                                        value="Giao hàng tiêu chuẩn - 30,000₫" readonly>
+                                </div>
 
-                            <div class="card order-note">
-                                <input type="text" placeholder="Ghi chú đơn hàng">
-                            </div>
+                                <div class="spacer"></div>
+
+                                <div class="card payment-method">
+                                    <h3>Phương thức thanh toán</h3>
+
+                                    <label class="radio-option">
+                                        <input type="radio" name="paymentMethod" value="payoo" checked>
+                                        Thanh toán online qua Payoo (Thẻ ATM, VISA, Mastercard, v.v...)
+                                        <div class="payment-logos">
+                                            <img src="image/payoo-logo-jpg-inkythuatso.jpg" alt="Payoo"
+                                                style="height: 15px;">
+                                            <i class="fab fa-cc-visa"></i>
+                                            <i class="fab fa-cc-mastercard"></i>
+                                            <i class="fas fa-credit-card"></i>
+                                        </div>
+                                    </label>
+
+                                    <label class="radio-option">
+                                        <input type="radio" name="paymentMethod" value="cod">
+                                        Thanh toán khi nhận hàng
+                                    </label>
+                                </div>
+
+                                <div class="spacer"></div>
+
+                                <div class="card order-note">
+                                    <input type="text" name="orderNote" placeholder="Ghi chú đơn hàng">
+                                </div>
+                            </form>
                         </div>
 
                         <div class="right-column">
@@ -141,10 +144,21 @@
                                                         </div>
                                                     </div>
                                                     <div class="quantity-control">
-                                                        <button class="js-decrease-quantity">-</button>
-                                                        <span class="js-quantity-display"
-                                                            data-quantity="${item.quantity}">${item.quantity}</span>
-                                                        <button class="js-increase-quantity">+</button>
+                                                        <form action="cart" method="post"
+                                                            style="display: flex; align-items: center;">
+                                                            <input type="hidden" name="action" value="update">
+                                                            <input type="hidden" name="id" value="${item.product.id}">
+                                                            <input type="hidden" name="sku" value="${item.sku}">
+
+                                                            <button type="submit" name="quantity"
+                                                                value="${item.quantity - 1}"
+                                                                class="js-decrease-quantity">-</button>
+                                                            <span class="js-quantity-display"
+                                                                style="margin: 0 10px;">${item.quantity}</span>
+                                                            <button type="submit" name="quantity"
+                                                                value="${item.quantity + 1}"
+                                                                class="js-increase-quantity">+</button>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>
@@ -168,10 +182,49 @@
                                                         class="fa-solid fa-xmark"></i></span>
                                                 <h3 class="h3-khuyenmai">Chọn mã khuyến mãi</h3>
                                             </div>
-                                            <div class="noPromoBox">
-                                                <img src="image/discount.png" class="promoIcon">
-                                                <p>Không có mã khuyến mãi phù hợp</p>
-                                            </div>
+                                            <c:if test="${not empty requestScope.debugMessage}">
+                                                <div
+                                                    style="background-color: #fff3cd; color: #856404; padding: 10px; margin: 0 15px 10px 15px; border-radius: 4px; font-size: 13px; border: 1px solid #ffeeba;">
+                                                    <i class="fa-solid fa-triangle-exclamation"></i>
+                                                    ${requestScope.debugMessage}
+                                                </div>
+                                            </c:if>
+
+                                            <c:choose>
+                                                <c:when test="${not empty requestScope.vouchers}">
+                                                    <div class="promo-list"
+                                                        style="padding: 15px; overflow-y: auto; max-height: 300px;">
+                                                        <c:forEach var="v" items="${requestScope.vouchers}">
+                                                            <div class="promo-item"
+                                                                style="border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 8px;">
+                                                                <div style="font-weight: bold; color: #d32f2f;">
+                                                                    ${v.voucherCode}</div>
+                                                                <div>Giảm
+                                                                    <fmt:formatNumber value="${v.discountValue}"
+                                                                        pattern="#,###" />${v.discountType ==
+                                                                    'percentage' ? '%' : '₫'}
+                                                                </div>
+                                                                <div style="font-size: 12px; color: #666;">Đơn tối
+                                                                    thiểu:
+                                                                    <fmt:formatNumber value="${v.minOrderAmount}"
+                                                                        pattern="#,###" />₫
+                                                                </div>
+                                                                <button class="btn-use-promo"
+                                                                    onclick="applyPromo('${v.voucherCode}')"
+                                                                    style="margin-top: 5px; background: #333; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;">Dùng
+                                                                    ngay</button>
+                                                            </div>
+                                                        </c:forEach>
+                                                    </div>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="noPromoBox">
+                                                        <img src="image/discount.png" class="promoIcon">
+                                                        <p>Không có mã khuyến mãi phù hợp</p>
+                                                    </div>
+                                                </c:otherwise>
+                                            </c:choose>
+
                                             <div class="bottomZone">
                                                 <button class="btnCloseBottom" id="btnCloseBottom">Đóng</button>
                                             </div>
@@ -180,8 +233,8 @@
                                     </div>
                                 </div>
                                 <div class="apply-promo">
-                                    <input type="text" placeholder="Nhập mã khuyến mãi">
-                                    <button class="btn-apply">Áp dụng</button>
+                                    <input type="text" id="promoInput" placeholder="Nhập mã khuyến mãi">
+                                    <button class="btn-apply" onclick="applyPromoInput()">Áp dụng</button>
                                 </div>
                             </div>
 
@@ -191,7 +244,26 @@
                                 <h3>Tóm tắt đơn hàng</h3>
                                 <c:set var="cartTotal" value="${sessionScope.cart.totalPrice}" />
                                 <c:set var="shippingFee" value="${cartTotal >= 1000000 ? 0 : 30000}" />
-                                <c:set var="finalTotal" value="${cartTotal + shippingFee}" />
+                                <c:set var="discountAmount" value="0" />
+
+                                <c:if test="${not empty sessionScope.appliedVoucher}">
+                                    <c:set var="voucher" value="${sessionScope.appliedVoucher}" />
+                                    <c:choose>
+                                        <c:when
+                                            test="${voucher.discountType == 'percentage' or voucher.discountType == 'percent'}">
+                                            <c:set var="discountAmount"
+                                                value="${cartTotal * (voucher.discountValue / 100)}" />
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:set var="discountAmount" value="${voucher.discountValue}" />
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:if>
+
+                                <c:set var="finalTotal" value="${cartTotal + shippingFee - discountAmount}" />
+                                <c:if test="${finalTotal < 0}">
+                                    <c:set var="finalTotal" value="0" />
+                                </c:if>
 
                                 <div class="total-row">
                                     <span>Tổng tiền hàng</span>
@@ -212,6 +284,13 @@
                                         </c:choose>
                                     </span>
                                 </div>
+                                <div class="total-row">
+                                    <span>Voucher giảm giá</span>
+                                    <span>
+                                        -
+                                        <fmt:formatNumber value="${discountAmount}" pattern="#,###" />₫
+                                    </span>
+                                </div>
                                 <hr>
                                 <div class="total-row final-total">
                                     <span>Tổng thanh toán</span>
@@ -219,120 +298,65 @@
                                         <fmt:formatNumber value="${finalTotal}" pattern="#,###" />₫
                                     </span>
                                 </div>
-                                <button class="btn-order"><a href="account.jsp">Đặt hàng</a> </button>
+                                <button class="btn-order"><a href="javascript:void(0)" onclick="placeOrder()">Đặt
+                                        hàng</a> </button>
                             </div>
                         </div>
-                </div>
-                </main>
+                    </main>
                 </div>
                 <jsp:include page="footer.jsp" />
                 <script>
-                    function handleIncreaseQuantity(event) {
-                        const btn = event.currentTarget;
-                        const quantityDisplay = btn.previousElementSibling;
+                    function applyPromo(code) {
+                        document.getElementById('promoInput').value = code;
+                        document.getElementById('popupOverlay').style.display = 'none';
 
-                        if (quantityDisplay) {
-                            let currentQuantity = parseInt(quantityDisplay.textContent);
-                            currentQuantity += 1; // Tăng lên 1
+                        // Call backend to apply voucher
+                        fetch('cart', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                            },
+                            body: 'action=applyVoucher&code=' + encodeURIComponent(code)
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    alert(data.message);
+                                    location.reload(); // Reload to update totals from session
+                                } else {
+                                    alert(data.message);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('Có lỗi xảy ra khi áp dụng mã khuyến mãi.');
+                            });
+                    }
 
-                            quantityDisplay.textContent = currentQuantity;
-                            quantityDisplay.dataset.quantity = currentQuantity;
-
+                    function applyPromoInput() {
+                        const code = document.getElementById('promoInput').value.trim();
+                        if (code) {
+                            applyPromo(code);
+                        } else {
+                            alert('Vui lòng nhập mã khuyến mãi');
                         }
                     }
 
-                    function handleDecreaseQuantity(event) {
-                        const btn = event.currentTarget;
-                        const quantityDisplay = btn.nextElementSibling;
-
-                        if (quantityDisplay) {
-                            let currentQuantity = parseInt(quantityDisplay.textContent);
-
-                            if (currentQuantity > 1) {
-                                currentQuantity -= 1;
-
-                                quantityDisplay.textContent = currentQuantity;
-                                quantityDisplay.dataset.quantity = currentQuantity;
-
-                            } else {
-                                alert("Số lượng tối thiểu là 1. Nhấn thùng rác để xóa sản phẩm.");
-                            }
-                        }
+                    function placeOrder() {
+                        document.getElementById('checkoutForm').submit();
                     }
-
-
-                    const btnIncreaseList = document.querySelectorAll(".js-increase-quantity");
-                    const btnDecreaseList = document.querySelectorAll(".js-decrease-quantity");
-
-                    btnIncreaseList.forEach(btn => {
-                        btn.addEventListener('click', handleIncreaseQuantity);
-                    });
-
-                    btnDecreaseList.forEach(btn => {
-                        btn.addEventListener('click', handleDecreaseQuantity);
-                    });
-
-
-                    // Chọn tất cả các nút mở modal
-                    const btnOpenList = document.querySelectorAll(".js-open-modal");
-                    // Chọn tất cả các nút đóng modal
-                    const btnCloseList = document.querySelectorAll(".js-close-modal");
-                    // Chọn tất cả các nút XÓA sản phẩm
-                    const btnRemoveList = document.querySelectorAll(".js-remove-item");
-
-                    // --- 1. Xử lý Mở Modal ---
-                    btnOpenList.forEach(btnOpen => {
-                        btnOpen.onclick = () => {
-                            // Tìm element overlay (js-overlay) ngay bên cạnh nút (trong cùng một item-controls)
-                            const overlay = btnOpen.nextElementSibling;
-                            if (overlay) {
-                                overlay.style.display = "flex";
-                            }
-                        };
-                    });
-
-                    // --- 2. Xử lý Đóng Modal ---
-                    btnCloseList.forEach(btnClose => {
-                        btnClose.onclick = () => {
-                            // Lấy element popup -> element overlay
-                            const overlay = btnClose.closest(".js-overlay");
-                            if (overlay) {
-                                overlay.style.display = "none";
-                            }
-                        };
-                    });
-
-                    // --- 3. Xử lý Bỏ Sản Phẩm và Xóa khỏi DOM ---
-                    btnRemoveList.forEach(btnRemove => {
-                        btnRemove.onclick = () => {
-                            // 1. Tìm element overlay để đóng modal
-                            const overlay = btnRemove.closest(".js-overlay");
-                            if (overlay) {
-                                overlay.style.display = "none";
-                            }
-
-
-                            const cartItem = btnRemove.closest(".js-cart-item");
-
-                            if (cartItem) {
-                                // Hiển thị thông báo và xóa khỏi DOM
-                                alert(`Đã bỏ sản phẩm: ${cartItem.querySelector('.item-details p').textContent}!`);
-                                cartItem.remove();
-                            } else {
-                                alert("Lỗi: Không tìm thấy sản phẩm để xóa!");
-                            }
-                        };
-                    });
 
                     // --- Xử lý Popup Khuyến Mãi ---
-                    // Lưu ý: Đoạn này sẽ chỉ hoạt động nếu các ID này là duy nhất trong HTML.
                     const popupOverlay = document.getElementById("popupOverlay");
                     const btnShowPromo = document.getElementById("btnOpenkm");
                     const btnCloseTop = document.getElementById("btnCloseTop");
                     const btnCloseBottom = document.getElementById("btnCloseBottom");
 
                     if (btnShowPromo && popupOverlay) {
-                        btnShowPromo.onclick = () => popupOverlay.style.display = "flex";
+                        btnShowPromo.onclick = (e) => {
+                            e.preventDefault();
+                            popupOverlay.style.display = "flex";
+                        };
                     }
                     if (btnCloseTop && popupOverlay) {
                         btnCloseTop.onclick = () => popupOverlay.style.display = "none";
