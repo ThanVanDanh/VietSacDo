@@ -56,7 +56,15 @@ public class ProductImage extends AId implements Serializable {
         return isThumbnail;
     }
 
+    public boolean getIsThumbnail() {
+        return isThumbnail;
+    }
+
     public void setThumbnail(boolean thumbnail) {
+        isThumbnail = thumbnail;
+    }
+
+    public void setIsThumbnail(boolean thumbnail) {
         isThumbnail = thumbnail;
     }
 }

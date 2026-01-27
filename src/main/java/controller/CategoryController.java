@@ -9,6 +9,7 @@ import model.product.ProductListDTO;
 import model.product.Category;
 import services.CloudinaryService;
 import services.ProductService;
+import util.PaginationUtils;
 import java.io.IOException;
 import java.util.List;
 
@@ -52,33 +53,24 @@ public class CategoryController extends HttpServlet {
                 return;
             }
 //            phan trang
-            int page = 1;
-            int pageSize = 15;
-            if (request.getParameter("page") != null) {
-                try {
-                    page = Integer.parseInt(request.getParameter("page"));
-                } catch (NumberFormatException e) {
-                    page = 1;
-                }
-            }
+            int pageSize = 10;
             String sortBy = request.getParameter("sort-by");
             if (sortBy == null || sortBy.isEmpty()) {
                 sortBy = "alpha-asc"; // Giá trị mặc định
             }
 
             int totalProducts = categoryDao.countProductsByCategory(currentCategory.getId());
-            int totalPages = (int) Math.ceil((double) totalProducts / pageSize);
+            
+            //calculate
+            PaginationUtils.PageInfo pageInfo = PaginationUtils.calculate(request.getParameter("page"), totalProducts, pageSize);
 
-            if (page < 1) page = 1;
-            if (page > totalPages && totalPages > 0) page = totalPages;
-
-            List<ProductListDTO> list = categoryDao.getProductsByCategoryPayload(currentCategory.getId(), page, pageSize, sortBy);
+            List<ProductListDTO> list = categoryDao.getProductsByCategoryPayload(currentCategory.getId(), pageInfo.getCurrentPage(), pageSize, sortBy);
 
             request.setAttribute("currentCategory", currentCategory);
             request.setAttribute("list", list);
 
-            request.setAttribute("currentPage", page);
-            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("currentPage", pageInfo.getCurrentPage());
+            request.setAttribute("totalPages", pageInfo.getTotalPages());
             request.setAttribute("sortBy", sortBy);
 //            cookie san pham da xem
             String txt = "";

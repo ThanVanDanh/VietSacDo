@@ -11,9 +11,6 @@ import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-/**
- * GsonUtil - Gson với custom adapters cho Java 8+ Date/Time
- */
 public class GsonUtil {
 
     private static final Gson GSON = createGson();
