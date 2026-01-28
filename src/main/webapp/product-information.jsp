@@ -24,16 +24,10 @@
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 </head>
 <body>
+<c:set var="pageTitle" value="${currentCategory.nameCategory}" scope="request" />
 <jsp:include page="header.jsp" />
 <!--breadcrumb-->
-<div class="breadcrumb-container">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home">Trang Chủ</a></li>
-            <li class="breadcrumb-item"><a href="all-product.jsp">Áo dài</a></li> <li class="breadcrumb-item active" aria-current="page">Chi tiết sản phẩm </li>
-        </ol>
-    </nav>
-</div>
+
 <div class="product-container">
     <div class="product-image-gallery">
         <div class="thumbnails">
