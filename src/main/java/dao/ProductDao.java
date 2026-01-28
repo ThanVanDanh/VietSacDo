@@ -384,4 +384,126 @@ public class ProductDao extends BaseDao {
 
         return rows > 0;
     }
+
+    public List<ProductListDTO> searchProducts(String keyword, int page, int pageSize, String sortBy) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return getAllActiveProductsPayload(page, pageSize, sortBy);
+        }
+
+        int offset = (page - 1) * pageSize;
+        // Mặc định sort theo độ liên quan (MATCH score cao nhất lên đầu)
+        String orderBy = "MATCH(p.search_product) AGAINST(:keyword IN NATURAL LANGUAGE MODE) DESC";
+
+        // Chỉ thay đổi sort khi user chọn option cụ thể (không phải mặc định)
+        if (sortBy != null && !sortBy.isEmpty() && !sortBy.equals("relevance")) {
+            switch (sortBy) {
+                case "alpha-asc": orderBy = "p.name_product ASC"; break;
+                case "alpha-desc": orderBy = "p.name_product DESC"; break;
+                case "price-asc": orderBy = "price ASC"; break;
+                case "price-desc": orderBy = "price DESC"; break;
+                case "created-desc": orderBy = "p.created_at DESC"; break;
+            }
+        }
+
+        String sql = "SELECT " +
+                "p.id, p.name_product, p.product_code, p.status_product, p.created_at, p.category_id, c.name_category AS categoryName, " +
+                "(SELECT current_price FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS price, " +
+                "(SELECT discounted_price FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS discountedPrice, " +
+                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
+                "(SELECT sku FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS sku, " +
+                "COALESCE((SELECT COUNT(*) FROM Product_variants WHERE product_id = p.id), 0) AS variantCount, " +
+                "COALESCE((SELECT SUM(stock_quantity) FROM Product_variants WHERE product_id = p.id), 0) AS totalStock " +
+                "FROM Products p " +
+                "LEFT JOIN Categories c ON p.category_id = c.id " +
+                "WHERE p.status_product = 'active' " +
+                "AND MATCH(p.search_product) AGAINST(:keyword IN NATURAL LANGUAGE MODE) " +
+                "ORDER BY " + orderBy + " " +
+                "LIMIT :limit OFFSET :offset";
+
+        return get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("keyword", keyword.trim())
+                        .bind("limit", pageSize)
+                        .bind("offset", offset)
+                        .mapToBean(ProductListDTO.class)
+                        .list()
+        );
+    }
+
+    public int countSearchResults(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return countActiveProducts();
+        }
+
+        String sql = "SELECT COUNT(*) FROM Products p " +
+                "WHERE p.status_product = 'active' " +
+                "AND MATCH(p.search_product) AGAINST(:keyword IN NATURAL LANGUAGE MODE)";
+
+        return get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("keyword", keyword.trim())
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
+
+  
+    public List<ProductListDTO> searchProductsAdmin(String keyword, int page, int pageSize, String sortBy) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return getListProductWithPaginationAndSort(pageSize, (page - 1) * pageSize, sortBy);
+        }
+
+        int offset = (page - 1) * pageSize;
+        // Mặc định sort theo độ liên quan (MATCH score cao nhất lên đầu)
+        String orderBy = "MATCH(p.search_product) AGAINST(:keyword IN NATURAL LANGUAGE MODE) DESC";
+
+        // Chỉ thay đổi sort khi user chọn option cụ thể (không phải mặc định)
+        if (sortBy != null && !sortBy.isEmpty() && !sortBy.equals("relevance") && !sortBy.equals("id-desc")) {
+            switch (sortBy) {
+                case "name-asc": orderBy = "p.name_product ASC"; break;
+                case "name-desc": orderBy = "p.name_product DESC"; break;
+                case "price-asc": orderBy = "price ASC"; break;
+                case "price-desc": orderBy = "price DESC"; break;
+                case "id-asc": orderBy = "p.id ASC"; break;
+            }
+        }
+
+        String sql = "SELECT " +
+                "p.id, p.name_product, p.product_code, p.status_product, p.created_at, p.category_id, c.name_category AS categoryName, " +
+                "(SELECT current_price FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS price, " +
+                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
+                "(SELECT sku FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS sku, " +
+                "COALESCE((SELECT COUNT(*) FROM Product_variants WHERE product_id = p.id), 0) AS variantCount, " +
+                "COALESCE((SELECT SUM(stock_quantity) FROM Product_variants WHERE product_id = p.id), 0) AS totalStock " +
+                "FROM Products p " +
+                "LEFT JOIN Categories c ON p.category_id = c.id " +
+                "WHERE MATCH(p.search_product) AGAINST(:keyword IN NATURAL LANGUAGE MODE) " +
+                "ORDER BY " + orderBy + " " +
+                "LIMIT :limit OFFSET :offset";
+
+        return get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("keyword", keyword.trim())
+                        .bind("limit", pageSize)
+                        .bind("offset", offset)
+                        .mapToBean(ProductListDTO.class)
+                        .list()
+        );
+    }
+
+    public int countSearchResultsAdmin(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return countTotalProducts();
+        }
+
+        String sql = "SELECT COUNT(*) FROM Products p " +
+                "WHERE MATCH(p.search_product) AGAINST(:keyword IN NATURAL LANGUAGE MODE)";
+
+        return get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("keyword", keyword.trim())
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
 }

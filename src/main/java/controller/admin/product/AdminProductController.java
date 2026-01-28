@@ -112,35 +112,71 @@ public class AdminProductController extends HttpServlet {
             // Phân trang: 15 sản phẩm mỗi trang
             int pageSize = 15;
             String sortBy = req.getParameter("sort");
-            if (sortBy == null || sortBy.isEmpty()) {
+            
+            // Lấy từ khóa search (nếu có)
+            String searchKeyword = req.getParameter("search");
+            boolean isSearchMode = (searchKeyword != null && !searchKeyword.trim().isEmpty());
+            
+            // Nếu đang search và không có sortBy từ user -> để null để dùng relevance score
+            // Nếu không search và không có sortBy -> dùng mặc định id-desc
+            if (!isSearchMode && (sortBy == null || sortBy.isEmpty())) {
                 sortBy = "id-desc";
             }
             
-            int totalProducts = productService.countTotalProducts();
-            PaginationUtils.PageInfo pageInfo = PaginationUtils.calculate(
-                    req.getParameter("page"),
-                    totalProducts,
-                    pageSize
-            );
+            int totalProducts;
+            List<ProductListDTO> products;
+            
+            if (isSearchMode) {
+                // Chế độ tìm kiếm
+                totalProducts = productDao.countSearchResultsAdmin(searchKeyword);
+                PaginationUtils.PageInfo pageInfo = PaginationUtils.calculate(
+                        req.getParameter("page"),
+                        totalProducts,
+                        pageSize
+                );
+                
+                products = productDao.searchProductsAdmin(searchKeyword, pageInfo.getCurrentPage(), pageSize, sortBy);
+                System.out.println("✅ Search found " + products.size() + " products for keyword: " + searchKeyword);
+                
+                // Convert to JSON với thông tin phân trang
+                Map<String, Object> response = new java.util.HashMap<>();
+                response.put("products", products);
+                response.put("currentPage", pageInfo.getCurrentPage());
+                response.put("totalPages", pageInfo.getTotalPages());
+                response.put("totalProducts", totalProducts);
+                response.put("searchKeyword", searchKeyword);
 
-            // Lấy danh sách products với sorting
-            List<ProductListDTO> products = productService.getListProductWithPaginationAndSort(
-                    pageSize, 
-                    pageInfo.getOffset(),
-                    sortBy
-            );
-            System.out.println("✅ Loaded " + products.size() + " products (page " + pageInfo.getCurrentPage() + "/" + pageInfo.getTotalPages() + ", sort: " + sortBy + ")");
+                String json = gson.toJson(response);
+                resp.getWriter().write(json);
+                resp.setStatus(HttpServletResponse.SC_OK);
+            } else {
+                // Chế độ hiển thị tất cả
+                totalProducts = productService.countTotalProducts();
+                PaginationUtils.PageInfo pageInfo = PaginationUtils.calculate(
+                        req.getParameter("page"),
+                        totalProducts,
+                        pageSize
+                );
 
-            // Convert to JSON với thông tin phân trang
-            Map<String, Object> response = new java.util.HashMap<>();
-            response.put("products", products);
-            response.put("currentPage", pageInfo.getCurrentPage());
-            response.put("totalPages", pageInfo.getTotalPages());
-            response.put("totalProducts", totalProducts);
+                // Lấy danh sách products với sorting
+                products = productService.getListProductWithPaginationAndSort(
+                        pageSize, 
+                        pageInfo.getOffset(),
+                        sortBy
+                );
+                System.out.println("✅ Loaded " + products.size() + " products (page " + pageInfo.getCurrentPage() + "/" + pageInfo.getTotalPages() + ", sort: " + sortBy + ")");
 
-            String json = gson.toJson(response);
-            resp.getWriter().write(json);
-            resp.setStatus(HttpServletResponse.SC_OK);
+                // Convert to JSON với thông tin phân trang
+                Map<String, Object> response = new java.util.HashMap<>();
+                response.put("products", products);
+                response.put("currentPage", pageInfo.getCurrentPage());
+                response.put("totalPages", pageInfo.getTotalPages());
+                response.put("totalProducts", totalProducts);
+
+                String json = gson.toJson(response);
+                resp.getWriter().write(json);
+                resp.setStatus(HttpServletResponse.SC_OK);
+            }
 
         } catch (Exception ex) {
             System.err.println("❌ Error in doGet: " + ex.getMessage());
