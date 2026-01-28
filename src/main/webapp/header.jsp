@@ -266,8 +266,8 @@
             </a>
         </div>
 
-        <form class="search-overlay-form">
-            <input type="text" id="searchInput" placeholder="áo dài truyền thống, quần áo dài, vòng tay...">
+        <form class="search-overlay-form" action="${pageContext.request.contextPath}/list-product" method="get">
+            <input type="text" name="search" id="searchInput" placeholder="áo dài truyền thống, quần áo dài, vòng tay..." required>
             <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
         </form>
 
