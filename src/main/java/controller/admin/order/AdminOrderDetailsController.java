@@ -1,0 +1,70 @@
+package controller.admin.order;
+
+import com.google.gson.Gson;
+import dao.OrderDao;
+import model.order.Order;
+import model.order.OrderItem;
+import util.GsonUtil;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@WebServlet("/admin/order-details")
+public class AdminOrderDetailsController extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
+        Gson gson = GsonUtil.getGson();
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            String orderIdStr = req.getParameter("orderId");
+            if (orderIdStr == null || orderIdStr.isEmpty()) {
+                response.put("success", false);
+                response.put("message", "Thiếu mã đơn hàng");
+                resp.getWriter().write(gson.toJson(response));
+                return;
+            }
+
+            int orderId = Integer.parseInt(orderIdStr);
+            OrderDao orderDao = new OrderDao();
+
+            // Get order by ID
+            Order order = orderDao.getOrderById(orderId);
+            if (order == null) {
+                response.put("success", false);
+                response.put("message", "Không tìm thấy đơn hàng");
+                resp.getWriter().write(gson.toJson(response));
+                return;
+            }
+
+            // Get order items
+            List<OrderItem> items = orderDao.getOrderItems(orderId);
+
+            // Set formatted date for JSON
+            order.setFormattedCreatedAt(order.getFormattedCreatedAt());
+
+            response.put("success", true);
+            response.put("order", order);
+            response.put("items", items);
+
+        } catch (NumberFormatException e) {
+            response.put("success", false);
+            response.put("message", "ID đơn hàng không hợp lệ");
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("success", false);
+            response.put("message", "Lỗi hệ thống: " + e.getMessage());
+        }
+
+        resp.getWriter().write(gson.toJson(response));
+    }
+}

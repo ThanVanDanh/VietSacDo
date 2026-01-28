@@ -1,10 +1,9 @@
-
 .product-container {
     display: flex;
     max-width: 1200px;
     background-color: #FFFFFF;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    margin:0 auto;
+    margin: 0 auto;
     align-items: flex-start;
 }
 
@@ -53,6 +52,7 @@
     position: relative;
 
 }
+
 .product-details {
     width: 50%;
     padding: 20px 40px 20px 20px;
@@ -78,6 +78,7 @@
     align-items: flex-end;
     flex-wrap: wrap;
 }
+
 /*product-price*/
 .product-price {
     font-size: 14px;
@@ -98,6 +99,7 @@
     color: #999;
     font-size: 14px;
 }
+
 .discount-tag {
     background-color: #b90000;
     color: white;
@@ -106,12 +108,14 @@
     border-radius: 2px;
     font-weight: bold;
 }
-.saving{
+
+.saving {
     width: 100%;
     margin-top: 5px;
     margin-bottom: 5px;
 }
-.saving .price{
+
+.saving .price {
     color: #a00;
     font-size: 0.95rem;
 
@@ -142,6 +146,7 @@
     margin-top: 5px;
     font-size: 0.95rem;
 }
+
 /* Lựa chọn */
 .section-title {
     font-size: 1rem;
@@ -164,10 +169,12 @@
     transition: all 0.2s;
 }
 
-.size-btn.active, .size-btn:hover {
+.size-btn.active,
+.size-btn:hover {
     border-color: #333;
     font-weight: 500;
 }
+
 /* Thao tác mua hàng */
 .purchase-actions {
     display: flex;
@@ -238,7 +245,8 @@
     transition: background-color 0.2s;
     height: 55px;
 }
-.buy-now-btn a{
+
+.buy-now-btn a {
     color: #fff;
     text-decoration: none;
 }
@@ -247,32 +255,38 @@
 .buy-now-btn:hover {
     background-color: #800;
 }
+
 .dashed-line {
     border: none;
     border-top: 2px dashed #999;
     margin: 20px 0;
 }
-.shipping{
+
+.shipping {
     margin: 10px;
 }
-.shipping span i{
+
+.shipping span i {
     color: #a00;
     margin: 0 5px;
 }
+
 details summary {
     font-size: 18px;
     margin-bottom: 5px;
     margin-top: 5px;
 }
-.doitra-details .content-chinhsach p{
+
+.doitra-details .content-chinhsach p {
     font-size: 16px;
     margin-bottom: 10px;
 }
 
-.content-chitiet{
+.content-chitiet {
     text-align: center;
     padding: 10px;
 }
+
 .baohanh-img {
     padding: 10px 15px 15px 15px;
 }
@@ -293,7 +307,8 @@ details summary {
         padding: 0;
     }
 
-    .product-image-gallery, .product-details {
+    .product-image-gallery,
+    .product-details {
         width: 100%;
         padding: 15px;
     }
@@ -306,8 +321,9 @@ details summary {
         width: 100%;
     }
 }
+
 section {
-    max-width: 1200px ;
+    max-width: 1200px;
     width: 100%;
     margin: 0 auto;
     padding: 0 15px;
@@ -336,14 +352,17 @@ section {
 .product-card {
     text-align: left;
 }
+
 .product-image-wrapper {
     position: relative;
     overflow: hidden;
 }
+
 .product-image {
     aspect-ratio: 2/3;
     overflow: hidden;
 }
+
 .product-image img:hover {
     transform: scale(0.95);
 }
@@ -357,9 +376,11 @@ section {
     object-fit: cover;
     object-position: center;
 }
+
 .product-image-wrapper:hover .product-image img {
     transform: scale(0.95);
 }
+
 .product-info {
     padding: 10px 5px;
 }
@@ -369,9 +390,11 @@ section {
     color: var(--color-secondary);
     transition: color 0.3s ease;
 }
+
 .product-info a:hover {
-    color:#ffffff;
+    color: #ffffff;
 }
+
 .product-name {
     font-size: 16px;
     display: -webkit-box;
@@ -380,6 +403,7 @@ section {
     overflow: hidden;
     min-height: 2.4em;
 }
+
 .product-price {
     font-size: 14px;
     display: flex;
@@ -399,6 +423,7 @@ section {
     color: #999;
     font-size: 14px;
 }
+
 .discount-tag {
     background-color: #b90000;
     color: white;
@@ -407,6 +432,7 @@ section {
     border-radius: 2px;
     font-weight: bold;
 }
+
 /*gio hang & xem nhanh*/
 .product-overlay {
     position: absolute;
@@ -416,7 +442,7 @@ section {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 15px;
+    gap: 0;
     padding: 20px 0;
     opacity: 0;
     visibility: hidden;
@@ -424,33 +450,38 @@ section {
     transition: all 0.3s ease-in-out;
     z-index: 3;
 }
+
 .product-image-wrapper:hover .product-overlay {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
 }
+
 .icon-button {
-    background-color: white;
-    border: 1px solid #ddd;
-    width: 40px;
+    background-color: rgba(50, 0, 0, 0.7);
+    color: white;
+    border: none;
+    width: 80%;
     height: 40px;
-    border-radius: 10px;
+    border-radius: 4px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 16px;
-    color: #333;
-    transition: background-color 0.5s ease;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
 }
 
 .icon-button:hover {
-    background-color: #333;
+    background-color: rgba(100, 0, 0, 0.9);
     color: white;
 }
-.product-image-wrapper a{
+
+.product-image-wrapper a {
     text-decoration: none;
 }
-.het_hang{
+
+.het_hang {
     text-decoration: none;
     padding: 15px 50px;
     color: white;
@@ -461,6 +492,7 @@ section {
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
-.het_hang:hover{
+
+.het_hang:hover {
     background-color: var(--color-secondary);
 }

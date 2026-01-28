@@ -137,10 +137,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Xác nhận xóa (chung)
+    // Xác nhận xóa (chỉ cho customers)
     const deleteModal = document.getElementById('delete-confirm-modal');
     if (deleteModal) {
-        const deleteModalBtn = document.querySelectorAll('.btn-delete');
+        const deleteModalBtn = document.querySelectorAll('.customer-table .btn-delete');
         const deleteClose = deleteModal.querySelector('.close-modal');
         const cancelDeleteBtn = document.getElementById('btn-cancel-delete');
         const confirmDeleteBtn = document.getElementById('btn-confirm-delete');
@@ -330,7 +330,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const href = link.getAttribute('href');
 
         // 1. Xử lý click thủ công (nếu không load lại trang)
-        item.addEventListener('click', function() {
+        item.addEventListener('click', function () {
             navItems.forEach(i => i.classList.remove('active'));
             this.classList.add('active');
         });

@@ -223,4 +223,12 @@ public class Order extends AId implements Serializable {
     public void setFormattedCreatedAt(String formattedCreatedAt) {
         this.formattedCreatedAt = formattedCreatedAt;
     }
+
+    public String getFormattedUpdatedAt() {
+        if (updatedAt == null)
+            return "Không rõ";
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter
+                .ofPattern("dd-MM-yyyy HH:mm:ss");
+        return updatedAt.format(formatter);
+    }
 }

@@ -18,7 +18,8 @@ public class ProductDao extends BaseDao {
     }
 
     private String normalizeVietnamese(String text) {
-        if (text == null || text.isEmpty()) return "";
+        if (text == null || text.isEmpty())
+            return "";
 
         String result = text.toLowerCase();
 
@@ -81,10 +82,12 @@ public class ProductDao extends BaseDao {
                 "p.category_id, " +
                 "c.name_category AS categoryName, " +
                 "(SELECT current_price FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS price, " +
-                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
+                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, "
+                +
                 "(SELECT sku FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS sku, " +
                 "COALESCE((SELECT COUNT(*) FROM Product_variants WHERE product_id = p.id), 0) AS variantCount, " +
-                "COALESCE((SELECT SUM(stock_quantity) FROM Product_variants WHERE product_id = p.id), 0) AS totalStock " +
+                "COALESCE((SELECT SUM(stock_quantity) FROM Product_variants WHERE product_id = p.id), 0) AS totalStock "
+                +
                 "FROM Products p " +
                 "LEFT JOIN Categories c ON p.category_id = c.id " +
                 orderByClause + " " +
@@ -97,6 +100,21 @@ public class ProductDao extends BaseDao {
                 .list());
     }
 
+    public Product getBestSellingProduct() {
+        String sql = "SELECT p.*, SUM(oi.quantity) as totalSold " +
+                "FROM Order_items oi " +
+                "JOIN Product_variants pv ON oi.variant_id = pv.id " +
+                "JOIN Products p ON pv.product_id = p.id " +
+                "GROUP BY p.id " +
+                "ORDER BY totalSold DESC " +
+                "LIMIT 1";
+
+        return get().withHandle(handle -> handle.createQuery(sql)
+                .mapToBean(Product.class)
+                .findFirst()
+                .orElse(null));
+    }
+
     public List<ProductListDTO> getListProduct() {
         String sql = "SELECT " +
                 "p.id, " +
@@ -107,21 +125,23 @@ public class ProductDao extends BaseDao {
                 "p.category_id, " +
                 "c.name_category AS categoryName, " +
                 "(SELECT current_price FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS price, " +
-                "(SELECT discounted_price FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS discountedPrice, " +
-                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
+                "(SELECT discounted_price FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS discountedPrice, "
+                +
+                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, "
+                +
                 "(SELECT sku FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS sku, " +
                 "COALESCE((SELECT COUNT(*) FROM Product_variants WHERE product_id = p.id), 0) AS variantCount, " +
-                "COALESCE((SELECT SUM(stock_quantity) FROM Product_variants WHERE product_id = p.id), 0) AS totalStock " +
+                "COALESCE((SELECT SUM(stock_quantity) FROM Product_variants WHERE product_id = p.id), 0) AS totalStock "
+                +
                 "FROM Products p " +
                 "LEFT JOIN Categories c ON p.category_id = c.id " +
                 "ORDER BY p.id DESC";
 
-        return get().withHandle(handle ->
-                handle.createQuery(sql)
-                        .mapToBean(ProductListDTO.class)
-                        .list()
-        );
+        return get().withHandle(handle -> handle.createQuery(sql)
+                .mapToBean(ProductListDTO.class)
+                .list());
     }
+
     public List<ProductListDTO> getActiveListProduct() {
         String sql = "SELECT " +
                 "p.id, " +
@@ -132,27 +152,26 @@ public class ProductDao extends BaseDao {
                 "p.category_id, " +
                 "c.name_category AS categoryName, " +
                 "(SELECT current_price FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS price, " +
-                "(SELECT discounted_price FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS discountedPrice, " +
-                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
+                "(SELECT discounted_price FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS discountedPrice, "
+                +
+                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, "
+                +
                 "(SELECT sku FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS sku, " +
                 "COALESCE((SELECT COUNT(*) FROM Product_variants WHERE product_id = p.id), 0) AS variantCount, " +
-                "COALESCE((SELECT SUM(stock_quantity) FROM Product_variants WHERE product_id = p.id), 0) AS totalStock " +
+                "COALESCE((SELECT SUM(stock_quantity) FROM Product_variants WHERE product_id = p.id), 0) AS totalStock "
+                +
                 "FROM Products p " +
                 "LEFT JOIN Categories c ON p.category_id = c.id " +
                 "WHERE p.status_product = 'active' " + // CHỈ LẤY ACTIVE
                 "ORDER BY p.id DESC";
 
-        return get().withHandle(handle ->
-                handle.createQuery(sql)
-                        .mapToBean(ProductListDTO.class)
-                        .list()
-        );
+        return get().withHandle(handle -> handle.createQuery(sql)
+                .mapToBean(ProductListDTO.class)
+                .list());
     }
     public int countActiveProducts() {
         String sql = "SELECT COUNT(*) FROM Products WHERE status_product = 'active'";
-        return get().withHandle(handle ->
-                handle.createQuery(sql).mapTo(Integer.class).one()
-        );
+        return get().withHandle(handle -> handle.createQuery(sql).mapTo(Integer.class).one());
     }
 
     public List<ProductListDTO> getAllActiveProductsPayload(int page, int pageSize, String sortBy) {
@@ -160,34 +179,46 @@ public class ProductDao extends BaseDao {
         String orderBy = "p.id DESC";
 
         switch (sortBy) {
-            case "alpha-asc": orderBy = "p.name_product ASC"; break;
-            case "alpha-desc": orderBy = "p.name_product DESC"; break;
-            case "price-asc": orderBy = "price ASC"; break;
-            case "price-desc": orderBy = "price DESC"; break;
-            case "created-desc": orderBy = "p.created_at DESC"; break;
+            case "alpha-asc":
+                orderBy = "p.name_product ASC";
+                break;
+            case "alpha-desc":
+                orderBy = "p.name_product DESC";
+                break;
+            case "price-asc":
+                orderBy = "price ASC";
+                break;
+            case "price-desc":
+                orderBy = "price DESC";
+                break;
+            case "created-desc":
+                orderBy = "p.created_at DESC";
+                break;
         }
 
         String sql = "SELECT " +
-                "p.id, p.name_product, p.product_code, p.status_product, p.created_at, p.category_id, c.name_category AS categoryName, " +
+                "p.id, p.name_product, p.product_code, p.status_product, p.created_at, p.category_id, c.name_category AS categoryName, "
+                +
                 "(SELECT current_price FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS price, " +
-                "(SELECT discounted_price FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS discountedPrice, " +
-                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
+                "(SELECT discounted_price FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS discountedPrice, "
+                +
+                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, "
+                +
                 "(SELECT sku FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS sku, " +
                 "COALESCE((SELECT COUNT(*) FROM Product_variants WHERE product_id = p.id), 0) AS variantCount, " +
-                "COALESCE((SELECT SUM(stock_quantity) FROM Product_variants WHERE product_id = p.id), 0) AS totalStock " +
+                "COALESCE((SELECT SUM(stock_quantity) FROM Product_variants WHERE product_id = p.id), 0) AS totalStock "
+                +
                 "FROM Products p " +
                 "LEFT JOIN Categories c ON p.category_id = c.id " +
                 "WHERE p.status_product = 'active' " +
                 "ORDER BY " + orderBy + " " +
                 "LIMIT :limit OFFSET :offset";
 
-        return get().withHandle(handle ->
-                handle.createQuery(sql)
-                        .bind("limit", pageSize)
-                        .bind("offset", offset)
-                        .mapToBean(ProductListDTO.class)
-                        .list()
-        );
+        return get().withHandle(handle -> handle.createQuery(sql)
+                .bind("limit", pageSize)
+                .bind("offset", offset)
+                .mapToBean(ProductListDTO.class)
+                .list());
     }
 
     public Product getProduct(int id) {
@@ -217,8 +248,11 @@ public class ProductDao extends BaseDao {
     public List<ProductListDTO> getProductsByCategory(int categoryId) {
         String sql = "SELECT p.id, p.name_product, " +
                 "(SELECT current_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS price, " +
-                "(SELECT discounted_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS discountedPrice, " + // Thêm dòng này
-                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
+                "(SELECT discounted_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS discountedPrice, " + // Thêm
+                                                                                                                         // dòng
+                                                                                                                         // này
+                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, "
+                +
                 "(SELECT sku FROM Product_variants WHERE product_id = p.id LIMIT 1) AS sku " +
                 "FROM Products p " +
                 "WHERE p.category_id = :categoryId";
@@ -230,15 +264,19 @@ public class ProductDao extends BaseDao {
     }
 
     public List<ProductListDTO> getViewedProducts(List<Integer> ids) {
-        if (ids == null || ids.isEmpty()) return new java.util.ArrayList<>();
+        if (ids == null || ids.isEmpty())
+            return new java.util.ArrayList<>();
 
         String sql = "SELECT p.id, p.name_product, " +
                 "(SELECT current_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS price, " +
-                "(SELECT discounted_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS discountedPrice, " + // THÊM DÒNG NÀY
-                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
+                "(SELECT discounted_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS discountedPrice, " + // THÊM
+                                                                                                                         // DÒNG
+                                                                                                                         // NÀY
+                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, "
+                +
                 "(SELECT sku FROM Product_variants WHERE product_id = p.id LIMIT 1) AS sku " +
                 "FROM Products p " +
-                "WHERE p.id IN (<listId>)"+
+                "WHERE p.id IN (<listId>)" +
                 "AND p.status_product = 'active'";
 
         return get().withHandle(handle -> handle.createQuery(sql)
@@ -251,7 +289,8 @@ public class ProductDao extends BaseDao {
         String sql = "SELECT p.id, p.name_product, " +
                 "(SELECT current_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS price, " +
                 "(SELECT discounted_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS discountedPrice, " +
-                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
+                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, "
+                +
                 "(SELECT sku FROM Product_variants WHERE product_id = p.id LIMIT 1) AS sku " +
                 "FROM Products p " +
                 "WHERE p.category_id = :categoryId " +
@@ -274,7 +313,8 @@ public class ProductDao extends BaseDao {
     }
 
     public int insert(Handle handle, Product product) {
-        String sql = "INSERT INTO Products (name_product, product_code, description, status_product, category_id, search_product) " +
+        String sql = "INSERT INTO Products (name_product, product_code, description, status_product, category_id, search_product) "
+                +
                 "VALUES (:nameProduct, :productCode, :description, :statusProduct, :categoryId, :searchProduct)";
 
         Integer catId = product.getCategoryId() == 0 ? null : product.getCategoryId();
@@ -299,7 +339,6 @@ public class ProductDao extends BaseDao {
             return count > 0;
         });
     }
-
 
     public boolean delete(int productId) {
         return get().withHandle(handle -> {
@@ -424,7 +463,7 @@ public class ProductDao extends BaseDao {
         );
     }
 
-  
+
     public List<ProductListDTO> searchProductsAdmin(String keyword, int page, int pageSize, String sortBy) {
         if (keyword == null || keyword.trim().isEmpty()) {
             return getListProductWithPaginationAndSort(pageSize, (page - 1) * pageSize, sortBy);

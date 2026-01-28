@@ -84,8 +84,13 @@ public class CancelOrderController extends HttpServlet {
                 return;
             }
 
-            // 4. Update Status
-            boolean updated = orderDao.updateOrderStatus(orderId, "Đã hủy"); // Update to "Canceled" (Vietnamese)
+            // 4. Update Status with Cancel Reason
+            String cancelReason = req.getParameter("cancelReason");
+            if (cancelReason == null || cancelReason.trim().isEmpty()) {
+                cancelReason = "Không có lý do";
+            }
+            
+            boolean updated = orderDao.cancelOrderWithReason(orderId, "Đã hủy", cancelReason);
 
             if (updated) {
                 response.put("success", true);

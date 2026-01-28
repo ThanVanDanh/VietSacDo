@@ -1,248 +1,519 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Admin - Quản lý Đơn hàng</title>
-    <link rel="stylesheet" href="../style/admin.css">
-    <link rel="stylesheet" href="../style/orders.css">
-    <link rel="stylesheet" href="../style/customers.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-          integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    <link rel="stylesheet" href="../style/charts.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="../scripts/admin/admin.js"></script>
-</head>
-<body>
-<div class="admin-container">
-    <jsp:include page="sidebar.jsp" />
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+        <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+            <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+                <!DOCTYPE html>
+                <html lang="en">
 
-    <main class="main-content">
-        <header class="admin-header">
-            <div class="header-actions">
-                <a href="../login.jsp" class="btn-logout"><i class="fas fa-user-circle"></i> Đăng xuất</a>
-            </div>
-        </header>
-        <h1>Quản lý Đơn hàng</h1>
-        <section class="table-container">
-            <div class="table-toolbar">
-                <div class="filters">
-                    <select id="filter-status">
-                        <option value="">Tất cả Trạng thái</option>
-                        <option value="processing">Đang xử lý</option>
-                        <option value="shipping">Đang vận chuyển</option>
-                        <option value="completed">Hoàn thành</option>
-                        <option value="canceled">Đã hủy</option>
-                    </select>
-                    <input type="date" id="filter-date">
-                    <input type="text" placeholder="Tìm theo tên khách..." class="table-search">
-                </div>
-                <div class="toolbar-buttons">
-                    <button class="btn-secondary"><i class="fas fa-file-excel"></i> Xuất Excel</button>
-                    <button class="btn-secondary"><i class="fas fa-file-pdf"></i> Xuất PDF</button>
-                </div>
-            </div>
-            <table class="table-general order-table">
-                <thead>
-                <tr>
-                    <th>Mã ĐH</th>
-                    <th>Khách Hàng</th>
-                    <th>Sản Phẩm</th>
-                    <th>Tổng Tiền</th>
-                    <th>Trạng Thái</th>
-                    <th>Ngày Đặt</th>
-                    <th>Cập Nhật</th>
-                    <th>Hành Động</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td><strong>#1052</strong></td>
-                    <td>Phùng Thị Minh Thư</td>
-                    <td class="product-list">
-                        - Áo Dài Lụa (Đỏ) x 1<br>
-                        - Guốc Gỗ Vàng x 1
-                    </td>
-                    <td>1.850.000₫</td>
-                    <td><span class="status-badge status-completed">Hoàn thành</span></td>
-                    <td>2025-11-07</td>
-                    <td>2025-11-10</td>
-                    <td class="table-actions">
-                        <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
-                        <button class="btn-action btn-delete" title="Xóa"><i class="fas fa-trash-alt"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>#1051</strong></td>
-                    <td>Lại Thị Hoa</td>
-                    <td class="product-list">
-                        - Áo Dài Gấm (Xanh) x 2
-                    </td>
-                    <td>3.200.000₫</td>
-                    <td><span class="status-badge status-shipping">Đang vận chuyển</span></td>
-                    <td>2025-11-03</td>
-                    <td>2025-11-04</td>
-                    <td class="table-actions">
-                        <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
-                        <button class="btn-action btn-delete" title="Xóa"><i class="fas fa-trash-alt"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>#1050</strong></td>
-                    <td>Thân Văn Danh</td>
-                    <td class="product-list">
-                        - Phụ Kiện Cài Tóc x 3
-                    </td>
-                    <td>450.000₫</td>
-                    <td><span class="status-badge status-processing">Đang xử lý</span></td>
-                    <td>2025-11-02</td>
-                    <td>2024-11-05</td>
-                    <td class="table-actions">
-                        <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
-                        <button class="btn-action btn-delete" title="Xóa"><i class="fas fa-trash-alt"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><strong>#1049</strong></td>
-                    <td>Nguyễn Văn Đ</td>
-                    <td class="product-list">
-                        - Áo Dài Thêu Tay x 1
-                    </td>
-                    <td>2.500.000₫</td>
-                    <td><span class="status-badge status-canceled">Đã hủy</span></td>
-                    <td>2024-10-26</td>
-                    <td>2024-10-27</td>
-                    <td class="table-actions">
-                        <button class="btn-action btn-view" title="Xem"><i class="fas fa-eye"></i></button>
-                        <button class="btn-action btn-delete" title="Xóa"><i class="fas fa-trash-alt"></i></button>
-                    </td>
-                </tr>
-                <tr class="empty-state-row" style="display: none;">
-                    <td colspan="8" style="text-align: center; padding: 40px; color: #666;">Hiện tại không có đơn hàng nào.</td>
-                </tr>
-                </tbody>
-            </table>
-            <div class="pagination">
-                <a href="#">Trước</a>
-                <a href="#" class="active">1</a>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <a href="#">Sau</a>
-            </div>
-        </section>
-    </main>
-</div>
-<div id="order-modal" class="modal" style="display: none;">
-    <div class="modal-content large">
-        <span class="close-modal">&times;</span>
-        <h2>Chi tiết Đơn hàng: #1052</h2>
-        <div class="modal-body">
-            <div class="modal-flex">
-                <div class="modal-section">
-                    <div class="customer-information">
-                        <h3>Thông tin khách hàng</h3>
-                        <p><strong>Tên:</strong> Phùng Thị Minh Thư</p>
-                        <p><strong>Email:</strong> 23130317@st.hcmuaf.edu.vn</p>
-                        <p><strong>SĐT:</strong> 033333333</p>
-                        <p><strong>Địa chỉ:</strong> Quận 9, TP. HCM</p>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Admin - Quản lý Đơn hàng</title>
+                    <link rel="stylesheet" href="../style/admin.css">
+                    <link rel="stylesheet" href="../style/orders.css">
+                    <link rel="stylesheet" href="../style/customers.css">
+                    <link rel="stylesheet"
+                        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+                        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+                        crossorigin="anonymous" referrerpolicy="no-referrer" />
+                    <link rel="stylesheet" href="../style/charts.css">
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                    <script src="../scripts/admin/admin.js"></script>
+                </head>
+
+                <body>
+                    <div class="admin-container">
+                        <jsp:include page="sidebar.jsp" />
+
+                        <main class="main-content">
+                            <header class="admin-header">
+                                <div class="header-actions">
+                                    <a href="../login.jsp" class="btn-logout"><i class="fas fa-user-circle"></i> Đăng
+                                        xuất</a>
+                                </div>
+                            </header>
+                            <h1>Quản lý Đơn hàng</h1>
+                            <section class="table-container">
+                                <div class="table-toolbar">
+                                    <div class="filters">
+                                        <select id="filter-status">
+                                            <option value="">Tất cả Trạng thái</option>
+                                            <option value="processing">Đang xử lý</option>
+                                            <option value="shipping">Đang vận chuyển</option>
+                                            <option value="completed">Hoàn thành</option>
+                                            <option value="canceled">Đã hủy</option>
+                                        </select>
+                                        <input type="date" id="filter-date">
+                                        <input type="text" placeholder="Tìm theo tên khách..." class="table-search">
+                                    </div>
+                                    <div class="toolbar-buttons">
+                                        <button class="btn-secondary"><i class="fas fa-file-excel"></i> Xuất
+                                            Excel</button>
+                                        <button class="btn-secondary"><i class="fas fa-file-pdf"></i> Xuất PDF</button>
+                                    </div>
+                                </div>
+                                <table class="table-general order-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã ĐH</th>
+                                            <th>Khách Hàng</th>
+                                            <th>Sản Phẩm</th>
+                                            <th>Tổng Tiền</th>
+                                            <th>Trạng Thái</th>
+                                            <th>Ngày Đặt</th>
+                                            <th>Cập Nhật</th>
+                                            <th>Hành Động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:choose>
+                                            <c:when test="${not empty orders}">
+                                                <c:forEach items="${orders}" var="order">
+                                                    <tr>
+                                                        <td><strong>${order.orderCode}</strong></td>
+                                                        <td>${order.customerFullname}</td>
+                                                        <td class="product-list">
+                                                            Đơn hàng #${order.id}
+                                                        </td>
+                                                        <td>
+                                                            <fmt:formatNumber value="${order.totalAmount}"
+                                                                pattern="#,###" />₫
+                                                        </td>
+                                                        <td>
+                                                            <span
+                                                                class="status-badge status-${fn:replace(fn:toLowerCase(order.orderStatus), ' ', '-')}">${order.orderStatus}</span>
+                                                            <c:if
+                                                                test="${fn:toLowerCase(order.orderStatus) == 'đã hủy' and not empty order.cancelReason}">
+                                                                <br>
+                                                                <small
+                                                                    style="color: #d32f2f; font-size: 0.85em; display: block; margin-top: 4px;">(${order.cancelReason})</small>
+                                                            </c:if>
+                                                        </td>
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when test="${not empty order.createdAt}">
+                                                                    ${order.formattedCreatedAt}
+                                                                </c:when>
+                                                                <c:otherwise>N/A</c:otherwise>
+                                                            </c:choose>
+                                                        </td>
+                                                        <td>
+                                                            <c:choose>
+                                                                <c:when test="${not empty order.updatedAt}">
+                                                                    ${order.formattedUpdatedAt}
+                                                                </c:when>
+                                                                <c:otherwise>N/A</c:otherwise>
+                                                            </c:choose>
+                                                        </td>
+                                                        <td class="table-actions">
+                                                            <button class="btn-action btn-view" title="Xem"
+                                                                onclick="viewOrder(${order.id})"><i
+                                                                    class="fas fa-eye"></i></button>
+                                                            <button class="btn-action btn-delete" title="Xóa"
+                                                                onclick="deleteOrder(${order.id})"><i
+                                                                    class="fas fa-trash-alt"></i></button>
+                                                        </td>
+                                                    </tr>
+                                                </c:forEach>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <tr class="empty-state-row">
+                                                    <td colspan="8"
+                                                        style="text-align: center; padding: 40px; color: #666;">
+                                                        Hiện
+                                                        tại không có đơn hàng nào.</td>
+                                                </tr>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </tbody>
+                                </table>
+                                <div class="pagination">
+                                    <a href="#">Trước</a>
+                                    <a href="#" class="active">1</a>
+                                    <a href="#">2</a>
+                                    <a href="#">3</a>
+                                    <a href="#">Sau</a>
+                                </div>
+                            </section>
+                        </main>
                     </div>
+                    <div id="order-modal" class="modal" style="display: none;">
+                        <div class="modal-content large">
+                            <span class="close-modal" onclick="closeOrderModal()">&times;</span>
+                            <h2>Chi tiết Đơn hàng: <span id="modal-order-code">#</span></h2>
+                            <div class="modal-body">
+                                <div class="modal-flex">
+                                    <div class="modal-section">
+                                        <div class="customer-information">
+                                            <h3>Thông tin khách hàng</h3>
+                                            <p><strong>Tên:</strong> <span id="modal-customer-name">-</span></p>
+                                            <p><strong>Email:</strong> <span id="modal-customer-email">-</span></p>
+                                            <p><strong>SĐT:</strong> <span id="modal-customer-phone">-</span></p>
+                                            <p><strong>Địa chỉ:</strong> <span id="modal-shipping-address">-</span></p>
+                                            <p><strong>Ghi chú:</strong> <span id="modal-customer-note">-</span></p>
+                                        </div>
 
-                    <div class="update-status">
-                        <h3>Cập nhật Trạng thái</h3>
-                        <div class="status-update-form">
-                            <select class="update-status-select">
-                                <option value="processing">Đang xử lý</option>
-                                <option value="shipping">Đang vận chuyển</option>
-                                <option value="completed" selected>Hoàn thành</option>
-                                <option value="canceled">Hủy đơn hàng</option>
-                            </select>
-                            <button class="btn-primary">Cập nhật</button>
+                                        <div class="update-status">
+                                            <h3>Cập nhật Trạng thái</h3>
+                                            <input type="hidden" id="modal-order-id" value="">
+                                            <div class="status-update-form">
+                                                <select id="modal-status-select" class="update-status-select">
+                                                    <option value="chờ xử lý">Chờ xử lý</option>
+                                                    <option value="đang xử lý">Đang xử lý</option>
+                                                    <option value="đang vận chuyển">Đang vận chuyển</option>
+                                                    <option value="đã giao hàng">Đã giao hàng</option>
+                                                    <option value="hoàn thành">Hoàn thành</option>
+                                                    <option value="đã hủy">Đã hủy</option>
+                                                </select>
+                                                <button class="btn-primary" onclick="updateOrderStatus()">Cập
+                                                    nhật</button>
+                                            </div>
+                                            <div class="modal-actions">
+                                                <button class="btn-secondary"><i class="fas fa-print"></i> In Hóa
+                                                    Đơn</button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="modal-section" style="flex: 1;">
+                                        <div class="product" style="width: 100%;">
+                                            <h3>Sản phẩm trong Đơn hàng</h3>
+                                            <table class="order-detail-table" style="width: 100%;">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Sản Phẩm</th>
+                                                        <th>SL</th>
+                                                        <th>Giá</th>
+                                                        <th>Tổng</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="modal-order-items">
+                                                    <!-- Order items will be loaded dynamically -->
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <td colspan="3" style="text-align: center"><strong>Tổng tiền
+                                                                hàng</strong></td>
+                                                        <td id="modal-subtotal">0₫</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3" style="text-align: center"><strong>Phí vận
+                                                                chuyển</strong></td>
+                                                        <td id="modal-shipping">0₫</td>
+                                                    </tr>
+                                                    <tr id="modal-voucher-row">
+                                                        <td colspan="3" style="text-align: center"><strong>Voucher giảm
+                                                                giá</strong></td>
+                                                        <td id="modal-discount">0₫</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="3" style="text-align: center"><strong>Thành
+                                                                tiền</strong></td>
+                                                        <td><strong id="modal-total">0₫</strong></td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="modal-actions">
-                            <button class="btn-secondary"><i class="fas fa-print"></i> In Hóa Đơn</button>
-                            <button class="btn-secondary"><i class="fas fa-envelope"></i> Gửi Email</button>
+                    </div>
+                    <div id="delete-confirm-modal" class="modal" style="display: none;">
+                        <div class="modal-content">
+                            <span class="close-modal">&times;</span>
+                            <h2>Xác nhận xóa</h2>
+                            <p>Bạn có chắc chắn muốn xóa đơn hàng <strong id="customer-name-to-delete">#1052</strong>
+                                không?</p>
+                            <p>Hành động này không thể hoàn tác.</p>
+
+                            <div class="confirm-actions">
+                                <button id="btn-cancel-delete" class="btn-secondary">Hủy bỏ</button>
+                                <button id="btn-confirm-delete" class="btn-danger">Xác nhận Xóa</button>
+                            </div>
                         </div>
                     </div>
 
-                </div>
-                <div class="modal-section">
-                    <div class="product">
-                        <h3>Sản phẩm trong Đơn hàng</h3>
-                        <table class="order-detail-table">
-                            <thead>
-                            <tr>
-                                <th>Sản Phẩm</th>
-                                <th>SL</th>
-                                <th>Giá</th>
-                                <th>Tổng</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td>Áo Dài Lụa (Đỏ)</td>
-                                <td>1</td>
-                                <td>1.500.000₫</td>
-                                <td>1.500.000₫</td>
-                            </tr>
-                            <tr>
-                                <td>Guốc gỗ vàng</td>
-                                <td>1</td>
-                                <td>350.000₫</td>
-                                <td>350.000₫</td>
-                            </tr>
-                            </tbody>
-                            <tfoot>
-                            <tr>
-                                <td colspan="3" style="text-align: center"><strong>Tổng tiền hàng</strong></td>
-                                <td>1.850.000₫</td>
-                            </tr>
-                            <tr>
-                                <td colspan="3" style="text-align: center"><strong>Phí vận chuyển</strong></td>
-                                <td>Miễn phí</td>
-                            </tr>
-                            <tr>
-                                <td colspan="3" style="text-align: center"><strong>Thành tiền</strong></td>
-                                <td><strong>1.850.000₫</strong></td>
-                            </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                    <div class="history-status">
-                        <strong>Lịch sử Trạng thái</strong>
-                        <ul class="status-history">
-                            <li>
-                                <span class="status-text">Hoàn thành</span>
-                                <span class="status-time">2024-10-30 10:00 AM</span>
-                            </li>
-                            <li>
-                                <span class="status-text">Đang vận chuyển</span>
-                                <span class="status-time">2024-10-29 02:30 PM</span>
-                            </li>
-                            <li>
-                                <span class="status-text">Đang xử lý</span>
-                                <span class="status-time">2024-10-28 09:15 AM</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div id="delete-confirm-modal" class="modal" style="display: none;">
-    <div class="modal-content">
-        <span class="close-modal">&times;</span>
-        <h2>Xác nhận xóa</h2>
-        <p>Bạn có chắc chắn muốn xóa đơn hàng <strong id="customer-name-to-delete">#1052</strong> không?</p>
-        <p>Hành động này không thể hoàn tác.</p>
+                    <!-- Cancel Reason Modal for Admin -->
+                    <div id="cancel-reason-modal" class="modal" style="display: none;">
+                        <div class="modal-content" style="max-width: 450px;">
+                            <span class="close-cancel-modal close-modal">&times;</span>
+                            <h2 style="color: #8B0000; margin-bottom: 20px;">Lý do hủy đơn hàng</h2>
 
-        <div class="confirm-actions">
-            <button id="btn-cancel-delete" class="btn-secondary">Hủy bỏ</button>
-            <button id="btn-confirm-delete" class="btn-danger">Xác nhận Xóa</button>
-        </div>
-    </div>
-</div>
-<script src="${pageContext.request.contextPath}/scripts/admin/admin.js"></script>
-</body>
-</html>
+                            <p style="margin-bottom: 15px;">Vui lòng chọn lý do hủy đơn:</p>
+
+                            <div class="cancel-reasons"
+                                style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 15px;">
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="radio" name="admin-cancel-reason" value="Khách hàng yêu cầu hủy"
+                                        checked>
+                                    <span>Khách hàng yêu cầu hủy</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="radio" name="admin-cancel-reason" value="Hết hàng">
+                                    <span>Hết hàng</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="radio" name="admin-cancel-reason"
+                                        value="Không liên lạc được với khách">
+                                    <span>Không liên lạc được với khách</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="radio" name="admin-cancel-reason" value="Sai thông tin đơn hàng">
+                                    <span>Sai thông tin đơn hàng</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="radio" name="admin-cancel-reason" value="other">
+                                    <span>Lý do khác</span>
+                                </label>
+                            </div>
+
+                            <div id="admin-other-reason-container" style="display: none; margin-bottom: 15px;">
+                                <textarea id="admin-other-reason-text" placeholder="Nhập lý do..."
+                                    style="width: 100%; height: 80px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; resize: none;"></textarea>
+                            </div>
+
+                            <div class="confirm-actions" style="display: flex; gap: 10px; justify-content: flex-end;">
+                                <button id="btn-cancel-reason-close" class="btn-secondary">Đóng</button>
+                                <button id="btn-confirm-cancel-reason" class="btn-danger">Xác nhận hủy</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script src="${pageContext.request.contextPath}/scripts/admin/admin.js"></script>
+                    <script>
+                        // View order details
+                        function viewOrder(orderId) {
+                            fetch('${pageContext.request.contextPath}/admin/order-details?orderId=' + orderId)
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        const order = data.order;
+                                        const items = data.items;
+
+                                        // Populate modal with order data
+                                        document.getElementById('modal-order-id').value = order.id;
+                                        document.getElementById('modal-order-code').textContent = order.orderCode;
+                                        document.getElementById('modal-customer-name').textContent = order.customerFullname || '-';
+                                        document.getElementById('modal-customer-email').textContent = order.customerEmail || '-';
+                                        document.getElementById('modal-customer-phone').textContent = order.customerPhone || '-';
+                                        document.getElementById('modal-shipping-address').textContent = order.shippingAddress || '-';
+                                        document.getElementById('modal-customer-note').textContent = order.customerNote || 'Không có';
+
+                                        // Set current status in dropdown
+                                        const statusSelect = document.getElementById('modal-status-select');
+                                        for (let option of statusSelect.options) {
+                                            if (option.value === order.orderStatus) {
+                                                option.selected = true;
+                                                break;
+                                            }
+                                        }
+
+                                        // Populate order items
+                                        const tbody = document.getElementById('modal-order-items');
+                                        tbody.innerHTML = '';
+                                        const fmt = new Intl.NumberFormat('vi-VN');
+
+                                        items.forEach(item => {
+                                            const tr = document.createElement('tr');
+                                            const name = item.productName || ('Sản phẩm #' + item.variantId);
+                                            const size = item.size || 'N/A';
+                                            const price = fmt.format(item.priceAtPurchase);
+                                            const total = fmt.format(item.priceAtPurchase * item.quantity);
+                                            tr.innerHTML = '<td>' + name + ' (' + size + ')</td>' +
+                                                '<td>' + item.quantity + '</td>' +
+                                                '<td>' + price + '₫</td>' +
+                                                '<td>' + total + '₫</td>';
+                                            tbody.appendChild(tr);
+                                        });
+
+                                        // Update totals
+                                        document.getElementById('modal-subtotal').textContent = fmt.format(order.subtotalAmount || 0) + '₫';
+                                        document.getElementById('modal-shipping').textContent = order.shippingFee > 0 ? fmt.format(order.shippingFee) + '₫' : 'Miễn phí';
+
+                                        // Show voucher discount
+                                        if (order.discountAmount > 0) {
+                                            document.getElementById('modal-discount').textContent = '-' + fmt.format(order.discountAmount) + '₫';
+                                        } else {
+                                            document.getElementById('modal-discount').textContent = '0₫';
+                                        }
+
+                                        document.getElementById('modal-total').textContent = fmt.format(order.totalAmount) + '₫';
+
+                                        // Show modal
+                                        document.getElementById('order-modal').style.display = 'flex';
+                                    } else {
+                                        alert(data.message || 'Lỗi tải thông tin đơn hàng');
+                                    }
+                                })
+                                .catch(err => {
+                                    console.error(err);
+                                    alert('Lỗi kết nối server');
+                                });
+                        }
+
+                        // Close order modal
+                        function closeOrderModal() {
+                            document.getElementById('order-modal').style.display = 'none';
+                        }
+
+                        // Update order status
+                        function updateOrderStatus() {
+                            const orderId = document.getElementById('modal-order-id').value;
+                            const newStatus = document.getElementById('modal-status-select').value;
+
+                            if (!orderId) {
+                                alert('Lỗi: Không có mã đơn hàng');
+                                return;
+                            }
+
+                            // If status is 'đã hủy', show cancel reason modal
+                            if (newStatus === 'đã hủy') {
+                                showCancelReasonModal(orderId, newStatus);
+                                return;
+                            }
+
+                            // For other statuses, update directly
+                            sendStatusUpdate(orderId, newStatus, '');
+                        }
+
+                        // Show cancel reason modal
+                        function showCancelReasonModal(orderId, status) {
+                            window.pendingCancelOrderId = orderId;
+                            window.pendingCancelStatus = status;
+                            document.getElementById('cancel-reason-modal').style.display = 'flex';
+
+                            // Reset to first option
+                            const firstRadio = document.querySelector('input[name="admin-cancel-reason"]');
+                            if (firstRadio) firstRadio.checked = true;
+                            document.getElementById('admin-other-reason-container').style.display = 'none';
+                            document.getElementById('admin-other-reason-text').value = '';
+                        }
+
+                        // Send status update request
+                        function sendStatusUpdate(orderId, status, cancelReason) {
+                            let bodyStr = 'orderId=' + orderId + '&status=' + encodeURIComponent(status);
+                            if (cancelReason) {
+                                bodyStr += '&cancelReason=' + encodeURIComponent(cancelReason);
+                            }
+
+                            fetch('${pageContext.request.contextPath}/admin/update-order-status', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: bodyStr
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        alert('Cập nhật trạng thái thành công!');
+                                        closeOrderModal();
+                                        location.reload();
+                                    } else {
+                                        alert(data.message || 'Lỗi cập nhật trạng thái');
+                                    }
+                                })
+                                .catch(err => {
+                                    console.error(err);
+                                    alert('Lỗi kết nối server');
+                                });
+                        }
+
+                        // Cancel reason modal event listeners
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const cancelReasonModal = document.getElementById('cancel-reason-modal');
+                            if (!cancelReasonModal) return;
+
+                            // Show/hide other reason textarea
+                            document.querySelectorAll('input[name="admin-cancel-reason"]').forEach(radio => {
+                                radio.addEventListener('change', function () {
+                                    document.getElementById('admin-other-reason-container').style.display =
+                                        this.value === 'other' ? 'block' : 'none';
+                                });
+                            });
+
+                            // Close modal
+                            function closeCancelReasonModal() {
+                                cancelReasonModal.style.display = 'none';
+                            }
+
+                            document.getElementById('btn-cancel-reason-close').addEventListener('click', closeCancelReasonModal);
+                            document.querySelector('.close-cancel-modal').addEventListener('click', closeCancelReasonModal);
+
+                            // Confirm cancel
+                            document.getElementById('btn-confirm-cancel-reason').addEventListener('click', function () {
+                                const selectedReason = document.querySelector('input[name="admin-cancel-reason"]:checked');
+
+                                if (!selectedReason) {
+                                    alert('Vui lòng chọn lý do hủy đơn!');
+                                    return;
+                                }
+
+                                let cancelReason = selectedReason.value;
+
+                                if (cancelReason === 'other') {
+                                    cancelReason = document.getElementById('admin-other-reason-text').value.trim();
+                                    if (!cancelReason) {
+                                        alert('Vui lòng nhập lý do hủy đơn!');
+                                        return;
+                                    }
+                                }
+
+                                closeCancelReasonModal();
+                                sendStatusUpdate(window.pendingCancelOrderId, window.pendingCancelStatus, cancelReason);
+                            });
+                        });
+
+                        // Delete order
+                        let orderIdToDelete = null;
+
+                        function deleteOrder(orderId) {
+                            orderIdToDelete = orderId;
+                            document.getElementById('customer-name-to-delete').textContent = '#' + orderId;
+                            document.getElementById('delete-confirm-modal').style.display = 'flex';
+                        }
+
+                        function closeDeleteModal() {
+                            document.getElementById('delete-confirm-modal').style.display = 'none';
+                            orderIdToDelete = null;
+                        }
+
+                        function confirmDeleteOrder() {
+                            if (!orderIdToDelete) {
+                                alert('Lỗi: Không có mã đơn hàng');
+                                return;
+                            }
+
+                            fetch('${pageContext.request.contextPath}/admin/delete-order', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: 'orderId=' + orderIdToDelete
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        alert('Xóa đơn hàng thành công!');
+                                        closeDeleteModal();
+                                        location.reload();
+                                    } else {
+                                        alert(data.message || 'Lỗi xóa đơn hàng');
+                                    }
+                                })
+                                .catch(err => {
+                                    console.error(err);
+                                    alert('Lỗi kết nối server');
+                                });
+                        }
+
+                        // Setup delete modal event listeners
+                        document.addEventListener('DOMContentLoaded', function () {
+                            document.getElementById('btn-cancel-delete').addEventListener('click', closeDeleteModal);
+                            document.getElementById('btn-confirm-delete').addEventListener('click', confirmDeleteOrder);
+                            document.querySelector('#delete-confirm-modal .close-modal').addEventListener('click', closeDeleteModal);
+                        });
+                    </script>
+                </body>
+
+                </html>

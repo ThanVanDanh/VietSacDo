@@ -1,52 +1,60 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi tiết sản phẩm</title>
-    <link rel="icon" href="image/logoaodai.jpg" type="image/jpeg">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style/product-infomation.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="scripts/home.js"></script>
-<%--    <script src="scripts/product-information.js"></script>--%>
-    <link rel="stylesheet" href="style/style-header.css">
-    <link rel="stylesheet" href="style/footer.css">
-    <link rel="stylesheet" href="style/backtop.css">
-    <script src="scripts/backtop.js"></script>
-    <link rel="stylesheet" href="style/breadcrumb.css">
-    <link rel="stylesheet" href="style/style.css">
-    <link rel="stylesheet" href="style/quick-view.css">
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-</head>
-<body>
-<c:set var="pageTitle" value="${currentCategory.nameCategory}" scope="request" />
-<jsp:include page="header.jsp" />
-<!--breadcrumb-->
+    <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+        <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+            <!DOCTYPE html>
+            <html lang="vi">
 
-<div class="product-container">
-    <div class="product-image-gallery">
-        <div class="thumbnails">
-            <c:forEach items="${p.images}" var="img" varStatus="status">
-                <img src="${img.imageUrl}" alt="Ảnh nhỏ ${status.count}" class="thumbnail ${status.first ? 'active' : ''}">
-            </c:forEach>
-        </div>
-        <div class="main-image-wrapper">
-            <c:if test="${not empty p.images}">
-                <img id="mainImg" src="${p.images[0].imageUrl}"
-                     alt="${p.nameProduct}" class="main-image">
-            </c:if>
-            <c:if test="${empty p.images}">
-                <img id="mainImg" src="image/default.jpg" alt="Chưa có ảnh" class="main-image">
-            </c:if>
-            <a class="left carousel-control fui-arrow-left" href="#myCarousel" data-slide="prev"><i class="fa-solid fa-chevron-left"></i></a>
-            <a class="right carousel-control fui-arrow-right" href="#myCarousel" data-slide="next"><i class="fa-solid fa-chevron-right"></i></a>
-        </div>
-    </div>
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Chi tiết sản phẩm</title>
+                <link rel="icon" href="image/logoaodai.jpg" type="image/jpeg">
+                <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+                    rel="stylesheet">
+                <link rel="stylesheet" href="style/product-infomation.css">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+                    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+                    crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <script src="${pageContext.request.contextPath}/scripts/home.js"></script>
+                <%-- <script src="scripts/product-information.js"></script>--%>
+                    <link rel="stylesheet" href="style/style-header.css">
+                    <link rel="stylesheet" href="style/footer.css">
+                    <link rel="stylesheet" href="style/backtop.css">
+                    <script src="scripts/backtop.js"></script>
+                    <link rel="stylesheet" href="style/breadcrumb.css">
+                    <link rel="stylesheet" href="style/style.css">
+                    <link rel="stylesheet" href="style/quick-view.css">
+                    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+                    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+            </head>
+
+            <body>
+                <c:set var="pageTitle" value="${currentCategory.nameCategory}" scope="request" />
+                <jsp:include page="header.jsp" />
+                <!--breadcrumb-->
+
+                <div class="product-container">
+                    <div class="product-image-gallery">
+                        <div class="thumbnails">
+                            <c:forEach items="${p.images}" var="img" varStatus="status">
+                                <img src="${img.imageUrl}" alt="Ảnh nhỏ ${status.count}"
+                                    class="thumbnail ${status.first ? 'active' : ''}">
+                            </c:forEach>
+                        </div>
+                        <div class="main-image-wrapper">
+                            <c:if test="${not empty p.images}">
+                                <img id="mainImg" src="${p.images[0].imageUrl}" alt="${p.nameProduct}"
+                                    class="main-image">
+                            </c:if>
+                            <c:if test="${empty p.images}">
+                                <img id="mainImg" src="image/default.jpg" alt="Chưa có ảnh" class="main-image">
+                            </c:if>
+                            <a class="left carousel-control fui-arrow-left" href="#myCarousel" data-slide="prev"><i
+                                    class="fa-solid fa-chevron-left"></i></a>
+                            <a class="right carousel-control fui-arrow-right" href="#myCarousel" data-slide="next"><i
+                                    class="fa-solid fa-chevron-right"></i></a>
+                        </div>
+                    </div>
 
                     <div class="product-details">
                         <h1>${p.nameProduct}</h1>
@@ -77,19 +85,17 @@
         </div>
         <div class="section-title">Kích thước: <span id="selected-size">${p.variants[0].size}</span></div>
 
-        <div class="size-options">
-            <c:forEach items="${p.variants}" var="variant" varStatus="status">
-                <button class="size-btn ${status.first ? 'active' : ''}"
-                        data-price="${variant.discountedPrice}"
-                        data-old-price="${variant.currentPrice}"
-                        data-sku="${variant.sku}"
-                        data-color="${variant.color}"
-                        data-stock="${variant.stockQuantity}"
-                        onclick="updateVariant(this, '${variant.size}')">
-                        ${variant.size}
-                </button>
-            </c:forEach>
-        </div>
+                        <div class="size-options">
+                            <c:forEach items="${p.variants}" var="variant" varStatus="status">
+                                <button class="size-btn ${status.first ? 'active' : ''}"
+                                    data-price="${variant.discountedPrice}" data-old-price="${variant.currentPrice}"
+                                    data-sku="${variant.sku}" data-color="${variant.color}"
+                                    data-stock="${variant.stockQuantity}"
+                                    onclick="updateVariant(this, '${variant.size}')">
+                                    ${variant.size}
+                                </button>
+                            </c:forEach>
+                        </div>
 
                         <div class="section-title">
                             Màu sắc: <span id="selected-color">${p.variants[0].color}</span>
@@ -161,11 +167,8 @@
                                         </div>
                                         <div class="product-overlay">
                                             <a href="${pageContext.request.contextPath}/product-detail?id=${rp.id}"
-                                                class="icon-button" title="Tùy chọn">
-                                                <i class="fa-solid fa-cart-shopping"></i>
-                                            </a>
-                                            <a href="#" class="icon-button" title="Xem nhanh">
-                                                <i class="fa-solid fa-eye"></i>
+                                                class="icon-button" title="Xem chi tiết">
+                                                Xem chi tiết
                                             </a>
                                         </div>
                                     </div>
@@ -177,28 +180,33 @@
                                         <div class="product-price">
                                             <c:choose>
                                                 <%-- CÓ GIẢM GIÁ --%>
-                                                <c:when test="${rp.discountedPrice > 0 && rp.discountedPrice < rp.price}">
-                                                    <div class="current-price">
-                                                        <fmt:formatNumber value="${rp.discountedPrice}" pattern="#,###"/>₫
-                                                    </div>
+                                                    <c:when
+                                                        test="${rp.discountedPrice > 0 && rp.discountedPrice < rp.price}">
+                                                        <div class="current-price">
+                                                            <fmt:formatNumber value="${rp.discountedPrice}"
+                                                                pattern="#,###" />₫
+                                                        </div>
 
-                                                    <div class="price-meta">
-                                                <span class="old-price">
-                                                    <fmt:formatNumber value="${rp.price}" pattern="#,###"/>₫
-                                                </span>
-                                                        <c:set var="percent" value="${Math.round((1 - rp.discountedPrice/rp.price) * 100)}" />
-                                                        <span class="discount-tag">
-                                                    -${percent}%
-                                                </span>
-                                                    </div>
-                                                </c:when>
+                                                        <div class="price-meta">
+                                                            <span class="old-price">
+                                                                <fmt:formatNumber value="${rp.price}" pattern="#,###" />
+                                                                ₫
+                                                            </span>
+                                                            <c:set var="percent"
+                                                                value="${Math.round((1 - rp.discountedPrice/rp.price) * 100)}" />
+                                                            <span class="discount-tag">
+                                                                -${percent}%
+                                                            </span>
+                                                        </div>
+                                                    </c:when>
 
-                                                <%-- KHÔNG GIẢM GIÁ --%>
-                                                <c:otherwise>
-                                                    <div class="current-price">
-                                                        <fmt:formatNumber value="${rp.price}" pattern="#,###"/>₫
-                                                    </div>
-                                                </c:otherwise>
+                                                    <%-- KHÔNG GIẢM GIÁ --%>
+                                                        <c:otherwise>
+                                                            <div class="current-price">
+                                                                <fmt:formatNumber value="${rp.price}" pattern="#,###" />
+                                                                ₫
+                                                            </div>
+                                                        </c:otherwise>
                                             </c:choose>
                                         </div>
                                     </div>
@@ -229,12 +237,9 @@
                                                 </a>
                                             </div>
                                             <div class="product-overlay">
-                                                <a href="${pageContext.request.contextPath}/product-detail?id=${rp.id}"
-                                                    class="icon-button" title="Tùy chọn">
-                                                    <i class="fa-solid fa-cart-shopping"></i>
-                                                </a>
-                                                <a href="#" class="icon-button" title="Xem nhanh">
-                                                    <i class="fa-solid fa-eye"></i>
+                                                <a href="${pageContext.request.contextPath}/product-detail?id=${vp.id}"
+                                                    class="icon-button" title="Xem chi tiết">
+                                                    Xem chi tiết
                                                 </a>
                                             </div>
                                         </div>
@@ -246,28 +251,33 @@
                                             <div class="product-price">
                                                 <c:choose>
                                                     <%-- CÓ GIẢM GIÁ --%>
-                                                    <c:when test="${vp.discountedPrice > 0 && vp.discountedPrice < vp.price}">
-                                                        <div class="current-price">
-                                                            <fmt:formatNumber value="${vp.discountedPrice}" pattern="#,###"/>₫
-                                                        </div>
+                                                        <c:when
+                                                            test="${vp.discountedPrice > 0 && vp.discountedPrice < vp.price}">
+                                                            <div class="current-price">
+                                                                <fmt:formatNumber value="${vp.discountedPrice}"
+                                                                    pattern="#,###" />₫
+                                                            </div>
 
-                                                        <div class="price-meta">
-                                                <span class="old-price">
-                                                    <fmt:formatNumber value="${vp.price}" pattern="#,###"/>₫
-                                                </span>
-                                                            <c:set var="percent" value="${Math.round((1 - vp.discountedPrice/vp.price) * 100)}" />
-                                                            <span class="discount-tag">
-                                                    -${percent}%
-                                                </span>
-                                                        </div>
-                                                    </c:when>
+                                                            <div class="price-meta">
+                                                                <span class="old-price">
+                                                                    <fmt:formatNumber value="${vp.price}"
+                                                                        pattern="#,###" />₫
+                                                                </span>
+                                                                <c:set var="percent"
+                                                                    value="${Math.round((1 - vp.discountedPrice/vp.price) * 100)}" />
+                                                                <span class="discount-tag">
+                                                                    -${percent}%
+                                                                </span>
+                                                            </div>
+                                                        </c:when>
 
-                                                    <%-- KHÔNG GIẢM GIÁ --%>
-                                                    <c:otherwise>
-                                                        <div class="current-price">
-                                                            <fmt:formatNumber value="${vp.price}" pattern="#,###"/>₫
-                                                        </div>
-                                                    </c:otherwise>
+                                                        <%-- KHÔNG GIẢM GIÁ --%>
+                                                            <c:otherwise>
+                                                                <div class="current-price">
+                                                                    <fmt:formatNumber value="${vp.price}"
+                                                                        pattern="#,###" />₫
+                                                                </div>
+                                                            </c:otherwise>
                                                 </c:choose>
                                             </div>
                                         </div>
@@ -393,7 +403,7 @@
                         </div>
 
                         <div class="success-footer">
-                            <a href="thanhtoan.jsp" class="checkout-btn">Thanh toán</a>
+                            <a href="${pageContext.request.contextPath}/checkout" class="checkout-btn">Thanh toán</a>
                             <a href="cart.jsp" class="success-btn">Xem giỏ hàng</a>
                         </div>
                     </div>

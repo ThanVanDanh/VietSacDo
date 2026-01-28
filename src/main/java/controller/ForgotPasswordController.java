@@ -46,6 +46,13 @@ public class ForgotPasswordController extends HttpServlet {
             String inputOtp = request.getParameter("otp");
             HttpSession session = request.getSession();
             String sessionOtp = (String) session.getAttribute("otp");
+            Long otpTime = (Long) session.getAttribute("otp_time");
+
+            if (otpTime == null || (System.currentTimeMillis() - otpTime > 5 * 60 * 1000)) {
+                request.setAttribute("error", "Mã OTP đã hết hạn! Vui lòng lấy lại mã mới.");
+                request.getRequestDispatcher("verify-otp.jsp").forward(request, response);
+                return;
+            }
 
             if (sessionOtp != null && sessionOtp.equals(inputOtp)) {
                 request.getRequestDispatcher("reset-pw.jsp").forward(request, response);
@@ -62,7 +69,8 @@ public class ForgotPasswordController extends HttpServlet {
 
             String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$";
             if (!newPass.matches(passwordRegex)) {
-                request.setAttribute("error", "Mật khẩu yếu: Phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và ký tự đặc biệt!");
+                request.setAttribute("error",
+                        "Mật khẩu yếu: Phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường và ký tự đặc biệt!");
                 request.getRequestDispatcher("reset-pw.jsp").forward(request, response);
                 return;
             }
