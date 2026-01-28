@@ -22,18 +22,15 @@ public class CategoryService {
     }
 
     public int createCategory(Category cat) {
-        // validation cơ bản
         if (cat == null) return -1;
         if (cat.getNameCategory() == null || cat.getNameCategory().trim().isEmpty()) return -1;
 
-        // nếu slug null/empty => tạo tự động
         String slug = cat.getSlug();
         if (slug == null || slug.trim().isEmpty()) {
             slug = slugify(cat.getNameCategory());
             cat.setSlug(slug);
         }
 
-        // nếu slug đã tồn tại, cố gắng thêm hậu tố để tránh duplicate
         int attempt = 0;
         String baseSlug = slug;
         while (categoryDao.existsBySlug(cat.getSlug()) && attempt < 10) {
@@ -41,7 +38,6 @@ public class CategoryService {
             cat.setSlug(baseSlug + "-" + attempt);
         }
         if (categoryDao.existsBySlug(cat.getSlug())) {
-            // vẫn trùng sau nhiều lần
             return -2; // mã lỗi slug duplicate
         }
         return categoryDao.insert(cat);
@@ -50,7 +46,6 @@ public class CategoryService {
     private String slugify(String text) {
         if (text == null) return "";
         String s = text.toLowerCase().trim();
-        // Loại bỏ dấu (basic)
         s = java.text.Normalizer.normalize(s, java.text.Normalizer.Form.NFD)
                 .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
         s = s.replaceAll("đ", "d");
@@ -68,14 +63,12 @@ public class CategoryService {
         if (cat == null || cat.getId() <= 0) return false;
         if (cat.getNameCategory() == null || cat.getNameCategory().trim().isEmpty()) return false;
 
-        // Auto-generate slug if empty
         String slug = cat.getSlug();
         if (slug == null || slug.trim().isEmpty()) {
             slug = slugify(cat.getNameCategory());
             cat.setSlug(slug);
         }
 
-        // Check if category exists
         if (!categoryDao.exists(cat.getId())) {
             return false;
         }
@@ -86,7 +79,6 @@ public class CategoryService {
     public boolean deleteCategory(int id) {
         if (id <= 0) return false;
 
-        // Check if exists
         if (!categoryDao.exists(id)) {
             return false;
         }
