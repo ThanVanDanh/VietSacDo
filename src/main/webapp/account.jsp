@@ -30,12 +30,6 @@
                             </a>
                         </div>
 
-                        <form class="search-overlay-form">
-                            <input type="text" id="searchInput"
-                                placeholder="áo dài truyền thống, quần áo dài, vòng tay...">
-                            <button type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
-                        </form>
-
                         <div class="icons">
                             <div class="user-menu">
                                 <a><i class="fa-regular fa-user"></i></a>
