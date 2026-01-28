@@ -7,9 +7,6 @@ import java.util.List;
 
 public class PolicyDao extends BaseDao {
 
-    /**
-     * Lấy tất cả policies
-     */
     public List<Policy> getAll() {
         String sql = "SELECT * FROM policy ORDER BY id DESC";
         return get().withHandle(handle ->
@@ -19,9 +16,6 @@ public class PolicyDao extends BaseDao {
         );
     }
 
-    /**
-     * Lấy policy theo ID
-     */
     public Policy getById(int id) {
         String sql = "SELECT * FROM policy WHERE id = :id";
         return get().withHandle(handle ->
@@ -33,9 +27,6 @@ public class PolicyDao extends BaseDao {
         );
     }
 
-    /**
-     * Lấy policy theo category_id
-     */
     public Policy getByCategoryId(int categoryId) {
         String sql = "SELECT * FROM policy WHERE category_id = :categoryId";
         return get().withHandle(handle ->
@@ -47,9 +38,6 @@ public class PolicyDao extends BaseDao {
         );
     }
 
-    /**
-     * Kiểm tra policy có tồn tại theo ID
-     */
     public boolean exists(int id) {
         String sql = "SELECT COUNT(*) FROM policy WHERE id = :id";
         return get().withHandle(handle -> {
@@ -61,9 +49,6 @@ public class PolicyDao extends BaseDao {
         });
     }
 
-    /**
-     * Kiểm tra category_id đã có policy chưa
-     */
     public boolean existsByCategoryId(int categoryId) {
         String sql = "SELECT COUNT(*) FROM policy WHERE category_id = :categoryId";
         return get().withHandle(handle -> {
@@ -75,9 +60,6 @@ public class PolicyDao extends BaseDao {
         });
     }
 
-    /**
-     * Thêm policy mới
-     */
     public int insert(Policy policy) {
         return get().withHandle(handle -> insert(handle, policy));
     }
@@ -92,9 +74,6 @@ public class PolicyDao extends BaseDao {
                 .one();
     }
 
-    /**
-     * Cập nhật policy
-     */
     public boolean update(Policy policy) {
         return get().withHandle(handle -> update(handle, policy));
     }
@@ -109,9 +88,6 @@ public class PolicyDao extends BaseDao {
         return rows > 0;
     }
 
-    /**
-     * Xóa policy theo ID
-     */
     public boolean delete(int id) {
         String sql = "DELETE FROM policy WHERE id = :id";
         return get().withHandle(handle -> {
@@ -122,9 +98,6 @@ public class PolicyDao extends BaseDao {
         });
     }
 
-    /**
-     * Xóa policy theo category_id
-     */
     public boolean deleteByCategoryId(int categoryId) {
         String sql = "DELETE FROM policy WHERE category_id = :categoryId";
         return get().withHandle(handle -> {
