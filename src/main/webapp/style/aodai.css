@@ -30,14 +30,17 @@ section {
 .product-card {
     text-align: left;
 }
+
 .product-image-wrapper {
     position: relative;
     overflow: hidden;
 }
+
 .product-image {
     aspect-ratio: 2/3;
     overflow: hidden;
 }
+
 .product-image img:hover {
     transform: scale(0.95);
 }
@@ -51,9 +54,11 @@ section {
     object-fit: cover;
     object-position: center;
 }
+
 .product-image-wrapper:hover .product-image img {
     transform: scale(0.95);
 }
+
 .product-info {
     padding: 10px 5px;
 }
@@ -63,10 +68,12 @@ section {
     color: var(--color-secondary);
     transition: color 0.3s ease;
 }
+
 .product-info a:hover {
-    color:#000000;
+    color: #000000;
     text-decoration: underline;
 }
+
 .product-name {
     font-size: 16px;
     display: -webkit-box;
@@ -76,6 +83,7 @@ section {
     min-height: 2.4em;
 
 }
+
 .product-price {
     font-size: 14px;
     display: flex;
@@ -95,6 +103,7 @@ section {
     color: #999;
     font-size: 14px;
 }
+
 .discount-tag {
     background-color: #b90000;
     color: white;
@@ -103,7 +112,7 @@ section {
     border-radius: 2px;
     font-weight: bold;
 }
-/*gio hang & xem nhanh*/
+
 .product-overlay {
     position: absolute;
     bottom: 0;
@@ -112,7 +121,7 @@ section {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 15px;
+    gap: 0;
     padding: 20px 0;
     opacity: 0;
     visibility: hidden;
@@ -120,32 +129,37 @@ section {
     transition: all 0.3s ease-in-out;
     z-index: 3;
 }
+
 .product-image-wrapper:hover .product-overlay {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
 }
+
 .icon-button {
-    background-color: white;
-    border: 1px solid #ddd;
-    width: 40px;
+    background-color: rgba(50, 0, 0, 0.7);
+    color: white;
+    border: none;
+    width: 80%;
     height: 40px;
-    border-radius: 10px;
+    border-radius: 4px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 16px;
-    color: #333;
-    transition: background-color 0.5s ease;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
 }
 
 .icon-button:hover {
-    background-color: #333;
+    background-color: rgba(100, 0, 0, 0.9);
     color: white;
 }
-.product-image-wrapper a{
+
+.product-image-wrapper a {
     text-decoration: none;
 }
+
 .pagination {
     display: flex;
     justify-content: flex-end;
@@ -179,7 +193,8 @@ section {
 .pagination a:first-child {
     margin-left: 0;
 }
-.pagination img{
+
+.pagination img {
     width: 15px;
     height: 15px;
 }
@@ -239,7 +254,7 @@ section {
 
     border-left: 5px solid transparent;
     border-right: 5px solid transparent;
-    border-top: 6px solid #555; /* Màu mũi tên */
+    border-top: 6px solid #555;
 
     pointer-events: none;
 }

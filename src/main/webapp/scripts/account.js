@@ -111,27 +111,97 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // 3. Logic Hủy đơn hàng
 window.cancelOrder = function (orderId) {
-    if (!confirm('Bạn có chắc chắn muốn hủy đơn hàng này không? Hành động này không thể hoàn tác.')) {
-        return;
+    // Show the cancel modal
+    document.getElementById('cancel-order-id').value = orderId;
+    document.getElementById('cancel-order-modal').style.display = 'flex';
+
+    // Reset to first option
+    const firstRadio = document.querySelector('input[name="cancel-reason"]');
+    if (firstRadio) firstRadio.checked = true;
+    document.getElementById('other-reason-container').style.display = 'none';
+    document.getElementById('other-reason-text').value = '';
+};
+
+// Cancel modal functionality
+document.addEventListener('DOMContentLoaded', function () {
+    const cancelModal = document.getElementById('cancel-order-modal');
+    if (!cancelModal) return;
+
+    const closeModalBtn = document.getElementById('cancel-modal-close-btn');
+    const closeBtn = cancelModal.querySelector('.modal-close');
+    const confirmBtn = document.getElementById('confirm-cancel-btn');
+    const otherContainer = document.getElementById('other-reason-container');
+    const otherText = document.getElementById('other-reason-text');
+
+    // Show/hide other reason textarea
+    document.querySelectorAll('input[name="cancel-reason"]').forEach(radio => {
+        radio.addEventListener('change', function () {
+            if (this.value === 'other') {
+                otherContainer.style.display = 'block';
+            } else {
+                otherContainer.style.display = 'none';
+            }
+        });
+    });
+
+    // Close modal
+    function closeCancelModal() {
+        cancelModal.style.display = 'none';
     }
 
-    fetch('cancel-order?orderId=' + orderId, {
-        method: 'POST'
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Đã hủy đơn hàng thành công!');
-                location.reload();
-            } else {
-                alert('Lỗi: ' + data.message);
+    if (closeModalBtn) closeModalBtn.addEventListener('click', closeCancelModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeCancelModal);
+
+    cancelModal.addEventListener('click', function (e) {
+        if (e.target === cancelModal) closeCancelModal();
+    });
+
+    // Confirm cancel
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', function () {
+            const orderId = document.getElementById('cancel-order-id').value;
+            const selectedReason = document.querySelector('input[name="cancel-reason"]:checked');
+
+            if (!selectedReason) {
+                alert('Vui lòng chọn lý do hủy đơn!');
+                return;
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Đã xảy ra lỗi kết nối. Vui lòng thử lại.');
+
+            let cancelReason = selectedReason.value;
+
+            if (cancelReason === 'other') {
+                cancelReason = otherText.value.trim();
+                if (!cancelReason) {
+                    alert('Vui lòng nhập lý do hủy đơn!');
+                    return;
+                }
+            }
+
+            // Send request
+            fetch('cancel-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'orderId=' + orderId + '&cancelReason=' + encodeURIComponent(cancelReason)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Đã hủy đơn hàng thành công!');
+                        closeCancelModal();
+                        location.reload();
+                    } else {
+                        alert('Lỗi: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Đã xảy ra lỗi kết nối. Vui lòng thử lại.');
+                });
         });
-};
+    }
+});
 
 // 4. Logic Xem chi tiết đơn hàng
 window.viewOrderDetails = function (orderId) {
@@ -165,6 +235,7 @@ window.viewOrderDetails = function (orderId) {
                 items.forEach(item => {
                     const productName = item.productName || '<span style="color: #999; font-style: italic;">Sản phẩm không còn tồn tại</span>';
                     const size = item.size || 'N/A';
+                    const productImage = item.productImage || 'image/no-image.png';
 
                     const tr = document.createElement('tr');
                     tr.innerHTML = `

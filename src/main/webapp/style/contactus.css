@@ -1,5 +1,5 @@
 :root {
-    --color-primary: #640100;
+        --color-primary: #640100;
     --color-secondary: #320000;
     --color-background: rgb(202, 183, 161);
 }
@@ -7,7 +7,6 @@ section {
     position: relative;
     padding-top: 50px;
     padding-bottom: 50px;
-    /*background-image: url('../image/Contact.png');*/
     background-size: cover;
     background-position: center;
     isolation: isolate;
@@ -91,7 +90,6 @@ section::after {
 
 .contact-info-content p {
     color:var(--color-secondary);
-
     font-size: 1em;
 }
 
@@ -108,7 +106,6 @@ section::after {
     font-size: 2em;
     margin-bottom: 10px;
     color:var(--color-secondary);
-
 }
 
 .contact-form .input-box {

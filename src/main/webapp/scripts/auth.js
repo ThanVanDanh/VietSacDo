@@ -19,7 +19,7 @@ const facebookProvider = new FacebookAuthProvider();
 
 document.addEventListener('DOMContentLoaded', function () {
     const googleBtn = document.querySelector('.btn-google');
-    if(googleBtn) {
+    if (googleBtn) {
         const btnWrapper = googleBtn.closest('button');
 
         if (btnWrapper) {
@@ -111,19 +111,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 newPassInput.style.border = "1px solid red";
                 return;
             }
-                if (newPass !== confirmPass) {
-                    e.preventDefault();
+            if (newPass !== confirmPass) {
+                e.preventDefault();
 
-                    if (errorDiv) {
-                        errorDiv.innerText = "Mật khẩu xác nhận không khớp!";
-                        errorDiv.style.display = 'block';
-                    } else {
-                        alert("Mật khẩu xác nhận không khớp!");
-                    }
-
-                    confirmPassInput.focus();
-                    confirmPassInput.style.border = "1px solid red";
+                if (errorDiv) {
+                    errorDiv.innerText = "Mật khẩu xác nhận không khớp!";
+                    errorDiv.style.display = 'block';
+                } else {
+                    alert("Mật khẩu xác nhận không khớp!");
                 }
+
+                confirmPassInput.focus();
+                confirmPassInput.style.border = "1px solid red";
+            }
 
         });
     }
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const showLoginLink = document.getElementById('show_login_view');
     // Ẩn/hiện form
     if (showForgotLink) {
-        showForgotLink.addEventListener('click', function(event) {
+        showForgotLink.addEventListener('click', function (event) {
             event.preventDefault();
             if (loginView && forgotView) {
                 loginView.style.display = 'none';
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (showLoginLink) {
-        showLoginLink.addEventListener('click', function(event) {
+        showLoginLink.addEventListener('click', function (event) {
             event.preventDefault();
 
             if (loginView && forgotView) {
@@ -188,12 +188,30 @@ document.addEventListener('DOMContentLoaded', function () {
     if (confirmBtn) {
         confirmBtn.addEventListener('click', closeVerifyPopup);
     }
-    window.addEventListener('click', function(e) {
+    window.addEventListener('click', function (e) {
         if (e.target === verifyModal) {
             closeVerifyPopup();
         }
     });
 });
+
+// Toggle Password Visibility
+document.body.addEventListener('click', function (e) {
+    if (e.target.classList.contains('toggle-password')) {
+        const inputId = e.target.getAttribute('toggle');
+        const input = document.getElementById(inputId); // Changed to getElementById for safer selection
+
+        if (input) {
+            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+            input.setAttribute('type', type);
+
+            // Toggle icon
+            e.target.classList.toggle('fa-eye');
+            e.target.classList.toggle('fa-eye-slash');
+        }
+    }
+});
+
 
 function doLoginSocial(email, name, uid, providerType) {
     const params = new URLSearchParams();

@@ -86,17 +86,17 @@ public class AdminProductController extends HttpServlet {
 
             int pageSize = 10;
             String sortBy = req.getParameter("sort");
-            
+
             String searchKeyword = req.getParameter("search");
             boolean isSearchMode = (searchKeyword != null && !searchKeyword.trim().isEmpty());
-            
+
             if (!isSearchMode && (sortBy == null || sortBy.isEmpty())) {
                 sortBy = "id-desc";
             }
             
             int totalProducts;
             List<ProductListDTO> products;
-            
+
             if (isSearchMode) {
                 totalProducts = productDao.countSearchResultsAdmin(searchKeyword);
                 PaginationUtils.PageInfo pageInfo = PaginationUtils.calculate(
@@ -104,7 +104,7 @@ public class AdminProductController extends HttpServlet {
                         totalProducts,
                         pageSize
                 );
-                
+
                 products = productDao.searchProductsAdmin(searchKeyword, pageInfo.getCurrentPage(), pageSize, sortBy);
 
                 Map<String, Object> response = new java.util.HashMap<>();
@@ -126,7 +126,7 @@ public class AdminProductController extends HttpServlet {
                 );
 
                 products = productService.getListProductWithPaginationAndSort(
-                        pageSize, 
+                        pageSize,
                         pageInfo.getOffset(),
                         sortBy
                 );

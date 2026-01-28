@@ -26,6 +26,7 @@ public class Product extends AId implements Serializable {
     public List<ProductVariant> getVariants() {
         return variants;
     }
+
     public List<ProductImage> getImages() {
         return images;
     }
@@ -33,9 +34,12 @@ public class Product extends AId implements Serializable {
     public Product(int id) {
         super(id);
     }
-    public Product() {}
 
-    public Product(int id, String nameProduct, String productCode, String description, LocalDateTime createdAt, String statusProduct, int categoryId) {
+    public Product() {
+    }
+
+    public Product(int id, String nameProduct, String productCode, String description, LocalDateTime createdAt,
+            String statusProduct, int categoryId) {
         super(id);
         this.nameProduct = nameProduct;
         this.productCode = productCode;
@@ -44,6 +48,7 @@ public class Product extends AId implements Serializable {
         this.statusProduct = statusProduct;
         this.categoryId = categoryId;
     }
+
     public int getCategoryId() {
         return categoryId;
     }
@@ -91,11 +96,12 @@ public class Product extends AId implements Serializable {
     public void setNameProduct(String nameProduct) {
         this.nameProduct = nameProduct;
     }
-    public void setVariants(List<ProductVariant> variants) { this.variants = variants; }
-    public void setImages(List<ProductImage> images) { this.images = images; }
+
+    public void setVariants(List<ProductVariant> variants) {
+        this.variants = variants;
+    }
+
+    public void setImages(List<ProductImage> images) {
+        this.images = images;
+    }
 }
-
-
-
-
-

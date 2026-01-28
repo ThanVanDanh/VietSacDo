@@ -88,6 +88,17 @@ public class OrderDao extends BaseDao {
                         .execute() > 0);
     }
 
+    public boolean cancelOrderWithReason(int orderId, String status, String cancelReason) {
+        return jdbi.withHandle(
+                handle -> handle
+                        .createUpdate(
+                                "UPDATE Orders SET order_status = :status, cancel_reason = :reason WHERE id = :orderId")
+                        .bind("status", status)
+                        .bind("reason", cancelReason)
+                        .bind("orderId", orderId)
+                        .execute() > 0);
+    }
+
     public List<model.order.OrderItem> getOrderItems(int orderId) {
         String sql = "SELECT oi.*, " +
                 "p.name_product AS productName, " +
@@ -102,6 +113,77 @@ public class OrderDao extends BaseDao {
         return jdbi.withHandle(handle -> handle.createQuery(sql)
                 .bind("orderId", orderId)
                 .mapToBean(model.order.OrderItem.class)
+                .list());
+    }
+
+    public List<Order> getAllOrders() {
+        return jdbi.withHandle(
+                handle -> handle.createQuery("SELECT * FROM Orders ORDER BY created_at DESC")
+                        .mapToBean(Order.class)
+                        .list());
+    }
+
+    public Order getOrderById(int orderId) {
+        return jdbi.withHandle(
+                handle -> handle.createQuery("SELECT * FROM Orders WHERE id = :orderId")
+                        .bind("orderId", orderId)
+                        .mapToBean(Order.class)
+                        .findFirst()
+                        .orElse(null));
+    }
+
+    public boolean deleteOrder(int orderId) {
+        return jdbi.inTransaction(handle -> {
+            // Delete order items first (foreign key constraint)
+            handle.createUpdate("DELETE FROM Order_items WHERE order_id = :orderId")
+                    .bind("orderId", orderId)
+                    .execute();
+
+            // Delete the order
+            int deleted = handle.createUpdate("DELETE FROM Orders WHERE id = :orderId")
+                    .bind("orderId", orderId)
+                    .execute();
+
+            return deleted > 0;
+        });
+    }
+
+    // Dashboard Statistics Methods
+
+    public double getTotalRevenue() {
+        return jdbi.withHandle(handle -> handle.createQuery(
+                "SELECT COALESCE(SUM(total_amount), 0) FROM Orders WHERE order_status = 'hoàn thành' OR order_status = 'Hoàn thành'")
+                .mapTo(Double.class)
+                .one());
+    }
+
+    public int countTotalOrders() {
+        return jdbi.withHandle(handle -> handle.createQuery("SELECT COUNT(*) FROM Orders")
+                .mapTo(Integer.class)
+                .one());
+    }
+
+    public List<Order> getRecentOrders(int limit) {
+        return jdbi
+                .withHandle(handle -> handle.createQuery("SELECT * FROM Orders ORDER BY created_at DESC LIMIT :limit")
+                        .bind("limit", limit)
+                        .mapToBean(Order.class)
+                        .list());
+    }
+
+    public List<model.order.MonthlyRevenue> getRevenueByMonth(int limit) {
+        String sql = "SELECT CONCAT(MONTH(created_at), '/', YEAR(created_at)) as monthYear, " +
+                "COUNT(*) as orderCount, " +
+                "SUM(total_amount) as revenue " +
+                "FROM Orders " +
+                "WHERE order_status = 'hoàn thành' OR order_status = 'Hoàn thành' " +
+                "GROUP BY YEAR(created_at), MONTH(created_at) " +
+                "ORDER BY YEAR(created_at) DESC, MONTH(created_at) DESC " +
+                "LIMIT :limit";
+
+        return jdbi.withHandle(handle -> handle.createQuery(sql)
+                .bind("limit", limit)
+                .mapToBean(model.order.MonthlyRevenue.class)
                 .list());
     }
 }
