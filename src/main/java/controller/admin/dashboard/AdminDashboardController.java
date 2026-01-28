@@ -35,19 +35,16 @@ public class AdminDashboardController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // 1. Fetch Key Statistics
         double totalRevenue = orderDao.getTotalRevenue();
         int totalOrders = orderDao.countTotalOrders();
         int newCustomersWeek = userDao.countNewThisWeek();
         Product bestSellingProduct = productDao.getBestSellingProduct();
 
-        // 2. Fetch Lists for Tables
         List<Order> recentOrders = orderDao.getRecentOrders(5);
         List<User> newCustomers = userDao.getNewCustomers(5);
         List<model.order.MonthlyRevenue> monthlyRevenue = orderDao.getRevenueByMonth(6);
         List<Voucher> activeVouchers = voucherDao.getActiveVouchers();
 
-        // 3. Set Attributes
         req.setAttribute("totalRevenue", totalRevenue);
         req.setAttribute("totalOrders", totalOrders);
         req.setAttribute("newCustomersWeek", newCustomersWeek);
@@ -57,7 +54,6 @@ public class AdminDashboardController extends HttpServlet {
         req.setAttribute("monthlyRevenue", monthlyRevenue);
         req.setAttribute("activeVouchers", activeVouchers);
 
-        // 4. Forward to JSP
         req.getRequestDispatcher("/admin/dashboard.jsp").forward(req, resp);
     }
 }

@@ -22,6 +22,7 @@
 </head>
 <body>
 <c:set var="pageTitle" value="${currentCategory.nameCategory}" scope="request" />
+<c:set var="searchParam" value="${not empty searchKeyword ? '&search='.concat(searchKeyword) : ''}" />
 <jsp:include page="header.jsp" />
 <main>
     <section class="product-showcase tab-component">
@@ -32,7 +33,7 @@
             <div class="sort-by-wrapper">
                 <label for="sort-by">Sắp xếp:</label>
                 <div class="custom-select-wrapper">
-                    <select id="sort-by" name="sort-by" onchange="location.href='?page=1&sort-by='+this.value">
+                    <select id="sort-by" name="sort-by" onchange="location.href='?page=1&sort-by='+this.value+'${searchParam}'">
                         <option value="alpha-asc" ${sortBy == 'alpha-asc' ? 'selected' : ''}>Tên A → Z</option>
                         <option value="alpha-desc" ${sortBy == 'alpha-desc' ? 'selected' : ''}>Tên Z → A</option>
                         <option value="price-asc" ${sortBy == 'price-asc' ? 'selected' : ''}>Giá tăng dần</option>
@@ -118,17 +119,17 @@
         </div>
         <div class="pagination">
             <c:if test="${currentPage > 1}">
-                <a href="?page=${currentPage - 1}&sort-by=${sortBy}">
+                <a href="?page=${currentPage - 1}&sort-by=${sortBy}${searchParam}">
                     <img src="${pageContext.request.contextPath}/image/chevron_left.png" alt="Prev">
                 </a>
             </c:if>
 
             <c:forEach begin="1" end="${totalPages}" var="i">
-                <a href="?page=${i}&sort-by=${sortBy}" class="${currentPage == i ? 'active' : ''}">${i}</a>
+                <a href="?page=${i}&sort-by=${sortBy}${searchParam}" class="${currentPage == i ? 'active' : ''}">${i}</a>
             </c:forEach>
 
             <c:if test="${currentPage < totalPages}">
-                <a href="?page=${currentPage + 1}&sort-by=${sortBy}">
+                <a href="?page=${currentPage + 1}&sort-by=${sortBy}${searchParam}">
                     <img src="${pageContext.request.contextPath}/image/chevron_right.png" alt="Next">
                 </a>
             </c:if>

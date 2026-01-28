@@ -1,11 +1,13 @@
 package controller;
 
 import dao.ProductDao;
+import dao.PolicyDao;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 import model.product.Product;
 import model.product.ProductListDTO;
+import model.policy.Policy;
 import services.CloudinaryService;
 import services.ProductService;
 
@@ -20,6 +22,7 @@ import java.util.Collections;
 @WebServlet(name = "ProductController", value = "/product-detail")
 public class ProductController extends HttpServlet {
     private ProductService productService;
+    private PolicyDao policyDao;
 
     public void init() throws ServletException {
         super.init();
@@ -28,6 +31,7 @@ public class ProductController extends HttpServlet {
             org.jdbi.v3.core.Jdbi jdbi = pd.get();
             CloudinaryService cloudinary = new CloudinaryService();
             this.productService = new ProductService(jdbi, cloudinary);
+            this.policyDao = new PolicyDao();
         } catch (Exception ex) {
             throw new ServletException("Khởi tạo ProductController thất bại: " + ex.getMessage(), ex);
         }
@@ -57,6 +61,10 @@ public class ProductController extends HttpServlet {
                 ProductDao dao = new ProductDao();
                 List<ProductListDTO> relatedProducts = dao.getRelatedProducts(product.getCategoryId(), id, 5);
                 request.setAttribute("relatedProducts", relatedProducts);
+                
+                // Lấy chính sách đổi trả theo category_id
+                Policy policy = policyDao.getByCategoryId(product.getCategoryId());
+                request.setAttribute("policy", policy);
             }
 
             // côkie san pham da xem

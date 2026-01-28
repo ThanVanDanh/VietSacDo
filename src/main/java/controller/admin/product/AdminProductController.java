@@ -23,15 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
-/**
- * AdminProductController - LIST, ADD, DELETE, UPDATE, GET
- * <p>
- * GET  /admin/product/add    -> Trả về JSON danh sách products (list)
- * GET  /admin/product/get    -> Lấy chi tiết 1 product (✨ MỚI)
- * POST /admin/product/add    -> Thêm product mới
- * POST /admin/product/update -> Cập nhật product (✨ MỚI)
- * POST /admin/product/delete -> Xóa product
- */
 @WebServlet(name = "AdminProductController", urlPatterns = {
         "/admin/product/add",
         "/admin/product/delete",
@@ -49,28 +40,19 @@ public class AdminProductController extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         try {
-            System.out.println("=== Initializing AdminProductController ===");
-
             productDao = new ProductDao();
             Jdbi jdbi = productDao.get();
-            System.out.println("✅ Jdbi: " + jdbi);
 
             CloudinaryService cloudinary = new CloudinaryService();
-            System.out.println("✅ CloudinaryService created");
 
             productService = new ProductService(jdbi, cloudinary);
-            System.out.println("✅ ProductService initialized");
             gson = GsonUtil.getGson();
         } catch (Exception ex) {
-            System.err.println("❌ Init failed: " + ex.getMessage());
             ex.printStackTrace();
             throw new ServletException("Init failed: " + ex.getMessage(), ex);
         }
     }
 
-    /**
-     * CORS headers
-     */
     private void addCorsHeaders(HttpServletResponse resp) {
         resp.setHeader("Access-Control-Allow-Origin", "*");
         resp.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
@@ -84,9 +66,6 @@ public class AdminProductController extends HttpServlet {
         resp.setStatus(HttpServletResponse.SC_OK);
     }
 
-    /**
-     * GET -> Trả về JSON danh sách products HOẶC chi tiết 1 product
-     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         addCorsHeaders(resp);
@@ -95,55 +74,74 @@ public class AdminProductController extends HttpServlet {
 
         String uri = req.getRequestURI();
 
-        // ✅ MỚI: Kiểm tra nếu là /get thì lấy chi tiết
         if (uri != null && uri.contains("/get")) {
             handleGetProduct(req, resp);
             return;
         }
 
-        // Mặc định: List products
-        System.out.println("=== doGet AdminProductController (LIST) ===");
-
         try {
             if (productService == null) {
-                throw new IllegalStateException("ProductService chưa được khởi tạo");
+                throw new IllegalStateException("ProductService chưa tạo");
             }
 
-            // Phân trang: 15 sản phẩm mỗi trang
-            int pageSize = 15;
+            int pageSize = 10;
             String sortBy = req.getParameter("sort");
-            if (sortBy == null || sortBy.isEmpty()) {
+
+            String searchKeyword = req.getParameter("search");
+            boolean isSearchMode = (searchKeyword != null && !searchKeyword.trim().isEmpty());
+
+            if (!isSearchMode && (sortBy == null || sortBy.isEmpty())) {
                 sortBy = "id-desc";
             }
             
-            int totalProducts = productService.countTotalProducts();
-            PaginationUtils.PageInfo pageInfo = PaginationUtils.calculate(
-                    req.getParameter("page"),
-                    totalProducts,
-                    pageSize
-            );
+            int totalProducts;
+            List<ProductListDTO> products;
 
-            // Lấy danh sách products với sorting
-            List<ProductListDTO> products = productService.getListProductWithPaginationAndSort(
-                    pageSize, 
-                    pageInfo.getOffset(),
-                    sortBy
-            );
-            System.out.println("✅ Loaded " + products.size() + " products (page " + pageInfo.getCurrentPage() + "/" + pageInfo.getTotalPages() + ", sort: " + sortBy + ")");
+            if (isSearchMode) {
+                totalProducts = productDao.countSearchResultsAdmin(searchKeyword);
+                PaginationUtils.PageInfo pageInfo = PaginationUtils.calculate(
+                        req.getParameter("page"),
+                        totalProducts,
+                        pageSize
+                );
 
-            // Convert to JSON với thông tin phân trang
-            Map<String, Object> response = new java.util.HashMap<>();
-            response.put("products", products);
-            response.put("currentPage", pageInfo.getCurrentPage());
-            response.put("totalPages", pageInfo.getTotalPages());
-            response.put("totalProducts", totalProducts);
+                products = productDao.searchProductsAdmin(searchKeyword, pageInfo.getCurrentPage(), pageSize, sortBy);
 
-            String json = gson.toJson(response);
-            resp.getWriter().write(json);
-            resp.setStatus(HttpServletResponse.SC_OK);
+                Map<String, Object> response = new java.util.HashMap<>();
+                response.put("products", products);
+                response.put("currentPage", pageInfo.getCurrentPage());
+                response.put("totalPages", pageInfo.getTotalPages());
+                response.put("totalProducts", totalProducts);
+                response.put("searchKeyword", searchKeyword);
+
+                String json = gson.toJson(response);
+                resp.getWriter().write(json);
+                resp.setStatus(HttpServletResponse.SC_OK);
+            } else {
+                totalProducts = productService.countTotalProducts();
+                PaginationUtils.PageInfo pageInfo = PaginationUtils.calculate(
+                        req.getParameter("page"),
+                        totalProducts,
+                        pageSize
+                );
+
+                products = productService.getListProductWithPaginationAndSort(
+                        pageSize,
+                        pageInfo.getOffset(),
+                        sortBy
+                );
+                Map<String, Object> response = new java.util.HashMap<>();
+                response.put("products", products);
+                response.put("currentPage", pageInfo.getCurrentPage());
+                response.put("totalPages", pageInfo.getTotalPages());
+                response.put("totalProducts", totalProducts);
+
+                String json = gson.toJson(response);
+                resp.getWriter().write(json);
+                resp.setStatus(HttpServletResponse.SC_OK);
+            }
 
         } catch (Exception ex) {
-            System.err.println("❌ Error in doGet: " + ex.getMessage());
             ex.printStackTrace();
 
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -151,9 +149,6 @@ public class AdminProductController extends HttpServlet {
         }
     }
 
-    /**
-     * POST -> Thêm product mới HOẶC xóa product HOẶC update product
-     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -164,44 +159,32 @@ public class AdminProductController extends HttpServlet {
 
         String uri = req.getRequestURI();
 
-        // ✅ Kiểm tra URI để phân biệt
         if (uri != null && uri.contains("/delete")) {
             handleDelete(req, resp);
             return;
         }
 
-        // ✅ MỚI: Kiểm tra /update
         if (uri != null && uri.contains("/update")) {
             handleUpdate(req, resp);
             return;
         }
 
-        // ✅ Kiểm tra query param action=delete
         String action = req.getParameter("action");
         if ("delete".equals(action)) {
             handleDelete(req, resp);
             return;
         }
 
-        // ✅ Mặc định: ADD
         handleAdd(req, resp);
     }
 
-    /**
-     * DELETE method
-     */
     @Override
     protected void doDelete(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         handleDelete(req, resp);
     }
 
-    /**
-     * ✅ MỚI: Xử lý GET product detail
-     */
     private void handleGetProduct(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        System.out.println("=== handleGetProduct AdminProductController ===");
-
         resp.setContentType("application/json;charset=UTF-8");
 
         try {
@@ -222,9 +205,6 @@ public class AdminProductController extends HttpServlet {
                 return;
             }
 
-            System.out.println("Getting product ID: " + productId);
-
-            // Lấy product với variants & images
             Product product = productService.getProduct(productId);
 
             if (product == null) {
@@ -233,27 +213,19 @@ public class AdminProductController extends HttpServlet {
                 return;
             }
 
-            // Convert to JSON
             String json = gson.toJson(product);
             resp.setStatus(HttpServletResponse.SC_OK);
             resp.getWriter().write(json);
 
-            System.out.println("✅ Product returned: " + product.getNameProduct());
-
         } catch (Exception ex) {
-            System.err.println("❌ Error getting product: " + ex.getMessage());
             ex.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().write("{\"success\":false, \"error\":\"" + escapeJson(ex.getMessage()) + "\"}");
         }
     }
 
-    /**
-     * ✅ MỚI: Xử lý UPDATE product
-     */
     private void handleUpdate(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        System.out.println("=== handleUpdate AdminProductController ===");
 
         String contentType = req.getContentType();
         if (contentType == null || !contentType.toLowerCase().startsWith("multipart/")) {
@@ -262,7 +234,6 @@ public class AdminProductController extends HttpServlet {
         }
 
         try {
-            // 1) Parse product ID
             String idStr = req.getParameter("product-id");
             if (idStr == null || idStr.trim().isEmpty()) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -272,16 +243,12 @@ public class AdminProductController extends HttpServlet {
             }
 
             int productId = Integer.parseInt(idStr.trim());
-            System.out.println("UPDATE - Product ID: " + productId);
 
-            // 2) Đọc parameters (giống handleAdd)
             String name = safe(req.getParameter("product-name"));
             String code = safe(req.getParameter("product-code"));
             String description = safe(req.getParameter("product-description"));
             String status = safe(req.getParameter("product-status"));
             String cat = safe(req.getParameter("product-category"));
-
-            System.out.println("Params: name=" + name + ", code=" + code + ", cat=" + cat);
 
             if (name.isEmpty()) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -305,7 +272,6 @@ public class AdminProductController extends HttpServlet {
             product.setStatusProduct(status.isEmpty() ? "active" : status);
             product.setCategoryId(categoryId);
 
-            // 3) Variants (giống handleAdd)
             List<ProductVariant> variants = new ArrayList<>();
             String[] skus = optional(req.getParameterValues("variant-sku[]"), req.getParameterValues("variant-sku"));
 
@@ -341,9 +307,6 @@ public class AdminProductController extends HttpServlet {
                     variants.add(v);
                 }
             }
-            System.out.println("Variants: " + variants.size());
-
-            // 4) ✨ Parse keepImageId[] + keepImageIsThumb[]
             List<Integer> keepImageIds = new ArrayList<>();
             List<Boolean> keepImageThumbs = new ArrayList<>();
             String[] keepIds = optional(req.getParameterValues("keepImageId[]"), req.getParameterValues("keepImageId"));
@@ -360,9 +323,6 @@ public class AdminProductController extends HttpServlet {
                     }
                 }
             }
-            System.out.println("Keep images: " + keepImageIds + ", thumbnails: " + keepImageThumbs);
-
-            // 5) Images mới (giống handleAdd)
             List<ImageUpload> uploads = new ArrayList<>();
             String[] alts = optional(req.getParameterValues("productImageAlt[]"), req.getParameterValues("productImageAlt"));
             String[] thumbs = optional(req.getParameterValues("productImageIsThumb[]"), req.getParameterValues("productImageIsThumb"));
@@ -380,18 +340,13 @@ public class AdminProductController extends HttpServlet {
                 uploads.add(new ImageUpload(is, filename, alt, thumb));
                 idx++;
             }
-            System.out.println("New images: " + uploads.size());
-
-            // 6) ✨ Update product - truyền keepImageThumbs để xử lý thumbnail
             boolean success = productService.updateProduct(product, variants, uploads, keepImageIds, keepImageThumbs);
-            System.out.println("✅ Updated product ID: " + productId);
 
             resp.setContentType("application/json;charset=UTF-8");
             resp.getWriter().write("{\"success\":true,\"id\":" + productId + "}");
             resp.setStatus(HttpServletResponse.SC_OK);
 
         } catch (Exception ex) {
-            System.err.println("❌ Error in handleUpdate: " + ex.getMessage());
             ex.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.setContentType("application/json;charset=UTF-8");
@@ -399,17 +354,11 @@ public class AdminProductController extends HttpServlet {
         }
     }
 
-    /**
-     * ✅ Xử lý DELETE product
-     */
     private void handleDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        System.out.println("=== handleDelete AdminProductController ===");
-
         resp.setContentType("application/json;charset=UTF-8");
 
         try {
             String idStr = req.getParameter("id");
-
             if (idStr == null || idStr.trim().isEmpty()) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 resp.getWriter().write("{\"success\":false, \"error\":\"ID sản phẩm là bắt buộc\"}");
@@ -425,20 +374,15 @@ public class AdminProductController extends HttpServlet {
                 return;
             }
 
-            System.out.println("Deleting product ID: " + productId);
-
-            // Kiểm tra product tồn tại
             if (!productDao.exists(productId)) {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 resp.getWriter().write("{\"success\":false, \"error\":\"Sản phẩm không tồn tại\"}");
                 return;
             }
 
-            // Xóa product (cascade delete variants & images)
             boolean success = productDao.delete(productId);
 
             if (success) {
-                System.out.println("✅ Deleted product ID: " + productId);
                 resp.setStatus(HttpServletResponse.SC_OK);
                 resp.getWriter().write("{\"success\":true, \"message\":\"Xóa sản phẩm thành công\"}");
             } else {
@@ -447,20 +391,14 @@ public class AdminProductController extends HttpServlet {
             }
 
         } catch (Exception ex) {
-            System.err.println("❌ Error deleting product: " + ex.getMessage());
             ex.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().write("{\"success\":false, \"error\":\"" + escapeJson(ex.getMessage()) + "\"}");
         }
     }
 
-    /**
-     * ✅ Xử lý ADD product
-     */
     private void handleAdd(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        System.out.println("=== handleAdd AdminProductController ===");
-
         String contentType = req.getContentType();
         if (contentType == null || !contentType.toLowerCase().startsWith("multipart/")) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Yêu cầu multipart/form-data");
@@ -468,14 +406,11 @@ public class AdminProductController extends HttpServlet {
         }
 
         try {
-            // 1) Đọc parameters
             String name = safe(req.getParameter("product-name"));
             String code = safe(req.getParameter("product-code"));
             String description = safe(req.getParameter("product-description"));
             String status = safe(req.getParameter("product-status"));
             String cat = safe(req.getParameter("product-category"));
-
-            System.out.println("Params: name=" + name + ", code=" + code + ", cat=" + cat);
 
             if (name.isEmpty()) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -499,7 +434,6 @@ public class AdminProductController extends HttpServlet {
             product.setStatusProduct(status.isEmpty() ? "active" : status);
             product.setCategoryId(categoryId);
 
-            // 2) Variants
             List<ProductVariant> variants = new ArrayList<>();
             String[] skus = optional(req.getParameterValues("variant-sku[]"), req.getParameterValues("variant-sku"));
 
@@ -537,7 +471,6 @@ public class AdminProductController extends HttpServlet {
             }
             System.out.println("Variants: " + variants.size());
 
-            // 3) Images
             List<ImageUpload> uploads = new ArrayList<>();
             String[] alts = optional(req.getParameterValues("productImageAlt[]"), req.getParameterValues("productImageAlt"));
             String[] thumbs = optional(req.getParameterValues("productImageIsThumb[]"), req.getParameterValues("productImageIsThumb"));
@@ -555,18 +488,14 @@ public class AdminProductController extends HttpServlet {
                 uploads.add(new ImageUpload(is, filename, alt, thumb));
                 idx++;
             }
-            System.out.println("Images: " + uploads.size());
 
-            // 4) Create product
             int newId = productService.createProduct(product, variants, uploads);
-            System.out.println("✅ Created product ID: " + newId);
 
             resp.setContentType("application/json;charset=UTF-8");
             resp.getWriter().write("{\"success\":true,\"id\":" + newId + "}");
             resp.setStatus(HttpServletResponse.SC_OK);
 
         } catch (Exception ex) {
-            System.err.println("❌ Error: " + ex.getMessage());
             ex.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.setContentType("application/json;charset=UTF-8");
@@ -574,7 +503,6 @@ public class AdminProductController extends HttpServlet {
         }
     }
 
-    /* ---------- helpers ---------- */
     private String safe(String s) {
         return s == null ? "" : s.trim();
     }

@@ -41,24 +41,17 @@ public class AdminArticleController extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         try {
-            System.out.println("=== Initializing AdminArticleController ===");
-
             articleDao = new ArticleDao();
             voucherDao = new VoucherDao();
             Jdbi jdbi = articleDao.get();
-            System.out.println("✅ Jdbi: " + jdbi);
 
             CloudinaryService cloudinary = new CloudinaryService();
-            System.out.println("✅ CloudinaryService created");
 
             articleService = new ArticleService(jdbi, cloudinary);
-            System.out.println("✅ ArticleService initialized");
 
             gson = GsonUtil.getGson();
         } catch (Exception ex) {
-            System.err.println("❌ Init failed: " + ex.getMessage());
             ex.printStackTrace();
-            throw new ServletException("Init failed: " + ex.getMessage(), ex);
         }
     }
 
@@ -105,14 +98,12 @@ public class AdminArticleController extends HttpServlet {
 
         try {
             List<ArticleListDTO> articles = articleService.getListArticles();
-            System.out.println("✅ Loaded " + articles.size() + " articles");
 
             String json = gson.toJson(articles);
             resp.getWriter().write(json);
             resp.setStatus(HttpServletResponse.SC_OK);
 
         } catch (Exception ex) {
-            System.err.println("❌ Error listing articles: " + ex.getMessage());
             ex.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().write("{\"error\":\"" + escapeJson(ex.getMessage()) + "\"}");
@@ -120,8 +111,6 @@ public class AdminArticleController extends HttpServlet {
     }
 
     private void handleGetArticle(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        System.out.println("=== handleGetArticle ===");
-
         try {
             String idStr = req.getParameter("id");
 
@@ -132,8 +121,6 @@ public class AdminArticleController extends HttpServlet {
             }
 
             int articleId = Integer.parseInt(idStr.trim());
-            System.out.println("Getting article ID: " + articleId);
-
             Article article = articleService.getArticle(articleId);
 
             if (article == null) {
@@ -146,13 +133,10 @@ public class AdminArticleController extends HttpServlet {
             resp.getWriter().write(json);
             resp.setStatus(HttpServletResponse.SC_OK);
 
-            System.out.println("✅ Article returned: " + article.getTitle());
-
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.getWriter().write("{\"error\":\"ID không hợp lệ\"}");
         } catch (Exception ex) {
-            System.err.println("❌ Error getting article: " + ex.getMessage());
             ex.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().write("{\"error\":\"" + escapeJson(ex.getMessage()) + "\"}");
@@ -160,8 +144,6 @@ public class AdminArticleController extends HttpServlet {
     }
 
     private void handleAdd(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("=== handleAdd Article ===");
-
         String contentType = req.getContentType();
         if (contentType == null || !contentType.toLowerCase().startsWith("multipart/")) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Yêu cầu multipart/form-data");
@@ -175,10 +157,6 @@ public class AdminArticleController extends HttpServlet {
             String voucherIdStr = safe(req.getParameter("voucher-id"));
             String startDateStr = safe(req.getParameter("start-date"));
             String endDateStr = safe(req.getParameter("end-date"));
-
-            System.out.println("Title: " + title);
-            System.out.println("Status: " + status);
-            System.out.println("Voucher ID: " + voucherIdStr);
 
             if (title.isEmpty()) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -216,14 +194,11 @@ public class AdminArticleController extends HttpServlet {
             }
 
             int newId = articleService.createArticle(article, bannerStream, bannerFilename);
-            System.out.println("✅ Created article ID: " + newId);
-
             resp.setContentType("application/json;charset=UTF-8");
             resp.getWriter().write("{\"success\":true,\"id\":" + newId + "}");
             resp.setStatus(HttpServletResponse.SC_OK);
 
         } catch (Exception ex) {
-            System.err.println("❌ Error creating article: " + ex.getMessage());
             ex.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.setContentType("application/json;charset=UTF-8");
@@ -232,8 +207,6 @@ public class AdminArticleController extends HttpServlet {
     }
 
     private void handleUpdate(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("=== handleUpdate Article ===");
-
         String contentType = req.getContentType();
         if (contentType == null || !contentType.toLowerCase().startsWith("multipart/")) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Yêu cầu multipart/form-data");
@@ -250,8 +223,6 @@ public class AdminArticleController extends HttpServlet {
             }
 
             int articleId = Integer.parseInt(idStr.trim());
-            System.out.println("UPDATE - Article ID: " + articleId);
-
             String title = safe(req.getParameter("article-title"));
             String content = safe(req.getParameter("article-content"));
             String status = safe(req.getParameter("article-status"));
@@ -289,20 +260,16 @@ public class AdminArticleController extends HttpServlet {
                 if ("banner-image".equals(part.getName()) && part.getSize() > 0) {
                     bannerFilename = getFilename(part);
                     bannerStream = part.getInputStream();
-                    System.out.println("New banner image: " + bannerFilename);
                     break;
                 }
             }
 
             boolean success = articleService.updateArticle(article, bannerStream, bannerFilename);
-            System.out.println("✅ Updated article ID: " + articleId);
-
             resp.setContentType("application/json;charset=UTF-8");
             resp.getWriter().write("{\"success\":true,\"id\":" + articleId + "}");
             resp.setStatus(HttpServletResponse.SC_OK);
 
         } catch (Exception ex) {
-            System.err.println("❌ Error updating article: " + ex.getMessage());
             ex.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.setContentType("application/json;charset=UTF-8");
@@ -311,8 +278,6 @@ public class AdminArticleController extends HttpServlet {
     }
 
     private void handleDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        System.out.println("=== handleDelete Article ===");
-
         resp.setContentType("application/json;charset=UTF-8");
 
         try {
@@ -336,7 +301,6 @@ public class AdminArticleController extends HttpServlet {
             boolean success = articleService.deleteArticle(articleId);
 
             if (success) {
-                System.out.println("✅ Deleted article ID: " + articleId);
                 resp.setStatus(HttpServletResponse.SC_OK);
                 resp.getWriter().write("{\"success\":true,\"message\":\"Xóa bài viết thành công\"}");
             } else {
@@ -345,7 +309,6 @@ public class AdminArticleController extends HttpServlet {
             }
 
         } catch (Exception ex) {
-            System.err.println("❌ Error deleting article: " + ex.getMessage());
             ex.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().write("{\"error\":\"" + escapeJson(ex.getMessage()) + "\"}");
