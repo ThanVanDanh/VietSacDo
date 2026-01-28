@@ -90,4 +90,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+document.addEventListener("DOMContentLoaded", function() {
+    const replyButtons = document.querySelectorAll(".btn-reply-email");
+    const replyModal = document.getElementById("reply-modal");
+    const replyEmailInput = document.getElementById("reply-to");
+    const replyIdInput = document.getElementById("reply-id");
+
+    replyButtons.forEach(btn => {
+        btn.addEventListener("click", function() {
+            const email = this.getAttribute("data-recipient-email");
+            const id = this.getAttribute("data-id"); // Lấy ID
+
+            replyEmailInput.value = email;
+            replyIdInput.value = id;
+X
+            replyModal.style.display = "block";
+            replyModal.classList.add("active");
+        });
+    });
+});
 

@@ -20,7 +20,7 @@
                                 class="fas fa-shopping-cart"></i> Quản lý Đơn hàng</a></li>
                     <li class="nav-item"><a href="${pageContext.request.contextPath}/admin/users"><i
                                 class="fas fa-users"></i> Quản lý Tài khoản</a></li>
-                    <li class="nav-item"><a href="${pageContext.request.contextPath}/contactus-admin"><i
+                    <li class="nav-item"><a href="${pageContext.request.contextPath}/admin/contact-list"><i
                                 class="fa-regular fa-address-book"></i> Quản lý Liên hệ</a></li>
                     <li class="nav-item"><a href="${pageContext.request.contextPath}/admin/promotions.jsp"><i
                                 class="fas fa-tags"></i> Khuyến mãi</a></li>

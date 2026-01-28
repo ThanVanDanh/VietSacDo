@@ -184,7 +184,13 @@ public class CartController extends HttpServlet {
 
                             if ((!sku.isEmpty() && sku.equals(v.getSku())) ||
                                     (!size.isEmpty() && size.equals(v.getSize()))) {
-                                price = v.getCurrentPrice();
+
+                                // Kiểm tra nếu có giá giảm thì lấy giá giảm, ngược lại lấy giá gốc
+                                if (v.getDiscountedPrice() > 0 && v.getDiscountedPrice() < v.getCurrentPrice()) {
+                                    price = v.getDiscountedPrice();
+                                } else {
+                                    price = v.getCurrentPrice();
+                                }
                                 break;
                             }
                         }
