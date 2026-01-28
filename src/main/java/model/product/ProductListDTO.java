@@ -5,10 +5,6 @@ import org.jdbi.v3.core.mapper.reflect.ColumnName;
 
 import java.time.LocalDateTime;
 
-/**
- * ProductListDTO - DTO cho danh sách products
- * Chứa thông tin đầy đủ để hiển thị trong bảng
- */
 public class ProductListDTO extends AId {
 
     @ColumnName("name_product")
@@ -45,38 +41,65 @@ public class ProductListDTO extends AId {
         super(id);
     }
 
-    public ProductListDTO() {}
+    public ProductListDTO() {
+    }
 
     // Getters and Setters
-    public String getNameProduct() { return nameProduct; }
-    public void setNameProduct(String nameProduct) { this.nameProduct = nameProduct; }
+    public String getNameProduct() {
+        return nameProduct;
+    }
 
-    public String getProductCode() { return productCode; }
-    public void setProductCode(String productCode) { this.productCode = productCode; }
+    public void setNameProduct(String nameProduct) {
+        this.nameProduct = nameProduct;
+    }
 
-    public String getStatusProduct() { return statusProduct; }
-    public void setStatusProduct(String statusProduct) { this.statusProduct = statusProduct; }
+    public String getProductCode() {
+        return productCode;
+    }
 
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public void setProductCode(String productCode) {
+        this.productCode = productCode;
+    }
 
-    public Integer getCategoryId() { return categoryId; }
-    public void setCategoryId(Integer categoryId) { this.categoryId = categoryId; }
+    public String getStatusProduct() {
+        return statusProduct;
+    }
 
-    public String getCategoryName() { return categoryName; }
-    public void setCategoryName(String categoryName) { this.categoryName = categoryName; }
+    public void setStatusProduct(String statusProduct) {
+        this.statusProduct = statusProduct;
+    }
 
-    public Double getPrice() { return price; }
-    public void setPrice(Double price) { this.price = price; }
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 
-    public String getThumbnail() { return thumbnail; }
-    public void setThumbnail(String thumbnail) { this.thumbnail = thumbnail; }
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
-    public String getSku() { return sku; }
-    public void setSku(String sku) { this.sku = sku; }
+    public Integer getCategoryId() {
+        return categoryId;
+    }
 
-    public Integer getVariantCount() { return variantCount; }
-    public void setVariantCount(Integer variantCount) { this.variantCount = variantCount; }
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
 
     public Integer getTotalStock() { return totalStock; }
     public void setTotalStock(Integer totalStock) { this.totalStock = totalStock; }
@@ -85,4 +108,28 @@ public class ProductListDTO extends AId {
     public void setDiscountedPrice(double discountedPrice) {
         this.discountedPrice = discountedPrice;
     }
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
+
+    public Integer getVariantCount() {
+        return variantCount;
+    }
+
+    public void setVariantCount(Integer variantCount) {
+        this.variantCount = variantCount;
+    }
+
 }
