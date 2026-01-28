@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/footer.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/style-header.css">
 
-    <script src="scripts/home.js"></script>
+    <script src="${pageContext.request.contextPath}/scripts/home.js"></script>
 </head>
 <body>
 <c:set var="pageTitle" value="${currentCategory.nameCategory}" scope="request" />
