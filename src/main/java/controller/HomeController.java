@@ -2,7 +2,7 @@ package controller;
 
 import dao.BannerDao;
 import dao.CategoryDao;
-import dao.HomeConfigDao;
+import dao.HomeDao;
 import dao.ProductDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -22,12 +22,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(name = "HomeController", urlPatterns = {"/home"})
+@WebServlet(name = "HomeController", urlPatterns = { "/home" })
 public class HomeController extends HttpServlet {
 
     private ProductService productService;
     private CategoryDao categoryDao;
-    private HomeConfigDao homeConfigDao;
+    private HomeDao homeDao;
     private BannerDao bannerDao;
 
     @Override
@@ -35,7 +35,7 @@ public class HomeController extends HttpServlet {
         try {
             this.productService = new ProductService(new ProductDao().get(), new CloudinaryService());
             this.categoryDao = new CategoryDao();
-            this.homeConfigDao = new HomeConfigDao();
+            this.homeDao = new HomeDao();
             this.bannerDao = new BannerDao();
         } catch (Exception ex) {
             System.err.println(" Failed to initialize HomeController: " + ex.getMessage());
@@ -59,16 +59,16 @@ public class HomeController extends HttpServlet {
         } catch (Exception e) {
             System.err.println(" Error in HomeController: " + e.getMessage());
             e.printStackTrace();
-            
+
             req.setAttribute("banners", new ArrayList<Banner>());
             req.setAttribute("dynamicSections", new ArrayList<SectionDTO>());
-            
+
             req.getRequestDispatcher("/index.jsp").forward(req, resp);
         }
     }
 
     private List<SectionDTO> loadDynamicSections() {
-        String[] sectionKeys = {"section_1", "section_2", "summer_collection"};
+        List<String> sectionKeys = homeDao.getAllSectionKeys();
         List<SectionDTO> sections = new ArrayList<>();
 
         for (String key : sectionKeys) {
@@ -89,8 +89,8 @@ public class HomeController extends HttpServlet {
     }
 
     private SectionDTO loadSection(String sectionKey) {
-        String title = homeConfigDao.getSectionTitle(sectionKey);
-        List<Home> dbTabs = homeConfigDao.getSectionTabs(sectionKey);
+        String title = homeDao.getSectionTitle(sectionKey);
+        List<Home> dbTabs = homeDao.getSectionTabs(sectionKey);
 
         if (title == null || dbTabs == null || dbTabs.isEmpty()) {
             return null;
@@ -110,9 +110,9 @@ public class HomeController extends HttpServlet {
             TabDTO tab = new TabDTO();
             tab.index = homeTab.getPosition();
             tab.title = category.getNameCategory();
-            
+
             List<ProductListDTO> products = productService.getProductsByCategory(category.getId());
-            
+
             tab.products = products.size() > 5 ? products.subList(0, 5) : products;
             
             section.tabs.add(tab);
