@@ -71,6 +71,8 @@
                                     </a>
                                     <a href="#" class="icon-button" title="Xem nhanh">
                                         <i class="fa-solid fa-eye"></i>
+                                        Xem chi tiết
+<%--                                        <i class="fa-solid fa-cart-shopping"></i>--%>
                                     </a>
                                 </div>
                             </div>
