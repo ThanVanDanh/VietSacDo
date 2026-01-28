@@ -174,7 +174,7 @@ public class OrderDao extends BaseDao {
                 "SUM(total_amount) as revenue " +
                 "FROM Orders " +
                 "WHERE order_status = 'hoàn thành' OR order_status = 'Hoàn thành' " +
-                "GROUP BY YEAR(created_at), MONTH(created_at) " +
+                "GROUP BY monthYear, YEAR(created_at), MONTH(created_at) " +
                 "ORDER BY YEAR(created_at) DESC, MONTH(created_at) DESC " +
                 "LIMIT :limit";
 

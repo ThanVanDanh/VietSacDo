@@ -8,11 +8,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class HomeConfigDao extends BaseDao {
+public class HomeDao extends BaseDao {
 
     private final Jdbi jdbi;
 
-    public HomeConfigDao() {
+    public HomeDao() {
         this.jdbi = get();
         ensureTable();
     }
