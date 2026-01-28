@@ -138,4 +138,10 @@ public class User extends AId implements Serializable {
             return "";
         return createdAt.format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
     }
+
+    public String getFormattedCreatedDate() {
+        if (createdAt == null)
+            return "";
+        return createdAt.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    }
 }

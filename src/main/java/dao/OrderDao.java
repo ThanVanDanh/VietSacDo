@@ -147,4 +147,43 @@ public class OrderDao extends BaseDao {
             return deleted > 0;
         });
     }
+
+    // Dashboard Statistics Methods
+
+    public double getTotalRevenue() {
+        return jdbi.withHandle(handle -> handle.createQuery(
+                "SELECT COALESCE(SUM(total_amount), 0) FROM Orders WHERE order_status = 'hoàn thành' OR order_status = 'Hoàn thành'")
+                .mapTo(Double.class)
+                .one());
+    }
+
+    public int countTotalOrders() {
+        return jdbi.withHandle(handle -> handle.createQuery("SELECT COUNT(*) FROM Orders")
+                .mapTo(Integer.class)
+                .one());
+    }
+
+    public List<Order> getRecentOrders(int limit) {
+        return jdbi
+                .withHandle(handle -> handle.createQuery("SELECT * FROM Orders ORDER BY created_at DESC LIMIT :limit")
+                        .bind("limit", limit)
+                        .mapToBean(Order.class)
+                        .list());
+    }
+
+    public List<model.order.MonthlyRevenue> getRevenueByMonth(int limit) {
+        String sql = "SELECT CONCAT(MONTH(created_at), '/', YEAR(created_at)) as monthYear, " +
+                "COUNT(*) as orderCount, " +
+                "SUM(total_amount) as revenue " +
+                "FROM Orders " +
+                "WHERE order_status = 'hoàn thành' OR order_status = 'Hoàn thành' " +
+                "GROUP BY YEAR(created_at), MONTH(created_at) " +
+                "ORDER BY YEAR(created_at) DESC, MONTH(created_at) DESC " +
+                "LIMIT :limit";
+
+        return jdbi.withHandle(handle -> handle.createQuery(sql)
+                .bind("limit", limit)
+                .mapToBean(model.order.MonthlyRevenue.class)
+                .list());
+    }
 }
