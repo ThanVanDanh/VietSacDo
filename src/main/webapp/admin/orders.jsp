@@ -80,7 +80,7 @@
                                                         </td>
                                                         <td>
                                                             <span
-                                                                class="status-badge status-${fn:toLowerCase(order.orderStatus)}">${order.orderStatus}</span>
+                                                                class="status-badge status-${fn:replace(fn:toLowerCase(order.orderStatus), ' ', '-')}">${order.orderStatus}</span>
                                                             <c:if
                                                                 test="${fn:toLowerCase(order.orderStatus) == 'đã hủy' and not empty order.cancelReason}">
                                                                 <br>

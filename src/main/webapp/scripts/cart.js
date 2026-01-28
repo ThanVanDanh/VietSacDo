@@ -8,7 +8,7 @@ function closeSuccessPopup() {
     if (popup) popup.classList.remove('active');
 }
 
-function addToCart(productId) {
+function addToCart(productId, isBuyNow = false) {
     let quantityInput = document.getElementById("quantityInput") || document.getElementById("product-quantity");
     let quantity = quantityInput ? quantityInput.value : 1;
 
@@ -104,13 +104,25 @@ function addToCart(productId) {
                     if (emptyEl) emptyEl.style.display = hasItems ? 'none' : 'block';
                 });
 
-                showSuccessPopup(quantity, currentSize, currentSku, data);
+                if (isBuyNow) {
+                    window.location.href = 'checkout';
+                } else {
+                    showSuccessPopup(quantity, currentSize, currentSku, data);
+                }
 
             } else {
                 alert("Lỗi: " + data.message);
             }
         })
         .catch(error => console.error('Error fetching cart:', error));
+}
+
+function buyNow(productId) {
+    if (typeof window.isLoggedIn !== 'undefined' && !window.isLoggedIn) {
+        window.location.href = 'login.jsp';
+        return;
+    }
+    addToCart(productId, true);
 }
 
 function showSuccessPopup(quantity, currentSize, currentSku, data) {

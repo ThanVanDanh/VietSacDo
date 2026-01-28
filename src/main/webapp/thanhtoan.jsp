@@ -22,7 +22,7 @@
                 <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
                 <link rel="stylesheet" href="style/quick-view.css">
                 <link rel="stylesheet" href="style/thanhtoan.css">
-
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             </head>
 
             <body>
@@ -31,7 +31,8 @@
                 <div class="breadcrumb-container">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home">Trang Chủ</a></li>
+                            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home">Trang Chủ</a>
+                            </li>
                             <li class="breadcrumb-item"><a href="thanhtoan.jsp">Thanh toán</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Tiến hành thanh toán</li>
                         </ol>
@@ -343,7 +344,57 @@
                     }
 
                     function placeOrder() {
-                        document.getElementById('checkoutForm').submit();
+                        const form = document.getElementById('checkoutForm');
+                        const formData = new URLSearchParams(new FormData(form));
+
+                        // Add ajax params
+                        formData.append('ajax', 'true');
+
+                        // Show loading
+                        Swal.fire({
+                            title: 'Đang xử lý...',
+                            text: 'Vui lòng chờ trong giây lát',
+                            allowOutsideClick: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            }
+                        });
+
+                        fetch('checkout', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+                            },
+                            body: formData
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Thanh toán thành công!',
+                                        text: 'Cảm ơn bạn đã mua hàng. Chuyển hướng đến trang tài khoản...',
+                                        timer: 2000,
+                                        showConfirmButton: false
+                                    }).then(() => {
+                                        window.location.href = '${pageContext.request.contextPath}/account';
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Thanh toán thất bại',
+                                        text: data.message || 'Có lỗi xảy ra, vui lòng thử lại.'
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Lỗi',
+                                    text: 'Không thể kết nối đến máy chủ.'
+                                });
+                            });
                     }
 
                     // --- Xử lý Popup Khuyến Mãi ---

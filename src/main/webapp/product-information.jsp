@@ -1,58 +1,68 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi tiết sản phẩm</title>
-    <link rel="icon" href="image/logoaodai.jpg" type="image/jpeg">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style/product-infomation.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="scripts/home.js"></script>
-<%--    <script src="scripts/product-information.js"></script>--%>
-    <link rel="stylesheet" href="style/style-header.css">
-    <link rel="stylesheet" href="style/footer.css">
-    <link rel="stylesheet" href="style/backtop.css">
-    <script src="scripts/backtop.js"></script>
-    <link rel="stylesheet" href="style/breadcrumb.css">
-    <link rel="stylesheet" href="style/style.css">
-    <link rel="stylesheet" href="style/quick-view.css">
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-</head>
-<body>
-<jsp:include page="header.jsp" />
-<!--breadcrumb-->
-<div class="breadcrumb-container">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home">Trang Chủ</a></li>
-            <li class="breadcrumb-item"><a href="all-product.jsp">Áo dài</a></li> <li class="breadcrumb-item active" aria-current="page">Chi tiết sản phẩm </li>
-        </ol>
-    </nav>
-</div>
-<div class="product-container">
-    <div class="product-image-gallery">
-        <div class="thumbnails">
-            <c:forEach items="${p.images}" var="img" varStatus="status">
-                <img src="${img.imageUrl}" alt="Ảnh nhỏ ${status.count}" class="thumbnail ${status.first ? 'active' : ''}">
-            </c:forEach>
-        </div>
-        <div class="main-image-wrapper">
-            <c:if test="${not empty p.images}">
-                <img id="mainImg" src="${p.images[0].imageUrl}"
-                     alt="${p.nameProduct}" class="main-image">
-            </c:if>
-            <c:if test="${empty p.images}">
-                <img id="mainImg" src="image/default.jpg" alt="Chưa có ảnh" class="main-image">
-            </c:if>
-            <a class="left carousel-control fui-arrow-left" href="#myCarousel" data-slide="prev"><i class="fa-solid fa-chevron-left"></i></a>
-            <a class="right carousel-control fui-arrow-right" href="#myCarousel" data-slide="next"><i class="fa-solid fa-chevron-right"></i></a>
-        </div>
-    </div>
+    <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+        <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+            <!DOCTYPE html>
+            <html lang="vi">
+
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Chi tiết sản phẩm</title>
+                <link rel="icon" href="image/logoaodai.jpg" type="image/jpeg">
+                <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+                    rel="stylesheet">
+                <link rel="stylesheet" href="style/product-infomation.css">
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+                    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+                    crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <script src="scripts/home.js"></script>
+                <%-- <script src="scripts/product-information.js"></script>--%>
+                    <link rel="stylesheet" href="style/style-header.css">
+                    <link rel="stylesheet" href="style/footer.css">
+                    <link rel="stylesheet" href="style/backtop.css">
+                    <script src="scripts/backtop.js"></script>
+                    <link rel="stylesheet" href="style/breadcrumb.css">
+                    <link rel="stylesheet" href="style/style.css">
+                    <link rel="stylesheet" href="style/quick-view.css">
+                    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+                    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+            </head>
+
+            <body>
+                <jsp:include page="header.jsp" />
+                <!--breadcrumb-->
+                <div class="breadcrumb-container">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home">Trang Chủ</a>
+                            </li>
+                            <li class="breadcrumb-item"><a href="all-product.jsp">Áo dài</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Chi tiết sản phẩm </li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="product-container">
+                    <div class="product-image-gallery">
+                        <div class="thumbnails">
+                            <c:forEach items="${p.images}" var="img" varStatus="status">
+                                <img src="${img.imageUrl}" alt="Ảnh nhỏ ${status.count}"
+                                    class="thumbnail ${status.first ? 'active' : ''}">
+                            </c:forEach>
+                        </div>
+                        <div class="main-image-wrapper">
+                            <c:if test="${not empty p.images}">
+                                <img id="mainImg" src="${p.images[0].imageUrl}" alt="${p.nameProduct}"
+                                    class="main-image">
+                            </c:if>
+                            <c:if test="${empty p.images}">
+                                <img id="mainImg" src="image/default.jpg" alt="Chưa có ảnh" class="main-image">
+                            </c:if>
+                            <a class="left carousel-control fui-arrow-left" href="#myCarousel" data-slide="prev"><i
+                                    class="fa-solid fa-chevron-left"></i></a>
+                            <a class="right carousel-control fui-arrow-right" href="#myCarousel" data-slide="next"><i
+                                    class="fa-solid fa-chevron-right"></i></a>
+                        </div>
+                    </div>
 
                     <div class="product-details">
                         <h1>${p.nameProduct}</h1>
@@ -60,65 +70,67 @@
                             Mã sản phẩm: <span id="sku-value">${p.variants[0].sku}</span>
                         </p>
 
-        <div class="product-price">
-            <c:set var="v" value="${p.variants[0]}" />
+                        <div class="product-price">
+                            <c:set var="v" value="${p.variants[0]}" />
 
-            <c:choose>
-                <%-- Trường hợp CÓ giảm giá --%>
-                <c:when test="${v.discountedPrice > 0 && v.discountedPrice < v.currentPrice}">
-            <span class="old-price">
-                <fmt:formatNumber value="${v.currentPrice}" pattern="#,###"/>₫
-            </span>
-                    <span class="current-price" id="display-price">
-                <fmt:formatNumber value="${v.discountedPrice}" pattern="#,###"/>₫
-            </span>
-                    <c:set var="percent" value="${Math.round((1 - v.discountedPrice/v.currentPrice) * 100)}" />
-                    <span class="discount-tag">${percent}%</span>
-                    <p class="saving">
-                        (<span class="save">Tiết kiệm</span>
-                        <span class="price">
-                    <fmt:formatNumber value="${v.currentPrice - v.discountedPrice}" pattern="#,###"/>₫
-                </span>)
-                    </p>
-                </c:when>
+                            <c:choose>
+                                <%-- Trường hợp CÓ giảm giá --%>
+                                    <c:when test="${v.discountedPrice > 0 && v.discountedPrice < v.currentPrice}">
+                                        <span class="old-price">
+                                            <fmt:formatNumber value="${v.currentPrice}" pattern="#,###" />₫
+                                        </span>
+                                        <span class="current-price" id="display-price">
+                                            <fmt:formatNumber value="${v.discountedPrice}" pattern="#,###" />₫
+                                        </span>
+                                        <c:set var="percent"
+                                            value="${Math.round((1 - v.discountedPrice/v.currentPrice) * 100)}" />
+                                        <span class="discount-tag">${percent}%</span>
+                                        <p class="saving">
+                                            (<span class="save">Tiết kiệm</span>
+                                            <span class="price">
+                                                <fmt:formatNumber value="${v.currentPrice - v.discountedPrice}"
+                                                    pattern="#,###" />₫
+                                            </span>)
+                                        </p>
+                                    </c:when>
 
-                <%-- Trường hợp KHÔNG giảm giá (giảm giá bằng 0) --%>
-                <c:otherwise>
-            <span class="current-price" id="display-price">
-                <fmt:formatNumber value="${v.currentPrice}" pattern="#,###"/>₫
-            </span>
-                    <%-- Ẩn các cột khác --%>
-                    <span class="old-price" style="display: none;"></span>
-                    <span class="discount-tag" style="display: none;"></span>
-                    <p class="saving" style="display: none;"></p>
-                </c:otherwise>
-            </c:choose>
-        </div>
-        <fieldset class="promotion-box-fieldset">
-            <legend class="promotion-header-legend">
-                🎁 KHUYẾN MÃI - ƯU ĐÃI
-            </legend>
-            <ul>
-                <li>Freeship toàn quốc khi mua hàng qua các kênh Web, FB, Insta (Không áp dụng cho đơn chỉ có phụ kiện dưới 350K)</li>
-                <li>Hỏa tốc mọi ngày trong tuần</li>
-            </ul>
-        </fieldset>
-        <div class="section-title">Mã giảm giá</div>
-        <div class="section-title">Kích thước: <span id="selected-size">${p.variants[0].size}</span></div>
+                                    <%-- Trường hợp KHÔNG giảm giá (giảm giá bằng 0) --%>
+                                        <c:otherwise>
+                                            <span class="current-price" id="display-price">
+                                                <fmt:formatNumber value="${v.currentPrice}" pattern="#,###" />₫
+                                            </span>
+                                            <%-- Ẩn các cột khác --%>
+                                                <span class="old-price" style="display: none;"></span>
+                                                <span class="discount-tag" style="display: none;"></span>
+                                                <p class="saving" style="display: none;"></p>
+                                        </c:otherwise>
+                            </c:choose>
+                        </div>
+                        <fieldset class="promotion-box-fieldset">
+                            <legend class="promotion-header-legend">
+                                🎁 KHUYẾN MÃI - ƯU ĐÃI
+                            </legend>
+                            <ul>
+                                <li>Freeship toàn quốc khi mua hàng qua các kênh Web, FB, Insta (Không áp dụng cho đơn
+                                    chỉ có phụ kiện dưới 350K)</li>
+                                <li>Hỏa tốc mọi ngày trong tuần</li>
+                            </ul>
+                        </fieldset>
+                        <div class="section-title">Mã giảm giá</div>
+                        <div class="section-title">Kích thước: <span id="selected-size">${p.variants[0].size}</span>
+                        </div>
 
-        <div class="size-options">
-            <c:forEach items="${p.variants}" var="variant" varStatus="status">
-                <button class="size-btn ${status.first ? 'active' : ''}"
-                        data-price="${variant.discountedPrice}"
-                        data-old-price="${variant.currentPrice}"
-                        data-sku="${variant.sku}"
-                        data-color="${variant.color}"
-                        data-stock="${variant.stockQuantity}"
-                        onclick="updateVariant(this, '${variant.size}')">
-                        ${variant.size}
-                </button>
-            </c:forEach>
-        </div>
+                        <div class="size-options">
+                            <c:forEach items="${p.variants}" var="variant" varStatus="status">
+                                <button class="size-btn ${status.first ? 'active' : ''}"
+                                    data-price="${variant.discountedPrice}" data-old-price="${variant.currentPrice}"
+                                    data-sku="${variant.sku}" data-color="${variant.color}"
+                                    data-stock="${variant.stockQuantity}"
+                                    onclick="updateVariant(this, '${variant.size}')">
+                                    ${variant.size}
+                                </button>
+                            </c:forEach>
+                        </div>
 
                         <div class="section-title">
                             Màu sắc: <span id="selected-color">${p.variants[0].color}</span>
@@ -410,7 +422,7 @@
                         </div>
 
                         <div class="success-footer">
-                            <a href="thanhtoan.jsp" class="checkout-btn">Thanh toán</a>
+                            <a href="${pageContext.request.contextPath}/checkout" class="checkout-btn">Thanh toán</a>
                             <a href="cart.jsp" class="success-btn">Xem giỏ hàng</a>
                         </div>
                     </div>
@@ -419,8 +431,8 @@
                 <button onclick="scrollToTop()" id="backToTopBtn" title="Trở về đầu trang">
                     <i class="fas fa-chevron-up"></i>
                 </button>
-                <script src="${pageContext.request.contextPath}/scripts/product-information.js"></script>
-                <script src="${pageContext.request.contextPath}/scripts/cart.js"></script>
+                <script src="${pageContext.request.contextPath}/scripts/product-information.js?v=2"></script>
+                <script src="${pageContext.request.contextPath}/scripts/cart.js?v=2"></script>
             </body>
 
             </html>

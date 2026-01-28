@@ -171,4 +171,15 @@ public class Voucher extends AId implements Serializable {
             return "";
         return createdAt.format(java.time.format.DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss"));
     }
+    public String getFormattedValidToDate() {
+        if (validTo == null)
+            return "";
+        return validTo.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    }
+
+    public String getFormattedValidFromDate() {
+        if (validFrom == null)
+            return "";
+        return validFrom.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    }
 }
