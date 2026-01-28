@@ -32,7 +32,6 @@ import java.util.List;
 })
 @MultipartConfig(maxFileSize = 1024 * 1024 * 10, maxRequestSize = 1024 * 1024 * 20)
 public class AdminArticleController extends HttpServlet {
-
     private ArticleService articleService;
     private ArticleDao articleDao;
     private VoucherDao voucherDao;

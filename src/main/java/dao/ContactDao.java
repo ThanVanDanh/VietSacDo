@@ -42,5 +42,16 @@ public class ContactDao extends BaseDao {
         );
     }
 
+    public boolean updateStatus(int id, String status) {
+        String sql = "UPDATE Contact_messages SET status_message = :status WHERE id = :id";
+
+        return get().withHandle(handle ->
+                handle.createUpdate(sql)
+                        .bind("status", status)
+                        .bind("id", id)
+                        .execute() > 0
+        );
+    }
+
 }
 

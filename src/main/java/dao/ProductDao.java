@@ -154,6 +154,52 @@ public class ProductDao extends BaseDao {
                         .list()
         );
     }
+    // Trong file dao/ProductDao.java
+
+    // 1. Đếm tổng số sản phẩm đang Active (để tính số trang)
+    public int countActiveProducts() {
+        String sql = "SELECT COUNT(*) FROM Products WHERE status_product = 'active'";
+        return get().withHandle(handle ->
+                handle.createQuery(sql).mapTo(Integer.class).one()
+        );
+    }
+
+    // 2. Lấy danh sách tất cả sản phẩm Active (có Phân trang & Sắp xếp)
+    public List<ProductListDTO> getAllActiveProductsPayload(int page, int pageSize, String sortBy) {
+        int offset = (page - 1) * pageSize;
+        String orderBy = "p.id DESC"; // Mặc định: Mới nhất
+
+        // Xử lý sắp xếp (Mapping giống CategoryController)
+        switch (sortBy) {
+            case "alpha-asc": orderBy = "p.name_product ASC"; break;
+            case "alpha-desc": orderBy = "p.name_product DESC"; break;
+            case "price-asc": orderBy = "price ASC"; break;
+            case "price-desc": orderBy = "price DESC"; break;
+            case "created-desc": orderBy = "p.created_at DESC"; break;
+        }
+
+        String sql = "SELECT " +
+                "p.id, p.name_product, p.product_code, p.status_product, p.created_at, p.category_id, c.name_category AS categoryName, " +
+                "(SELECT current_price FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS price, " +
+                "(SELECT discounted_price FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS discountedPrice, " +
+                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
+                "(SELECT sku FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS sku, " +
+                "COALESCE((SELECT COUNT(*) FROM Product_variants WHERE product_id = p.id), 0) AS variantCount, " +
+                "COALESCE((SELECT SUM(stock_quantity) FROM Product_variants WHERE product_id = p.id), 0) AS totalStock " +
+                "FROM Products p " +
+                "LEFT JOIN Categories c ON p.category_id = c.id " +
+                "WHERE p.status_product = 'active' " +
+                "ORDER BY " + orderBy + " " +
+                "LIMIT :limit OFFSET :offset";
+
+        return get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("limit", pageSize)
+                        .bind("offset", offset)
+                        .mapToBean(ProductListDTO.class)
+                        .list()
+        );
+    }
 
     public Product getProduct(int id) {
         return get().withHandle(handle -> {
@@ -218,8 +264,8 @@ public class ProductDao extends BaseDao {
     public List<ProductListDTO> getRelatedProducts(int categoryId, int currentProductId, int limit) {
         String sql = "SELECT p.id, p.name_product, " +
                 "(SELECT current_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS price, " +
-                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, "
-                +
+                "(SELECT discounted_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS discountedPrice, " +
+                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
                 "(SELECT sku FROM Product_variants WHERE product_id = p.id LIMIT 1) AS sku " +
                 "FROM Products p " +
                 "WHERE p.category_id = :categoryId " +
@@ -268,9 +314,7 @@ public class ProductDao extends BaseDao {
         });
     }
 
-    /**
-     * ✅ MỚI: Xóa product (cascade delete variants & images)
-     */
+
     public boolean delete(int productId) {
         return get().withHandle(handle -> {
             // Delete trong transaction để đảm bảo consistency
@@ -295,9 +339,6 @@ public class ProductDao extends BaseDao {
         });
     }
 
-    /**
-     * ✅ MỚI: Đếm số variants của product
-     */
     public int countVariants(int productId) {
         String sql = "SELECT COUNT(*) FROM Product_variants WHERE product_id = :productId";
         return get()

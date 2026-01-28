@@ -9,7 +9,7 @@ import model.contact.ContactUs;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "ContactUsAdmin", value = "/contactus-admin")
+@WebServlet(name = "ContactUsAdmin", value = "/admin/contact-list")
 public class ContactAdminController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
