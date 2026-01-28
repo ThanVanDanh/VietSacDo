@@ -1,10 +1,17 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">Chi tiết Khuyến mãi - Việt Sắc Đỏ</title>
+    <title>
+        <c:choose>
+            <c:when test="${not empty article}">${article.title} - Việt Sắc Đỏ</c:when>
+            <c:otherwise>Chi tiết Khuyến mãi - Việt Sắc Đỏ</c:otherwise>
+        </c:choose>
+    </title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/style.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/style-header.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/style/footer.css">
@@ -13,229 +20,112 @@
           integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
           crossorigin="anonymous" referrerpolicy="no-referrer"/>
     <script src="${pageContext.request.contextPath}/scripts/home.js"></script>
+    <script src="${pageContext.request.contextPath}/scripts/promotionPost.js"></script>
+
 </head>
 <body>
 
 <jsp:include page="header.jsp"/>
 
 <main>
-    <div id="loading-container" style="text-align:center; padding:80px 20px;">
-        <i class="fas fa-spinner fa-spin" style="font-size:48px; color:#320000;"></i>
-        <p style="margin-top:20px; color:#666;">Đang tải bài viết...</p>
-    </div>
-
-    <article class="blog-post" id="article-container" style="display:none;">
-        <h1 id="article-title"></h1>
-        <p class="post-meta" id="article-meta"></p>
-
-        <div class="image-placeholder" id="article-banner-container">
-        </div>
-
-        <div class="post-content" id="article-content">
-        </div>
-
-        <div id="voucher-info" class="voucher-box" style="display:none;">
-            <h3>
-                <i class="fas fa-ticket-alt"></i> Thông tin mã khuyến mãi
-            </h3>
-            <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
-                <div style="flex:1; min-width:250px;">
-                    <p style="margin:10px 0; font-size:15px;">
-                        <strong>🎫 Mã voucher:</strong>
-                        <span id="voucher-code" class="voucher-code"></span>
-                    </p>
-                    <p id="voucher-discount" style="margin:10px 0; font-size:15px;"></p>
-                    <p id="voucher-min-order" style="margin:10px 0; font-size:15px;"></p>
-                    <p id="voucher-valid" style="margin:10px 0; font-size:14px; color:#666;"></p>
-                </div>
-                <button onclick="copyVoucherCode()" class="btn-copy-voucher">
-                    <i class="fas fa-copy"></i> Sao chép mã
-                </button>
+    <c:choose>
+        <c:when test="${empty article}">
+            <div style="text-align:center; padding:80px 20px;">
+                <i class="fas fa-exclamation-circle" style="font-size:64px; color:#e74c3c;"></i>
+                <h2 style="color:#e74c3c; margin-top:20px;">Không tìm thấy bài viết</h2>
+                <p style="color:#666; margin:20px 0;">Bài viết này không tồn tại hoặc đã bị xóa.</p>
+                <a href="${pageContext.request.contextPath}/promotion" style="display:inline-block; padding:10px 20px; background:#320000; color:white; text-decoration:none; border-radius:4px; margin-top:20px;">
+                    Quay lại danh sách khuyến mãi
+                </a>
             </div>
-        </div>
-    </article>
+        </c:when>
+        <c:otherwise>
+            <article class="blog-post">
+                <h1>${article.title}</h1>
+                <p class="post-meta">
+                    Đăng bởi Việt Sắc Đỏ
+                    <c:if test="${not empty article.startDate}">
+                        | Ngày ${article.startDate.toString().substring(0, 10).replace('-', '/')}
+                    </c:if>
+                    <c:if test="${empty article.startDate and not empty article.createdAt}">
+                        | Ngày ${article.createdAt.toString().substring(0, 10).replace('-', '/')}
+                    </c:if>
+                </p>
 
-    <div id="error-container" style="display:none; text-align:center; padding:80px 20px;">
-        <i class="fas fa-exclamation-circle" style="font-size:64px; color:#e74c3c;"></i>
-        <h2 style="color:#e74c3c; margin-top:20px;">Không tìm thấy bài viết</h2>
-        <p style="color:#666; margin:20px 0;">Bài viết này không tồn tại hoặc đã bị xóa.</p>
-    </div>
+                <c:if test="${not empty article.bannerImageUrl}">
+                    <div class="image-placeholder">
+                        <img id="imgpost" src="${article.bannerImageUrl}"
+                             alt="${article.title}"
+                             style="width:auto; max-width:100%; height:auto; display:block; margin:0 auto;"
+                             onerror="this.style.display='none'">
+                    </div>
+                </c:if>
+
+                <div class="post-content">
+                    <c:choose>
+                        <c:when test="${not empty article.content}">
+                            ${article.content}
+                        </c:when>
+                        <c:otherwise>
+                            <p>Nội dung đang được cập nhật...</p>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+
+                <c:if test="${not empty voucher}">
+                    <div class="voucher-box">
+                        <h3>
+                            <i class="fas fa-ticket-alt"></i> Thông tin mã khuyến mãi
+                        </h3>
+                        <div style="display:flex; align-items:center; gap:20px; flex-wrap:wrap;">
+                            <div style="flex:1; min-width:250px;">
+                                <p style="margin:10px 0; font-size:15px;">
+                                    <strong>🎫 Mã voucher:</strong>
+                                    <span class="voucher-code" id="voucher-code-display">${voucher.voucherCode}</span>
+                                </p>
+                                <p style="margin:10px 0; font-size:15px;">
+                                    <strong>💰 Giá trị giảm:</strong>
+                                    <c:choose>
+                                        <c:when test="${voucher.discountType == 'percentage'}">
+                                            Giảm ${voucher.discountValue}%
+                                        </c:when>
+                                        <c:otherwise>
+                                            Giảm <fmt:formatNumber value="${voucher.discountValue}" pattern="#,###"/>đ
+                                        </c:otherwise>
+                                    </c:choose>
+                                </p>
+                                <p style="margin:10px 0; font-size:15px;">
+                                    <strong>📦 Đơn tối thiểu:</strong>
+                                    <c:choose>
+                                        <c:when test="${voucher.minOrderAmount > 0}">
+                                            <fmt:formatNumber value="${voucher.minOrderAmount}" pattern="#,###"/>đ
+                                        </c:when>
+                                        <c:otherwise>
+                                            Không yêu cầu
+                                        </c:otherwise>
+                                    </c:choose>
+                                </p>
+                                <c:if test="${not empty voucher.validFrom and not empty voucher.validTo}">
+                                    <p style="margin:10px 0; font-size:14px; color:#666;">
+                                        <i class="far fa-calendar-alt"></i>
+                                        <strong>Thời hạn:</strong> Từ ${voucher.validFrom.toString().substring(0, 10).replace('-', '/')} đến ${voucher.validTo.toString().substring(0, 10).replace('-', '/')}
+                                    </p>
+                                </c:if>
+                            </div>
+                            <button onclick="copyVoucherCode()" class="btn-copy-voucher">
+                                <i class="fas fa-copy"></i> Sao chép mã
+                            </button>
+                        </div>
+                    </div>
+                </c:if>
+            </article>
+        </c:otherwise>
+    </c:choose>
 </main>
 
 <jsp:include page="footer.jsp"/>
 
-<script>
-    const CTX = '${pageContext.request.contextPath}';
 
-    function getArticleIdFromUrl() {
-        var urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get('id');
-    }
-
-    function formatDateTime(dateStr) {
-        if (!dateStr) return 'N/A';
-        var date = new Date(dateStr);
-        if (isNaN(date.getTime())) return 'N/A';
-
-        var d = String(date.getDate()).padStart(2, '0');
-        var m = String(date.getMonth() + 1).padStart(2, '0');
-        var y = date.getFullYear();
-
-        return d + '/' + m + '/' + y;
-    }
-
-    function formatCurrency(amount) {
-        return Number(amount).toLocaleString('vi-VN') + 'đ';
-    }
-
-    function copyVoucherCode() {
-        var code = document.getElementById('voucher-code').textContent;
-
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(code).then(function() {
-                alert('Đã sao chép mã: ' + code);
-            }).catch(function() {
-                fallbackCopy(code);
-            });
-        } else {
-            fallbackCopy(code);
-        }
-    }
-
-    function fallbackCopy(text) {
-        var textarea = document.createElement('textarea');
-        textarea.value = text;
-        textarea.style.position = 'fixed';
-        textarea.style.opacity = '0';
-        document.body.appendChild(textarea);
-        textarea.select();
-        try {
-            document.execCommand('copy');
-            alert('Đã sao chép mã: ' + text);
-        } catch (err) {
-            alert('Không thể sao chép. Vui lòng copy thủ công: ' + text);
-        }
-        document.body.removeChild(textarea);
-    }
-
-    function showLoading() {
-        document.getElementById('loading-container').style.display = 'block';
-        document.getElementById('article-container').style.display = 'none';
-        document.getElementById('error-container').style.display = 'none';
-    }
-
-    function showArticle() {
-        document.getElementById('loading-container').style.display = 'none';
-        document.getElementById('article-container').style.display = 'block';
-        document.getElementById('error-container').style.display = 'none';
-    }
-
-    function showError() {
-        document.getElementById('loading-container').style.display = 'none';
-        document.getElementById('article-container').style.display = 'none';
-        document.getElementById('error-container').style.display = 'block';
-    }
-
-    function loadArticle(articleId) {
-        if (!articleId) {
-            showError();
-            return;
-        }
-
-        showLoading();
-
-        fetch(CTX + '/admin/article/get?id=' + articleId)
-            .then(function (response) {
-                if (!response.ok) throw new Error('HTTP ' + response.status);
-                return response.json();
-            })
-            .then(function (article) {
-                displayArticle(article);
-            })
-            .catch(function (error) {
-                console.error('Error loading article:', error);
-                showError();
-            });
-    }
-
-    function displayArticle(article) {
-        console.log('Article data:', article);
-        console.log('Voucher object:', article.voucher);
-
-        document.getElementById('article-title').textContent = article.title || 'Chương trình khuyến mãi';
-
-        var metaText = 'Đăng bởi Việt Sắc Đỏ';
-        if (article.startDate || article.createdAt) {
-            var dateStr = formatDateTime(article.startDate || article.createdAt);
-            metaText += ' | Ngày ' + dateStr;
-        }
-        document.getElementById('article-meta').textContent = metaText;
-
-        var bannerContainer = document.getElementById('article-banner-container');
-        if (article.bannerImageUrl) {
-            bannerContainer.innerHTML = '<img id="imgpost" src="' + article.bannerImageUrl + '" ' +
-                'alt="' + (article.title || '') + '" ' +
-                'style="width:auto; max-width:100%; height:auto; display:block; margin:0 auto;" ' +
-                'onerror="this.style.display=\'none\'">';
-        } else {
-            bannerContainer.style.display = 'none';
-        }
-
-        var contentDiv = document.getElementById('article-content');
-        if (article.content) {
-            contentDiv.innerHTML = article.content;
-        } else {
-            contentDiv.innerHTML = '<p>Nội dung đang được cập nhật...</p>';
-        }
-
-        if (article.voucher && article.voucher.voucherCode) {
-            console.log('✅ Article has voucher, displaying voucher info...');
-            displayVoucherInfo(article.voucher);
-        } else {
-            console.log('❌ Article has NO voucher');
-        }
-
-        document.getElementById('page-title').textContent = article.title + ' - Việt Sắc Đỏ';
-
-        showArticle();
-    }
-
-    function displayVoucherInfo(voucher) {
-        var voucherInfo = document.getElementById('voucher-info');
-        voucherInfo.style.display = 'block';
-
-        document.getElementById('voucher-code').textContent = voucher.voucherCode;
-
-        var discountText = '';
-        if (voucher.discountType === 'percentage') {
-            discountText = '<strong>💰 Giá trị giảm:</strong> Giảm ' + voucher.discountValue + '%';
-        } else {
-            discountText = '<strong>💰 Giá trị giảm:</strong> Giảm ' + formatCurrency(voucher.discountValue);
-        }
-        document.getElementById('voucher-discount').innerHTML = discountText;
-
-        if (voucher.minOrderAmount && voucher.minOrderAmount > 0) {
-            document.getElementById('voucher-min-order').innerHTML =
-                '<strong>📦 Đơn tối thiểu:</strong> ' + formatCurrency(voucher.minOrderAmount);
-        } else {
-            document.getElementById('voucher-min-order').innerHTML =
-                '<strong>📦 Đơn tối thiểu:</strong> Không yêu cầu';
-        }
-
-        var validText = '';
-        if (voucher.validFrom && voucher.validTo) {
-            validText = '<strong>Thời hạn:</strong> Từ ' + formatDateTime(voucher.validFrom) +
-                ' đến ' + formatDateTime(voucher.validTo);
-        }
-        document.getElementById('voucher-valid').innerHTML =
-            '<i class="far fa-calendar-alt"></i> ' + validText;
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        var articleId = getArticleIdFromUrl();
-        loadArticle(articleId);
-    });
-</script>
 
 </body>
 </html>

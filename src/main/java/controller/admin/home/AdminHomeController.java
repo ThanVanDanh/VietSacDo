@@ -5,7 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dao.CategoryDao;
-import dao.HomeConfigDao;
+import dao.HomeDao;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -30,13 +30,13 @@ public class AdminHomeController extends HttpServlet {
 
     private Gson gson;
     private CategoryDao categoryDao;
-    private HomeConfigDao homeConfigDao;
+    private HomeDao homeDao;
 
     @Override
     public void init() throws ServletException {
         this.gson = GsonUtil.getGson();
         this.categoryDao = new CategoryDao();
-        this.homeConfigDao = new HomeConfigDao();
+        this.homeDao = new HomeDao();
     }
 
     @Override
@@ -78,7 +78,7 @@ public class AdminHomeController extends HttpServlet {
         handleApiSaveConfig(req, resp, pathInfo);
     }
 
-    private void handleAdminPage(HttpServletRequest req, HttpServletResponse resp) 
+    private void handleAdminPage(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         try {
             List<Category> categories = categoryDao.getAll();
@@ -87,24 +87,33 @@ public class AdminHomeController extends HttpServlet {
             e.printStackTrace();
             req.setAttribute("categories", new ArrayList<Category>());
         }
-        
+
         req.getRequestDispatcher("/admin/home.jsp").forward(req, resp);
     }
 
-
-    private void handleApiGetConfig(HttpServletRequest req, HttpServletResponse resp, String pathInfo) 
+    private void handleApiGetConfig(HttpServletRequest req, HttpServletResponse resp, String pathInfo)
             throws IOException {
         setJsonHeaders(resp);
 
         String sectionKey = extractSectionKey(pathInfo);
         if (sectionKey == null || sectionKey.isBlank()) {
-            sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "Section key is required");
+            try {
+                List<String> allKeys = homeDao.getAllSectionKeys();
+                JsonObject response = new JsonObject();
+                response.addProperty("success", true);
+                response.add("sections", gson.toJsonTree(allKeys));
+                resp.getWriter().write(gson.toJson(response));
+            } catch (Exception e) {
+                e.printStackTrace();
+                sendErrorResponse(resp, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                        "Database error: " + e.getMessage());
+            }
             return;
         }
 
         try {
-            String title = homeConfigDao.getSectionTitle(sectionKey);
-            List<Home> tabs = homeConfigDao.getSectionTabs(sectionKey);
+            String title = homeDao.getSectionTitle(sectionKey);
+            List<Home> tabs = homeDao.getSectionTabs(sectionKey);
 
             JsonObject response = new JsonObject();
             response.addProperty("key", sectionKey);
@@ -115,7 +124,7 @@ public class AdminHomeController extends HttpServlet {
             }
 
             response.add("tabs", gson.toJsonTree(tabs));
-            
+
             resp.getWriter().write(gson.toJson(response));
 
         } catch (Exception e) {
@@ -124,8 +133,7 @@ public class AdminHomeController extends HttpServlet {
         }
     }
 
-
-    private void handleApiSaveConfig(HttpServletRequest req, HttpServletResponse resp, String pathInfo) 
+    private void handleApiSaveConfig(HttpServletRequest req, HttpServletResponse resp, String pathInfo)
             throws IOException {
         setJsonHeaders(resp);
 
@@ -135,13 +143,12 @@ public class AdminHomeController extends HttpServlet {
             return;
         }
 
-
         try {
             String body = new String(req.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
             JsonObject json = gson.fromJson(body, JsonObject.class);
 
-            String title = json.has("title") && !json.get("title").isJsonNull() 
-                    ? json.get("title").getAsString() 
+            String title = json.has("title") && !json.get("title").isJsonNull()
+                    ? json.get("title").getAsString()
                     : "";
 
             int maxTabs = sectionKey.startsWith("set_") ? 1 : 4;
@@ -150,7 +157,7 @@ public class AdminHomeController extends HttpServlet {
 
             validateTabs(tabs);
 
-            boolean success = homeConfigDao.saveSection(sectionKey, title, tabs, maxTabs);
+            boolean success = homeDao.saveSection(sectionKey, title, tabs, maxTabs);
 
             if (success) {
                 JsonObject response = new JsonObject();
@@ -198,7 +205,7 @@ public class AdminHomeController extends HttpServlet {
             JsonArray tabsArray = json.getAsJsonArray("tabs");
             for (JsonElement element : tabsArray) {
                 JsonObject tabObj = element.getAsJsonObject();
-                
+
                 if (!tabObj.has("position") || !tabObj.has("categoryId")) {
                     continue;
                 }
