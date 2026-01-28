@@ -281,7 +281,6 @@
 
                     <script src="${pageContext.request.contextPath}/scripts/admin/admin.js"></script>
                     <script>
-                        // View order details
                         function viewOrder(orderId) {
                             fetch('${pageContext.request.contextPath}/admin/order-details?orderId=' + orderId)
                                 .then(response => response.json())
@@ -290,7 +289,6 @@
                                         const order = data.order;
                                         const items = data.items;
 
-                                        // Populate modal with order data
                                         document.getElementById('modal-order-id').value = order.id;
                                         document.getElementById('modal-order-code').textContent = order.orderCode;
                                         document.getElementById('modal-customer-name').textContent = order.customerFullname || '-';
@@ -299,7 +297,6 @@
                                         document.getElementById('modal-shipping-address').textContent = order.shippingAddress || '-';
                                         document.getElementById('modal-customer-note').textContent = order.customerNote || 'Không có';
 
-                                        // Set current status in dropdown
                                         const statusSelect = document.getElementById('modal-status-select');
                                         for (let option of statusSelect.options) {
                                             if (option.value === order.orderStatus) {
@@ -308,7 +305,6 @@
                                             }
                                         }
 
-                                        // Populate order items
                                         const tbody = document.getElementById('modal-order-items');
                                         tbody.innerHTML = '';
                                         const fmt = new Intl.NumberFormat('vi-VN');
@@ -326,11 +322,10 @@
                                             tbody.appendChild(tr);
                                         });
 
-                                        // Update totals
+
                                         document.getElementById('modal-subtotal').textContent = fmt.format(order.subtotalAmount || 0) + '₫';
                                         document.getElementById('modal-shipping').textContent = order.shippingFee > 0 ? fmt.format(order.shippingFee) + '₫' : 'Miễn phí';
 
-                                        // Show voucher discount
                                         if (order.discountAmount > 0) {
                                             document.getElementById('modal-discount').textContent = '-' + fmt.format(order.discountAmount) + '₫';
                                         } else {
@@ -339,7 +334,6 @@
 
                                         document.getElementById('modal-total').textContent = fmt.format(order.totalAmount) + '₫';
 
-                                        // Show modal
                                         document.getElementById('order-modal').style.display = 'flex';
                                     } else {
                                         alert(data.message || 'Lỗi tải thông tin đơn hàng');
@@ -351,12 +345,10 @@
                                 });
                         }
 
-                        // Close order modal
                         function closeOrderModal() {
                             document.getElementById('order-modal').style.display = 'none';
                         }
 
-                        // Update order status
                         function updateOrderStatus() {
                             const orderId = document.getElementById('modal-order-id').value;
                             const newStatus = document.getElementById('modal-status-select').value;
@@ -366,30 +358,25 @@
                                 return;
                             }
 
-                            // If status is 'đã hủy', show cancel reason modal
                             if (newStatus === 'đã hủy') {
                                 showCancelReasonModal(orderId, newStatus);
                                 return;
                             }
 
-                            // For other statuses, update directly
                             sendStatusUpdate(orderId, newStatus, '');
                         }
 
-                        // Show cancel reason modal
                         function showCancelReasonModal(orderId, status) {
                             window.pendingCancelOrderId = orderId;
                             window.pendingCancelStatus = status;
                             document.getElementById('cancel-reason-modal').style.display = 'flex';
 
-                            // Reset to first option
                             const firstRadio = document.querySelector('input[name="admin-cancel-reason"]');
                             if (firstRadio) firstRadio.checked = true;
                             document.getElementById('admin-other-reason-container').style.display = 'none';
                             document.getElementById('admin-other-reason-text').value = '';
                         }
 
-                        // Send status update request
                         function sendStatusUpdate(orderId, status, cancelReason) {
                             let bodyStr = 'orderId=' + orderId + '&status=' + encodeURIComponent(status);
                             if (cancelReason) {
@@ -419,12 +406,10 @@
                                 });
                         }
 
-                        // Cancel reason modal event listeners
                         document.addEventListener('DOMContentLoaded', function () {
                             const cancelReasonModal = document.getElementById('cancel-reason-modal');
                             if (!cancelReasonModal) return;
 
-                            // Show/hide other reason textarea
                             document.querySelectorAll('input[name="admin-cancel-reason"]').forEach(radio => {
                                 radio.addEventListener('change', function () {
                                     document.getElementById('admin-other-reason-container').style.display =
@@ -432,7 +417,6 @@
                                 });
                             });
 
-                            // Close modal
                             function closeCancelReasonModal() {
                                 cancelReasonModal.style.display = 'none';
                             }
@@ -440,7 +424,6 @@
                             document.getElementById('btn-cancel-reason-close').addEventListener('click', closeCancelReasonModal);
                             document.querySelector('.close-cancel-modal').addEventListener('click', closeCancelReasonModal);
 
-                            // Confirm cancel
                             document.getElementById('btn-confirm-cancel-reason').addEventListener('click', function () {
                                 const selectedReason = document.querySelector('input[name="admin-cancel-reason"]:checked');
 
@@ -464,7 +447,6 @@
                             });
                         });
 
-                        // Delete order
                         let orderIdToDelete = null;
 
                         function deleteOrder(orderId) {
@@ -507,7 +489,6 @@
                                 });
                         }
 
-                        // Setup delete modal event listeners
                         document.addEventListener('DOMContentLoaded', function () {
                             document.getElementById('btn-cancel-delete').addEventListener('click', closeDeleteModal);
                             document.getElementById('btn-confirm-delete').addEventListener('click', confirmDeleteOrder);

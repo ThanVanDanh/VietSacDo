@@ -21,13 +21,10 @@ public class AdminOrderController extends HttpServlet {
         try {
             OrderDao orderDao = new OrderDao();
 
-            // Get all orders from database
             List<Order> orders = orderDao.getAllOrders();
 
-            // Set attribute for JSP
             req.setAttribute("orders", orders);
 
-            // Forward to orders.jsp
             req.getRequestDispatcher("/admin/orders.jsp").forward(req, resp);
 
         } catch (Exception e) {

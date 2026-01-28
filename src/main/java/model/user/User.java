@@ -58,7 +58,6 @@ public class User extends AId implements Serializable {
         return email;
     }
 
-    // @ColumnName("password_hash")
     public String getPassword() {
         return password;
     }

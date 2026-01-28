@@ -18,7 +18,6 @@ public class EditAddressController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
 
-        // 1. Kiểm tra đăng nhập
         HttpSession session = req.getSession(false);
         User user = (session != null) ? (User) session.getAttribute("account") : null;
         if (user == null) {
@@ -27,33 +26,28 @@ public class EditAddressController extends HttpServlet {
         }
 
         try {
-            // 2. Lấy dữ liệu từ form (bao gồm cả ID ẩn)
-            int id = Integer.parseInt(req.getParameter("id")); // ID của địa chỉ cần sửa
+            int id = Integer.parseInt(req.getParameter("id"));
             String ho = req.getParameter("ho");
             String ten = req.getParameter("ten");
             String sdt = req.getParameter("sdt");
             String diachi = req.getParameter("diachi");
             String tinhthanh = req.getParameter("tinhthanh");
             String quocgia = req.getParameter("quocgia");
-            // Checkbox: nếu không tích sẽ trả về null
             boolean isDefault = "true".equals(req.getParameter("macdinh"));
 
-            // 3. Tạo object Address
             Address addr = new Address();
             addr.setId(id);
             addr.setUserId(user.getId());
-            addr.setRecipientName(ho + " " + ten); // Ghép lại họ tên
+            addr.setRecipientName(ho + " " + ten);
             addr.setRecipientPhone(sdt);
             addr.setAddressLine(diachi);
             addr.setCityProvince(tinhthanh);
             addr.setCountry(quocgia);
             addr.setDefault(isDefault);
 
-            // 4. Gọi DAO cập nhật
             AddressDao dao = new AddressDao();
             dao.updateAddress(addr);
 
-            // 5. Quay lại trang account
             resp.sendRedirect("account");
 
         } catch (NumberFormatException e) {

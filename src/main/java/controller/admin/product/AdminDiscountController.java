@@ -131,7 +131,7 @@ public class AdminDiscountController extends HttpServlet {
     private void handleApplySingleDiscount(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             String sku = req.getParameter("sku");
-            String discountType = req.getParameter("discountType"); // "percentage" or "fixed"
+            String discountType = req.getParameter("discountType");
             String discountValueStr = req.getParameter("discountValue");
 
             System.out.println("Received parameters:");
@@ -184,13 +184,8 @@ public class AdminDiscountController extends HttpServlet {
     private void handleApplyBatchDiscount(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             String[] categoryIdStrs = req.getParameterValues("categoryIds");
-            String discountType = req.getParameter("discountType"); // "percentage" or "fixed"
+            String discountType = req.getParameter("discountType");
             String discountValueStr = req.getParameter("discountValue");
-
-//            System.out.println("Received parameters:");
-//            System.out.println("  categoryIds: " + (categoryIdStrs != null ? String.join(", ", categoryIdStrs) : "null"));
-//            System.out.println("  discountType: " + discountType);
-//            System.out.println("  discountValue: " + discountValueStr);
 
             if (categoryIdStrs == null || categoryIdStrs.length == 0) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

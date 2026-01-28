@@ -36,7 +36,6 @@ public class AddCartController extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         try {
-            // 1. Lấy tham số cơ bản
             String productIdRaw = request.getParameter("productId");
             String quantityRaw = request.getParameter("quantity");
 
@@ -48,7 +47,6 @@ public class AddCartController extends HttpServlet {
             int productId = Integer.parseInt(productIdRaw);
             int quantity = Integer.parseInt(quantityRaw);
 
-            // 2. Lấy tham số nâng cao (Size, SKU, Price)
             String sku = request.getParameter("sku");
             if (sku == null) sku = "";
 
@@ -67,7 +65,6 @@ public class AddCartController extends HttpServlet {
                 price = productService.getPriceById(productId);
             }
 
-            // 3. Logic giỏ hàng
             HttpSession session = request.getSession();
             Cart cart = (Cart) session.getAttribute("cart");
             if (cart == null) {
@@ -92,7 +89,6 @@ public class AddCartController extends HttpServlet {
                     if (count > 0) json.append(",");
                     json.append("{");
 
-                    // Product Info
                     json.append("\"product\": {");
                     json.append("\"id\": ").append(item.getProduct().getId()).append(",");
 
@@ -102,7 +98,6 @@ public class AddCartController extends HttpServlet {
                     String pCode = item.getProduct().getProductCode() != null ? item.getProduct().getProductCode() : "";
                     json.append("\"productCode\": \"").append(pCode).append("\",");
 
-                    // Images
                     json.append("\"images\": [");
                     if (item.getProduct().getImages() != null && !item.getProduct().getImages().isEmpty()) {
                         json.append("{ \"imageUrl\": \"").append(item.getProduct().getImages().get(0).getImageUrl()).append("\" }");
@@ -119,7 +114,6 @@ public class AddCartController extends HttpServlet {
 
                     String itemSize = item.getSize() != null ? item.getSize() : "";
                     json.append("\"size\": \"").append(itemSize).append("\"");
-                    // -------------------------------------
 
                     json.append("}");
                     count++;

@@ -17,7 +17,7 @@ public class DeleteContactController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            int id = Integer.parseInt(request.getParameter("id")); // Lấy ID từ Form
+            int id = Integer.parseInt(request.getParameter("id"));
             ContactDao dao = new ContactDao();
             dao.delete(id);
 

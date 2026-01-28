@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
             viewModal.style.display = 'block';
         });
     });
-    // xoa
     const deleteButtons = document.querySelectorAll('.delete');
     deleteButtons.forEach(button => {
         button.addEventListener('click', function() {
@@ -47,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- 4. XỬ LÝ NÚT: TRẢ LỜI EMAIL ---
     const replyButtons = document.querySelectorAll('.btn-reply-email');
     replyButtons.forEach(button => {
         button.addEventListener('click', function() {
@@ -64,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- 5. XỬ LÝ ĐÓNG MODAL (Chung cho tất cả) ---
 
     function closeAllModals() {
         viewModal.style.display = 'none';
@@ -72,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
         replyModal.style.display = 'none';
     }
 
-    // Gán sự kiện click cho các nút "X" (close-button)
     document.querySelectorAll('.close-button').forEach(btn => {
         btn.onclick = closeAllModals;
     });
@@ -99,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function() {
     replyButtons.forEach(btn => {
         btn.addEventListener("click", function() {
             const email = this.getAttribute("data-recipient-email");
-            const id = this.getAttribute("data-id"); // Lấy ID
+            const id = this.getAttribute("data-id");
 
             replyEmailInput.value = email;
             replyIdInput.value = id;

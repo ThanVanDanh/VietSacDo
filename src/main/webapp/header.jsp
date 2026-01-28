@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: laiqua
-  Date: 14/12/25
-  Time: 16:45
-  To change this template use File | Settings | File Templates.
---%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
@@ -19,7 +12,6 @@
         <nav>
             <ul class="menu">
                 <%--                <li><a href="${pageContext.request.contextPath}/home">Trang Chủ</a></li>--%>
-
                 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
                 <c:set var="menuAll" value="${requestScope.menuAllCategories}"/>
 
@@ -200,13 +192,11 @@
                 </a>
 
                 <div class="mini-cart-content">
-                    <%-- KHỐI 1: GIỎ HÀNG TRỐNG --%>
                     <div class="mini-empty-cart js-mini-cart-empty"
                          style="display: ${sessionScope.cart == null || sessionScope.cart.totalQuantity == 0 ? 'block' : 'none'}; text-align: center; padding: 20px;">
                         <p>Chưa có sản phẩm trong giỏ hàng</p>
                     </div>
 
-                    <%-- KHỐI 2: CÓ SẢN PHẨM --%>
                     <div class="js-mini-cart-has-item"
                          style="display: ${sessionScope.cart != null && sessionScope.cart.totalQuantity > 0 ? 'block' : 'none'};">
 
@@ -303,13 +293,11 @@
                 </a>
 
                 <div class="mini-cart-content">
-                    <%-- KHỐI 1: GIỎ HÀNG TRỐNG --%>
                     <div class="mini-empty-cart js-mini-cart-empty"
                          style="display: ${sessionScope.cart == null || sessionScope.cart.totalQuantity == 0 ? 'block' : 'none'}; text-align: center; padding: 20px;">
                         <p>Chưa có sản phẩm trong giỏ hàng</p>
                     </div>
 
-                    <%-- KHỐI 2: CÓ SẢN PHẨM --%>
                     <div class="js-mini-cart-has-item"
                          style="display: ${sessionScope.cart != null && sessionScope.cart.totalQuantity > 0 ? 'block' : 'none'};">
 
@@ -362,28 +350,20 @@
     <div class="search-overlay-close-area" id="searchCloseArea"></div>
 </div>
 
-<%-- ======= PHẦN BREADCRUMB MỚI THÊM VÀO ======= --%>
-<%-- Chỉ hiển thị khi có biến "pageTitle" được truyền vào --%>
-<%-- ======= PHẦN BREADCRUMB (Đã cập nhật thêm "Tất cả sản phẩm") ======= --%>
 <c:if test="${not empty pageTitle}">
     <div class="breadcrumb-container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                    <%-- 1. Trang chủ --%>
                 <li class="breadcrumb-item">
                     <a href="${pageContext.request.contextPath}/home">Trang Chủ</a>
                 </li>
 
-                    <%-- 2. Link 'Tất cả sản phẩm' --%>
-                    <%-- Logic: Chỉ hiện link này nếu trang hiện tại KHÔNG PHẢI là trang danh sách sản phẩm (để tránh bị lặp: Trang chủ > Tất cả sp > Tất cả sp) --%>
                 <c:if test="${pageTitle != 'Tất cả sản phẩm'}">
                     <li class="breadcrumb-item">
-                            <%-- Link này trỏ về Controller ListProduct --%>
                         <a href="${pageContext.request.contextPath}/list-product">Tất cả sản phẩm</a>
                     </li>
                 </c:if>
 
-                    <%-- 3. Trang hiện tại (Biến động) --%>
                 <li class="breadcrumb-item active" aria-current="page">${pageTitle}</li>
             </ol>
         </nav>

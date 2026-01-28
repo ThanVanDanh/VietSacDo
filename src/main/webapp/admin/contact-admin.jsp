@@ -15,7 +15,6 @@
 <div class="admin-container">
     <jsp:include page="sidebar.jsp" />
 
-    <%-- Phần hiển thị thông báo (Thành công/Thất bại) --%>
     <c:if test="${not empty sessionScope.message}">
         <div id="alert-message" class="alert-toast ${sessionScope.messageType == 'success' ? 'alert-toast-success' : 'alert-toast-danger'}">
             <i class="fas ${sessionScope.messageType == 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}" style="margin-right: 10px;"></i>
@@ -67,7 +66,6 @@
                             </td>
 
                             <td>
-                                    <%-- Nút Phản hồi: Đã thêm data-id để lấy ID tin nhắn --%>
                                 <button class="btn btn-sm btn-reply-email"
                                         title="Phản hồi Email"
                                         data-recipient-email="${c.email}"
@@ -97,7 +95,6 @@
     </main>
 </div>
 
-<%-- Modal Xem Chi Tiết --%>
 <div id="contact-modal" class="modal">
     <div class="modal-content">
         <span class="close-button">&times;</span>
@@ -114,7 +111,6 @@
     </div>
 </div>
 
-<%-- Modal Xóa --%>
 <div id="delete-modal" class="modal delete-modal">
     <div class="modal-content">
         <span class="close-button">&times;</span>
@@ -133,11 +129,9 @@
     </div>
 </div>
 
-<%-- Modal Phản hồi (Reply) --%>
 <div id="reply-modal" class="modal reply-modal">
     <div class="modal-content">
         <form id="reply-form" action="${pageContext.request.contextPath}/admin/contact-reply" method="post">
-            <%-- INPUT ẨN QUAN TRỌNG: Để gửi ID về Controller cập nhật trạng thái --%>
             <input type="hidden" name="id" id="reply-id">
 
             <div class="form-group">
@@ -163,7 +157,6 @@
 <script src="${pageContext.request.contextPath}/scripts/contact.js"></script>
 <script src="${pageContext.request.contextPath}/scripts/admin/admin.js"></script>
 
-<%-- Script xử lý riêng cho nút Reply để đảm bảo lấy đúng ID --%>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const replyButtons = document.querySelectorAll(".btn-reply-email");
@@ -172,16 +165,14 @@
         const replyIdInput = document.getElementById("reply-id");
         const cancelReplyBtn = document.getElementById("cancel-reply");
 
-        // Xử lý khi bấm nút Reply trên bảng
         replyButtons.forEach(btn => {
             btn.addEventListener("click", function() {
                 const email = this.getAttribute("data-recipient-email");
                 const id = this.getAttribute("data-id");
 
                 replyEmailInput.value = email;
-                replyIdInput.value = id; // Gán ID vào input ẩn
+                replyIdInput.value = id;
 
-                // Hiển thị modal (dựa trên class CSS của bạn)
                 if(replyModal) {
                     replyModal.style.display = "block";
                     replyModal.classList.add("active");
@@ -189,7 +180,6 @@
             });
         });
 
-        // Xử lý nút Hủy trong modal Reply
         if(cancelReplyBtn && replyModal) {
             cancelReplyBtn.addEventListener("click", function() {
                 replyModal.style.display = "none";
@@ -197,7 +187,6 @@
             });
         }
 
-        // Đóng modal khi click ra ngoài
         window.addEventListener("click", function(event) {
             if (event.target == replyModal) {
                 replyModal.style.display = "none";

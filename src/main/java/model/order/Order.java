@@ -44,7 +44,6 @@ public class Order extends AId implements Serializable {
     @ColumnName("updated_at")
     private LocalDateTime updatedAt;
 
-    // Field for JSON serialization (not transient so Gson can serialize it)
     private String formattedCreatedAt;
 
     public Order() {

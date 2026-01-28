@@ -278,9 +278,7 @@
     let currentEditId = null;
     let currentBannerUrl = null;
 
-    // ============================================
-    // CKEDITOR INITIALIZATION
-    // ============================================
+
     document.addEventListener('DOMContentLoaded', function() {
         ckeditorInstance = CKEDITOR.replace('article-content', {
             height: 500,
@@ -299,19 +297,13 @@
             ]
         });
 
-        // Load data
         loadVouchers();
         loadArticles();
 
-        // Event listeners
         setupEventListeners();
     });
 
-    // ============================================
-    // EVENT LISTENERS
-    // ============================================
     function setupEventListeners() {
-        // Tab switching
         document.querySelectorAll('.tab-button').forEach(button => {
             button.addEventListener('click', function() {
                 const tabId = this.getAttribute('data-tab');
@@ -319,32 +311,26 @@
             });
         });
 
-        // Save draft button
         document.getElementById('btn-save-draft').addEventListener('click', function() {
             saveArticle('draft');
         });
 
-        // Publish button
         document.getElementById('btn-publish').addEventListener('click', function() {
             saveArticle('published');
         });
 
-        // Cancel button
         document.getElementById('btn-cancel').addEventListener('click', function() {
             resetForm();
         });
 
-        // Voucher save button
         document.getElementById('btn-save-voucher').addEventListener('click', function() {
             saveVoucher();
         });
 
-        // Voucher cancel button
         document.getElementById('btn-cancel-voucher').addEventListener('click', function() {
             resetVoucherForm();
         });
 
-        // New image preview
         document.getElementById('banner-image').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
@@ -359,20 +345,18 @@
             }
         });
 
-        // Change existing image button
         document.getElementById('btn-change-image').addEventListener('click', function() {
             document.getElementById('existing-image-container').style.display = 'none';
             document.getElementById('upload-image-container').style.display = 'block';
-            currentBannerUrl = null; // Mark for replacement
+            currentBannerUrl = null;
         });
 
-        // Remove new image button
+
         document.getElementById('btn-remove-new-image').addEventListener('click', function() {
             document.getElementById('banner-image').value = '';
             document.getElementById('new-image-preview').src = '';
             document.getElementById('new-image-preview-container').style.display = 'none';
 
-            // Show upload box or existing image
             if (currentBannerUrl) {
                 document.getElementById('existing-image-container').style.display = 'block';
             } else {
@@ -381,9 +365,6 @@
         });
     }
 
-    // ============================================
-    // LOAD VOUCHERS
-    // ============================================
     function loadVouchers() {
         fetch(CTX + '/admin/voucher/list')
             .then(response => response.json())
@@ -404,9 +385,7 @@
             });
     }
 
-    // ============================================
-    // LOAD ARTICLES
-    // ============================================
+
     function loadArticles() {
         fetch(CTX + '/admin/article/list')
             .then(response => response.json())
@@ -431,12 +410,10 @@
         articles.forEach(article => {
             const row = document.createElement('tr');
 
-            // Title
             const titleCell = document.createElement('td');
             titleCell.innerHTML = '<strong>' + escapeHtml(article.title) + '</strong>';
             row.appendChild(titleCell);
 
-            // Voucher
             const voucherCell = document.createElement('td');
             if (article.voucherCode) {
                 voucherCell.innerHTML = '<span style="font-family:monospace; background:#f0f0f0; padding:4px 8px; border-radius:4px;">' +
@@ -447,7 +424,6 @@
             }
             row.appendChild(voucherCell);
 
-            // Status
             const statusCell = document.createElement('td');
             const statusSpan = document.createElement('span');
             statusSpan.className = 'status';
@@ -462,7 +438,6 @@
             statusCell.appendChild(statusSpan);
             row.appendChild(statusCell);
 
-            // Period
             const periodCell = document.createElement('td');
             periodCell.className = 'period';
             if (article.startDate && article.endDate) {
@@ -475,7 +450,6 @@
             }
             row.appendChild(periodCell);
 
-            // Actions
             const actionCell = document.createElement('td');
             actionCell.className = 'action-icons';
 
@@ -507,9 +481,6 @@
         });
     }
 
-    // ============================================
-    // SAVE ARTICLE (CREATE OR UPDATE)
-    // ============================================
     function saveArticle(status) {
         const title = document.getElementById('article-title').value.trim();
 
@@ -518,10 +489,8 @@
             return;
         }
 
-        // Get content from CKEditor
         const content = ckeditorInstance.getData();
 
-        // Create FormData
         const formData = new FormData();
 
         if (currentEditId) {
@@ -547,18 +516,15 @@
             formData.append('end-date', endDate);
         }
 
-        // Banner image
         const bannerInput = document.getElementById('banner-image');
         if (bannerInput.files.length > 0) {
             formData.append('banner-image', bannerInput.files[0]);
         }
 
-        // Determine URL
         const url = currentEditId
             ? CTX + '/admin/article/update'
             : CTX + '/admin/article/add';
 
-        // Disable buttons
         const btnDraft = document.getElementById('btn-save-draft');
         const btnPublish = document.getElementById('btn-publish');
         btnDraft.disabled = true;
@@ -566,7 +532,6 @@
         btnDraft.textContent = 'Đang lưu...';
         btnPublish.textContent = 'Đang lưu...';
 
-        // Submit
         fetch(url, {
             method: 'POST',
             body: formData
@@ -593,24 +558,18 @@
             });
     }
 
-    // ============================================
-    // EDIT ARTICLE
-    // ============================================
     function editArticle(articleId) {
         fetch(CTX + '/admin/article/get?id=' + articleId)
             .then(response => response.json())
             .then(article => {
                 console.log('Loaded article:', article);
 
-                // Set title
                 document.getElementById('editor-title').textContent = 'Chỉnh sửa bài viết';
 
-                // Fill form
                 document.getElementById('article-title').value = article.title || '';
                 ckeditorInstance.setData(article.content || '');
                 document.getElementById('voucher-select').value = article.voucherId || '';
 
-                // Dates
                 if (article.startDate) {
                     document.getElementById('start-date').value = formatDateTimeLocal(article.startDate);
                 }
@@ -618,35 +577,28 @@
                     document.getElementById('end-date').value = formatDateTimeLocal(article.endDate);
                 }
 
-                // Banner image handling
                 if (article.bannerImageUrl) {
                     console.log('Banner URL:', article.bannerImageUrl);
 
-                    // Show existing image
                     document.getElementById('existing-image').src = article.bannerImageUrl;
                     document.getElementById('existing-image-container').style.display = 'block';
 
-                    // Hide upload box and new preview
                     document.getElementById('upload-image-container').style.display = 'none';
                     document.getElementById('new-image-preview-container').style.display = 'none';
 
                     currentBannerUrl = article.bannerImageUrl;
                 } else {
-                    // No existing banner
                     document.getElementById('existing-image-container').style.display = 'none';
                     document.getElementById('upload-image-container').style.display = 'block';
                     document.getElementById('new-image-preview-container').style.display = 'none';
                     currentBannerUrl = null;
                 }
 
-                // Clear file input
                 document.getElementById('banner-image').value = '';
 
-                // Set edit mode
                 currentEditId = articleId;
                 document.getElementById('btn-cancel').style.display = 'inline-block';
 
-                // Scroll to top
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             })
             .catch(error => {
@@ -655,9 +607,6 @@
             });
     }
 
-    // ============================================
-    // DELETE ARTICLE
-    // ============================================
     function deleteArticle(articleId, title) {
         if (!confirm('Bạn có chắc muốn xóa bài viết "' + title + '"?\n\nThao tác này không thể hoàn tác!')) {
             return;
@@ -685,9 +634,6 @@
             });
     }
 
-    // ============================================
-    // RESET FORM
-    // ============================================
     function resetForm() {
         document.getElementById('editor-title').textContent = 'Tạo bài viết khuyến mãi mới';
         document.getElementById('article-title').value = '';
@@ -696,7 +642,6 @@
         document.getElementById('start-date').value = '';
         document.getElementById('end-date').value = '';
 
-        // Reset images
         document.getElementById('banner-image').value = '';
         document.getElementById('existing-image').src = '';
         document.getElementById('new-image-preview').src = '';
@@ -709,35 +654,24 @@
         document.getElementById('btn-cancel').style.display = 'none';
     }
 
-    // ============================================
-    // TAB SWITCHING
-    // ============================================
     function switchTab(tabId) {
-        // Hide all tabs
         document.querySelectorAll('.tab-content').forEach(tab => {
             tab.classList.remove('active');
         });
 
-        // Remove active from all buttons
         document.querySelectorAll('.tab-button').forEach(btn => {
             btn.classList.remove('active');
         });
 
-        // Show selected tab
         document.getElementById(tabId).classList.add('active');
 
-        // Activate button
         document.querySelector('[data-tab="' + tabId + '"]').classList.add('active');
 
-        // Load data when switching to vouchers tab
         if (tabId === 'vouchers-tab') {
             loadVouchersTable();
         }
     }
 
-    // ============================================
-    // LOAD VOUCHERS TABLE
-    // ============================================
     function loadVouchersTable() {
         fetch(CTX + '/admin/voucher/list')
             .then(response => response.json())
@@ -761,18 +695,15 @@
         vouchers.forEach(voucher => {
             const row = document.createElement('tr');
 
-            // Code
             const codeCell = document.createElement('td');
             codeCell.innerHTML = '<strong style="font-family:monospace; background:#f0f0f0; padding:4px 8px; border-radius:4px;">' +
                 escapeHtml(voucher.voucherCode) + '</strong>';
             row.appendChild(codeCell);
 
-            // Type
             const typeCell = document.createElement('td');
             typeCell.textContent = voucher.discountType === 'percentage' ? 'Phần trăm' : 'Số tiền';
             row.appendChild(typeCell);
 
-            // Value
             const valueCell = document.createElement('td');
             if (voucher.discountType === 'percentage') {
                 valueCell.textContent = voucher.discountValue + '%';
@@ -785,12 +716,10 @@
             }
             row.appendChild(valueCell);
 
-            // Min order
             const minCell = document.createElement('td');
             minCell.textContent = Number(voucher.minOrderAmount).toLocaleString('vi-VN') + 'đ';
             row.appendChild(minCell);
 
-            // Usage
             const usageCell = document.createElement('td');
             usageCell.textContent = voucher.currentUsage + '/' + voucher.maxUsage;
             if (voucher.currentUsage >= voucher.maxUsage) {
@@ -799,7 +728,6 @@
             }
             row.appendChild(usageCell);
 
-            // Period
             const periodCell = document.createElement('td');
             periodCell.className = 'period';
             periodCell.style.fontSize = '12px';
@@ -808,7 +736,6 @@
                 formatDateTime(voucher.validTo);
             row.appendChild(periodCell);
 
-            // Status
             const statusCell = document.createElement('td');
             const statusSpan = document.createElement('span');
             statusSpan.className = 'status';
@@ -836,7 +763,6 @@
             statusCell.appendChild(statusSpan);
             row.appendChild(statusCell);
 
-            // Actions
             const actionCell = document.createElement('td');
             actionCell.className = 'action-icons';
 
@@ -868,9 +794,6 @@
         });
     }
 
-    // ============================================
-    // SAVE VOUCHER (CREATE OR UPDATE)
-    // ============================================
     let currentVoucherEditId = null;
 
     function saveVoucher() {
@@ -893,7 +816,6 @@
             return;
         }
 
-        // Create FormData
         const formData = new URLSearchParams();
 
         if (currentVoucherEditId) {
@@ -909,12 +831,10 @@
         formData.append('valid-to', validTo);
         formData.append('is-active', isActive ? '1' : '0');
 
-        // Disable button
         const btnSave = document.getElementById('btn-save-voucher');
         btnSave.disabled = true;
         btnSave.textContent = 'Đang lưu...';
 
-        // Submit
         fetch(CTX + '/admin/voucher/add', {
             method: 'POST',
             headers: {
@@ -928,7 +848,7 @@
                     alert(currentVoucherEditId ? 'Cập nhật voucher thành công!' : 'Tạo voucher thành công!');
                     resetVoucherForm();
                     loadVouchersTable();
-                    loadVouchers(); // Reload for article form
+                    loadVouchers();
                 } else {
                     alert('Lỗi: ' + (data.error || 'Unknown error'));
                 }
@@ -942,20 +862,14 @@
                 btnSave.textContent = 'Lưu Voucher';
             });
     }
-
-    // ============================================
-    // EDIT VOUCHER
-    // ============================================
     function editVoucher(voucherId) {
         fetch(CTX + '/admin/voucher/get?id=' + voucherId)
             .then(response => response.json())
             .then(voucher => {
                 console.log('Loaded voucher:', voucher);
 
-                // Set title
                 document.getElementById('voucher-editor-title').textContent = 'Chỉnh sửa Voucher';
 
-                // Fill form
                 document.getElementById('voucher-code').value = voucher.voucherCode || '';
                 document.getElementById('discount-type').value = voucher.discountType || 'percentage';
                 document.getElementById('discount-value').value = voucher.discountValue || '';
@@ -963,7 +877,6 @@
                 document.getElementById('max-usage').value = voucher.maxUsage || '100';
                 document.getElementById('voucher-is-active').checked = voucher.isActive;
 
-                // Dates
                 if (voucher.validFrom) {
                     document.getElementById('voucher-valid-from').value = formatDateTimeLocal(voucher.validFrom);
                 }
@@ -971,11 +884,9 @@
                     document.getElementById('voucher-valid-to').value = formatDateTimeLocal(voucher.validTo);
                 }
 
-                // Set edit mode
                 currentVoucherEditId = voucherId;
                 document.getElementById('btn-cancel-voucher').style.display = 'inline-block';
 
-                // Scroll to top
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             })
             .catch(error => {
@@ -984,9 +895,6 @@
             });
     }
 
-    // ============================================
-    // DELETE VOUCHER
-    // ============================================
     function deleteVoucher(voucherId, code) {
         if (!confirm('Bạn có chắc muốn xóa voucher "' + code + '"?\n\nLưu ý: Các bài viết sử dụng voucher này sẽ không bị xóa.')) {
             return;
@@ -1004,7 +912,7 @@
                 if (data.success) {
                     alert('Xóa voucher thành công!');
                     loadVouchersTable();
-                    loadVouchers(); // Reload for article form
+                    loadVouchers();
                 } else {
                     alert('Lỗi: ' + (data.error || 'Unknown error'));
                 }
@@ -1015,9 +923,6 @@
             });
     }
 
-    // ============================================
-    // RESET VOUCHER FORM
-    // ============================================
     function resetVoucherForm() {
         document.getElementById('voucher-editor-title').textContent = 'Tạo Voucher mới';
         document.getElementById('voucher-code').value = '';
@@ -1033,9 +938,6 @@
         document.getElementById('btn-cancel-voucher').style.display = 'none';
     }
 
-    // ============================================
-    // HELPER FUNCTIONS
-    // ============================================
     function escapeHtml(text) {
         if (!text) return '';
         const div = document.createElement('div');

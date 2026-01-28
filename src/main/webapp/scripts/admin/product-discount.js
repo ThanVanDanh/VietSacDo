@@ -1,4 +1,3 @@
-// ======== DISCOUNT MARKETING FUNCTIONALITY ========
 document.addEventListener('DOMContentLoaded', function () {
     var discountMarketingBtn = document.getElementById('discountMarketing');
     var discountModal = document.getElementById('discountMarketingModal');
@@ -26,7 +25,6 @@ document.addEventListener('DOMContentLoaded', function () {
         modal.setAttribute('aria-hidden', 'true');
     }
 
-    // Open discount modal
     if (discountMarketingBtn) {
         discountMarketingBtn.addEventListener('click', function (e) {
             e.preventDefault();
@@ -35,7 +33,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Close discount modal
     if (closeDiscountModalBtn) {
         closeDiscountModalBtn.addEventListener('click', function () {
             closeModal(discountModal);
@@ -50,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Toggle discount method
     if (discountMethodSelect) {
         discountMethodSelect.addEventListener('change', function () {
             var method = this.value;
@@ -67,7 +63,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Update label when discount type changes (Single)
     if (singleDiscountType) {
         singleDiscountType.addEventListener('change', function () {
             var label = document.getElementById('single-discount-label');
@@ -81,7 +76,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Update label when discount type changes (Batch)
     if (batchDiscountType) {
         batchDiscountType.addEventListener('change', function () {
             var label = document.getElementById('batch-discount-label');
@@ -95,7 +89,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Check product price
     if (checkProductBtn) {
         checkProductBtn.addEventListener('click', function () {
             var sku = document.getElementById('product-code-discount').value.trim();
@@ -137,7 +130,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Apply discount
     if (applyDiscountBtn) {
         applyDiscountBtn.addEventListener('click', function () {
             var method = discountMethodSelect.value;
@@ -216,7 +208,6 @@ document.addEventListener('DOMContentLoaded', function () {
         var discountType = document.getElementById('batch-discount-type').value;
         var discountValue = document.getElementById('batch-discount-value').value.trim();
         
-        // Get selected categories
         var checkboxes = document.querySelectorAll('#category-checkbox-list input[type="checkbox"]:checked');
         var categoryIds = Array.prototype.map.call(checkboxes, function (cb) {
             return cb.value;

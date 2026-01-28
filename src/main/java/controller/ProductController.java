@@ -41,7 +41,6 @@ public class ProductController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            // 1. Lấy ID sản phẩm hiện tại
             String idParam = request.getParameter("id");
             if (idParam == null) {
                 response.sendRedirect("index.jsp");
@@ -51,7 +50,6 @@ public class ProductController extends HttpServlet {
 
             Product product = productService.getProduct(id);
             if (product == null || !"active".equalsIgnoreCase(product.getStatusProduct())) {
-                // Nếu sản phẩm không tồn tại hoặc không active, chuyển hướng về trang chủ hoặc báo lỗi
                 response.sendRedirect("index.jsp");
                 return;
             }
@@ -62,7 +60,6 @@ public class ProductController extends HttpServlet {
                 List<ProductListDTO> relatedProducts = dao.getRelatedProducts(product.getCategoryId(), id, 5);
                 request.setAttribute("relatedProducts", relatedProducts);
                 
-                // Lấy chính sách đổi trả theo category_id
                 Policy policy = policyDao.getByCategoryId(product.getCategoryId());
                 request.setAttribute("policy", policy);
             }

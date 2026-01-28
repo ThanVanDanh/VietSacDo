@@ -69,7 +69,6 @@
 
                                         <div class="product-price">
                                             <c:choose>
-                                                <%-- CÓ GIẢM GIÁ --%>
                                                     <c:when
                                                         test="${pdto.discountedPrice > 0 && pdto.discountedPrice < pdto.price}">
                                                         <div class="current-price">
@@ -90,7 +89,6 @@
                                                         </div>
                                                     </c:when>
 
-                                                    <%-- KHÔNG GIẢM GIÁ --%>
                                                         <c:otherwise>
                                                             <div class="current-price">
                                                                 <fmt:formatNumber value="${pdto.price}"
@@ -162,7 +160,6 @@
 
                                                 <div class="product-price">
                                                     <c:choose>
-                                                        <%-- CÓ GIẢM GIÁ --%>
                                                             <c:when
                                                                 test="${vp.discountedPrice > 0 && vp.discountedPrice < vp.price}">
                                                                 <div class="current-price">
@@ -183,7 +180,6 @@
                                                                 </div>
                                                             </c:when>
 
-                                                            <%-- KHÔNG GIẢM GIÁ --%>
                                                                 <c:otherwise>
                                                                     <div class="current-price">
                                                                         <fmt:formatNumber value="${vp.price}"

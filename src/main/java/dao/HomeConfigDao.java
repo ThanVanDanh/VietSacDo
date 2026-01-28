@@ -37,9 +37,6 @@ public class HomeConfigDao extends BaseDao {
         }
     }
 
-    /**
-     * Lấy title của một section
-     */
     public String getSectionTitle(String sectionType) {
         try {
             String sql = "SELECT section_title FROM Home " +
@@ -107,7 +104,6 @@ public class HomeConfigDao extends BaseDao {
                 
                 System.out.println("  Deleted " + deleted + " old records");
 
-                // 2. Insert dữ liệu mới
                 for (Home tab : normalizedTabs) {
                     h.createUpdate(
                         "INSERT INTO Home " +
@@ -146,7 +142,6 @@ public class HomeConfigDao extends BaseDao {
             int position = tab.getPosition();
             int categoryId = tab.getCategoryId();
 
-            // Validate
             if (position < 1 || position > maxTabs) {
                 System.err.println("  ⚠ Skipped tab with invalid position: " + position);
                 continue;
@@ -158,7 +153,6 @@ public class HomeConfigDao extends BaseDao {
             result.add(h);
         }
 
-        // Sort theo position
         result.sort(Comparator.comparing(Home::getPosition));
         
         return result;
