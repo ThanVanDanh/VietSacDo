@@ -62,50 +62,28 @@
                             Mã sản phẩm: <span id="sku-value">${p.variants[0].sku}</span>
                         </p>
 
-                        <div class="product-price">
-                            <c:set var="v" value="${p.variants[0]}" />
-                            <c:choose>
-                                <%-- Trường hợp CÓ giảm giá --%>
-                                    <c:when test="${v.discountedPrice > 0 && v.discountedPrice < v.currentPrice}">
-                                        <span class="old-price">
-                                            <fmt:formatNumber value="${v.currentPrice}" pattern="#,###" />₫
-                                        </span>
-                                        <span class="current-price" id="display-price">
-                                            <fmt:formatNumber value="${v.discountedPrice}" pattern="#,###" />₫
-                                        </span>
-                                        <c:set var="percent"
-                                            value="${Math.round((1 - v.discountedPrice/v.currentPrice) * 100)}" />
-                                        <span class="discount-tag">${percent}%</span>
-                                        <p class="saving">(<span class="save">Tiết kiệm</span><span class="price">
-                                                <fmt:formatNumber value="${v.currentPrice - v.discountedPrice}"
-                                                    pattern="#,###" />₫
-                                            </span>)</p>
-                                    </c:when>
-                                    <%-- Trường hợp KHÔNG giảm giá (giảm giá bằng 0) --%>
-                                        <c:otherwise>
-                                            <span class="current-price" id="display-price">
-                                                <fmt:formatNumber value="${v.currentPrice}" pattern="#,###" />₫
-                                            </span>
-                                            <%-- Ẩn các cột khác --%>
-                                                <span class="old-price" style="display: none;"></span>
-                                                <span class="discount-tag" style="display: none;"></span>
-                                                <p class="saving" style="display: none;"></p>
-                                        </c:otherwise>
-                            </c:choose>
-                        </div>
-                        <fieldset class="promotion-box-fieldset">
-                            <legend class="promotion-header-legend">
-                                🎁 KHUYẾN MÃI - ƯU ĐÃI
-                            </legend>
-                            <ul>
-                                <li>Freeship toàn quốc khi mua hàng qua các kênh Web, FB, Insta (Không áp dụng cho đơn
-                                    chỉ có phụ kiện dưới 350K)</li>
-                                <li>Hỏa tốc mọi ngày trong tuần</li>
-                            </ul>
-                        </fieldset>
-                        <div class="section-title">Mã giảm giá</div>
-                        <div class="section-title">Kích thước: <span id="selected-size">${p.variants[0].size}</span>
-                        </div>
+        <div class="product-price">
+            <c:set var="v" value="${p.variants[0]}" />
+            <c:choose>
+                <%-- Trường hợp CÓ giảm giá --%>
+                <c:when test="${v.discountedPrice > 0 && v.discountedPrice < v.currentPrice}">
+                    <span class="old-price"><fmt:formatNumber value="${v.currentPrice}" pattern="#,###"/>₫</span>
+                    <span class="current-price" id="display-price"><fmt:formatNumber value="${v.discountedPrice}" pattern="#,###"/>₫</span>
+                        <c:set var="percent" value="${Math.round((1 - v.discountedPrice/v.currentPrice) * 100)}" />
+                            <span class="discount-tag">${percent}%</span>
+                    <p class="saving">(<span class="save">Tiết kiệm </span><span class="price"><fmt:formatNumber value="${v.currentPrice - v.discountedPrice}" pattern="#,###"/>₫</span>)</p>
+                </c:when>
+                <%-- Trường hợp KHÔNG giảm giá (giảm giá bằng 0) --%>
+                <c:otherwise>
+                    <span class="current-price" id="display-price"><fmt:formatNumber value="${v.currentPrice}" pattern="#,###"/>₫</span>
+                    <%-- Ẩn các cột khác --%>
+                        <span class="old-price" style="display: none;"></span>
+                        <span class="discount-tag" style="display: none;"></span>
+                        <p class="saving" style="display: none;"></p>
+                </c:otherwise>
+            </c:choose>
+        </div>
+        <div class="section-title">Kích thước: <span id="selected-size">${p.variants[0].size}</span></div>
 
                         <div class="size-options">
                             <c:forEach items="${p.variants}" var="variant" varStatus="status">
@@ -137,67 +115,36 @@
                         <button class="buy-now-btn" id="mua-ngay" onclick="buyNow(${p.id})">MUA NGAY</button>
                         <button id="het-hang" class="het_hang" style="display:none;">Hết hàng </button>
                         <hr class="dashed-line">
-                        <div class="shipping">
-                            <p><span><i class="fa-solid fa-truck-fast"></i></span><span>Giao hàng toàn quốc - quốc
-                                    tế</span></p>
-
-                        </div>
                         <details class="baohanh-details">
                             <summary>Xem thêm chi tiết</summary>
                             <div class="content-chitiet">
                                 <h5>Thông tin sản phẩm</h5>
-                                <p>Chất liệu: Vải Linen </p>
-                                <p style="color: #880000; font-style: italic">Giá trên chưa bao gồm quần và phụ kiện.
-                                </p>
-                                <p>Sản phẩm có sẵn sẽ được gửi đến khách hàng trong thời gian 3-4 ngày kể từ lúc thanh
-                                    toán online.</p>
-                            </div>
-                            <div class="baohanh-img">
-                                <img src="image/giaiphap.png" alt="Hướng dẫn sử dụng">
-
+                                <c:choose>
+                                    <c:when test="${not empty p.description}">
+                                        <div>${p.description}</div>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <p>Chưa có thông tin chi tiết cho sản phẩm này.</p>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                         </details>
                         <hr class="dashed-line">
                         <details class="doitra-details">
                             <summary>Chính sách đổi trả</summary>
                             <hr>
-                            <ol>
-                                <li>
+                            <c:choose>
+                                <c:when test="${not empty policy and not empty policy.policyText}">
                                     <div class="content-chinhsach">
-                                        <p>Việt Sắc Đỏ nhận đổi size, KHÔNG HỖ TRỢ ĐỔI MÀU HAY MẪU KHÁC. Chỉ được đổi
-                                            size 1 lần với điều kiện cùng mẫu sản phẩm trong vòng 05 ngày kể từ ngày mua
-                                            hàng. Khi đổi, sản phẩm phải còn hóa đơn, chưa giặt, chưa sử dụng, không có
-                                            mùi lạ, không bị hư hỏng, còn nguyên nhãn tag.</p>
+                                        ${policy.policyText}
                                     </div>
-                                </li>
-                                <li>
+                                </c:when>
+                                <c:otherwise>
                                     <div class="content-chinhsach">
-                                        <p>Chỉ nhận trả hàng hoàn tiền trong trường hợp: hàng gửi đến khách là hàng lỗi,
-                                            hoặc sai sản phẩm nhưng không có sản phẩm khác thay thế. Sau khi kiểm tra
-                                            hàng trả còn nhãn tag, chưa qua sử dụng thì Việt Sắc Đỏ sẽ hoàn tiền cho
-                                            khách hàng trong 1-2 ngày làm việc.</p>
+                                        <p>Chưa có chính sách đổi trả cho sản phẩm này</p>
                                     </div>
-                                </li>
-                                <li>
-                                    <div class="content-chinhsach">
-                                        KHÁCH HÀNG VUI LÒNG BÁO TRƯỚC NẾU CÓ NHU CẦU ĐỔI/TRẢ ĐỂ ĐƯỢC HỖ TRỢ. Khách hàng
-                                        vui lòng đến cửa hàng để đổi hoặc trả phí ship 2 chiều khi đổi hàng từ xa.
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="content-chinhsach">
-                                        Không áp dụng các phương thức đổi/trả cho sản phẩm SALE.
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="content-chinhsach">
-                                        Ngoài những vấn đề trên Việt Sắc Đỏ không nhận đổi/trả hàng trong mọi trường hợp
-                                        khác.
-                                    </div>
-                                </li>
-
-                            </ol>
-
+                                </c:otherwise>
+                            </c:choose>
                         </details>
                     </div>
 

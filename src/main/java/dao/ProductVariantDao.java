@@ -5,9 +5,6 @@ import org.jdbi.v3.core.Handle;
 
 import java.util.List;
 
-/**
- * ProductVariantDao - thao tác với bảng Product_variants
- */
 public class ProductVariantDao extends BaseDao {
 
     public int insert(ProductVariant variant) {
@@ -99,9 +96,6 @@ public class ProductVariantDao extends BaseDao {
         return affected > 0;
     }
 
-    /**
-     * Cập nhật discounted_price cho các variants của một product
-     */
     public boolean updateDiscountedPriceByProductId(int productId, Double discountedPrice) {
         String sql = "UPDATE Product_variants SET discounted_price = :discountedPrice WHERE product_id = :productId";
         return get().withHandle(handle ->
@@ -112,9 +106,6 @@ public class ProductVariantDao extends BaseDao {
         );
     }
 
-    /**
-     * Cập nhật discounted_price cho tất cả variants của products trong các categories
-     */
     public int updateDiscountedPriceByCategoryIds(List<Integer> categoryIds, Double discountedPrice) {
         if (categoryIds == null || categoryIds.isEmpty()) return 0;
 
@@ -131,9 +122,6 @@ public class ProductVariantDao extends BaseDao {
         );
     }
 
-    /**
-     * Cập nhật discounted_price cho một variant cụ thể theo ID
-     */
     public boolean updateDiscountedPrice(int variantId, double discountedPrice) {
         String sql = "UPDATE Product_variants SET discounted_price = :discountedPrice WHERE id = :id";
         return get().withHandle(handle ->
@@ -144,9 +132,6 @@ public class ProductVariantDao extends BaseDao {
         );
     }
 
-    /**
-     * Lấy variant theo SKU
-     */
     public ProductVariant getVariantBySku(String sku) {
         String sql = "SELECT * FROM Product_variants WHERE sku = :sku LIMIT 1";
         
@@ -159,11 +144,7 @@ public class ProductVariantDao extends BaseDao {
         );
     }
 
-    /**
-     * Lấy variant đầu tiên của product theo product code hoặc SKU
-     */
     public ProductVariant getFirstVariantByProductCode(String code) {
-        // Thử tìm theo SKU trước
         String sqlBySku = "SELECT * FROM Product_variants WHERE sku = :code ORDER BY id LIMIT 1";
         
         ProductVariant variant = get().withHandle(handle ->
@@ -174,12 +155,10 @@ public class ProductVariantDao extends BaseDao {
                         .orElse(null)
         );
         
-        // Nếu tìm thấy theo SKU thì return
         if (variant != null) {
             return variant;
         }
-        
-        // Nếu không tìm thấy, thử tìm theo product_code
+
         String sqlByProductCode = "SELECT pv.* FROM Product_variants pv " +
                 "INNER JOIN Products p ON pv.product_id = p.id " +
                 "WHERE p.product_code = :code " +

@@ -362,12 +362,14 @@ function deleteCategory(category) {
 var currentProductPage = 1;
 var totalProductPages = 1;
 var currentSort = 'id-desc';
+var currentSearchKeyword = ''; // Lưu từ khóa search hiện tại
 
 function loadProducts(page, sortBy) {
     if (!page) page = 1;
     if (!sortBy) sortBy = currentSort;
     currentProductPage = page;
     currentSort = sortBy;
+    currentSearchKeyword = ''; // Xóa keyword khi load bình thường
 
     var url = CTX + '/admin/product/add?page=' + page + '&sort=' + sortBy;
     
@@ -381,6 +383,36 @@ function loadProducts(page, sortBy) {
         })
         .catch(function (error) {
             alert('Không thể tải danh sách sản phẩm: ' + error.message);
+        });
+}
+
+// Hàm mới: load products với search keyword
+function loadProductsWithSearch(keyword, page, sortBy) {
+    if (!page) page = 1;
+    if (!sortBy) sortBy = currentSort;
+    currentProductPage = page;
+    currentSort = sortBy;
+    currentSearchKeyword = keyword; // Lưu keyword
+
+    var url = CTX + '/admin/product/add?page=' + page + '&sort=' + sortBy + '&search=' + encodeURIComponent(keyword);
+    
+    fetch(url)
+        .then(function (response) {
+            if (!response.ok) throw new Error('HTTP ' + response.status);
+            return response.json();
+        })
+        .then(function (data) {
+            displayProducts(data);
+            // Hiển thị thông báo kết quả tìm kiếm
+            if (data.searchKeyword) {
+                var header = document.querySelector('.product-list-header h2');
+                if (header) {
+                    header.textContent = 'Kết quả tìm kiếm: "' + data.searchKeyword + '" (' + data.totalProducts + ' sản phẩm)';
+                }
+            }
+        })
+        .catch(function (error) {
+            alert('Không thể tìm kiếm sản phẩm: ' + error.message);
         });
 }
 
@@ -438,7 +470,7 @@ function editProduct(product) {
 
     modalTitle.textContent = 'Chỉnh sửa Sản phẩm';
     modalSubmitBtn.textContent = 'Cập nhật Sản phẩm';
-    modalSubmitBtn.style.backgroundColor = '#ff8c00';
+    modalSubmitBtn.style.backgroundColor = '#640100';
 
     fetch(CTX + '/admin/product/get?id=' + product.id)
         .then(function (response) {
@@ -756,7 +788,11 @@ function updateProductPagination() {
     } else {
         prevLink.onclick = function (e) {
             e.preventDefault();
-            loadProducts(currentProductPage - 1, currentSort);
+            if (currentSearchKeyword) {
+                loadProductsWithSearch(currentSearchKeyword, currentProductPage - 1, currentSort);
+            } else {
+                loadProducts(currentProductPage - 1, currentSort);
+            }
         };
     }
     paginationDiv.appendChild(prevLink);
@@ -770,7 +806,11 @@ function updateProductPagination() {
         firstLink.textContent = '1';
         firstLink.onclick = function (e) {
             e.preventDefault();
-            loadProducts(1, currentSort);
+            if (currentSearchKeyword) {
+                loadProductsWithSearch(currentSearchKeyword, 1, currentSort);
+            } else {
+                loadProducts(1, currentSort);
+            }
         };
         paginationDiv.appendChild(firstLink);
 
@@ -794,7 +834,11 @@ function updateProductPagination() {
             pageLink.onclick = (function (page) {
                 return function (e) {
                     e.preventDefault();
-                    loadProducts(page, currentSort);
+                    if (currentSearchKeyword) {
+                        loadProductsWithSearch(currentSearchKeyword, page, currentSort);
+                    } else {
+                        loadProducts(page, currentSort);
+                    }
                 };
             })(i);
         }
@@ -814,7 +858,11 @@ function updateProductPagination() {
         lastLink.textContent = totalProductPages;
         lastLink.onclick = function (e) {
             e.preventDefault();
-            loadProducts(totalProductPages, currentSort);
+            if (currentSearchKeyword) {
+                loadProductsWithSearch(currentSearchKeyword, totalProductPages, currentSort);
+            } else {
+                loadProducts(totalProductPages, currentSort);
+            }
         };
         paginationDiv.appendChild(lastLink);
     }
@@ -828,7 +876,11 @@ function updateProductPagination() {
     } else {
         nextLink.onclick = function (e) {
             e.preventDefault();
-            loadProducts(currentProductPage + 1, currentSort);
+            if (currentSearchKeyword) {
+                loadProductsWithSearch(currentSearchKeyword, currentProductPage + 1, currentSort);
+            } else {
+                loadProducts(currentProductPage + 1, currentSort);
+            }
         };
     }
     paginationDiv.appendChild(nextLink);
@@ -917,6 +969,13 @@ document.addEventListener('DOMContentLoaded', function () {
     var addCategoryForm = document.getElementById('addCategoryForm');
     var categorySubmitBtn = document.getElementById('categorySubmitBtn');
 
+    var addPolicyBtnTop = document.getElementById('addPolicyBtnTop');
+    var addPolicyModal = document.getElementById('addPolicyModal');
+    var closePolicyModalBtn = document.getElementById('closePolicyModalBtn');
+    var cancelPolicyModalBtn = document.getElementById('cancelPolicyModalBtn');
+    var addPolicyForm = document.getElementById('addPolicyForm');
+    var policySubmitBtn = document.getElementById('policySubmitBtn');
+
     var imageInput = document.getElementById('product-image-input');
     var imagePreviewGrid = document.getElementById('imagePreviewGrid');
     var variantsContainer = document.getElementById('variantsContainer');
@@ -942,6 +1001,10 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelector('[data-tab="' + tabId + '"]').classList.add('active');
 
         if (tabId === 'categories-tab') {
+            loadCategories();
+        }
+        if (tabId === 'policies-tab') {
+            loadPolicies();
             loadCategories();
         }
     }
@@ -994,9 +1057,41 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    if (addPolicyBtnTop) {
+        addPolicyBtnTop.addEventListener('click', function (e) {
+            e.preventDefault();
+            console.log('Policy button clicked!');
+            console.log('Modal element:', addPolicyModal);
+
+            addPolicyForm.reset();
+            delete addPolicyForm.dataset.editId;
+
+            document.getElementById('policyModalTitle').textContent = 'Thêm Chính sách';
+            document.getElementById('policySubmitBtn').textContent = 'Lưu Chính sách';
+
+            openModal(addPolicyModal);
+            loadCategories();
+        });
+    } else {
+        console.warn('addPolicyBtnTop not found!');
+    }
+
+    if (closePolicyModalBtn) {
+        closePolicyModalBtn.addEventListener('click', function () {
+            closeModal(addPolicyModal);
+        });
+    }
+
+    if (cancelPolicyModalBtn) {
+        cancelPolicyModalBtn.addEventListener('click', function () {
+            closeModal(addPolicyModal);
+        });
+    }
+
     window.addEventListener('click', function (evt) {
         if (evt.target === addProductModal) closeModal(addProductModal);
         if (evt.target === addCategoryModal) closeModal(addCategoryModal);
+        if (evt.target === addPolicyModal) closeModal(addPolicyModal);
     });
 
     if (addCategoryForm) {
@@ -1049,6 +1144,67 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (categorySubmitBtn) {
                         categorySubmitBtn.disabled = false;
                         categorySubmitBtn.textContent = editId ? 'Cập nhật' : 'Lưu Danh mục';
+                    }
+                });
+        });
+    }
+
+    if (addPolicyForm) {
+        addPolicyForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            var categoryId = document.getElementById('policy-category').value.trim();
+            var policyText = document.getElementById('policy-text').value.trim();
+
+            if (!categoryId) {
+                alert('Vui lòng chọn danh mục');
+                return;
+            }
+
+            if (!policyText) {
+                alert('Vui lòng nhập nội dung chính sách');
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append('policy-category', categoryId);
+            formData.append('policy-text', policyText);
+
+            var isUpdate = addPolicyForm.dataset.editId;
+            if (isUpdate) {
+                formData.append('id', addPolicyForm.dataset.editId);
+            }
+
+            if (policySubmitBtn) {
+                policySubmitBtn.disabled = true;
+                policySubmitBtn.textContent = 'Đang lưu...';
+            }
+
+            fetch(CTX + '/admin/policy/add', {
+                method: 'POST',
+                body: new URLSearchParams(formData)
+            })
+                .then(function (response) {
+                    return response.json();
+                })
+                .then(function (result) {
+                    if (result.success) {
+                        alert(isUpdate ? 'Cập nhật chính sách thành công!' : 'Thêm chính sách thành công!');
+                        closeModal(addPolicyModal);
+                        addPolicyForm.reset();
+                        delete addPolicyForm.dataset.editId;
+                        loadPolicies();
+                    } else {
+                        alert('Lỗi: ' + (result.error || 'Không thể lưu chính sách'));
+                    }
+                })
+                .catch(function (error) {
+                    alert('Lỗi: ' + error.message);
+                })
+                .finally(function () {
+                    if (policySubmitBtn) {
+                        policySubmitBtn.disabled = false;
+                        policySubmitBtn.textContent = isUpdate ? 'Cập nhật' : 'Lưu Chính sách';
                     }
                 });
         });
@@ -1266,15 +1422,21 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var searchInput = document.getElementById('globalSearchInput');
     if (searchInput) {
+        var searchTimeout;
         searchInput.addEventListener('input', function () {
-            var q = this.value.trim().toLowerCase();
-            var rows = document.querySelectorAll('#productTableBody tr');
-
-            Array.prototype.forEach.call(rows, function (row) {
-                var text = row.innerText.toLowerCase();
-                var match = !q || text.indexOf(q) !== -1;
-                row.style.display = match ? '' : 'none';
-            });
+            var keyword = this.value.trim();
+            
+            // Debounce search - đợi 500ms sau khi user ngừng gõ
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(function() {
+                if (keyword) {
+                    // Tìm kiếm từ database
+                    loadProductsWithSearch(keyword, 1, currentSort);
+                } else {
+                    // Không có keyword -> load tất cả
+                    loadProducts(1, currentSort);
+                }
+            }, 500);
         });
 
         window.addEventListener('keydown', function (e) {
@@ -1289,10 +1451,199 @@ document.addEventListener('DOMContentLoaded', function () {
     if (sortSelect) {
         sortSelect.addEventListener('change', function () {
             currentSort = this.value;
-            loadProducts(1, currentSort);
+            // Nếu đang search thì giữ lại keyword
+            if (currentSearchKeyword) {
+                loadProductsWithSearch(currentSearchKeyword, 1, currentSort);
+            } else {
+                loadProducts(1, currentSort);
+            }
         });
     }
 
     loadCategories();
     loadProducts();
+    loadPolicies();
 });
+
+// ============================================
+// ✅ POLICY MANAGEMENT FUNCTIONS
+// ============================================
+
+// Global cache for categories
+var categoriesCache = [];
+
+function loadPolicies() {
+    fetch(CTX + '/admin/policy/list')
+        .then(function (response) {
+            if (!response.ok) throw new Error('Failed to load policies');
+            return response.json();
+        })
+        .then(function (policies) {
+            displayPoliciesTable(policies);
+        })
+        .catch(function (error) {
+            alert('Không thể tải chính sách: ' + error.message);
+        });
+}
+
+function displayPoliciesTable(policies) {
+    var tbody = document.getElementById('policyTableBody');
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+
+    if (!policies || policies.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:40px;">Chưa có chính sách nào</td></tr>';
+        return;
+    }
+
+    policies.forEach(function (policy) {
+        var row = document.createElement('tr');
+        row.className = 'policy-row';
+
+        var categoryCell = document.createElement('td');
+        var category = categoriesCache.find(function(cat) { return cat.id === policy.categoryId; });
+        categoryCell.textContent = category ? category.nameCategory : 'ID: ' + policy.categoryId;
+        categoryCell.style.color = '#666';
+        row.appendChild(categoryCell);
+
+        var textCell = document.createElement('td');
+        var text = policy.policyText || '';
+        if (text.length > 100) {
+            text = text.substring(0, 100) + '...';
+        }
+        textCell.textContent = text;
+        textCell.style.fontSize = '13px';
+        row.appendChild(textCell);
+
+        var dateCell = document.createElement('td');
+        dateCell.textContent = formatDateTime(policy.createdAt);
+        dateCell.style.fontSize = '13px';
+        dateCell.style.color = '#666';
+        row.appendChild(dateCell);
+
+        var actionCell = document.createElement('td');
+        actionCell.style.textAlign = 'center';
+
+        var editBtn = document.createElement('a');
+        editBtn.href = '#';
+        editBtn.className = 'btn-icon';
+        editBtn.innerHTML = '<i class="fas fa-edit" style="color: var(--brand)"></i>';
+        editBtn.title = 'Sửa';
+        editBtn.style.marginRight = '8px';
+        editBtn.onclick = function (e) {
+            e.preventDefault();
+            editPolicy(policy);
+        };
+
+        var deleteBtn = document.createElement('a');
+        deleteBtn.href = '#';
+        deleteBtn.className = 'btn-icon btn-icon-danger';
+        deleteBtn.innerHTML = '<i class="fas fa-trash" style="color: var(--brand)"></i>';
+        deleteBtn.title = 'Xóa';
+        deleteBtn.onclick = function (e) {
+            e.preventDefault();
+            deletePolicy(policy);
+        };
+
+        actionCell.appendChild(editBtn);
+        actionCell.appendChild(deleteBtn);
+        row.appendChild(actionCell);
+
+        tbody.appendChild(row);
+    });
+}
+
+function editPolicy(policy) {
+    var modal = document.getElementById('addPolicyModal');
+    var form = document.getElementById('addPolicyForm');
+
+    document.getElementById('policyModalTitle').textContent = 'Chỉnh sửa Chính sách';
+    document.getElementById('policy-category').value = policy.categoryId || '';
+    document.getElementById('policy-text').value = policy.policyText || '';
+
+    form.dataset.editId = policy.id;
+    document.getElementById('policySubmitBtn').textContent = 'Cập nhật';
+
+    openModal(modal);
+}
+
+function deletePolicy(policy) {
+    if (!confirm('Bạn có chắc muốn xóa chính sách này?')) {
+        return;
+    }
+
+    fetch(CTX + '/admin/policy/delete', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': 'application/json'
+        },
+        body: 'id=' + policy.id
+    })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (result) {
+            if (result.success) {
+                alert('Xóa chính sách thành công!');
+                loadPolicies();
+            } else {
+                alert('Lỗi: ' + (result.error || 'Không thể xóa chính sách'));
+            }
+        })
+        .catch(function (error) {
+            alert('Lỗi kết nối: ' + error.message);
+        });
+}
+
+function refreshPolicyCategorySelect(categories) {
+    var policySelect = document.getElementById('policy-category');
+    if (!policySelect) return;
+
+    var currentValue = policySelect.value;
+    policySelect.innerHTML = '<option value="">-- Chọn danh mục --</option>';
+
+    if (categories && categories.length > 0) {
+        // Build a map to track which categories have children
+        var parentIds = new Set();
+        categories.forEach(function (cat) {
+            if (cat.parentCategoryId !== null && cat.parentCategoryId !== undefined) {
+                parentIds.add(cat.parentCategoryId);
+            }
+        });
+
+        // Only add leaf categories (categories that are not parents)
+        var leafCategories = categories.filter(function (cat) {
+            return !parentIds.has(cat.id);
+        });
+
+        leafCategories.forEach(function (cat) {
+            var opt = document.createElement('option');
+            opt.value = cat.id;
+            opt.textContent = cat.nameCategory;
+            policySelect.appendChild(opt);
+        });
+    }
+
+    if (currentValue) policySelect.value = currentValue;
+}
+
+// Update loadCategories to also refresh policy select
+var originalLoadCategories = loadCategories;
+loadCategories = function() {
+    fetch(CTX + '/admin/category/list')
+        .then(function (response) {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        })
+        .then(function (categories) {
+            categoriesCache = categories; // Save to cache
+            refreshCategorySelects(categories);
+            displayCategoriesTable(categories);
+            refreshPolicyCategorySelect(categories);
+        })
+        .catch(function (error) {
+            alert('Không thể tải danh mục: ' + error.message);
+        });
+};

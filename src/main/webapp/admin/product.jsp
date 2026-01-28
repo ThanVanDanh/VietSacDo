@@ -32,6 +32,9 @@
             <button class="tab-button" data-tab="categories-tab">
                 <i class="fas fa-folder"></i> Quản lý Danh mục
             </button>
+            <button class="tab-button" data-tab="policies-tab">
+                <i class="fas fa-file-contract"></i> Quản lý Chính sách
+            </button>
         </div>
 
         <div id="products-tab" class="tab-content active">
@@ -115,6 +118,33 @@
                     </tr>
                     </thead>
                     <tbody id="categoryTableBody">
+                    </tbody>
+                </table>
+            </section>
+        </div>
+
+        <div id="policies-tab" class="tab-content">
+            <section class="policy-section">
+                <div class="policy-list-header"
+                     style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                    <h2>Danh sách Chính sách</h2>
+                    <div class="actions-row">
+                        <a href="#" class="btn btn-primary" id="addPolicyBtnTop">
+                            <i class="fas fa-plus"></i> Thêm Chính sách
+                        </a>
+                    </div>
+                </div>
+
+                <table class="product-table">
+                    <thead>
+                    <tr>
+                        <th>Danh mục</th>
+                        <th>Nội dung chính sách</th>
+                        <th style="width: 150px;">Ngày tạo</th>
+                        <th style="width: 120px; text-align: center">Cài đặt</th>
+                    </tr>
+                    </thead>
+                    <tbody id="policyTableBody">
                     </tbody>
                 </table>
             </section>
@@ -313,6 +343,8 @@
 
                             <div class="form-group-modal">
                                 <label for="batch-discount-type">Loại giảm giá</label>
+                            <div class="form-group-modal">
+                                <label for="batch-discount-type">Loại giảm giá</label>
                                 <select id="batch-discount-type">
                                     <option value="percentage">Giảm theo %</option>
                                     <option value="fixed">Giảm số tiền cố định</option>
@@ -342,6 +374,47 @@
         </div>
 
     </main>
+
+    <!-- Policy Modal -->
+
+    <!-- Policy Modal -->
+    <div id="addPolicyModal" class="modal-overlay" aria-hidden="true">
+        <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="policyModalTitle">
+            <div class="modal-header">
+                <h3 id="policyModalTitle">Thêm Chính sách</h3>
+                <span class="close-button" id="closePolicyModalBtn">&times;</span>
+            </div>
+
+            <form id="addPolicyForm" action="${pageContext.request.contextPath}/admin/policy/add"
+                  method="post" novalidate>
+                <div class="modal-body">
+                    <div class="modal-form-grid">
+                        <div class="form-group-modal full-width">
+                            <label for="policy-category">Danh mục <span style="color:red">*</span></label>
+                            <select id="policy-category" name="policy-category" required>
+                                <option value="">-- Chọn danh mục --</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group-modal full-width">
+                            <label for="policy-text">Nội dung chính sách <span style="color:red">*</span></label>
+                            <textarea id="policy-text" name="policy-text" rows="10" 
+                                      placeholder="Nhập nội dung chính sách cho danh mục này..." required></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-modal btn-modal-secondary" id="cancelPolicyModalBtn">
+                        Hủy
+                    </button>
+                    <button type="submit" class="btn-modal btn-modal-primary" id="policySubmitBtn">
+                        Lưu Chính sách
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 <script>

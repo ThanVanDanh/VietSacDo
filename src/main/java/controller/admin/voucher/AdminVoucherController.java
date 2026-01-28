@@ -30,12 +30,9 @@ public class AdminVoucherController extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         try {
-            System.out.println("=== Initializing AdminVoucherController ===");
             voucherDao = new VoucherDao();
             gson = GsonUtil.getGson();
-            System.out.println("✅ VoucherDao initialized");
         } catch (Exception ex) {
-            System.err.println("❌ Init failed: " + ex.getMessage());
             ex.printStackTrace();
             throw new ServletException("Init failed: " + ex.getMessage(), ex);
         }
@@ -78,18 +75,14 @@ public class AdminVoucherController extends HttpServlet {
     }
 
     private void handleListVouchers(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        System.out.println("=== handleListVouchers ===");
-
         try {
             List<Voucher> vouchers = voucherDao.getAll();
-            System.out.println("✅ Loaded " + vouchers.size() + " vouchers");
 
             String json = gson.toJson(vouchers);
             resp.getWriter().write(json);
             resp.setStatus(HttpServletResponse.SC_OK);
 
         } catch (Exception ex) {
-            System.err.println("❌ Error listing vouchers: " + ex.getMessage());
             ex.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().write("{\"error\":\"" + escapeJson(ex.getMessage()) + "\"}");
@@ -97,8 +90,6 @@ public class AdminVoucherController extends HttpServlet {
     }
 
     private void handleGetVoucher(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        System.out.println("=== handleGetVoucher ===");
-
         try {
             String idStr = req.getParameter("id");
 
@@ -122,7 +113,6 @@ public class AdminVoucherController extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_OK);
 
         } catch (Exception ex) {
-            System.err.println("❌ Error getting voucher: " + ex.getMessage());
             ex.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().write("{\"error\":\"" + escapeJson(ex.getMessage()) + "\"}");
@@ -130,8 +120,6 @@ public class AdminVoucherController extends HttpServlet {
     }
 
     private void handleAddOrUpdate(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        System.out.println("=== handleAddOrUpdate Voucher ===");
-
         resp.setContentType("application/json;charset=UTF-8");
 
         try {
@@ -177,23 +165,19 @@ public class AdminVoucherController extends HttpServlet {
             voucher.setActive("true".equals(activeStr) || "1".equals(activeStr));
 
             if (isUpdate) {
-                // Keep current usage
                 Voucher existing = voucherDao.getById(voucherId);
                 voucher.setCurrentUsage(existing.getCurrentUsage());
 
                 boolean success = voucherDao.update(voucher);
-                System.out.println("✅ Updated voucher ID: " + voucherId);
                 resp.getWriter().write("{\"success\":true,\"id\":" + voucherId + "}");
             } else {
                 int newId = voucherDao.insert(voucher);
-                System.out.println("✅ Created voucher ID: " + newId);
                 resp.getWriter().write("{\"success\":true,\"id\":" + newId + "}");
             }
 
             resp.setStatus(HttpServletResponse.SC_OK);
 
         } catch (Exception ex) {
-            System.err.println("❌ Error saving voucher: " + ex.getMessage());
             ex.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().write("{\"error\":\"" + escapeJson(ex.getMessage()) + "\"}");
@@ -215,11 +199,9 @@ public class AdminVoucherController extends HttpServlet {
 
             int voucherId = Integer.parseInt(idStr.trim());
             System.out.println("Deleting voucher ID: " + voucherId);
-
             boolean success = voucherDao.delete(voucherId);
 
             if (success) {
-                System.out.println("✅ Deleted voucher ID: " + voucherId);
                 resp.setStatus(HttpServletResponse.SC_OK);
                 resp.getWriter().write("{\"success\":true,\"message\":\"Xóa voucher thành công\"}");
             } else {
@@ -228,7 +210,6 @@ public class AdminVoucherController extends HttpServlet {
             }
 
         } catch (Exception ex) {
-            System.err.println("❌ Error deleting voucher: " + ex.getMessage());
             ex.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().write("{\"error\":\"" + escapeJson(ex.getMessage()) + "\"}");

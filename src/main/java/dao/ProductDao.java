@@ -17,16 +17,12 @@ public class ProductDao extends BaseDao {
         this.jdbi = get();
     }
 
-    /**
-     * Chuyển chuỗi tiếng Việt có dấu thành không dấu, viết thường để hỗ trợ search
-     */
     private String normalizeVietnamese(String text) {
         if (text == null || text.isEmpty())
             return "";
 
         String result = text.toLowerCase();
 
-        // Xóa dấu tiếng Việt
         result = result.replaceAll("[àáạảãâầấậẩẫăằắặẳẵ]", "a");
         result = result.replaceAll("[èéẹẻẽêềếệểễ]", "e");
         result = result.replaceAll("[ìíịỉĩ]", "i");
@@ -35,10 +31,8 @@ public class ProductDao extends BaseDao {
         result = result.replaceAll("[ỳýỵỷỹ]", "y");
         result = result.replaceAll("đ", "d");
 
-        // Xóa ký tự đặc biệt (giữ lại chữ, số và khoảng trắng)
         result = result.replaceAll("[^a-z0-9\\s]", " ");
 
-        // Chuẩn hóa nhiều khoảng trắng thành 1
         result = result.replaceAll("\\s+", " ");
 
         return result.trim();
@@ -175,20 +169,15 @@ public class ProductDao extends BaseDao {
                 .mapToBean(ProductListDTO.class)
                 .list());
     }
-    // Trong file dao/ProductDao.java
-
-    // 1. Đếm tổng số sản phẩm đang Active (để tính số trang)
     public int countActiveProducts() {
         String sql = "SELECT COUNT(*) FROM Products WHERE status_product = 'active'";
         return get().withHandle(handle -> handle.createQuery(sql).mapTo(Integer.class).one());
     }
 
-    // 2. Lấy danh sách tất cả sản phẩm Active (có Phân trang & Sắp xếp)
     public List<ProductListDTO> getAllActiveProductsPayload(int page, int pageSize, String sortBy) {
         int offset = (page - 1) * pageSize;
-        String orderBy = "p.id DESC"; // Mặc định: Mới nhất
+        String orderBy = "p.id DESC";
 
-        // Xử lý sắp xếp (Mapping giống CategoryController)
         switch (sortBy) {
             case "alpha-asc":
                 orderBy = "p.name_product ASC";
@@ -241,14 +230,12 @@ public class ProductDao extends BaseDao {
                     .orElse(null);
 
             if (product != null) {
-                // Lấy variants
                 product.setVariants(handle.createQuery(
                         "SELECT * FROM Product_variants WHERE product_id = :id ORDER BY FIELD(size, 'S', 'M', 'L', 'XL', 'XXL');")
                         .bind("id", id)
                         .mapToBean(ProductVariant.class)
                         .list());
 
-                // Lấy images
                 product.setImages(handle.createQuery("SELECT * FROM Product_images WHERE product_id = :id")
                         .bind("id", id)
                         .mapToBean(ProductImage.class)
@@ -258,7 +245,6 @@ public class ProductDao extends BaseDao {
         });
     }
 
-    // Thêm vào trong class ProductDao
     public List<ProductListDTO> getProductsByCategory(int categoryId) {
         String sql = "SELECT p.id, p.name_product, " +
                 "(SELECT current_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS price, " +
@@ -356,19 +342,15 @@ public class ProductDao extends BaseDao {
 
     public boolean delete(int productId) {
         return get().withHandle(handle -> {
-            // Delete trong transaction để đảm bảo consistency
             return handle.inTransaction(h -> {
-                // 1. Xóa product images
                 h.createUpdate("DELETE FROM Product_images WHERE product_id = :productId")
                         .bind("productId", productId)
                         .execute();
 
-                // 2. Xóa product variants
                 h.createUpdate("DELETE FROM Product_variants WHERE product_id = :productId")
                         .bind("productId", productId)
                         .execute();
 
-                // 3. Xóa product
                 int affected = h.createUpdate("DELETE FROM Products WHERE id = :productId")
                         .bind("productId", productId)
                         .execute();
@@ -384,9 +366,6 @@ public class ProductDao extends BaseDao {
                 .withHandle(handle -> handle.createQuery(sql).bind("productId", productId).mapTo(Integer.class).one());
     }
 
-    /**
-     * ✅ MỚI: Đếm số images của product
-     */
     public int countImages(int productId) {
         String sql = "SELECT COUNT(*) FROM Product_images WHERE product_id = :productId";
         return get()
@@ -422,5 +401,123 @@ public class ProductDao extends BaseDao {
                 .execute();
 
         return rows > 0;
+    }
+
+    public List<ProductListDTO> searchProducts(String keyword, int page, int pageSize, String sortBy) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return getAllActiveProductsPayload(page, pageSize, sortBy);
+        }
+
+        int offset = (page - 1) * pageSize;
+        String orderBy = "MATCH(p.search_product) AGAINST(:keyword IN NATURAL LANGUAGE MODE) DESC";
+
+        if (sortBy != null && !sortBy.isEmpty() && !sortBy.equals("relevance")) {
+            switch (sortBy) {
+                case "alpha-asc": orderBy = "p.name_product ASC"; break;
+                case "alpha-desc": orderBy = "p.name_product DESC"; break;
+                case "price-asc": orderBy = "price ASC"; break;
+                case "price-desc": orderBy = "price DESC"; break;
+                case "created-desc": orderBy = "p.created_at DESC"; break;
+            }
+        }
+
+        String sql = "SELECT " +
+                "p.id, p.name_product, p.product_code, p.status_product, p.created_at, p.category_id, c.name_category AS categoryName, " +
+                "(SELECT current_price FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS price, " +
+                "(SELECT discounted_price FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS discountedPrice, " +
+                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
+                "(SELECT sku FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS sku, " +
+                "COALESCE((SELECT COUNT(*) FROM Product_variants WHERE product_id = p.id), 0) AS variantCount, " +
+                "COALESCE((SELECT SUM(stock_quantity) FROM Product_variants WHERE product_id = p.id), 0) AS totalStock " +
+                "FROM Products p " +
+                "LEFT JOIN Categories c ON p.category_id = c.id " +
+                "WHERE p.status_product = 'active' " +
+                "AND MATCH(p.search_product) AGAINST(:keyword IN NATURAL LANGUAGE MODE) " +
+                "ORDER BY " + orderBy + " " +
+                "LIMIT :limit OFFSET :offset";
+
+        return get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("keyword", keyword.trim())
+                        .bind("limit", pageSize)
+                        .bind("offset", offset)
+                        .mapToBean(ProductListDTO.class)
+                        .list()
+        );
+    }
+
+    public int countSearchResults(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return countActiveProducts();
+        }
+
+        String sql = "SELECT COUNT(*) FROM Products p " +
+                "WHERE p.status_product = 'active' " +
+                "AND MATCH(p.search_product) AGAINST(:keyword IN NATURAL LANGUAGE MODE)";
+
+        return get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("keyword", keyword.trim())
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
+
+
+    public List<ProductListDTO> searchProductsAdmin(String keyword, int page, int pageSize, String sortBy) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return getListProductWithPaginationAndSort(pageSize, (page - 1) * pageSize, sortBy);
+        }
+
+        int offset = (page - 1) * pageSize;
+        String orderBy = "MATCH(p.search_product) AGAINST(:keyword IN NATURAL LANGUAGE MODE) DESC";
+
+        if (sortBy != null && !sortBy.isEmpty() && !sortBy.equals("relevance") && !sortBy.equals("id-desc")) {
+            switch (sortBy) {
+                case "name-asc": orderBy = "p.name_product ASC"; break;
+                case "name-desc": orderBy = "p.name_product DESC"; break;
+                case "price-asc": orderBy = "price ASC"; break;
+                case "price-desc": orderBy = "price DESC"; break;
+                case "id-asc": orderBy = "p.id ASC"; break;
+            }
+        }
+
+        String sql = "SELECT " +
+                "p.id, p.name_product, p.product_code, p.status_product, p.created_at, p.category_id, c.name_category AS categoryName, " +
+                "(SELECT current_price FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS price, " +
+                "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, " +
+                "(SELECT sku FROM Product_variants WHERE product_id = p.id ORDER BY id LIMIT 1) AS sku, " +
+                "COALESCE((SELECT COUNT(*) FROM Product_variants WHERE product_id = p.id), 0) AS variantCount, " +
+                "COALESCE((SELECT SUM(stock_quantity) FROM Product_variants WHERE product_id = p.id), 0) AS totalStock " +
+                "FROM Products p " +
+                "LEFT JOIN Categories c ON p.category_id = c.id " +
+                "WHERE MATCH(p.search_product) AGAINST(:keyword IN NATURAL LANGUAGE MODE) " +
+                "ORDER BY " + orderBy + " " +
+                "LIMIT :limit OFFSET :offset";
+
+        return get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("keyword", keyword.trim())
+                        .bind("limit", pageSize)
+                        .bind("offset", offset)
+                        .mapToBean(ProductListDTO.class)
+                        .list()
+        );
+    }
+
+    public int countSearchResultsAdmin(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return countTotalProducts();
+        }
+
+        String sql = "SELECT COUNT(*) FROM Products p " +
+                "WHERE MATCH(p.search_product) AGAINST(:keyword IN NATURAL LANGUAGE MODE)";
+
+        return get().withHandle(handle ->
+                handle.createQuery(sql)
+                        .bind("keyword", keyword.trim())
+                        .mapTo(Integer.class)
+                        .one()
+        );
     }
 }

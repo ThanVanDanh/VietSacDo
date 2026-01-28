@@ -18,39 +18,32 @@
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/style/footer.css">
                 <link rel="stylesheet" href="${pageContext.request.contextPath}/style/style-header.css">
 
-                <%-- <script src="scripts/home.js"></script>--%>
-            </head>
+    <script src="${pageContext.request.contextPath}/scripts/home.js"></script>
+</head>
+<body>
+<c:set var="pageTitle" value="${currentCategory.nameCategory}" scope="request" />
+<jsp:include page="header.jsp" />
+<main>
+    <section class="product-showcase tab-component">
+        <div class="title-h1-linen">
+            <h1>${currentCategory.nameCategory}</h1>
+        </div>
 
-            <body>
-                <c:set var="pageTitle" value="${currentCategory.nameCategory}" scope="request" />
-                <jsp:include page="header.jsp" />
-                <main>
-                    <section class="product-showcase tab-component">
-                        <div class="title-h1-linen">
-                            <h1>${currentCategory.nameCategory}</h1>
-                        </div>
-
-                        <div class="toolbar-container">
-                            <div class="sort-by-wrapper">
-                                <label for="sort-by">Sắp xếp:</label>
-                                <div class="custom-select-wrapper">
-                                    <select id="sort-by" name="sort-by"
-                                        onchange="location.href='?page=1&sort-by='+this.value">
-                                        <option value="alpha-asc" ${sortBy=='alpha-asc' ? 'selected' : '' }>Tên A → Z
-                                        </option>
-                                        <option value="alpha-desc" ${sortBy=='alpha-desc' ? 'selected' : '' }>Tên Z → A
-                                        </option>
-                                        <option value="price-asc" ${sortBy=='price-asc' ? 'selected' : '' }>Giá tăng dần
-                                        </option>
-                                        <option value="price-desc" ${sortBy=='price-desc' ? 'selected' : '' }>Giá giảm
-                                            dần</option>
-                                        <option value="created-desc" ${sortBy=='created-desc' ? 'selected' : '' }>Hàng
-                                            mới</option>
-                                    </select>
-                                    <span class="custom-arrow"></span>
-                                </div>
-                            </div>
-                        </div>
+        <div class="toolbar-container">
+            <div class="sort-by-wrapper">
+                <label for="sort-by">Sắp xếp:</label>
+                <div class="custom-select-wrapper">
+                    <select id="sort-by" name="sort-by" onchange="location.href='?page=1&sort-by='+this.value">
+                        <option value="alpha-asc" ${sortBy == 'alpha-asc' ? 'selected' : ''}>Tên A → Z</option>
+                        <option value="alpha-desc" ${sortBy == 'alpha-desc' ? 'selected' : ''}>Tên Z → A</option>
+                        <option value="price-asc" ${sortBy == 'price-asc' ? 'selected' : ''}>Giá tăng dần</option>
+                        <option value="price-desc" ${sortBy == 'price-desc' ? 'selected' : ''}>Giá giảm dần</option>
+                        <option value="created-desc" ${sortBy == 'created-desc' ? 'selected' : ''}>Hàng mới</option>
+                    </select>
+                    <span class="custom-arrow"></span>
+                </div>
+            </div>
+        </div>
 
                         <div class="product-grid">
                             <c:forEach var="pdto" items="${list}">

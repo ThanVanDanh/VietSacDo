@@ -126,26 +126,11 @@ public class ProductService {
         return 0.0;
     }
 
-    // // Xóa danh sách ảnh đã upload (dùng publicId)
-    // private void cleanupUploaded(List<UploadedImageResult> uploaded) {
-    // if (uploaded == null || uploaded.isEmpty()) return;
-    // for (UploadedImageResult r : uploaded) {
-    // if (r.publicId != null) {
-    // try {
-    // cloudinary.deleteByPublicId(r.publicId);
-    // } catch (Exception ignored) {
-    // // nếu xóa fail, ghi log hoặc bỏ qua (không ném tiếp)
-    // ignored.printStackTrace();
-    // }
-    // }
-    // }
-    // }
 
     public int createProduct(Product product, List<ProductVariant> variants, List<ImageUpload> uploads) {
         List<UploadedImage> uploaded = new ArrayList<>();
 
         try {
-            // 1) upload ảnh trước
             if (uploads != null) {
                 for (ImageUpload iu : uploads) {
                     CloudinaryService.UploadedImage u;
@@ -164,7 +149,6 @@ public class ProductService {
                 }
             }
 
-            // 2) Insert vào DB trong 1 transaction
             int newProductId = jdbi.inTransaction(handle -> {
                 int pid = productDao.insert(handle, product);
 
@@ -186,7 +170,6 @@ public class ProductService {
                     }
                 }
 
-                // ✨ Đảm bảo chỉ có 1 thumbnail
                 ensureOnlyOneThumbnail(handle, pid);
 
                 return pid;
@@ -195,7 +178,6 @@ public class ProductService {
             return newProductId;
 
         } catch (RuntimeException ex) {
-            // error -> cleanup cloudinary uploads
             cleanupUploaded(uploaded);
             throw ex;
         }
@@ -226,7 +208,6 @@ public class ProductService {
         System.out.println("Keep Images: " + (keepImageIds != null ? keepImageIds.size() : 0));
         System.out.println("New Images: " + (newImageUploads != null ? newImageUploads.size() : 0));
 
-        // 1. Upload new images to Cloudinary first
         List<UploadedImage> uploaded = new ArrayList<>();
 
         if (newImageUploads != null && !newImageUploads.isEmpty()) {
@@ -253,27 +234,22 @@ public class ProductService {
 
                 } catch (Exception e) {
                     System.err.println("❌ Upload failed: " + iu.getFilename() + " - " + e.getMessage());
-
-                    // Cleanup uploaded images
                     cleanupUploaded(uploaded);
                     throw new Exception("Failed to upload image: " + iu.getFilename(), e);
                 }
             }
         }
 
-        // 2. Update database in transaction
         List<String> imagesToDelete = new ArrayList<>();
 
         try {
             boolean success = jdbi.inTransaction(handle -> {
-                // 2.1. Update product basic info
                 boolean updated = productDao.update(handle, product);
                 if (!updated) {
                     throw new RuntimeException("Failed to update product");
                 }
                 System.out.println("✅ Product updated");
 
-                // 2.2. & 2.3. Smart Update Variants (Preserve IDs)
                 List<ProductVariant> currentVariants = variantDao.getByProductId(handle, product.getId());
                 List<String> incomingSkus = new ArrayList<>();
 
@@ -282,10 +258,8 @@ public class ProductService {
                         incomingSkus.add(v.getSku());
                         boolean exists = false;
 
-                        // Try to find existing variant by SKU
                         for (ProductVariant existing : currentVariants) {
                             if (existing.getSku().equalsIgnoreCase(v.getSku())) {
-                                // Update existing
                                 existing.setSize(v.getSize());
                                 existing.setColor(v.getColor());
                                 existing.setCurrentPrice(v.getCurrentPrice());
@@ -297,57 +271,42 @@ public class ProductService {
                         }
 
                         if (!exists) {
-                            // Insert new
                             v.setProductId(product.getId());
                             variantDao.insert(handle, v);
                         }
                     }
                 }
 
-                // Delete removed variants
                 for (ProductVariant existing : currentVariants) {
                     if (!incomingSkus.contains(existing.getSku())) {
-                        // Check if used in orders? Ideally yes, but for now simple delete
-                        // Or better: soft delete. But sticking to current behavior (hard delete) only
-                        // for removed ones.
                         variantDao.delete(handle, existing.getId());
                     }
                 }
-                System.out.println("✅ Variants synced (Smart Update)");
 
-                // 2.4. Get existing images to determine which to delete
                 List<ProductImage> existingImages = imageDao.getByProductId(handle, product.getId());
 
                 for (ProductImage img : existingImages) {
                     boolean shouldKeep = keepImageIds != null && keepImageIds.contains(img.getId());
                     if (!shouldKeep) {
-                        // Mark for deletion from Cloudinary
                         imagesToDelete.add(img.getImageUrl());
                     }
                 }
 
-                System.out.println("✅ Images to delete from Cloudinary: " + imagesToDelete.size());
 
-                // 2.5. Delete images NOT in keepImageIds
                 if (keepImageIds == null || keepImageIds.isEmpty()) {
                     imageDao.deleteByProductId(handle, product.getId());
-                    System.out.println("✅ All images deleted");
                 } else {
                     imageDao.deleteExcept(handle, product.getId(), keepImageIds);
-                    System.out.println("✅ Images deleted except: " + keepImageIds);
                 }
 
-                // 2.6. ✨ Update thumbnail cho existing images
                 if (keepImageIds != null && !keepImageIds.isEmpty()) {
                     for (int i = 0; i < keepImageIds.size(); i++) {
                         int imageId = keepImageIds.get(i);
                         boolean isThumb = keepImageThumbs != null && i < keepImageThumbs.size() && keepImageThumbs.get(i);
                         imageDao.updateThumbnail(handle, imageId, isThumb);
                     }
-                    System.out.println("✅ Updated thumbnail for existing images");
                 }
 
-                // 2.7. Insert new images
                 if (!uploaded.isEmpty()) {
                     for (UploadedImage u : uploaded) {
                         ProductImage img = new ProductImage(0);
@@ -358,10 +317,8 @@ public class ProductService {
 
                         imageDao.insert(handle, img);
                     }
-                    System.out.println("✅ New images inserted: " + uploaded.size());
                 }
 
-                // 2.8. ✨ Đảm bảo chỉ có 1 thumbnail - dùng data từ memory thay vì đọc lại DB
                 Integer selectedThumbnailId = null;
 
                 // Tìm thumbnail từ existing images
@@ -374,17 +331,14 @@ public class ProductService {
                     }
                 }
 
-                // Nếu không có existing thumbnail, tìm trong new images
                 if (selectedThumbnailId == null && !uploaded.isEmpty()) {
                     for (UploadedImage u : uploaded) {
                         if (u.isThumbnail) {
-                            // New image thumbnail - sẽ được handle bởi ensureOnlyOneThumbnail
                             break;
                         }
                     }
                 }
 
-                // Gọi enforce để đảm bảo chỉ có 1 thumbnail
                 ensureOnlyOneThumbnail(handle, product.getId());
 
                 return true;
@@ -395,27 +349,21 @@ public class ProductService {
             }
 
         } catch (Exception e) {
-            System.err.println("❌ Transaction failed: " + e.getMessage());
             e.printStackTrace();
-
-            // Cleanup newly uploaded images from Cloudinary
             cleanupUploaded(uploaded);
 
             throw new Exception("Failed to update product", e);
         }
 
-        // 3. Delete old images from Cloudinary (after successful transaction)
         if (!imagesToDelete.isEmpty()) {
             for (String url : imagesToDelete) {
                 try {
                     String publicId = extractPublicId(url);
                     if (publicId != null) {
                         cloudinary.deleteByPublicId(publicId);
-                        System.out.println("✅ Deleted from Cloudinary: " + publicId);
                     }
                 } catch (Exception e) {
-                    System.err.println("⚠️ Failed to delete from Cloudinary: " + url + " - " + e.getMessage());
-                    // Don't throw, just log
+                    System.err.println("Lỗi xóa ảnh Cloudinary: " + url + " - " + e.getMessage());
                 }
             }
         }
@@ -428,21 +376,18 @@ public class ProductService {
             return null;
 
         try {
-            // Find "/upload/" and extract everything after it
             int uploadIndex = url.indexOf("/upload/");
             if (uploadIndex == -1)
                 return null;
 
-            String afterUpload = url.substring(uploadIndex + 8); // "/upload/".length() = 8
+            String afterUpload = url.substring(uploadIndex + 8);
 
-            // Remove version (v1234567890/)
             int slashIndex = afterUpload.indexOf('/');
             if (slashIndex == -1)
                 return null;
 
             String withExtension = afterUpload.substring(slashIndex + 1);
 
-            // Remove file extension
             int dotIndex = withExtension.lastIndexOf('.');
             if (dotIndex == -1)
                 return withExtension;
@@ -455,18 +400,13 @@ public class ProductService {
         }
     }
 
-    /**
-     * Áp dụng giảm giá cho variant theo SKU
-     */
     public boolean applyDiscountBySku(String sku, String discountType, double discountValue) {
         try {
-            // Lấy variant theo SKU
             ProductVariant variant = variantDao.getVariantBySku(sku);
             if (variant == null) {
                 throw new RuntimeException("Không tìm thấy sản phẩm với SKU: " + sku);
             }
 
-            // Tính giá giảm
             double discountedPrice;
             if ("percentage".equals(discountType)) {
                 discountedPrice = variant.getCurrentPrice() * (1 - discountValue / 100);
@@ -474,11 +414,9 @@ public class ProductService {
                 discountedPrice = variant.getCurrentPrice() - discountValue;
             }
 
-            // Đảm bảo giá không âm
             if (discountedPrice < 0)
                 discountedPrice = 0;
 
-            // Cập nhật vào DB qua DAO
             return variantDao.updateDiscountedPrice(variant.getId(), discountedPrice);
 
         } catch (Exception e) {
@@ -487,12 +425,8 @@ public class ProductService {
         }
     }
 
-    /**
-     * Áp dụng giảm giá hàng loạt theo danh mục
-     */
     public int applyDiscountByCategories(List<Integer> categoryIds, String discountType, double discountValue) {
         try {
-            // Lấy tất cả variants của các categories qua DAO
             List<ProductVariant> variants = jdbi.withHandle(handle -> {
                 String selectSql = "SELECT pv.* FROM Product_variants pv " +
                         "INNER JOIN Products p ON pv.product_id = p.id " +
@@ -507,7 +441,6 @@ public class ProductService {
             if (variants.isEmpty())
                 return 0;
 
-            // Cập nhật từng variant qua DAO
             int count = 0;
             for (ProductVariant v : variants) {
                 double discountedPrice;
@@ -520,7 +453,6 @@ public class ProductService {
                 if (discountedPrice < 0)
                     discountedPrice = 0;
 
-                // Gọi DAO để update
                 boolean updated = variantDao.updateDiscountedPrice(v.getId(), discountedPrice);
                 if (updated)
                     count++;
@@ -535,14 +467,12 @@ public class ProductService {
     }
 
     private void ensureOnlyOneThumbnail(org.jdbi.v3.core.Handle handle, int productId) {
-        // Đọc tất cả images của product này
         String selectSql = "SELECT * FROM Product_images WHERE product_id = :productId ORDER BY id";
         List<ProductImage> images = handle.createQuery(selectSql)
                 .bind("productId", productId)
                 .mapToBean(ProductImage.class)
                 .list();
 
-        // Tìm ảnh đầu tiên có is_thumbnail = 1
         ProductImage thumbnailImage = null;
         for (ProductImage img : images) {
             if (img.isThumbnail()) {
@@ -551,13 +481,11 @@ public class ProductService {
             }
         }
 
-        // Reset tất cả về 0
         String resetSql = "UPDATE Product_images SET is_thumbnail = 0 WHERE product_id = :productId";
         handle.createUpdate(resetSql)
                 .bind("productId", productId)
                 .execute();
 
-        // Set lại ảnh thumbnail được chọn (hoặc ảnh đầu tiên nếu không có)
         if (thumbnailImage != null) {
             String updateSql = "UPDATE Product_images SET is_thumbnail = 1 WHERE id = :id";
             handle.createUpdate(updateSql)
