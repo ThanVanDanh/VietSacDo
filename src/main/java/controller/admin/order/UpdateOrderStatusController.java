@@ -46,7 +46,6 @@ public class UpdateOrderStatusController extends HttpServlet {
 
             boolean updated;
 
-            // If status is 'đã hủy', save the cancel reason as well
             if (newStatus.equalsIgnoreCase("đã hủy")) {
                 String cancelReason = req.getParameter("cancelReason");
                 if (cancelReason == null || cancelReason.trim().isEmpty()) {

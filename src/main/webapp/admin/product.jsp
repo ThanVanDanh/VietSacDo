@@ -13,9 +13,7 @@
 </head>
 <body>
 <div class="admin-container">
-    <!-- Sidebar -->
     <jsp:include page="sidebar.jsp" />
-    <!-- Main -->
     <main class="main-content">
         <header class="admin-header">
             <div class="header-actions">

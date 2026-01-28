@@ -19,7 +19,6 @@ public class Address implements Serializable {
     @ColumnName("is_default")
     private boolean isDefault;
 
-    // Getters and setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public int getUserId() { return userId; }

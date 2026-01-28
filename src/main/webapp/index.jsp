@@ -68,7 +68,6 @@
             </div>
         </div>
     </div>
-<%--section--%>
     <c:forEach var="section" items="${dynamicSections}" varStatus="sectionStatus">
         <c:set var="sectionClass" value="${sectionStatus.index % 2 == 0 ? 'product-showcase' : 'product-showcase-top'}" />
         

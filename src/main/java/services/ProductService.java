@@ -32,8 +32,8 @@ public class ProductService {
     }
 
     public static class ImageUpload {
-        private final InputStream inputStream; // ưu tiên
-        private final File file; // optional
+        private final InputStream inputStream;
+        private final File file;
         private final String filename;
         private final String altText;
         private final boolean isThumbnail;
@@ -75,7 +75,6 @@ public class ProductService {
         }
     }
 
-    // internal holder
     private static class UploadedImage {
         final String secureUrl;
         final String publicId;
@@ -140,7 +139,6 @@ public class ProductService {
                         u = cloudinary.upload(iu.getFile());
                     }
                     if (u == null || u.getSecureUrl() == null) {
-                        // nếu upload thất bại -> xóa đã upload trước đó rồi ném
                         cleanupUploaded(uploaded);
                         throw new RuntimeException("Upload ảnh thất bại: " + iu.getFilename());
                     }
@@ -230,10 +228,10 @@ public class ProductService {
                             iu.getAltText(),
                             iu.isThumbnail()));
 
-                    System.out.println("✅ Uploaded new image: " + u.getSecureUrl());
+                    System.out.println("Uploaded new image: " + u.getSecureUrl());
 
                 } catch (Exception e) {
-                    System.err.println("❌ Upload failed: " + iu.getFilename() + " - " + e.getMessage());
+                    System.err.println("Upload failed: " + iu.getFilename() + " - " + e.getMessage());
                     cleanupUploaded(uploaded);
                     throw new Exception("Failed to upload image: " + iu.getFilename(), e);
                 }
@@ -248,7 +246,7 @@ public class ProductService {
                 if (!updated) {
                     throw new RuntimeException("Failed to update product");
                 }
-                System.out.println("✅ Product updated");
+                System.out.println("Product updated");
 
                 List<ProductVariant> currentVariants = variantDao.getByProductId(handle, product.getId());
                 List<String> incomingSkus = new ArrayList<>();
@@ -321,7 +319,6 @@ public class ProductService {
 
                 Integer selectedThumbnailId = null;
 
-                // Tìm thumbnail từ existing images
                 if (keepImageThumbs != null) {
                     for (int i = 0; i < keepImageThumbs.size(); i++) {
                         if (keepImageThumbs.get(i)) {

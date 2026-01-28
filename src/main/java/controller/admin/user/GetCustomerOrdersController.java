@@ -23,7 +23,6 @@ public class GetCustomerOrdersController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         orderDao = new OrderDao();
-        // Use the centralized Gson instance
         gson = GsonUtil.getGson();
     }
 

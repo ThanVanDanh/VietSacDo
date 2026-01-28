@@ -33,7 +33,13 @@ public class CategoryMenuFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 
+
 		if (request instanceof HttpServletRequest httpRequest) {
+			String requestURI = httpRequest.getRequestURI();
+			if (requestURI.contains("/admin/")) {
+				chain.doFilter(request, response);
+				return;
+			}
 			ServletContext servletContext = httpRequest.getServletContext();
 
 			Object cachedAll = servletContext.getAttribute("menuAllCategories");

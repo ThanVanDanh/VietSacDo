@@ -37,7 +37,6 @@ public class AdminOrderDetailsController extends HttpServlet {
             int orderId = Integer.parseInt(orderIdStr);
             OrderDao orderDao = new OrderDao();
 
-            // Get order by ID
             Order order = orderDao.getOrderById(orderId);
             if (order == null) {
                 response.put("success", false);
@@ -46,10 +45,8 @@ public class AdminOrderDetailsController extends HttpServlet {
                 return;
             }
 
-            // Get order items
             List<OrderItem> items = orderDao.getOrderItems(orderId);
 
-            // Set formatted date for JSON
             order.setFormattedCreatedAt(order.getFormattedCreatedAt());
 
             response.put("success", true);

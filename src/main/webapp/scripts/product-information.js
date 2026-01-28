@@ -2,7 +2,6 @@
 let MAX_QTY = 1;
 
 function updateVariant(element, sizeName) {
-    // 1. Quản lý trạng thái Active nút Size
     document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
     element.classList.add('active');
 
@@ -12,20 +11,16 @@ function updateVariant(element, sizeName) {
     const sizeInput = document.getElementById('selectedVariantSize');
     if (sizeInput) sizeInput.value = sizeName;
 
-    // 2. Lấy dữ liệu từ data attributes
-    const discountedPrice = parseFloat(element.getAttribute('data-price')) || 0; // Giá sau giảm
-    const currentPrice = parseFloat(element.getAttribute('data-old-price')) || 0; // Giá gốc
+    const discountedPrice = parseFloat(element.getAttribute('data-price')) || 0;
+    const currentPrice = parseFloat(element.getAttribute('data-old-price')) || 0;
 
-    // 3. Các thành phần giao diện cần cập nhật
     const priceDisplay = document.getElementById('display-price');
     const oldPriceDisplay = document.querySelector('.old-price');
     const discountTag = document.querySelector('.discount-tag');
     const savingSection = document.querySelector('.saving');
     const savingPrice = document.querySelector('.saving .price');
 
-    // 4. Logic kiểm tra giảm giá
     if (discountedPrice > 0 && discountedPrice < currentPrice) {
-        // CÓ GIẢM GIÁ: Hiển thị đầy đủ các cột
         if (priceDisplay) priceDisplay.innerText = discountedPrice.toLocaleString('vi-VN') + '₫';
         if (oldPriceDisplay) {
             oldPriceDisplay.innerText = currentPrice.toLocaleString('vi-VN') + '₫';
@@ -41,27 +36,23 @@ function updateVariant(element, sizeName) {
             if (savingPrice) savingPrice.innerText = (currentPrice - discountedPrice).toLocaleString('vi-VN') + '₫';
         }
     } else {
-        // KHÔNG GIẢM GIÁ: Giữ nguyên giá gốc và ẩn 2 cột kia
         if (priceDisplay) priceDisplay.innerText = currentPrice.toLocaleString('vi-VN') + '₫';
         if (oldPriceDisplay) oldPriceDisplay.style.display = 'none';
         if (discountTag) discountTag.style.display = 'none';
         if (savingSection) savingSection.style.display = 'none';
     }
 
-    // 5. Cập nhật các thông tin khác (SKU, Stock, Hidden Input)
     const sku = element.getAttribute('data-sku');
     const skuDisplay = document.getElementById('sku-value');
     if (skuDisplay && sku) skuDisplay.innerText = sku;
 
-    // Cập nhật SKU cho input ẩn (quan trọng cho Buy Now)
     const skuInput = document.getElementById('selectedVariantSku');
     if (skuInput && sku) skuInput.value = sku;
 
     const priceInput = document.getElementById('selectedVariantPrice');
     if (priceInput) priceInput.value = (discountedPrice > 0) ? discountedPrice : currentPrice;
 
-    // Cập nhật kho hàng
-    MAX_QTY = parseInt(element.getAttribute('data-stock')) || 0; // Dùng getAttribute an toàn hơn dataset đôi khi
+    MAX_QTY = parseInt(element.getAttribute('data-stock')) || 0;
     updateStockUI(MAX_QTY);
 }
 
@@ -159,27 +150,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const popup = document.getElementById('success-add-shopping');
     const btnClose = document.getElementById('close-success-popup');
 
-    // if (btnAdd && popup) {
-    //     btnAdd.onclick = (e) => {
-    //         e.preventDefault();
-    //         popup.classList.add('active');
-    //     };
-    // }
-
     if (btnClose) btnClose.onclick = () => popup.classList.remove('active');
 
     window.addEventListener('click', (e) => {
         if (e.target === popup) popup.classList.remove('active');
     });
 });
-// Hàm xử lý Mua Ngay
 function buyNow(productId) {
-    // 1. Lấy thông tin từ các thẻ input ẩn trong trang JSP
     const sku = document.getElementById('selectedVariantSku').value;
     const quantity = document.getElementById('product-quantity').value;
     const size = document.getElementById('selectedVariantSize').value;
 
-    // 2. Kiểm tra validation
     if (!sku || sku.trim() === "") {
         alert("Vui lòng chọn Kích thước và Màu sắc trước khi mua hàng!");
         return;
@@ -190,28 +171,23 @@ function buyNow(productId) {
         return;
     }
 
-    // 3. Gửi request AJAX đến CartController
-    // URL 'cart' tương ứng với @WebServlet(name = "CartController", value = "/cart")
     fetch('cart', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-            'X-Requested-With': 'XMLHttpRequest' // Header báo hiệu đây là AJAX
+            'X-Requested-With': 'XMLHttpRequest'
         },
-        // Tạo body chuẩn format form-urlencoded
         body: new URLSearchParams({
             'action': 'add',
-            'productId': productId, // Controller đang nhận tham số là "productId"
+            'productId': productId,
             'sku': sku,
             'size': size,
             'quantity': quantity
         })
     })
-        .then(response => response.json()) // Controller trả về JSON
+        .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // 4. Thành công -> Chuyển hướng sang trang thanh toán
-                // Dữ liệu giỏ hàng đã được lưu trong Session, trang thanh toán sẽ tự lấy lên
                 window.location.href = "thanhtoan.jsp";
             } else {
                 alert(data.message || "Có lỗi xảy ra khi thêm vào giỏ hàng. Vui lòng thử lại!");

@@ -158,8 +158,7 @@
                                                             <td>${order.formattedCreatedAt}</td>
                                                             <td>
                                                                 <strong style="color: #d32f2f;">
-                                                                    <fmt:formatNumber value="${order.totalAmount}"
-                                                                        type="currency" currencySymbol="₫" />
+                                                                    <fmt:formatNumber value="${order.totalAmount}" pattern="#,###"/>₫
                                                                 </strong>
                                                             </td>
                                                             <td>
@@ -396,7 +395,6 @@
                                     </tr>
                                 </thead>
                                 <tbody id="modal-order-items-body">
-                                    <!-- AJAX Content here -->
                                 </tbody>
                             </table>
                         </div>
@@ -410,7 +408,6 @@
                     </div>
                 </div>
 
-                <!-- Cancel Order Modal -->
                 <div id="cancel-order-modal" class="modal-overlay" style="display: none;">
                     <div class="modal-content" style="max-width: 450px;">
                         <button class="modal-close">&times;</button>

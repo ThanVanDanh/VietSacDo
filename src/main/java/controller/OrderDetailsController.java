@@ -27,7 +27,6 @@ public class OrderDetailsController extends HttpServlet {
         Gson gson = GsonUtil.getGson();
         Map<String, Object> response = new HashMap<>();
 
-        // 1. Check Login
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("account");
         if (user == null) {
@@ -37,7 +36,6 @@ public class OrderDetailsController extends HttpServlet {
             return;
         }
 
-        // 2. Get Order ID
         String orderIdStr = req.getParameter("id");
         if (orderIdStr == null || orderIdStr.isEmpty()) {
             response.put("success", false);
@@ -50,7 +48,6 @@ public class OrderDetailsController extends HttpServlet {
             int orderId = Integer.parseInt(orderIdStr);
             OrderDao orderDao = new OrderDao();
 
-            // 3. Verify Ownership (Security Check)
             List<Order> userOrders = orderDao.getOrdersByUserId(user.getId());
             boolean isOwner = false;
             Order targetOrder = null;
@@ -69,10 +66,8 @@ public class OrderDetailsController extends HttpServlet {
                 return;
             }
 
-            // 4. Get Items
             List<OrderItem> items = orderDao.getOrderItems(orderId);
 
-            // 5. Populate transient field for JSON
             System.out.println("DEBUG: createdAt = " + targetOrder.getCreatedAt());
             String formatted = targetOrder.getFormattedCreatedAt();
             System.out.println("DEBUG: formatted date = " + formatted);

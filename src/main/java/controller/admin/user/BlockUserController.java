@@ -14,7 +14,7 @@ public class BlockUserController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             int userId = Integer.parseInt(req.getParameter("id"));
-            String action = req.getParameter("action"); // "block" hoặc "unlock"
+            String action = req.getParameter("action");
             String status = "block".equals(action) ? "banned" : "active";
 
             UserDao dao = new UserDao();

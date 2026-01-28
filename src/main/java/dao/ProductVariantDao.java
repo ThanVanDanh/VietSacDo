@@ -22,7 +22,7 @@ public class ProductVariantDao extends BaseDao {
                 .bind("color", variant.getColor())
                 .bind("currentPrice", variant.getCurrentPrice())
                 .bind("stockQuantity", variant.getStockQuantity())
-                .bind("discountedPrice", variant.getDiscountedPrice()) // Bind giá giảm
+                .bind("discountedPrice", variant.getDiscountedPrice())
                 .executeAndReturnGeneratedKeys("id")
                 .mapTo(int.class)
                 .one();

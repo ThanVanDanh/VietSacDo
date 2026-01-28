@@ -25,7 +25,6 @@ public class CancelOrderController extends HttpServlet {
         Gson gson = new Gson();
         Map<String, Object> response = new HashMap<>();
 
-        // 1. Check Login
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("account");
         if (user == null) {
@@ -35,7 +34,6 @@ public class CancelOrderController extends HttpServlet {
             return;
         }
 
-        // 2. Get Order ID
         String orderIdStr = req.getParameter("orderId");
         if (orderIdStr == null || orderIdStr.isEmpty()) {
             response.put("success", false);
@@ -48,7 +46,6 @@ public class CancelOrderController extends HttpServlet {
             int orderId = Integer.parseInt(orderIdStr);
             OrderDao orderDao = new OrderDao();
 
-            // 3. Verify Ownership & Status
             List<Order> userOrders = orderDao.getOrdersByUserId(user.getId());
             Order targetOrder = null;
             for (Order o : userOrders) {
@@ -65,15 +62,10 @@ public class CancelOrderController extends HttpServlet {
                 return;
             }
 
-            // Normalize status string (handling whitespace and case)
             String currentStatus = targetOrder.getOrderStatus() != null
                     ? targetOrder.getOrderStatus().trim().toLowerCase()
                     : "";
 
-            // Allow cancel only if status is "pending" or "processing" (adjust keywords
-            // based on your DB values)
-            // Assuming DB uses Vietnamese: "chờ xử lý", "đang xử lý"
-            // Or English: "pending", "processing"
             boolean canCancel = currentStatus.contains("chờ") || currentStatus.contains("đang xử lý") ||
                     currentStatus.equals("pending") || currentStatus.equals("processing");
 
@@ -84,7 +76,6 @@ public class CancelOrderController extends HttpServlet {
                 return;
             }
 
-            // 4. Update Status with Cancel Reason
             String cancelReason = req.getParameter("cancelReason");
             if (cancelReason == null || cancelReason.trim().isEmpty()) {
                 cancelReason = "Không có lý do";

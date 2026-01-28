@@ -56,12 +56,11 @@ public class CategoryController extends HttpServlet {
             int pageSize = 10;
             String sortBy = request.getParameter("sort-by");
             if (sortBy == null || sortBy.isEmpty()) {
-                sortBy = "alpha-asc"; // Giá trị mặc định
+                sortBy = "alpha-asc";
             }
 
             int totalProducts = categoryDao.countProductsByCategory(currentCategory.getId());
             
-            //calculate
             PaginationUtils.PageInfo pageInfo = PaginationUtils.calculate(request.getParameter("page"), totalProducts, pageSize);
 
             List<ProductListDTO> list = categoryDao.getProductsByCategoryPayload(currentCategory.getId(), pageInfo.getCurrentPage(), pageSize, sortBy);

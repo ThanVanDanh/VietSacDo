@@ -188,7 +188,6 @@
             contentDiv.innerHTML = '<p>Nội dung đang được cập nhật...</p>';
         }
 
-        // ✅ Only show top voucher box
         if (article.voucher && article.voucher.voucherCode) {
             console.log('✅ Article has voucher, displaying voucher info...');
             displayVoucherInfo(article.voucher);

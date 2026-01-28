@@ -80,7 +80,6 @@ public class CartController extends HttpServlet {
             model.voucher.Voucher voucher = voucherDao.getByCode(code);
 
             if (voucher == null) {
-                // Mock logic cho test nếu DB trống (như đã làm ở CheckoutController)
                 if ("MOCK-TEST-1".equals(code)) {
                     voucher = new model.voucher.Voucher();
                     voucher.setId(999);
@@ -107,14 +106,10 @@ public class CartController extends HttpServlet {
                 }
             }
 
-            // Validate voucher conditions
             if (!voucher.isActive()) {
                 response.getWriter().write("{\"success\":false, \"message\":\"Mã giảm giá đã hết hạn hoặc bị khóa\"}");
                 return;
             }
-
-            // Check expiry date if implementation allows
-            // if (voucher.getValidTo().isBefore(LocalDateTime.now())) ...
 
             double minAmount = voucher.getMinOrderAmount();
             double cartTotal = cart.getTotalPrice();
@@ -126,7 +121,6 @@ public class CartController extends HttpServlet {
                 return;
             }
 
-            // Calculate discount
             double discountAmount = 0;
             if ("percentage".equalsIgnoreCase(voucher.getDiscountType())
                     || "percent".equalsIgnoreCase(voucher.getDiscountType())) {
@@ -135,16 +129,13 @@ public class CartController extends HttpServlet {
                 discountAmount = voucher.getDiscountValue();
             }
 
-            // Apply to session
             session.setAttribute("appliedVoucher", voucher);
 
-            // Calculate final total
             double shippingFee = (cartTotal >= 1000000) ? 0 : 30000;
             double finalTotal = cartTotal + shippingFee - discountAmount;
             if (finalTotal < 0)
                 finalTotal = 0;
 
-            // Return success JSON
             response.getWriter().write(String.format(
                     "{\"success\":true, \"message\":\"Áp dụng mã thành công\", \"discountAmount\":%.0f, \"finalTotal\":%.0f}",
                     discountAmount, finalTotal));
@@ -185,7 +176,6 @@ public class CartController extends HttpServlet {
                             if ((!sku.isEmpty() && sku.equals(v.getSku())) ||
                                     (!size.isEmpty() && size.equals(v.getSize()))) {
 
-                                // Kiểm tra nếu có giá giảm thì lấy giá giảm, ngược lại lấy giá gốc
                                 if (v.getDiscountedPrice() > 0 && v.getDiscountedPrice() < v.getCurrentPrice()) {
                                     price = v.getDiscountedPrice();
                                 } else {
@@ -198,26 +188,20 @@ public class CartController extends HttpServlet {
                             price = variants.get(0).getCurrentPrice();
                     }
                 }
-
                 cart.addItem(product, quantity, price, sku, size);
-
-                // Save cart to session
                 session.setAttribute("cart", cart);
             }
 
-            // Check if this is an AJAX request (for Buy Now functionality)
             String ajaxHeader = request.getHeader("X-Requested-With");
             boolean isAjax = "XMLHttpRequest".equals(ajaxHeader) ||
                     request.getContentType() != null
                             && request.getContentType().contains("application/x-www-form-urlencoded");
 
             if (isAjax) {
-                // Return JSON for AJAX requests
                 response.setContentType("application/json");
                 response.setCharacterEncoding("UTF-8");
                 response.getWriter().write("{\"success\":true, \"message\":\"Đã thêm vào giỏ hàng\"}");
             } else {
-                // Traditional redirect for non-AJAX requests
                 String referer = request.getHeader("Referer");
                 response.sendRedirect(referer != null ? referer : "cart");
             }
@@ -225,7 +209,6 @@ public class CartController extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
 
-            // Check if AJAX to return appropriate response
             String ajaxHeader = request.getHeader("X-Requested-With");
             boolean isAjax = "XMLHttpRequest".equals(ajaxHeader) ||
                     request.getContentType() != null

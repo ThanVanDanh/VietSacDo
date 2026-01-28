@@ -362,15 +362,14 @@ function deleteCategory(category) {
 var currentProductPage = 1;
 var totalProductPages = 1;
 var currentSort = 'id-desc';
-var currentSearchKeyword = ''; // Lưu từ khóa search hiện tại
+var currentSearchKeyword = '';
 
 function loadProducts(page, sortBy) {
     if (!page) page = 1;
     if (!sortBy) sortBy = currentSort;
     currentProductPage = page;
     currentSort = sortBy;
-    currentSearchKeyword = ''; // Xóa keyword khi load bình thường
-
+    currentSearchKeyword = '';
     var url = CTX + '/admin/product/add?page=' + page + '&sort=' + sortBy;
     
     fetch(url)
@@ -386,13 +385,12 @@ function loadProducts(page, sortBy) {
         });
 }
 
-// Hàm mới: load products với search keyword
 function loadProductsWithSearch(keyword, page, sortBy) {
     if (!page) page = 1;
     if (!sortBy) sortBy = currentSort;
     currentProductPage = page;
     currentSort = sortBy;
-    currentSearchKeyword = keyword; // Lưu keyword
+    currentSearchKeyword = keyword;
 
     var url = CTX + '/admin/product/add?page=' + page + '&sort=' + sortBy + '&search=' + encodeURIComponent(keyword);
     
@@ -403,7 +401,6 @@ function loadProductsWithSearch(keyword, page, sortBy) {
         })
         .then(function (data) {
             displayProducts(data);
-            // Hiển thị thông báo kết quả tìm kiếm
             if (data.searchKeyword) {
                 var header = document.querySelector('.product-list-header h2');
                 if (header) {
@@ -1347,7 +1344,6 @@ document.addEventListener('DOMContentLoaded', function () {
                             keepInput.value = imageId;
                             addProductForm.appendChild(keepInput);
 
-                            // Gửi thông tin thumbnail cho ảnh existing
                             var isThumb = item.dataset.isThumbnail === '1' ? '1' : '0';
                             var keepThumbInput = document.createElement('input');
                             keepThumbInput.type = 'hidden';
@@ -1426,14 +1422,11 @@ document.addEventListener('DOMContentLoaded', function () {
         searchInput.addEventListener('input', function () {
             var keyword = this.value.trim();
             
-            // Debounce search - đợi 500ms sau khi user ngừng gõ
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(function() {
                 if (keyword) {
-                    // Tìm kiếm từ database
                     loadProductsWithSearch(keyword, 1, currentSort);
                 } else {
-                    // Không có keyword -> load tất cả
                     loadProducts(1, currentSort);
                 }
             }, 500);
@@ -1451,7 +1444,6 @@ document.addEventListener('DOMContentLoaded', function () {
     if (sortSelect) {
         sortSelect.addEventListener('change', function () {
             currentSort = this.value;
-            // Nếu đang search thì giữ lại keyword
             if (currentSearchKeyword) {
                 loadProductsWithSearch(currentSearchKeyword, 1, currentSort);
             } else {
@@ -1465,11 +1457,6 @@ document.addEventListener('DOMContentLoaded', function () {
     loadPolicies();
 });
 
-// ============================================
-// ✅ POLICY MANAGEMENT FUNCTIONS
-// ============================================
-
-// Global cache for categories
 var categoriesCache = [];
 
 function loadPolicies() {
@@ -1605,7 +1592,6 @@ function refreshPolicyCategorySelect(categories) {
     policySelect.innerHTML = '<option value="">-- Chọn danh mục --</option>';
 
     if (categories && categories.length > 0) {
-        // Build a map to track which categories have children
         var parentIds = new Set();
         categories.forEach(function (cat) {
             if (cat.parentCategoryId !== null && cat.parentCategoryId !== undefined) {
@@ -1613,7 +1599,6 @@ function refreshPolicyCategorySelect(categories) {
             }
         });
 
-        // Only add leaf categories (categories that are not parents)
         var leafCategories = categories.filter(function (cat) {
             return !parentIds.has(cat.id);
         });
@@ -1629,7 +1614,6 @@ function refreshPolicyCategorySelect(categories) {
     if (currentValue) policySelect.value = currentValue;
 }
 
-// Update loadCategories to also refresh policy select
 var originalLoadCategories = loadCategories;
 loadCategories = function() {
     fetch(CTX + '/admin/category/list')
@@ -1638,7 +1622,7 @@ loadCategories = function() {
             return response.json();
         })
         .then(function (categories) {
-            categoriesCache = categories; // Save to cache
+            categoriesCache = categories;
             refreshCategorySelects(categories);
             displayCategoriesTable(categories);
             refreshPolicyCategorySelect(categories);

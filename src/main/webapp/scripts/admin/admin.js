@@ -1,10 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     const modal = document.getElementById('customer-modal');
-    //Chi tiết khách hàng
     if (modal) {
         const customerViewBtn = document.querySelectorAll('.customer-table .btn-view');
         const customerClose = modal.querySelector('.close-modal');
-        //Xem
         customerViewBtn.forEach(nut => {
             nut.addEventListener('click', () => {
                 document.getElementById('modal-fullName').textContent = nut.getAttribute('data-fullname') || '';
@@ -12,7 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById('modal-phone').textContent = nut.getAttribute('data-phone') || '';
                 document.getElementById('modal-address').textContent = nut.getAttribute('data-address') || '';
                 document.getElementById('modal-createdAt').textContent = nut.getAttribute('data-createdat') || '';
-                // Trạng thái tài khoản
                 const status = nut.getAttribute('data-status');
                 let statusText = '';
                 if (status === 'active') statusText = 'Hoạt động';
@@ -20,12 +17,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 else statusText = 'Chưa kích hoạt';
                 document.getElementById('modal-status').textContent = statusText;
 
-                // Clear old history
                 const historyList = document.getElementById('order-history-list');
                 historyList.innerHTML = '<li style="text-align:center;">Đang tải...</li>';
 
-                // Fetch Orders
-                const userId = nut.getAttribute('data-id'); // Make sure button has data-id
+                const userId = nut.getAttribute('data-id');
                 if (userId) {
                     fetch('get-customer-orders?userId=' + userId)
                         .then(res => res.json())
@@ -37,9 +32,9 @@ document.addEventListener("DOMContentLoaded", () => {
                             }
                             orders.forEach(o => {
                                 const li = document.createElement('li');
-                                li.classList.add('order-history-item'); // Add class for styling
+                                li.classList.add('order-history-item');
                                 let statusClass = 'status-processing';
-                                let statusText = 'Đang xử lý'; // Default status text
+                                let statusText = 'Đang xử lý';
                                 if (o.orderStatus === 'hoàn thành') {
                                     statusClass = 'status-complete';
                                     statusText = 'Hoàn thành';
@@ -51,11 +46,9 @@ document.addEventListener("DOMContentLoaded", () => {
                                     statusText = 'Đang giao';
                                 }
 
-                                // Format currency
                                 const total = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(o.totalAmount);
                                 const dateDisplay = o.created_at || o.createdAt;
 
-                                // Timeline HTML Structure
                                 let html = `
                                     <div class="timeline-date">${dateDisplay}</div>
                                     <div class="timeline-content">
@@ -72,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                     html += `<span class="cancel-reason">Lý do: ${o.cancelReason}</span>`;
                                 }
 
-                                html += `</div>`; // Close timeline-content
+                                html += `</div>`;
                                 li.innerHTML = html;
                                 historyList.appendChild(li);
                             });
@@ -86,11 +79,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 modal.style.display = 'flex';
             });
         });
-        //Đóng
         customerClose.addEventListener('click', () => {
             modal.style.display = 'none';
         });
-        //Click vào vùng nền mờ bên ngoài
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
                 modal.style.display = 'none';
@@ -98,22 +89,18 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    //Chi tiết đơn hàng
     const order = document.getElementById('order-modal');
     const orderViewBtn = document.querySelectorAll('.order-table .btn-view');
     if (order) {
         const orderClose = order.querySelector('.close-modal');
-        //Xem
         orderViewBtn.forEach(nut => {
             nut.addEventListener('click', () => {
                 order.style.display = 'flex';
             });
         });
-        //Đóng
         orderClose.addEventListener('click', () => {
             order.style.display = 'none';
         });
-        // Click vào vùng nền mờ bên ngoài
         order.addEventListener('click', (e) => {
             if (e.target === order) {
                 order.style.display = 'none';
@@ -121,30 +108,25 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    //Chuyển tab trong chi tiết khách hàng
     const tabLinks = document.querySelectorAll(".tab-link");
     if (tabLinks) {
         const tabContents = document.querySelectorAll(".tab-content");
         tabLinks.forEach(link => {
             link.addEventListener("click", () => {
-                //Xóa
                 tabLinks.forEach(btn => btn.classList.remove("active"));
                 tabContents.forEach(tab => tab.classList.remove("active"));
-                //Thêm
                 link.classList.add("active");
                 document.getElementById(link.dataset.tab).classList.add("active");
             });
         });
     }
 
-    // Xác nhận xóa (chỉ cho customers)
     const deleteModal = document.getElementById('delete-confirm-modal');
     if (deleteModal) {
         const deleteModalBtn = document.querySelectorAll('.customer-table .btn-delete');
         const deleteClose = deleteModal.querySelector('.close-modal');
         const cancelDeleteBtn = document.getElementById('btn-cancel-delete');
         const confirmDeleteBtn = document.getElementById('btn-confirm-delete');
-        // Biến tạm để lưu dòng (tr) đang muốn xóa
         let rowToDelete = null;
 
         deleteModalBtn.forEach(button => {
@@ -166,11 +148,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         confirmDeleteBtn.addEventListener('click', () => {
             if (rowToDelete) {
-                // Lấy ID từ nút delete trong dòng đang chọn
                 const btn = rowToDelete.querySelector('.btn-delete');
                 const userId = btn.getAttribute('data-id');
 
-                // GỌI SERVER ĐỂ XÓA
                 fetch('delete-user', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -178,7 +158,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
                     .then(response => {
                         if (response.ok) {
-                            // Nếu Server xóa thành công thì mới xóa trên giao diện
                             rowToDelete.style.transition = "opacity 0.5s";
                             rowToDelete.style.opacity = "0";
                             setTimeout(() => {
@@ -201,12 +180,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
     function checkEmptyTable(tbody) {
-        // Lấy tất cả các dòng dữ liệu (trừ dòng thông báo)
         const emptyRow = tbody.querySelector('.empty-state-row');
         const allRows = tbody.querySelectorAll('tr:not(#empty-state-row)');
         const pagination = document.querySelector('.pagination');
 
-        // Đếm số dòng đang hiển thị (style.display khác 'none')
         let visibleRowCount = 0;
         allRows.forEach(row => {
             if (row.style.display !== 'none') {
@@ -214,7 +191,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // Logic hiển thị/ẩn thông báo
         if (visibleRowCount === 0) {
             if (emptyRow) emptyRow.style.display = 'table-row';
             if (pagination) pagination.style.display = 'none';
@@ -224,7 +200,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // Xác nhận block
     const statusModal = document.getElementById('status-confirm-modal');
     if (statusModal) {
         const actionButtons = document.querySelectorAll('.btn-block, .btn-unlock');
@@ -244,16 +219,13 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.addEventListener('click', function () {
                 targetRow = this.closest('tr');
                 targetId = this.getAttribute('data-id');
-                const name = this.getAttribute('data-name'); // Nhớ thêm data-name vào cả nút unlock ở JSP
+                const name = this.getAttribute('data-name');
 
-                // Kiểm tra xem đang bấm nút nào
                 if (this.classList.contains('btn-block')) {
-                    // Logic cho KHÓA
                     targetAction = 'block';
                     modalTitle.textContent = "Xác nhận Khóa tài khoản";
                     modalActionText.textContent = "KHÓA";
                 } else {
-                    // Logic cho MỞ KHÓA
                     targetAction = 'unlock';
                     modalTitle.textContent = "Xác nhận Mở khóa";
                     modalActionText.textContent = "MỞ KHÓA";
@@ -266,7 +238,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         confirmBtn.addEventListener('click', () => {
             if (targetId && targetAction) {
-                // Gọi API chung
                 fetch('block-user', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -274,7 +245,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
                     .then(response => {
                         if (response.ok) {
-                            // Cập nhật giao diện dựa trên hành động vừa làm
                             const newStatus = (targetAction === 'block') ? 'blocked' : 'active';
                             toggleLockStatus(targetRow, newStatus);
 
@@ -290,7 +260,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // 3. Đóng Modal
         const closeFunc = () => { statusModal.style.display = 'none'; };
         closeModal.addEventListener('click', closeFunc);
         cancelBtn.addEventListener('click', closeFunc);
@@ -298,7 +267,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (e.target === statusModal) closeFunc();
         });
 
-        // --- HÀM PHỤ TRỢ: Đổi trạng thái hiển thị (Ẩn/Hiện) ---
         function toggleLockStatus(row, status) {
             const badgeActive = row.querySelector('.status-active');
             const badgeBlocked = row.querySelector('.status-blocked');
@@ -306,14 +274,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const btnUnlock = row.querySelector('.btn-unlock');
 
             if (status === 'blocked') {
-                // Nếu muốn KHÓA:
                 if (badgeActive) badgeActive.style.display = 'none';
                 if (badgeBlocked) badgeBlocked.style.display = 'inline-block';
 
                 if (btnBlock) btnBlock.style.display = 'none';
                 if (btnUnlock) btnUnlock.style.display = 'inline-block';
             } else {
-                // Nếu muốn MỞ KHÓA (Active):
                 if (badgeActive) badgeActive.style.display = 'inline-block';
                 if (badgeBlocked) badgeBlocked.style.display = 'none';
 
@@ -329,14 +295,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const link = item.querySelector('a');
         const href = link.getAttribute('href');
 
-        // 1. Xử lý click thủ công (nếu không load lại trang)
         item.addEventListener('click', function () {
             navItems.forEach(i => i.classList.remove('active'));
             this.classList.add('active');
         });
 
-        // 2. Tự động giữ trạng thái active dựa trên URL hiện tại
-        // Kiểm tra xem href của link có khớp với URL hiện tại không
         if (currentPath.includes(href) && href !== "#") {
             navItems.forEach(i => i.classList.remove('active'));
             item.classList.add('active');

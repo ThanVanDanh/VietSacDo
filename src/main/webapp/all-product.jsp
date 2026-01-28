@@ -46,21 +46,18 @@
         </div>
         <div class="product-grid">
             <c:choose>
-                <%-- Nếu không có sản phẩm nào --%>
                 <c:when test="${empty list}">
                     <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
                         <p>Hiện chưa có sản phẩm nào.</p>
                     </div>
                 </c:when>
 
-                <%-- Nếu có sản phẩm -> Duyệt vòng lặp --%>
                 <c:otherwise>
                     <c:forEach var="p" items="${list}">
                         <div class="product-card">
                             <div class="product-image-wrapper">
                                 <div class="product-image">
                                     <a href="${pageContext.request.contextPath}/product-detail?id=${p.id}">
-                                            <%-- VÌ ẢNH LÀ LINK ONLINE (CLOUDINARY), DÙNG TRỰC TIẾP BIẾN THUMBNAIL --%>
                                         <img src="${p.thumbnail}"
                                              alt="${p.nameProduct}"
                                              style="width: 100%; height: auto; object-fit: cover;"
@@ -68,12 +65,10 @@
                                     </a>
                                 </div>
                                 <div class="product-overlay">
-                                        <%-- Nút thêm vào giỏ / Tùy chọn --%>
                                     <a href="${pageContext.request.contextPath}/product-detail?id=${p.id}"
                                        class="icon-button" title="Tùy chọn">
                                         <i class="fa-solid fa-cart-shopping"></i>
                                     </a>
-                                        <%-- Nút xem nhanh (có thể cần JS xử lý sau) --%>
                                     <a href="#" class="icon-button" title="Xem nhanh">
                                         <i class="fa-solid fa-eye"></i>
                                     </a>
@@ -87,7 +82,6 @@
 
                                 <div class="product-price">
                                     <c:choose>
-                                        <%-- CÓ GIẢM GIÁ --%>
                                         <c:when test="${p.discountedPrice > 0 && p.discountedPrice < p.price}">
                                             <div class="current-price">
                                                 <fmt:formatNumber value="${p.discountedPrice}" pattern="#,###"/>₫
@@ -103,7 +97,6 @@
                                             </div>
                                         </c:when>
 
-                                        <%-- KHÔNG GIẢM GIÁ --%>
                                         <c:otherwise>
                                             <div class="current-price">
                                                 <fmt:formatNumber value="${p.price}" pattern="#,###"/>₫
@@ -154,7 +147,6 @@
                             <div class="product-image-wrapper">
                                 <div class="product-image">
                                     <a href="${pageContext.request.contextPath}/product-detail?id=${vp.id}">
-                                            <%-- CẬP NHẬT ẢNH CHO ĐỒNG BỘ VỚI DANH SÁCH CHÍNH --%>
                                         <img src="${vp.thumbnail}"
                                              alt="${vp.nameProduct}"
                                              style="width: 100%; height: auto; object-fit: cover;"
@@ -178,7 +170,6 @@
 
                                 <div class="product-price">
                                     <c:choose>
-                                        <%-- CÓ GIẢM GIÁ --%>
                                         <c:when test="${vp.discountedPrice > 0 && vp.discountedPrice < vp.price}">
                                             <div class="current-price">
                                                 <fmt:formatNumber value="${vp.discountedPrice}" pattern="#,###"/>₫
@@ -189,7 +180,6 @@
                                                     <fmt:formatNumber value="${vp.price}" pattern="#,###"/>₫
                                                 </span>
 
-                                                    <%-- SỬA LỖI MATH.ROUND TẠI ĐÂY --%>
                                                 <c:if test="${vp.price > 0}">
                                                     <c:set var="rawPercent" value="${(1 - vp.discountedPrice / vp.price) * 100}" />
                                                     <span class="discount-tag">
@@ -199,7 +189,6 @@
                                             </div>
                                         </c:when>
 
-                                        <%-- KHÔNG GIẢM GIÁ --%>
                                         <c:otherwise>
                                             <div class="current-price">
                                                 <fmt:formatNumber value="${vp.price}" pattern="#,###"/>₫
