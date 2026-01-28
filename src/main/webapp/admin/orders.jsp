@@ -123,6 +123,7 @@
                                         </c:choose>
                                     </tbody>
                                 </table>
+                                <c:if test="${totalPages > 1}">
                                 <div class="pagination">
                                     <c:if test="${currentPage > 1}">
                                         <a href="?page=${currentPage - 1}&status=${statusFilter}&search=${searchKeyword}">Trước</a>
@@ -135,6 +136,7 @@
                                         <a href="?page=${currentPage + 1}&status=${statusFilter}&search=${searchKeyword}">Sau</a>
                                     </c:if>
                                 </div>
+                                </c:if>
                             </section>
                         </main>
                     </div>
