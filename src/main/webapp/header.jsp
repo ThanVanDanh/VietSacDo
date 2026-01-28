@@ -154,7 +154,7 @@
                 </c:forEach>
 
                 <li><a href="${pageContext.request.contextPath}/contact_us">Liên Hệ</a></li>
-                <li><a href="${pageContext.request.contextPath}/promotion.jsp">Chương trình khuyến mãi</a></li>
+                <li><a href="${pageContext.request.contextPath}/promotion">Chương trình khuyến mãi</a></li>
             </ul>
         </nav>
         <div class="icons">
