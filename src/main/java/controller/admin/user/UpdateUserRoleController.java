@@ -22,6 +22,6 @@ public class UpdateUserRoleController extends HttpServlet {
                 userDao.updateRole(userId, role);
             } catch (NumberFormatException ignored) {}
         }
-        resp.sendRedirect("customers");
+        resp.sendRedirect("users");
     }
 }

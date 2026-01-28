@@ -183,4 +183,75 @@ public class OrderDao extends BaseDao {
                 .mapToBean(model.order.MonthlyRevenue.class)
                 .list());
     }
+
+    public List<Order> getOrdersPagination(int limit, int offset) {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("SELECT * FROM Orders ORDER BY created_at DESC LIMIT :limit OFFSET :offset")
+                        .bind("limit", limit)
+                        .bind("offset", offset)
+                        .mapToBean(Order.class)
+                        .list()
+        );
+    }
+
+    public int countOrdersByStatus(String status) {
+        if (status == null || status.isEmpty()) {
+            return countTotalOrders();
+        }
+        return jdbi.withHandle(handle ->
+                handle.createQuery("SELECT COUNT(*) FROM Orders WHERE order_status = :status")
+                        .bind("status", status)
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
+    public int countOrdersBySearch(String keyword, String status) {
+        String sql = "SELECT COUNT(*) FROM Orders WHERE (customer_fullname LIKE :keyword OR order_code LIKE :keyword)";
+
+        if (status != null && !status.isEmpty()) {
+            sql += " AND order_status = :status";
+        }
+
+        String finalSql = sql;
+        return jdbi.withHandle(handle ->
+                handle.createQuery(finalSql)
+                        .bind("keyword", "%" + keyword + "%")
+                        .bind("status", status)
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
+    public List<Order> getOrdersPaginationAndFilter(int limit, int offset, String status) {
+        if (status == null || status.isEmpty()) {
+            return getOrdersPagination(limit, offset);
+        }
+        return jdbi.withHandle(handle ->
+                handle.createQuery("SELECT * FROM Orders WHERE order_status = :status ORDER BY created_at DESC LIMIT :limit OFFSET :offset")
+                        .bind("status", status)
+                        .bind("limit", limit)
+                        .bind("offset", offset)
+                        .mapToBean(Order.class)
+                        .list()
+        );
+    }
+    public List<Order> searchOrders(String keyword, String status, int limit, int offset) {
+        String sql = "SELECT * FROM Orders WHERE (customer_fullname LIKE :keyword OR order_code LIKE :keyword)";
+
+        if (status != null && !status.isEmpty()) {
+            sql += " AND order_status = :status";
+        }
+
+        sql += " ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
+
+        String finalSql = sql;
+        return jdbi.withHandle(handle ->
+                handle.createQuery(finalSql)
+                        .bind("keyword", "%" + keyword + "%")
+                        .bind("status", status)
+                        .bind("limit", limit)
+                        .bind("offset", offset)
+                        .mapToBean(Order.class)
+                        .list()
+        );
+    }
 }

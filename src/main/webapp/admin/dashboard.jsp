@@ -34,8 +34,7 @@
                                     <div class="card-info">
                                         <h4>Doanh Thu</h4>
                                         <p>
-                                            <fmt:formatNumber value="${totalRevenue}" type="currency"
-                                                currencySymbol="₫" />
+                                            <fmt:formatNumber value="${totalRevenue}" pattern="#,###"/>₫
                                         </p>
                                     </div>
                                 </div>
@@ -92,8 +91,7 @@
                                                     <td><strong>#${order.id}</strong></td>
                                                     <td>${order.customerFullname}</td>
                                                     <td>
-                                                        <fmt:formatNumber value="${order.totalAmount}" type="currency"
-                                                            currencySymbol="₫" />
+                                                        <fmt:formatNumber value="${order.totalAmount}" pattern="#,###"/>₫
                                                     </td>
                                                     <td>
                                                         <span
@@ -151,8 +149,7 @@
                                                     <td><strong>${stat.monthYear}</strong></td>
                                                     <td>${stat.orderCount}</td>
                                                     <td>
-                                                        <fmt:formatNumber value="${stat.revenue}" type="currency"
-                                                            currencySymbol="₫" />
+                                                        <fmt:formatNumber value="${stat.revenue}" pattern="#,###"/>₫
                                                     </td>
                                                 </tr>
                                             </c:forEach>
@@ -182,7 +179,7 @@
                                                             <c:when test="${voucher.discountType == 'fixed'}">
                                                                 Giảm
                                                                 <fmt:formatNumber value="${voucher.discountValue}"
-                                                                    type="currency" currencySymbol="" />k
+                                                                                  pattern="#,###"/>₫
                                                             </c:when>
                                                             <c:when test="${voucher.discountType == 'shipping'}">
                                                                 Miễn phí vận chuyển

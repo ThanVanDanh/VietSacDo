@@ -3,8 +3,13 @@ package dao;
 import java.util.List;
 
 import model.user.User;
+import org.jdbi.v3.core.Jdbi;
 
 public class UserDao extends BaseDao {
+    private final Jdbi jdbi;
+    public UserDao() {
+        this.jdbi = get();
+    }
     public User findByEmailOrPhone(String key) {
         return get().withHandle(handle -> handle
                 .createQuery("SELECT * FROM Users WHERE email = :key OR phone_number = :key").bind("key", key)
@@ -103,5 +108,62 @@ public class UserDao extends BaseDao {
                         .bind("limit", limit)
                         .mapToBean(User.class)
                         .list());
+    }
+    public int countTotalUsers() {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("SELECT COUNT(*) FROM Users")
+                        .mapTo(Integer.class)
+                        .one()
+        );
+    }
+    public List<User> getUsersPagination(int limit, int offset) {
+        return jdbi.withHandle(handle ->
+                handle.createQuery("SELECT * FROM Users ORDER BY created_at DESC LIMIT :limit OFFSET :offset")
+                        .bind("limit", limit)
+                        .bind("offset", offset)
+                        .mapToBean(User.class)
+                        .list()
+        );
+    }
+    public int countUsersByFilter(String search, String status) {
+        String sql = "SELECT COUNT(*) FROM Users WHERE 1=1";
+        if (search != null && !search.isEmpty()) {
+            sql += " AND (full_name LIKE :search OR email LIKE :search)";
+        }
+        if (status != null && !status.isEmpty()) {
+            sql += " AND account_status = :status";
+        }
+
+        String finalSql = sql;
+        return jdbi.withHandle(handle -> {
+            var query = handle.createQuery(finalSql);
+            if (search != null && !search.isEmpty()) query.bind("search", "%" + search + "%");
+            if (status != null && !status.isEmpty()) query.bind("status", status);
+            return query.mapTo(Integer.class).one();
+        });
+    }
+    public List<User> getUsersPaginationAndFilter(int limit, int offset, String search, String status) {
+        String sql = "SELECT * FROM Users WHERE 1=1";
+
+        if (search != null && !search.isEmpty()) {
+            sql += " AND (full_name LIKE :search OR email LIKE :search)";
+        }
+        if (status != null && !status.isEmpty()) {
+            sql += " AND account_status = :status";
+        }
+
+        sql += " ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
+
+        String finalSql = sql;
+        return jdbi.withHandle(handle -> {
+            var query = handle.createQuery(finalSql)
+                    .bind("limit", limit)
+                    .bind("offset", offset);
+
+            if (search != null && !search.isEmpty()) query.bind("search", "%" + search + "%");
+            if (status != null && !status.isEmpty()) query.bind("status", status);
+
+            return query.mapToBean(User.class).list();
+        });
     }
 }
