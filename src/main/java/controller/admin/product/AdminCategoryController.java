@@ -61,10 +61,8 @@ public class AdminCategoryController extends HttpServlet {
         try {
             List<Category> cats = categoryService.getAllCategories();
 
-            // ✅ Lấy product counts
             Map<Integer, Integer> productCounts = categoryDao.getProductCountsForAllCategories();
 
-            // ✅ Tạo response với productCount
             List<Map<String, Object>> response = new ArrayList<>();
             for (Category cat : cats) {
                 Map<String, Object> catMap = new HashMap<>();
@@ -116,7 +114,6 @@ public class AdminCategoryController extends HttpServlet {
             cat.setSlug(slug.isEmpty() ? generateSlug(name) : slug);
             cat.setDescription(description.isEmpty() ? null : description);
 
-            // ✅ FIX: Xử lý parentId đúng
             Integer parentId = null;
             if (!parent.isEmpty()) {
                 try {
@@ -125,7 +122,6 @@ public class AdminCategoryController extends HttpServlet {
                         parentId = parsed;
                     }
                 } catch (NumberFormatException e) {
-                    // Log nếu cần
                     log("Invalid parent ID: " + parent);
                 }
             }
@@ -137,7 +133,6 @@ public class AdminCategoryController extends HttpServlet {
                 int id = Integer.parseInt(idStr.trim());
                 cat.setId(id);
 
-                // ✅ THÊM: Validate không được chọn chính nó làm parent
                 if (parentId != null && parentId == id) {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     resp.getWriter().write("{\"success\":false, \"error\":\"Không thể chọn chính category này làm parent\"}");
