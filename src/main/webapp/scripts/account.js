@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // 1. Xử lý chuyển Tab (Thông tin tài khoản <-> Sổ địa chỉ)
     const accountInfo = document.getElementById('nav-details');
     const address = document.getElementById('nav-addresses');
     const contentInfo = document.getElementById('account-details');
@@ -21,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // 2. Xử lý Modal (Popup) Thêm/Sửa địa chỉ
     const addModal = document.getElementById('add-address-modal');
     const editModal = document.getElementById('edit-address-modal');
     const addBtn = document.getElementById('add-address-btn');
@@ -37,7 +35,6 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
 
-            // 1. Lấy dữ liệu từ data attribute trong JSP
             const id = btn.getAttribute('data-id');
             const fullName = btn.getAttribute('data-name');
             const phone = btn.getAttribute('data-phone');
@@ -45,8 +42,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const city = btn.getAttribute('data-city');
             const isDefault = btn.getAttribute('data-default') === 'true';
 
-            // 2. Xử lý tách Họ và Tên (Vì DB lưu gộp, nhưng form tách riêng)
-            // Logic đơn giản: Lấy từ cuối cùng làm Tên, phần còn lại là Họ
             let lastSpaceIndex = fullName.lastIndexOf(" ");
             let ho = "";
             let ten = fullName;
@@ -55,7 +50,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 ten = fullName.substring(lastSpaceIndex + 1);
             }
 
-            // 3. Điền vào Form Sửa
             document.getElementById('edit-id').value = id;
             document.getElementById('edit-ho').value = ho;
             document.getElementById('edit-ten').value = ten;
@@ -63,11 +57,9 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('edit-diachi').value = addr;
             document.getElementById('edit-default').checked = isDefault;
 
-            // Set select option (cần đảm bảo value option khớp với data)
             const citySelect = document.getElementById('edit-tinhthanh');
             if (citySelect) citySelect.value = city;
 
-            // 4. Hiển thị Modal
             editModal.style.display = 'flex';
         });
     });
@@ -75,19 +67,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const deleteBtns = document.querySelectorAll('.delete-address-link');
     const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
 
-    // Bắt sự kiện click vào nút "Xóa" ở danh sách
     deleteBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
-            e.preventDefault(); // Ngăn không cho load lại trang
+            e.preventDefault();
 
-            // Lấy ID từ attribute data-id
             const id = btn.getAttribute('data-id');
 
-            // Cập nhật href cho nút "Xóa ngay" trong modal để trỏ về Controller
-            // Controller của bạn là DeleteAddressController mapped tại /delete-address
             confirmDeleteBtn.href = `delete-address?id=${id}`;
 
-            // Hiển thị Modal
             if (deleteModal) {
                 deleteModal.style.display = 'flex';
             }
@@ -109,20 +96,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// 3. Logic Hủy đơn hàng
 window.cancelOrder = function (orderId) {
-    // Show the cancel modal
     document.getElementById('cancel-order-id').value = orderId;
     document.getElementById('cancel-order-modal').style.display = 'flex';
 
-    // Reset to first option
     const firstRadio = document.querySelector('input[name="cancel-reason"]');
     if (firstRadio) firstRadio.checked = true;
     document.getElementById('other-reason-container').style.display = 'none';
     document.getElementById('other-reason-text').value = '';
 };
 
-// Cancel modal functionality
 document.addEventListener('DOMContentLoaded', function () {
     const cancelModal = document.getElementById('cancel-order-modal');
     if (!cancelModal) return;
@@ -133,7 +116,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const otherContainer = document.getElementById('other-reason-container');
     const otherText = document.getElementById('other-reason-text');
 
-    // Show/hide other reason textarea
     document.querySelectorAll('input[name="cancel-reason"]').forEach(radio => {
         radio.addEventListener('change', function () {
             if (this.value === 'other') {
@@ -144,7 +126,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Close modal
     function closeCancelModal() {
         cancelModal.style.display = 'none';
     }
@@ -156,7 +137,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.target === cancelModal) closeCancelModal();
     });
 
-    // Confirm cancel
     if (confirmBtn) {
         confirmBtn.addEventListener('click', function () {
             const orderId = document.getElementById('cancel-order-id').value;
@@ -177,7 +157,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
 
-            // Send request
             fetch('cancel-order', {
                 method: 'POST',
                 headers: {
@@ -203,7 +182,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-// 4. Logic Xem chi tiết đơn hàng
 window.viewOrderDetails = function (orderId) {
     const modal = document.getElementById('order-details-modal');
     const closeBtn = document.getElementById('close-order-details');
@@ -263,7 +241,6 @@ window.viewOrderDetails = function (orderId) {
             alert('Lỗi tải dữ liệu chi tiết.');
         });
 
-    // Close
     closeBtn.onclick = function () {
         modal.style.display = 'none';
     }

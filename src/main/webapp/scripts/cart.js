@@ -21,7 +21,6 @@ function addToCart(productId, isBuyNow = false) {
     let sizeInput = document.getElementById("selectedVariantSize");
     let currentSize = sizeInput ? sizeInput.value : "";
 
-    // 2. Gửi request AJAX
     let url = 'add-cart?productId=' + productId +
         '&quantity=' + quantity +
         '&price=' + price +
@@ -36,7 +35,6 @@ function addToCart(productId, isBuyNow = false) {
                 document.querySelectorAll(".count_item_pr").forEach(el => {
                     el.innerText = data.totalQuantity;
                 });
-                // Một số trang dùng class mini-count_item riêng
                 document.querySelectorAll(".mini-count_item").forEach(el => {
                     el.innerText = data.totalQuantity;
                 });
@@ -91,8 +89,6 @@ function addToCart(productId, isBuyNow = false) {
                 let allTotalPrices = document.querySelectorAll(".js-mini-total-price");
                 allTotalPrices.forEach(el => el.innerText = formatCurrency(data.totalPrice));
 
-                // FIX: Khi giỏ hàng ban đầu trống, home.js có thể đã set inline style (display:none)
-                // cho list/footer. Lần thêm đầu tiên cần ép lại trạng thái để hover hoạt động ngay.
                 const hasItems = itemsArray.length > 0;
                 document.querySelectorAll('.mini-cart-menu').forEach(menu => {
                     const listEl = menu.querySelector('.mini-cart-items-list');

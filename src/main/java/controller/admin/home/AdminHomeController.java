@@ -110,7 +110,6 @@ public class AdminHomeController extends HttpServlet {
             response.addProperty("key", sectionKey);
             response.addProperty("title", title != null ? title : "");
 
-            // Hỗ trợ backward compatibility cho set_*
             if (sectionKey.startsWith("set_") && tabs != null && !tabs.isEmpty()) {
                 response.addProperty("categoryId", tabs.get(0).getCategoryId());
             }
@@ -145,16 +144,12 @@ public class AdminHomeController extends HttpServlet {
                     ? json.get("title").getAsString() 
                     : "";
 
-            // Xác định số tab tối đa
             int maxTabs = sectionKey.startsWith("set_") ? 1 : 4;
 
-            // Parse tabs
             List<Home> tabs = parseTabs(json, sectionKey, maxTabs);
 
-            // Validate
             validateTabs(tabs);
 
-            // Save to database
             boolean success = homeConfigDao.saveSection(sectionKey, title, tabs, maxTabs);
 
             if (success) {

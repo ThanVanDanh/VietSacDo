@@ -311,7 +311,6 @@
                         document.getElementById('promoInput').value = code;
                         document.getElementById('popupOverlay').style.display = 'none';
 
-                        // Call backend to apply voucher
                         fetch('cart', {
                             method: 'POST',
                             headers: {
@@ -323,7 +322,7 @@
                             .then(data => {
                                 if (data.success) {
                                     alert(data.message);
-                                    location.reload(); // Reload to update totals from session
+                                    location.reload();
                                 } else {
                                     alert(data.message);
                                 }
@@ -347,10 +346,8 @@
                         const form = document.getElementById('checkoutForm');
                         const formData = new URLSearchParams(new FormData(form));
 
-                        // Add ajax params
                         formData.append('ajax', 'true');
 
-                        // Show loading
                         Swal.fire({
                             title: 'Đang xử lý...',
                             text: 'Vui lòng chờ trong giây lát',
@@ -397,7 +394,6 @@
                             });
                     }
 
-                    // --- Xử lý Popup Khuyến Mãi ---
                     const popupOverlay = document.getElementById("popupOverlay");
                     const btnShowPromo = document.getElementById("btnOpenkm");
                     const btnCloseTop = document.getElementById("btnCloseTop");

@@ -13,7 +13,6 @@
             <link rel="stylesheet" href="../style/customers.css">
             <link rel="stylesheet" href="../style/charts.css">
             <script>
-                // App context path for AJAX endpoints (set by server)
                 var APP_CTX = '${pageContext.request.contextPath}';
             </script>
             <script src="../scripts/admin.js"></script>

@@ -34,18 +34,14 @@ public class CloudinaryService {
     public UploadedImage upload(InputStream inputStream, String filename) {
         if (inputStream == null) return null;
         try {
-            // Tham số resource_type auto để Cloudinary tự detect image/video
             @SuppressWarnings("unchecked")
             Map<String, Object> res = cloudinary.uploader().upload(inputStream,
                     ObjectUtils.asMap("resource_type", "auto", "public_id", stripExtension(filename)));
             return mapToUploadedImage(res);
         } catch (Exception e) {
-            // Nếu upload trực tiếp thất bại (ví dụ SDK không hỗ trợ InputStream),
-            // fallback ghi ra temp file rồi upload file đó
             try {
                 File tmp = streamToTempFile(inputStream, filename);
                 UploadedImage ui = upload(tmp);
-                // xóa temp file
                 if (tmp.exists()) tmp.delete();
                 return ui;
             } catch (Exception ex) {
@@ -83,7 +79,6 @@ public class CloudinaryService {
         return new UploadedImage(secureUrl, publicId, res);
     }
 
-    // Loại bỏ phần mở rộng đuôi file để làm public_id
     private String stripExtension(String filename) {
         if (filename == null) return null;
         int i = filename.lastIndexOf('.');
@@ -91,7 +86,6 @@ public class CloudinaryService {
         return filename;
     }
 
-    // Ghi InputStream ra temp file (sử dụng khi cần)
     private File streamToTempFile(InputStream in, String filename) throws IOException {
         String prefix = "cld_";
         String suffix = null;
@@ -107,7 +101,7 @@ public class CloudinaryService {
         return tmp;
     }
     public String uploadImage(String filePath) {
-        if (cloudinary == null) return null; // Kiểm tra an toàn
+        if (cloudinary == null) return null;
 
         try {
             java.io.File file = new java.io.File(filePath);

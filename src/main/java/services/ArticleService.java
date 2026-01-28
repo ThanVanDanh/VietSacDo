@@ -46,7 +46,7 @@ public class ArticleService {
                 if (uploaded != null) {
                     article.setBannerImageUrl(uploaded.getSecureUrl());
                     uploadedPublicId = uploaded.getPublicId();
-                    System.out.println("✅ Uploaded banner: " + uploaded.getSecureUrl());
+                    System.out.println("Uploaded banner: " + uploaded.getSecureUrl());
                     System.out.println("   Public ID: " + uploadedPublicId);
                 }
             }
@@ -55,17 +55,17 @@ public class ArticleService {
                 return articleDao.insert(handle, article);
             });
 
-            System.out.println("✅ Created article ID: " + articleId);
+            System.out.println("Created article ID: " + articleId);
             return articleId;
 
         } catch (Exception ex) {
-            System.err.println("❌ Error creating article: " + ex.getMessage());
+            System.err.println("Error creating article: " + ex.getMessage());
             ex.printStackTrace();
 
             if (uploadedPublicId != null) {
                 try {
                     cloudinaryService.deleteByPublicId(uploadedPublicId);
-                    System.out.println("🗑️ Cleaned up uploaded banner: " + uploadedPublicId);
+                    System.out.println("Cleaned up uploaded banner: " + uploadedPublicId);
                 } catch (Exception e) {
                     System.err.println("Failed to cleanup banner: " + e.getMessage());
                 }
@@ -95,7 +95,7 @@ public class ArticleService {
                 if (uploaded != null) {
                     article.setBannerImageUrl(uploaded.getSecureUrl());
                     newPublicId = uploaded.getPublicId();
-                    System.out.println("✅ Uploaded new banner: " + uploaded.getSecureUrl());
+                    System.out.println("Uploaded new banner: " + uploaded.getSecureUrl());
                     System.out.println("   Public ID: " + newPublicId);
                 }
             } else {
@@ -110,19 +110,19 @@ public class ArticleService {
                 if (newPublicId != null && oldPublicId != null && !oldPublicId.equals(newPublicId)) {
                     try {
                         cloudinaryService.deleteByPublicId(oldPublicId);
-                        System.out.println("🗑️ Deleted old banner: " + oldPublicId);
+                        System.out.println("Deleted old banner: " + oldPublicId);
                     } catch (Exception e) {
                         System.err.println("Failed to delete old banner: " + e.getMessage());
                     }
                 }
 
-                System.out.println("✅ Updated article ID: " + article.getId());
+                System.out.println("Updated article ID: " + article.getId());
                 return true;
             } else {
                 if (newPublicId != null) {
                     try {
                         cloudinaryService.deleteByPublicId(newPublicId);
-                        System.out.println("🗑️ Rolled back new banner: " + newPublicId);
+                        System.out.println("Rolled back new banner: " + newPublicId);
                     } catch (Exception e) {
                         System.err.println("Failed to rollback banner: " + e.getMessage());
                     }
@@ -131,7 +131,7 @@ public class ArticleService {
             }
 
         } catch (Exception ex) {
-            System.err.println("❌ Error updating article: " + ex.getMessage());
+            System.err.println("Error updating article: " + ex.getMessage());
             ex.printStackTrace();
             throw new Exception("Failed to update article: " + ex.getMessage());
         }
@@ -139,7 +139,6 @@ public class ArticleService {
 
     public boolean deleteArticle(int articleId) throws Exception {
         try {
-            // Get article to get banner URL
             Article article = articleDao.getById(articleId);
             if (article == null) {
                 throw new Exception("Article not found");
@@ -153,20 +152,20 @@ public class ArticleService {
                 if (publicId != null) {
                     try {
                         cloudinaryService.deleteByPublicId(publicId);
-                        System.out.println("🗑️ Deleted banner from Cloudinary: " + publicId);
+                        System.out.println("Deleted banner from Cloudinary: " + publicId);
                     } catch (Exception e) {
                         System.err.println("Failed to delete banner: " + e.getMessage());
                     }
                 }
 
-                System.out.println("✅ Deleted article ID: " + articleId);
+                System.out.println("Deleted article ID: " + articleId);
                 return true;
             }
 
             return false;
 
         } catch (Exception ex) {
-            System.err.println("❌ Error deleting article: " + ex.getMessage());
+            System.err.println("Error deleting article: " + ex.getMessage());
             ex.printStackTrace();
             throw new Exception("Failed to delete article: " + ex.getMessage());
         }

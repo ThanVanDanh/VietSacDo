@@ -1,7 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, GoogleAuthProvider, FacebookAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-//Cấu hình FireBase
 const firebaseConfig = {
     apiKey: "AIzaSyBcuuZMwTkWjkFTGlVlB38cLtOW_FlWxVQ",
     authDomain: "vietsacdo-ck.firebaseapp.com",
@@ -11,7 +10,6 @@ const firebaseConfig = {
     appId: "1:57602782048:web:7df607358f7769c7c5e405",
     measurementId: "G-LTWM6DGKHZ"
 };
-// Khởi tạo Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
@@ -131,7 +129,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const forgotView = document.getElementById('forgot_view');
     const showForgotLink = document.getElementById('show_forgot_view');
     const showLoginLink = document.getElementById('show_login_view');
-    // Ẩn/hiện form
     if (showForgotLink) {
         showForgotLink.addEventListener('click', function (event) {
             event.preventDefault();
@@ -155,7 +152,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    //Popup Đăng ký thành công
     const bridgeShowPopup = document.getElementById('bridge-show-popup');
     const bridgeUserEmail = document.getElementById('bridge-user-email');
     const verifyModal = document.getElementById('verifyModal');
@@ -195,7 +191,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-// Toggle Password Visibility
 document.body.addEventListener('click', function (e) {
     if (e.target.classList.contains('toggle-password')) {
         const inputId = e.target.getAttribute('toggle');

@@ -69,14 +69,12 @@ public class UserDao extends BaseDao {
         });
     }
 
-    // Đếm tổng số khách hàng
     public int countAll() {
         return get().withHandle(handle -> handle.createQuery("SELECT COUNT(*) FROM Users")
                 .mapTo(int.class)
                 .one());
     }
 
-    // Đếm số khách mới trong tuần
     public int countNewThisWeek() {
         return get().withHandle(handle -> handle
                 .createQuery("SELECT COUNT(*) FROM Users WHERE YEARWEEK(created_at, 1) = YEARWEEK(CURDATE(), 1)")

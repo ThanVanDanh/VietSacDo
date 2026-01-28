@@ -20,7 +20,6 @@
 
     <body>
         <jsp:include page="header.jsp" />
-        <!--breadcrumb-->
         <div class="breadcrumb-container">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">

@@ -129,7 +129,7 @@
         const searchInput = document.getElementById('searchInput');
 
         searchTrigger.addEventListener('click', function(event) {
-            event.preventDefault(); // Ngăn trình duyệt nhảy trang
+            event.preventDefault();
 
             searchOverlay.classList.add('search-overlay--active');
 
@@ -162,20 +162,17 @@
                     disableOnInteraction: false,
                 },
             });
-            //Xem nhanh
             quickViewButtons.forEach(btn => {
                 btn.addEventListener("click", (e) => {
                     e.preventDefault();
                     modal.classList.add("active");
                 });
             });
-            //Thêm giỏ hàng
             addToCartBtn.addEventListener("click", (e) => {
                 e.preventDefault();
                 modal.classList.remove("active");
                 successPopup.classList.add("active");
             });
-            //Đóng xem nhanh
             closeBtn.addEventListener("click", () => {
                 modal.classList.remove("active");
             });
@@ -185,7 +182,6 @@
                     modal.classList.remove("active");
                 }
             });
-            //Đóng giỏ hàng
             closeSuccessPopupBtn.addEventListener("click", () => {
                 successPopup.classList.remove("active");
             });
@@ -195,7 +191,6 @@
                 }
             });
 
-            //Logic tăng giảm số lượng
             const quantityWrappers = document.querySelectorAll('.quantity, .quatity-sp');
 
             quantityWrappers.forEach(wrapper => {
@@ -216,14 +211,12 @@
                         input.value = val + 1;
                     });
 
-                    // Chặn ký tự chữ
                     input.addEventListener('input', function (e) {
                         e.preventDefault();
                         this.value = this.value.replace(/[^0-9]/g, '1');
                     });
 
 
-                    // Chặn các phím ký tự đặc biệt (., -, +, e)
                     input.addEventListener('keypress', function (e) {
                         if (!/[0-9]/.test(e.key)) {
                             e.preventDefault();
@@ -256,7 +249,6 @@
         checkEmptyCart();
         checkMiniCart();
 
-        // Hàm kiểm tra giỏ hàng trống (Logic Ẩn/Hiện)
         function checkEmptyCart() {
             const cartList = document.querySelector('.cart-items-list-sp');
             const dataContainer = document.getElementById('cart-data-container');
@@ -266,12 +258,10 @@
                 const itemCount = cartList.querySelectorAll('li').length;
 
                 if (itemCount === 0) {
-                    // Giỏ hàng trống
                     if(dataContainer) dataContainer.style.display = 'none';
                     if(emptyMessage) emptyMessage.style.display = 'block';
 
                 } else {
-                    // Giỏ hàng có sản phẩm
                     if(dataContainer) dataContainer.style.display = 'flex';
                     if(emptyMessage) emptyMessage.style.display = 'none';
                 }
@@ -290,12 +280,10 @@
                 const itemCount = cartList.querySelectorAll('li').length;
 
                 if (itemCount === 0) {
-                    // Giỏ hàng trống
                     cartList.style.display = 'none';
                     if (cartFooter) cartFooter.style.display = 'none';
                     if (empCart) empCart.style.display = 'block';
                 } else {
-                    // Có sản phẩm
                     cartList.style.display = 'block';
                     if (cartFooter) cartFooter.style.display = 'block';
                     if (empCart) empCart.style.display = 'none';
@@ -311,7 +299,6 @@
 
                 if (cartList && countElement) {
                     let totalQty = 0;
-                    // Tìm tất cả các thẻ hiển thị số lượng (ví dụ: x1, x2...)
                     const quantityElements = cartList.querySelectorAll('.mini-quantity');
 
                     quantityElements.forEach(el => {

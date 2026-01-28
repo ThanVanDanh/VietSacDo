@@ -51,7 +51,6 @@ public class HomeController extends HttpServlet {
             List<Banner> banners = bannerDao.getActiveBanners();
             req.setAttribute("banners", banners);
 
-            // Load các section động từ database
             List<SectionDTO> dynamicSections = loadDynamicSections();
             req.setAttribute("dynamicSections", dynamicSections);
 
@@ -61,7 +60,6 @@ public class HomeController extends HttpServlet {
             System.err.println(" Error in HomeController: " + e.getMessage());
             e.printStackTrace();
             
-            // Set empty data để tránh lỗi JSP
             req.setAttribute("banners", new ArrayList<Banner>());
             req.setAttribute("dynamicSections", new ArrayList<SectionDTO>());
             
@@ -70,7 +68,6 @@ public class HomeController extends HttpServlet {
     }
 
     private List<SectionDTO> loadDynamicSections() {
-        // Danh sách các section key cần hiển thị
         String[] sectionKeys = {"section_1", "section_2", "summer_collection"};
         List<SectionDTO> sections = new ArrayList<>();
 
@@ -92,7 +89,6 @@ public class HomeController extends HttpServlet {
     }
 
     private SectionDTO loadSection(String sectionKey) {
-        // Lấy title và tabs từ database
         String title = homeConfigDao.getSectionTitle(sectionKey);
         List<Home> dbTabs = homeConfigDao.getSectionTabs(sectionKey);
 
@@ -100,12 +96,10 @@ public class HomeController extends HttpServlet {
             return null;
         }
 
-        // Tạo DTO
         SectionDTO section = new SectionDTO();
         section.key = sectionKey;
         section.title = title;
 
-        // Load products cho từng tab
         for (Home homeTab : dbTabs) {
             Category category = categoryDao.getById(homeTab.getCategoryId());
             if (category == null) {
@@ -117,10 +111,8 @@ public class HomeController extends HttpServlet {
             tab.index = homeTab.getPosition();
             tab.title = category.getNameCategory();
             
-            // Lấy products theo category
             List<ProductListDTO> products = productService.getProductsByCategory(category.getId());
             
-            // Limit 5 sản phẩm mỗi tab
             tab.products = products.size() > 5 ? products.subList(0, 5) : products;
             
             section.tabs.add(tab);

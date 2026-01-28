@@ -134,12 +134,10 @@ public class OrderDao extends BaseDao {
 
     public boolean deleteOrder(int orderId) {
         return jdbi.inTransaction(handle -> {
-            // Delete order items first (foreign key constraint)
             handle.createUpdate("DELETE FROM Order_items WHERE order_id = :orderId")
                     .bind("orderId", orderId)
                     .execute();
 
-            // Delete the order
             int deleted = handle.createUpdate("DELETE FROM Orders WHERE id = :orderId")
                     .bind("orderId", orderId)
                     .execute();
@@ -148,7 +146,6 @@ public class OrderDao extends BaseDao {
         });
     }
 
-    // Dashboard Statistics Methods
 
     public double getTotalRevenue() {
         return jdbi.withHandle(handle -> handle.createQuery(
