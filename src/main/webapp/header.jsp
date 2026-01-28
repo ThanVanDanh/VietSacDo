@@ -18,7 +18,7 @@
         </div>
         <nav>
             <ul class="menu">
-                <li><a href="${pageContext.request.contextPath}/home">Trang Chủ</a></li>
+                <%--                <li><a href="${pageContext.request.contextPath}/home">Trang Chủ</a></li>--%>
 
                 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
                 <c:set var="menuAll" value="${requestScope.menuAllCategories}"/>
@@ -39,125 +39,125 @@
                             </c:if>
                         </c:forEach>
 
-                    <c:choose>
-                        <c:when test="${hasChildren}">
+                        <c:choose>
+                            <c:when test="${hasChildren}">
 
-                            <c:set var="hasGrandChild" value="${false}"/>
-                            <c:forEach var="child" items="${menuAll}">
-                                <c:if test="${child.parentId == cat.id}">
-                                    <c:forEach var="grand" items="${menuAll}">
-                                        <c:if test="${grand.parentId == child.id}">
-                                            <c:set var="hasGrandChild" value="${true}"/>
-                                        </c:if>
-                                    </c:forEach>
-                                </c:if>
-                            </c:forEach>
+                                <c:set var="hasGrandChild" value="${false}"/>
+                                <c:forEach var="child" items="${menuAll}">
+                                    <c:if test="${child.parentId == cat.id}">
+                                        <c:forEach var="grand" items="${menuAll}">
+                                            <c:if test="${grand.parentId == child.id}">
+                                                <c:set var="hasGrandChild" value="${true}"/>
+                                            </c:if>
+                                        </c:forEach>
+                                    </c:if>
+                                </c:forEach>
 
-                            <c:choose>
-                                <c:when test="${hasGrandChild}">
-                                    <li class="has-megamenu">
-                                        <c:choose>
-                                            <c:when test="${empty cat.slug}">
-                                                <a href="#">${cat.nameCategory}<i class="fa-solid fa-chevron-down"></i></a>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <a href="${ctx}/danh-muc/${cat.slug}">${cat.nameCategory}<i class="fa-solid fa-chevron-down"></i></a>
-                                            </c:otherwise>
-                                        </c:choose>
-
-                                        <ul class="sub-menu">
-                                            <div class="mega-menu-container">
-                                                <div class="mega-menu-content">
-                                                    <c:forEach var="col" items="${menuAll}">
-                                                        <c:if test="${col.parentId == cat.id}">
-                                                            <div class="category-column">
-                                                                <h3>${col.nameCategory}</h3>
-                                                                <ul>
-                                                                    <c:set var="hasGrand" value="${false}"/>
-                                                                    <c:forEach var="g" items="${menuAll}">
-                                                                        <c:if test="${g.parentId == col.id}">
-                                                                            <c:set var="hasGrand" value="${true}"/>
-                                                                        </c:if>
-                                                                    </c:forEach>
-
-                                                                    <c:choose>
-                                                                        <c:when test="${hasGrand}">
-                                                                            <c:forEach var="g" items="${menuAll}">
-                                                                                <c:if test="${g.parentId == col.id}">
-                                                                                    <c:choose>
-                                                                                        <c:when test="${empty g.slug}">
-                                                                                            <li><a href="#">${g.nameCategory}</a></li>
-                                                                                        </c:when>
-                                                                                        <c:otherwise>
-                                                                                            <li><a href="${ctx}/danh-muc/${g.slug}">${g.nameCategory}</a></li>
-                                                                                        </c:otherwise>
-                                                                                    </c:choose>
-                                                                                </c:if>
-                                                                            </c:forEach>
-                                                                        </c:when>
-                                                                        <c:otherwise>
-                                                                            <c:choose>
-                                                                                <c:when test="${empty col.slug}">
-                                                                                    <li><a href="#">${col.nameCategory}</a></li>
-                                                                                </c:when>
-                                                                                <c:otherwise>
-                                                                                    <li><a href="${ctx}/danh-muc/${col.slug}">${col.nameCategory}</a></li>
-                                                                                </c:otherwise>
-                                                                            </c:choose>
-                                                                        </c:otherwise>
-                                                                    </c:choose>
-                                                                </ul>
-                                                            </div>
-                                                        </c:if>
-                                                    </c:forEach>
-                                                </div>
-                                            </div>
-                                        </ul>
-                                    </li>
-                                </c:when>
-                                <c:otherwise>
-                                    <li>
-                                        <c:choose>
-                                            <c:when test="${empty cat.slug}">
-                                                <a href="#">${cat.nameCategory}<i class="fa-solid fa-chevron-down"></i></a>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <a href="${ctx}/danh-muc/${cat.slug}">${cat.nameCategory}<i class="fa-solid fa-chevron-down"></i></a>
-                                            </c:otherwise>
-                                        </c:choose>
-                                        <ul class="sub-menu">
-                                            <c:forEach var="child" items="${menuAll}">
-                                                <c:if test="${child.parentId == cat.id}">
-                                                    <c:choose>
-                                                        <c:when test="${empty child.slug}">
-                                                            <li><a href="#">${child.nameCategory}</a></li>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            <li><a href="${ctx}/danh-muc/${child.slug}">${child.nameCategory}</a></li>
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </c:if>
-                                            </c:forEach>
-                                        </ul>
-                                    </li>
-                                </c:otherwise>
-                            </c:choose>
-
-                        </c:when>
-
-                        <c:otherwise>
-                            <li>
                                 <c:choose>
-                                    <c:when test="${empty cat.slug}">
-                                        <a href="#">${cat.nameCategory}</a>
+                                    <c:when test="${hasGrandChild}">
+                                        <li class="has-megamenu">
+                                            <c:choose>
+                                                <c:when test="${empty cat.slug}">
+                                                    <a href="#">${cat.nameCategory}<i class="fa-solid fa-chevron-down"></i></a>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a href="${ctx}/danh-muc/${cat.slug}">${cat.nameCategory}<i class="fa-solid fa-chevron-down"></i></a>
+                                                </c:otherwise>
+                                            </c:choose>
+
+                                            <ul class="sub-menu">
+                                                <div class="mega-menu-container">
+                                                    <div class="mega-menu-content">
+                                                        <c:forEach var="col" items="${menuAll}">
+                                                            <c:if test="${col.parentId == cat.id}">
+                                                                <div class="category-column">
+                                                                    <h3>${col.nameCategory}</h3>
+                                                                    <ul>
+                                                                        <c:set var="hasGrand" value="${false}"/>
+                                                                        <c:forEach var="g" items="${menuAll}">
+                                                                            <c:if test="${g.parentId == col.id}">
+                                                                                <c:set var="hasGrand" value="${true}"/>
+                                                                            </c:if>
+                                                                        </c:forEach>
+
+                                                                        <c:choose>
+                                                                            <c:when test="${hasGrand}">
+                                                                                <c:forEach var="g" items="${menuAll}">
+                                                                                    <c:if test="${g.parentId == col.id}">
+                                                                                        <c:choose>
+                                                                                            <c:when test="${empty g.slug}">
+                                                                                                <li><a href="#">${g.nameCategory}</a></li>
+                                                                                            </c:when>
+                                                                                            <c:otherwise>
+                                                                                                <li><a href="${ctx}/danh-muc/${g.slug}">${g.nameCategory}</a></li>
+                                                                                            </c:otherwise>
+                                                                                        </c:choose>
+                                                                                    </c:if>
+                                                                                </c:forEach>
+                                                                            </c:when>
+                                                                            <c:otherwise>
+                                                                                <c:choose>
+                                                                                    <c:when test="${empty col.slug}">
+                                                                                        <li><a href="#">${col.nameCategory}</a></li>
+                                                                                    </c:when>
+                                                                                    <c:otherwise>
+                                                                                        <li><a href="${ctx}/danh-muc/${col.slug}">${col.nameCategory}</a></li>
+                                                                                    </c:otherwise>
+                                                                                </c:choose>
+                                                                            </c:otherwise>
+                                                                        </c:choose>
+                                                                    </ul>
+                                                                </div>
+                                                            </c:if>
+                                                        </c:forEach>
+                                                    </div>
+                                                </div>
+                                            </ul>
+                                        </li>
                                     </c:when>
                                     <c:otherwise>
-                                        <a href="${ctx}/danh-muc/${cat.slug}">${cat.nameCategory}</a>
+                                        <li>
+                                            <c:choose>
+                                                <c:when test="${empty cat.slug}">
+                                                    <a href="#">${cat.nameCategory}<i class="fa-solid fa-chevron-down"></i></a>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a href="${ctx}/danh-muc/${cat.slug}">${cat.nameCategory}<i class="fa-solid fa-chevron-down"></i></a>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <ul class="sub-menu">
+                                                <c:forEach var="child" items="${menuAll}">
+                                                    <c:if test="${child.parentId == cat.id}">
+                                                        <c:choose>
+                                                            <c:when test="${empty child.slug}">
+                                                                <li><a href="#">${child.nameCategory}</a></li>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <li><a href="${ctx}/danh-muc/${child.slug}">${child.nameCategory}</a></li>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </c:if>
+                                                </c:forEach>
+                                            </ul>
+                                        </li>
                                     </c:otherwise>
                                 </c:choose>
-                            </li>
-                        </c:otherwise>
-                    </c:choose>
+
+                            </c:when>
+
+                            <c:otherwise>
+                                <li>
+                                    <c:choose>
+                                        <c:when test="${empty cat.slug}">
+                                            <a href="#">${cat.nameCategory}</a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <a href="${ctx}/danh-muc/${cat.slug}">${cat.nameCategory}</a>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </li>
+                            </c:otherwise>
+                        </c:choose>
                     </c:if>
                 </c:forEach>
 
@@ -361,3 +361,31 @@
     </div>
     <div class="search-overlay-close-area" id="searchCloseArea"></div>
 </div>
+
+<%-- ======= PHẦN BREADCRUMB MỚI THÊM VÀO ======= --%>
+<%-- Chỉ hiển thị khi có biến "pageTitle" được truyền vào --%>
+<%-- ======= PHẦN BREADCRUMB (Đã cập nhật thêm "Tất cả sản phẩm") ======= --%>
+<c:if test="${not empty pageTitle}">
+    <div class="breadcrumb-container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                    <%-- 1. Trang chủ --%>
+                <li class="breadcrumb-item">
+                    <a href="${pageContext.request.contextPath}/home">Trang Chủ</a>
+                </li>
+
+                    <%-- 2. Link 'Tất cả sản phẩm' --%>
+                    <%-- Logic: Chỉ hiện link này nếu trang hiện tại KHÔNG PHẢI là trang danh sách sản phẩm (để tránh bị lặp: Trang chủ > Tất cả sp > Tất cả sp) --%>
+                <c:if test="${pageTitle != 'Tất cả sản phẩm'}">
+                    <li class="breadcrumb-item">
+                            <%-- Link này trỏ về Controller ListProduct --%>
+                        <a href="${pageContext.request.contextPath}/list-product">Tất cả sản phẩm</a>
+                    </li>
+                </c:if>
+
+                    <%-- 3. Trang hiện tại (Biến động) --%>
+                <li class="breadcrumb-item active" aria-current="page">${pageTitle}</li>
+            </ol>
+        </nav>
+    </div>
+</c:if>

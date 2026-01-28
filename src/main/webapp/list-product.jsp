@@ -19,17 +19,8 @@
     <script src="scripts/home.js"></script>
 </head>
 <body>
+<c:set var="pageTitle" value="${currentCategory.nameCategory}" scope="request" />
 <jsp:include page="header.jsp" />
-
-<div class="breadcrumb-container">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home">Trang Chủ</a></li>
-            <li class="breadcrumb-item active" aria-current="page">${currentCategory.nameCategory}</li>
-        </ol>
-    </nav>
-</div>
-
 <main>
     <section class="product-showcase tab-component">
         <div class="title-h1-linen">

@@ -109,6 +109,9 @@ public class ProductService {
     public List<ProductListDTO> getProductsByCategory(int categoryId) {
         return productDao.getProductsByCategory(categoryId);
     }
+    public List<ProductListDTO> getActiveListProduct() {
+        return productDao.getActiveListProduct();
+    }
 
     public Product getProduct(int id) {
         return productDao.getProduct(id);
