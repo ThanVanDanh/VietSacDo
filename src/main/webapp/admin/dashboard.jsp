@@ -66,15 +66,7 @@
                                         <p title="${bestSellingProduct.nameProduct}">
                                             <c:choose>
                                                 <c:when test="${not empty bestSellingProduct}">
-                                                    <c:choose>
-                                                        <c:when
-                                                            test="${fn:length(bestSellingProduct.nameProduct) > 20}">
-                                                            ${fn:substring(bestSellingProduct.nameProduct, 0, 20)}...
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            ${bestSellingProduct.nameProduct}
-                                                        </c:otherwise>
-                                                    </c:choose>
+                                                    ${bestSellingProduct.nameProduct}
                                                 </c:when>
                                                 <c:otherwise>Chưa có dữ liệu</c:otherwise>
                                             </c:choose>

@@ -1,8 +1,16 @@
+
 let MAX_QTY = 1;
+
 function updateVariant(element, sizeName) {
     // 1. Quản lý trạng thái Active nút Size
     document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active'));
     element.classList.add('active');
+
+    const sizeDisplay = document.getElementById('selected-size');
+    if (sizeDisplay) sizeDisplay.innerText = sizeName;
+
+    const sizeInput = document.getElementById('selectedVariantSize');
+    if (sizeInput) sizeInput.value = sizeName;
 
     // 2. Lấy dữ liệu từ data attributes
     const discountedPrice = parseFloat(element.getAttribute('data-price')) || 0; // Giá sau giảm
@@ -45,11 +53,15 @@ function updateVariant(element, sizeName) {
     const skuDisplay = document.getElementById('sku-value');
     if (skuDisplay && sku) skuDisplay.innerText = sku;
 
+    // Cập nhật SKU cho input ẩn (quan trọng cho Buy Now)
+    const skuInput = document.getElementById('selectedVariantSku');
+    if (skuInput && sku) skuInput.value = sku;
+
     const priceInput = document.getElementById('selectedVariantPrice');
     if (priceInput) priceInput.value = (discountedPrice > 0) ? discountedPrice : currentPrice;
 
     // Cập nhật kho hàng
-    MAX_QTY = parseInt(element.dataset.stock) || 0;
+    MAX_QTY = parseInt(element.getAttribute('data-stock')) || 0; // Dùng getAttribute an toàn hơn dataset đôi khi
     updateStockUI(MAX_QTY);
 }
 
@@ -160,3 +172,53 @@ document.addEventListener('DOMContentLoaded', function () {
         if (e.target === popup) popup.classList.remove('active');
     });
 });
+// Hàm xử lý Mua Ngay
+function buyNow(productId) {
+    // 1. Lấy thông tin từ các thẻ input ẩn trong trang JSP
+    const sku = document.getElementById('selectedVariantSku').value;
+    const quantity = document.getElementById('product-quantity').value;
+    const size = document.getElementById('selectedVariantSize').value;
+
+    // 2. Kiểm tra validation
+    if (!sku || sku.trim() === "") {
+        alert("Vui lòng chọn Kích thước và Màu sắc trước khi mua hàng!");
+        return;
+    }
+
+    if (parseInt(quantity) < 1) {
+        alert("Số lượng phải lớn hơn 0");
+        return;
+    }
+
+    // 3. Gửi request AJAX đến CartController
+    // URL 'cart' tương ứng với @WebServlet(name = "CartController", value = "/cart")
+    fetch('cart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+            'X-Requested-With': 'XMLHttpRequest' // Header báo hiệu đây là AJAX
+        },
+        // Tạo body chuẩn format form-urlencoded
+        body: new URLSearchParams({
+            'action': 'add',
+            'productId': productId, // Controller đang nhận tham số là "productId"
+            'sku': sku,
+            'size': size,
+            'quantity': quantity
+        })
+    })
+        .then(response => response.json()) // Controller trả về JSON
+        .then(data => {
+            if (data.success) {
+                // 4. Thành công -> Chuyển hướng sang trang thanh toán
+                // Dữ liệu giỏ hàng đã được lưu trong Session, trang thanh toán sẽ tự lấy lên
+                window.location.href = "thanhtoan.jsp";
+            } else {
+                alert(data.message || "Có lỗi xảy ra khi thêm vào giỏ hàng. Vui lòng thử lại!");
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Lỗi kết nối đến server.");
+        });
+}

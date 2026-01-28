@@ -21,15 +21,14 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/home">Trang Chủ</a></li>
-            <li class="breadcrumb-item"><a href="contactus.html">Liên hệ</a></li> <li class="breadcrumb-item active" aria-current="page">Gửi</li>
+            <li class="breadcrumb-item"><a href="${pageContext.request.contextPath}/contact_us">Liên hệ</a></li> <li class="breadcrumb-item active" aria-current="page">Gửi</li>
         </ol>
     </nav>
 </div>
-<section style="background-image: url('image/Contact.png');">
+<section >
     <div class="section-header">
         <div class="container">
             <h2>Liên hệ</h2>
-            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
         </div>
     </div>
 

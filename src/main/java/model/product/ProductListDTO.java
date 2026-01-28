@@ -101,13 +101,22 @@ public class ProductListDTO extends AId {
         this.price = price;
     }
 
-    public Integer getTotalStock() { return totalStock; }
-    public void setTotalStock(Integer totalStock) { this.totalStock = totalStock; }
-    public double getDiscountedPrice() { return discountedPrice; }
+    public Integer getTotalStock() {
+        return totalStock;
+    }
+
+    public void setTotalStock(Integer totalStock) {
+        this.totalStock = totalStock;
+    }
+
+    public double getDiscountedPrice() {
+        return discountedPrice;
+    }
 
     public void setDiscountedPrice(double discountedPrice) {
         this.discountedPrice = discountedPrice;
     }
+
     public String getThumbnail() {
         return thumbnail;
     }
