@@ -22,13 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * AdminDiscountController - Xử lý giảm giá marketing
- * 
- * POST /admin/discount/apply-single     -> Giảm giá theo mã sản phẩm
- * POST /admin/discount/apply-batch      -> Giảm giá hàng loạt theo danh mục
- * GET  /admin/discount/get-product      -> Lấy thông tin giá của product theo code
- */
 @WebServlet(name = "AdminDiscountController", urlPatterns = {
         "/admin/discount/apply-single",
         "/admin/discount/apply-batch",
@@ -45,8 +38,6 @@ public class AdminDiscountController extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         try {
-            System.out.println("=== Initializing AdminDiscountController ===");
-
             ProductDao productDao = new ProductDao();
             Jdbi jdbi = productDao.get();
             
@@ -56,9 +47,7 @@ public class AdminDiscountController extends HttpServlet {
             this.categoryDao = new CategoryDao();
             this.gson = GsonUtil.getGson();
 
-            System.out.println("✅ AdminDiscountController initialized");
         } catch (Exception ex) {
-            System.err.println("❌ Init failed: " + ex.getMessage());
             ex.printStackTrace();
             throw new ServletException("Init failed: " + ex.getMessage(), ex);
         }
@@ -105,12 +94,7 @@ public class AdminDiscountController extends HttpServlet {
         }
     }
 
-    /**
-     * Lấy thông tin giá của variant theo SKU
-     */
     private void handleGetProduct(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        System.out.println("=== handleGetProduct ===");
-
         try {
             String sku = req.getParameter("sku");
 
@@ -138,19 +122,13 @@ public class AdminDiscountController extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_OK);
 
         } catch (Exception ex) {
-            System.err.println("❌ Error getting product: " + ex.getMessage());
             ex.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().write("{\"success\":false,\"error\":\"" + escapeJson(ex.getMessage()) + "\"}");
         }
     }
 
-    /**
-     * Áp dụng giảm giá cho một variant theo SKU
-     */
     private void handleApplySingleDiscount(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        System.out.println("=== handleApplySingleDiscount ===");
-
         try {
             String sku = req.getParameter("sku");
             String discountType = req.getParameter("discountType"); // "percentage" or "fixed"
@@ -189,7 +167,6 @@ public class AdminDiscountController extends HttpServlet {
             );
 
             if (success) {
-                System.out.println("✅ Applied discount to SKU: " + sku);
                 resp.getWriter().write("{\"success\":true,\"message\":\"Áp dụng giảm giá thành công\"}");
                 resp.setStatus(HttpServletResponse.SC_OK);
             } else {
@@ -198,28 +175,22 @@ public class AdminDiscountController extends HttpServlet {
             }
 
         } catch (Exception ex) {
-            System.err.println("❌ Error applying discount: " + ex.getMessage());
             ex.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().write("{\"success\":false,\"error\":\"" + escapeJson(ex.getMessage()) + "\"}");
         }
     }
 
-    /**
-     * Áp dụng giảm giá hàng loạt theo danh mục
-     */
     private void handleApplyBatchDiscount(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        System.out.println("=== handleApplyBatchDiscount ===");
-
         try {
             String[] categoryIdStrs = req.getParameterValues("categoryIds");
             String discountType = req.getParameter("discountType"); // "percentage" or "fixed"
             String discountValueStr = req.getParameter("discountValue");
 
-            System.out.println("Received parameters:");
-            System.out.println("  categoryIds: " + (categoryIdStrs != null ? String.join(", ", categoryIdStrs) : "null"));
-            System.out.println("  discountType: " + discountType);
-            System.out.println("  discountValue: " + discountValueStr);
+//            System.out.println("Received parameters:");
+//            System.out.println("  categoryIds: " + (categoryIdStrs != null ? String.join(", ", categoryIdStrs) : "null"));
+//            System.out.println("  discountType: " + discountType);
+//            System.out.println("  discountValue: " + discountValueStr);
 
             if (categoryIdStrs == null || categoryIdStrs.length == 0) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -242,7 +213,6 @@ public class AdminDiscountController extends HttpServlet {
                 return;
             }
 
-            // Parse category IDs
             List<Integer> categoryIds = new ArrayList<>();
             for (String idStr : categoryIdStrs) {
                 try {
@@ -265,7 +235,6 @@ public class AdminDiscountController extends HttpServlet {
             );
 
             if (affectedCount > 0) {
-                System.out.println("✅ Applied discount to " + affectedCount + " variants");
                 resp.getWriter().write("{\"success\":true,\"message\":\"Đã áp dụng giảm giá cho " + affectedCount + " biến thể sản phẩm\",\"count\":" + affectedCount + "}");
                 resp.setStatus(HttpServletResponse.SC_OK);
             } else {
@@ -274,7 +243,6 @@ public class AdminDiscountController extends HttpServlet {
             }
 
         } catch (Exception ex) {
-            System.err.println("❌ Error applying batch discount: " + ex.getMessage());
             ex.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().write("{\"success\":false,\"error\":\"" + escapeJson(ex.getMessage()) + "\"}");

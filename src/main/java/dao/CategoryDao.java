@@ -21,9 +21,9 @@ public class CategoryDao extends BaseDao {
     }
 
     public int insert(Category category) {
+
         return jdbi.withHandle(handle -> insert(handle, category));
     }
-    // Insert sử dụng Handle (dùng trong transaction nếu cần)
     public int insert(Handle handle, Category category) {
         String sql = "INSERT INTO Categories (name_category, slug, description, parent_category_id) " +
                 "VALUES (:nameCategory, :slug, :description, :parentId)";
@@ -114,7 +114,6 @@ public class CategoryDao extends BaseDao {
                         .orElse(null)
         );
     }
-    // 1. Đếm tổng số sản phẩm trong danh mục (Dùng để tính Total Pages)
     public int countProductsByCategory(int categoryId) {
         String sql = "SELECT COUNT(*) FROM Products WHERE category_id = :categoryId and status_product = 'active'";
 

@@ -119,18 +119,21 @@ public class VoucherDao extends BaseDao {
     }
 
     public boolean incrementUsage(int voucherId) {
-        String sql = "UPDATE Vouchers SET current_usage = current_usage + 1 WHERE id = :id";
+        String sql = "UPDATE Vouchers SET " +
+                "current_usage = current_usage + 1, " +
+                "is_active = CASE WHEN current_usage + 1 >= max_usage THEN 0 ELSE is_active END " +
+                "WHERE id = :id";
         return jdbi.withHandle(handle -> handle.createUpdate(sql)
                 .bind("id", voucherId)
                 .execute() > 0);
     }
 
     /**
-     * Tự động cập nhật is_active = 0 cho các voucher đã hết hạn
+     * Tự động cập nhật is_active = 0 cho các voucher đã hết hạn hoặc hết lượt sử dụng
      */
     public int deactivateExpiredVouchers() {
         String sql = "UPDATE Vouchers SET is_active = 0 " +
-                "WHERE is_active = 1 AND valid_to < NOW()";
+                "WHERE is_active = 1 AND (valid_to < NOW() OR current_usage >= max_usage)";
 
         return jdbi.withHandle(handle -> handle.createUpdate(sql).execute());
     }

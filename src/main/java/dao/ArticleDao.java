@@ -68,14 +68,12 @@ public class ArticleDao extends BaseDao {
 
     public Article getById(int id) {
         return jdbi.withHandle(handle -> {
-            // Get article first
             Article article = handle.createQuery("SELECT * FROM Articles WHERE id = :id")
                     .bind("id", id)
                     .mapToBean(Article.class)
                     .findFirst()
                     .orElse(null);
 
-            // If article has voucher, fetch and populate it
             if (article != null && article.getVoucherId() != null) {
                 Voucher voucher = handle.createQuery("SELECT * FROM Vouchers WHERE id = :voucherId")
                         .bind("voucherId", article.getVoucherId())
