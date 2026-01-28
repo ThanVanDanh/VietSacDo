@@ -521,3 +521,13 @@
         opacity: 1;
     }
 }
+.table-toolbar .btn-secondary {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+}

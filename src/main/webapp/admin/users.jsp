@@ -51,15 +51,20 @@
                     </section>
                     <section class="table-container">
                         <div class="table-toolbar">
-                            <div class="filters">
-                                <select name="filter-status" id="filter-status">
+                            <form action="" method="GET" class="filters">
+                                <select name="status" id="filter-status" onchange="this.form.submit()">
                                     <option value="">Tất cả trạng thái</option>
-                                    <option value="active">Hoạt động</option>
-                                    <option value="blocked">Bị khóa</option>
+                                    <option value="active" ${statusFilter=='active' ? 'selected' : '' }>Hoạt động
+                                    </option>
+                                    <option value="banned" ${statusFilter=='banned' ? 'selected' : '' }>Bị khóa</option>
+                                    <option value="inactive" ${statusFilter=='inactive' ? 'selected' : '' }>Chưa kích
+                                        hoạt</option>
+
                                 </select>
-                                <input type="text" placeholder="Tìm theo tên hoặc email..." class="table-search">
-                            </div>
-                            <button class="btn-csv"><i class="fas fa-file-csv"></i> Xuất CSV</button>
+                                <input type="text" name="search" value="${searchKeyword}"
+                                    placeholder="Tìm theo tên hoặc email..." class="table-search">
+                                <button type="submit" class="btn-secondary"><i class="fas fa-search"></i></button>
+                            </form>
                         </div>
                         <table class="table-general customer-table">
                             <thead>
@@ -76,77 +81,84 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <c:forEach var="user" items="${users}">
-                                    <tr>
-                                        <td>${user.fullName}</td>
-                                        <td>${user.email}</td>
-                                        <td>${user.phone}</td>
-                                        <td>${user.createdAt}</td>
-                                        <td>${user.authProvider}</td>
-                                        <td>0</td>
-                                        <td>
-                                            <form method="post" action="update-role" style="margin:0;">
-                                                <input type="hidden" name="userId" value="${user.id}" />
-                                                <select name="role" onchange="this.form.submit()">
-                                                    <option value="user" ${user.role eq 'user' ? 'selected' : '' }>User
-                                                    </option>
-                                                    <option value="admin" ${user.role eq 'admin' ? 'selected' : '' }>
-                                                        Admin</option>
-                                                </select>
-                                            </form>
-                                        </td>
-                                        <td>
-                                            <span class="status-badge status-active"
-                                                style="${user.status eq 'active' ? '' : 'display:none;'}">Hoạt
-                                                động</span>
-                                            <span class="status-badge status-blocked"
-                                                style="${user.status eq 'banned' ? '' : 'display:none;'}">Bị khóa</span>
-                                            <span class="status-badge status-inactive"
-                                                style="${user.status eq 'inactive' ? '' : 'display:none;'}">Chưa kích
-                                                hoạt</span>
-                                        </td>
-                                        <td class="table-actions">
-                                            <button class="btn-action btn-view" title="Xem" data-id="${user.id}"
-                                                data-fullname="${user.fullName}" data-email="${user.email}"
-                                                data-phone="${user.phone}" data-address="${user.authProvider}"
-                                                data-createdat="${user.createdAt}" data-status="${user.status}">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-
-                                            <button class="btn-action btn-block" title="Khóa" data-id="${user.id}"
-                                                data-name="${user.fullName}"
-                                                style="${user.status eq 'banned' ? 'display: none;' : ''}">
-                                                <i class="fas fa-ban"></i>
-                                            </button>
-
-                                            <button class="btn-action btn-unlock" title="Mở khóa" data-id="${user.id}"
-                                                data-name="${user.fullName}"
-                                                style="${user.status eq 'banned' ? '' : 'display: none;'}">
-                                                <i class="fas fa-check-circle"></i>
-                                            </button>
-
-                                            <button class="btn-action btn-delete" title="Xóa" data-id="${user.id}"
-                                                data-name="${user.fullName}">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </c:forEach>
-                                <c:if test="${empty users}">
+                            <c:choose>
+                                <c:when test="${empty users}">
                                     <tr class="empty-state-row">
-                                        <td colspan="7" style="text-align: center; padding: 40px; color: #666;">Hiện tại
-                                            không có tài khoản nào.</td>
+                                        <td colspan="9" style="text-align: center; padding: 40px; color: #666;">
+                                            Hiện tại không có tài khoản nào.
+                                        </td>
                                     </tr>
-                                </c:if>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:forEach var="user" items="${users}">
+                                        <tr>
+                                            <td>${user.fullName}</td>
+                                            <td>${user.email}</td>
+                                            <td>${user.phone}</td>
+                                            <td>${user.createdAt}</td>
+                                            <td>${user.authProvider}</td>
+                                            <td>0</td>
+                                            <td>
+                                                <form method="post" action="update-role" style="margin:0;">
+                                                    <input type="hidden" name="userId" value="${user.id}" />
+                                                    <select name="role" onchange="this.form.submit()">
+                                                        <option value="user" ${user.role eq 'user' ? 'selected' : '' }>User</option>
+                                                        <option value="admin" ${user.role eq 'admin' ? 'selected' : '' }>Admin</option>
+                                                    </select>
+                                                </form>
+                                            </td>
+                                            <td>
+                        <span class="status-badge status-active"
+                              style="${user.status eq 'active' ? '' : 'display:none;'}">Hoạt động</span>
+                                                <span class="status-badge status-blocked"
+                                                      style="${user.status eq 'banned' ? '' : 'display:none;'}">Bị khóa</span>
+                                                <span class="status-badge status-inactive"
+                                                      style="${user.status eq 'inactive' ? '' : 'display:none;'}">Chưa kích hoạt</span>
+                                            </td>
+                                            <td class="table-actions">
+                                                <button class="btn-action btn-view" title="Xem" data-id="${user.id}"
+                                                        data-fullname="${user.fullName}" data-email="${user.email}"
+                                                        data-phone="${user.phone}" data-address="${user.authProvider}"
+                                                        data-createdat="${user.createdAt}" data-status="${user.status}">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn-action btn-block" title="Khóa" data-id="${user.id}"
+                                                        data-name="${user.fullName}"
+                                                        style="${user.status eq 'banned' ? 'display: none;' : ''}">
+                                                    <i class="fas fa-ban"></i>
+                                                </button>
+                                                <button class="btn-action btn-unlock" title="Mở khóa" data-id="${user.id}"
+                                                        data-name="${user.fullName}"
+                                                        style="${user.status eq 'banned' ? '' : 'display: none;'}">
+                                                    <i class="fas fa-check-circle"></i>
+                                                </button>
+                                                <button class="btn-action btn-delete" title="Xóa" data-id="${user.id}"
+                                                        data-name="${user.fullName}">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </c:otherwise>
+                            </c:choose>
                             </tbody>
                         </table>
+                        <c:if test="${totalPages > 1}">
                         <div class="pagination">
-                            <a href="#">Trước</a>
-                            <a href="#" class="active">1</a>
-                            <a href="#">2</a>
-                            <a href="#">3</a>
-                            <a href="#">Sau</a>
+                            <c:if test="${currentPage > 1}">
+                                <a
+                                    href="?page=${currentPage - 1}&status=${statusFilter}&search=${searchKeyword}">Trước</a>
+                            </c:if>
+                            <c:forEach begin="1" end="${totalPages}" var="i">
+                                <a href="?page=${i}&status=${statusFilter}&search=${searchKeyword}"
+                                    class="${currentPage == i ? 'active' : ''}">${i}</a>
+                            </c:forEach>
+                            <c:if test="${currentPage < totalPages}">
+                                <a
+                                    href="?page=${currentPage + 1}&status=${statusFilter}&search=${searchKeyword}">Sau</a>
+                            </c:if>
                         </div>
+                        </c:if>
                     </section>
 
                 </main>
