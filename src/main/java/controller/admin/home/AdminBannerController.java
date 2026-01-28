@@ -50,14 +50,12 @@ public class AdminBannerController extends HttpServlet {
 
         try {
             if (pathInfo == null || pathInfo.equals("/") || pathInfo.equals("/list")) {
-                // Lấy danh sách tất cả banner
                 List<BannerDTO> banners = bannerDao.getAllBanners();
                 JsonObject response = new JsonObject();
                 response.addProperty("success", true);
                 response.add("banners", gson.toJsonTree(banners));
                 resp.getWriter().write(gson.toJson(response));
             } else {
-                // Lấy banner theo ID
                 String idStr = pathInfo.substring(1);
                 int id = Integer.parseInt(idStr);
                 BannerDTO banner = bannerDao.getById(id);
@@ -84,7 +82,6 @@ public class AdminBannerController extends HttpServlet {
         String pathInfo = req.getPathInfo();
 
         try {
-            // Upload banner mới
             String contentType = req.getContentType();
             if (contentType == null || !contentType.toLowerCase().startsWith("multipart/")) {
                 sendErrorResponse(resp, HttpServletResponse.SC_BAD_REQUEST, "Yêu cầu multipart/form-data");
@@ -101,7 +98,6 @@ public class AdminBannerController extends HttpServlet {
             String sortOrderStr = req.getParameter("sortOrder");
             String isActiveStr = req.getParameter("isActive");
 
-            // Upload ảnh lên Cloudinary
             String filename = getFileName(filePart);
             UploadedImage uploaded = cloudinaryService.upload(filePart.getInputStream(), "banner_" + System.currentTimeMillis() + "_" + filename);
 
@@ -115,7 +111,6 @@ public class AdminBannerController extends HttpServlet {
                     : bannerDao.getNextSortOrder();
             boolean isActive = isActiveStr == null || isActiveStr.isEmpty() || "true".equals(isActiveStr) || "1".equals(isActiveStr);
 
-            // Lưu vào database
             int newId = bannerDao.insert(
                     uploaded.getSecureUrl(),
                     altText != null ? altText : "",
@@ -169,11 +164,9 @@ public class AdminBannerController extends HttpServlet {
             boolean isActive = existing.isActive;
 
             if (isMultipart) {
-                // Có upload ảnh mới
                 Part filePart = req.getPart("image");
 
                 if (filePart != null && filePart.getSize() > 0) {
-                    // Upload ảnh mới
                     String filename = getFileName(filePart);
                     UploadedImage uploaded = cloudinaryService.upload(filePart.getInputStream(), "banner_" + System.currentTimeMillis() + "_" + filename);
 
@@ -191,7 +184,6 @@ public class AdminBannerController extends HttpServlet {
                 if (isActiveParam != null) isActive = "true".equals(isActiveParam) || "1".equals(isActiveParam);
 
             } else {
-                // Cập nhật chỉ thông tin (không upload ảnh)
                 String body = new String(req.getInputStream().readAllBytes(), "UTF-8");
                 JsonObject json = gson.fromJson(body, JsonObject.class);
 

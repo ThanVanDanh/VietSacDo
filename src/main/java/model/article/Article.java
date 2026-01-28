@@ -27,7 +27,6 @@ public class Article extends AId implements Serializable {
 
     private Voucher voucher;
 
-    // Constructors
     public Article() {
     }
 

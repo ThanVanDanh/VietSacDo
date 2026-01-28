@@ -25,7 +25,6 @@ public class VerifyAccountController extends HttpServlet {
             request.setAttribute("errorMessage", "Đường dẫn không hợp lệ.");
         }
 
-        // Chuyển hướng về trang login để hiện thông báo
         request.getRequestDispatcher("login.jsp").forward(request, response);
     }
 }

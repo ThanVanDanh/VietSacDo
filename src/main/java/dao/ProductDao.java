@@ -162,7 +162,7 @@ public class ProductDao extends BaseDao {
                 +
                 "FROM Products p " +
                 "LEFT JOIN Categories c ON p.category_id = c.id " +
-                "WHERE p.status_product = 'active' " + // CHỈ LẤY ACTIVE
+                "WHERE p.status_product = 'active' " +
                 "ORDER BY p.id DESC";
 
         return get().withHandle(handle -> handle.createQuery(sql)
@@ -248,9 +248,7 @@ public class ProductDao extends BaseDao {
     public List<ProductListDTO> getProductsByCategory(int categoryId) {
         String sql = "SELECT p.id, p.name_product, " +
                 "(SELECT current_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS price, " +
-                "(SELECT discounted_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS discountedPrice, " + // Thêm
-                                                                                                                         // dòng
-                                                                                                                         // này
+                "(SELECT discounted_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS discountedPrice, " +
                 "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, "
                 +
                 "(SELECT sku FROM Product_variants WHERE product_id = p.id LIMIT 1) AS sku " +
@@ -269,9 +267,7 @@ public class ProductDao extends BaseDao {
 
         String sql = "SELECT p.id, p.name_product, " +
                 "(SELECT current_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS price, " +
-                "(SELECT discounted_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS discountedPrice, " + // THÊM
-                                                                                                                         // DÒNG
-                                                                                                                         // NÀY
+                "(SELECT discounted_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS discountedPrice, " +
                 "(SELECT image_url FROM Product_images WHERE product_id = p.id AND is_thumbnail = 1 LIMIT 1) AS thumbnail, "
                 +
                 "(SELECT sku FROM Product_variants WHERE product_id = p.id LIMIT 1) AS sku " +

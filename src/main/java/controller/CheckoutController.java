@@ -39,14 +39,12 @@ public class CheckoutController extends HttpServlet {
 
         HttpSession session = request.getSession();
 
-        // Kiểm tra giỏ hàng
         Cart cart = (Cart) session.getAttribute("cart");
         if (cart == null || cart.getTotalQuantity() == 0) {
             response.sendRedirect(request.getContextPath() + "/cart");
             return;
         }
 
-        // Load danh sách voucher khả dụng
         try {
             List<model.voucher.Voucher> vouchers = voucherDao.getActiveVouchers();
             request.setAttribute("vouchers", vouchers);
@@ -54,31 +52,26 @@ public class CheckoutController extends HttpServlet {
             e.printStackTrace();
         }
 
-        // Lấy voucher đã áp dụng từ session
         model.voucher.Voucher appliedVoucher = (model.voucher.Voucher) session.getAttribute("appliedVoucher");
         if (appliedVoucher != null) {
             request.setAttribute("appliedVoucher", appliedVoucher);
         }
 
-        // Nếu có thông báo lỗi voucher
         String voucherError = (String) session.getAttribute("voucherError");
         if (voucherError != null) {
             request.setAttribute("voucherError", voucherError);
             session.removeAttribute("voucherError");
         }
 
-        // Kiểm tra đăng nhập
         User user = (User) session.getAttribute("account");
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
 
-        // Load địa chỉ mặc định của user
         try {
             List<Address> addresses = addressDao.findByUserId(user.getId());
             if (addresses != null && !addresses.isEmpty()) {
-                // Tìm địa chỉ mặc định
                 Address defaultAddress = addresses.stream()
                         .filter(Address::isDefault)
                         .findFirst()
@@ -88,10 +81,8 @@ public class CheckoutController extends HttpServlet {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            // Không block việc checkout nếu không load được địa chỉ
         }
 
-        // Forward đến trang thanh toán
         request.getRequestDispatcher("/thanhtoan.jsp").forward(request, response);
     }
 
@@ -126,7 +117,6 @@ public class CheckoutController extends HttpServlet {
 
         String shippingAddress = (address != null ? address : "") + ", " + (city != null ? city : "");
 
-        // Create Order
         Order order = new Order();
         if (user != null) {
             order.setUserId(user.getId());
@@ -139,7 +129,6 @@ public class CheckoutController extends HttpServlet {
         order.setCustomerNote(orderNote);
         order.setPaymentMethod(paymentMethod != null ? paymentMethod : "cod");
 
-        // Calculate Totals
         double subtotal = cart.getTotalPrice();
         double shippingFee = (subtotal >= 300000) ? 0 : 30000;
 
@@ -222,7 +211,6 @@ public class CheckoutController extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/checkout");
             return;
         }
-        // Kiểm tra điều kiện hợp lệ
         if (!voucher.isActive()) {
             session.setAttribute("voucherError", "Mã khuyến mãi không còn hiệu lực.");
             session.removeAttribute("appliedVoucher");
@@ -253,7 +241,6 @@ public class CheckoutController extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/checkout");
             return;
         }
-        // Hợp lệ
         session.setAttribute("appliedVoucher", voucher);
         session.removeAttribute("voucherError");
         resp.sendRedirect(req.getContextPath() + "/checkout");

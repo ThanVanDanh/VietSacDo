@@ -49,7 +49,6 @@
             
             <hr class="section-divider">
             
-            <!-- Section Management -->
             <button class="btn-add-section" onclick="addNewSection()">
                 <i class="fas fa-plus-circle"></i> Thêm Section Mới
             </button>
@@ -63,7 +62,6 @@
     </main>
 </div>
 
-<!-- Banner Modal -->
 <div id="bannerModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -131,7 +129,6 @@
             showAlert('Chưa có danh mục nào. Vui lòng tạo danh mục trước.', 'danger');
         }
         
-        // Load banners
         loadBanners();
         
         DEFAULT_SECTIONS.forEach(function(key) {
@@ -139,7 +136,6 @@
         });
     });
 
-    // ========== BANNER MANAGEMENT ==========
     function loadBanners() {
         fetch(CTX + '/admin/banner/api')
             .then(function(response) { 
@@ -317,7 +313,6 @@
         });
     });
 
-    // Click outside modal to close
     window.addEventListener('click', function(e) {
         var modal = document.getElementById('bannerModal');
         if (e.target === modal) {
@@ -325,7 +320,6 @@
         }
     });
 
-    // ========== SECTION MANAGEMENT ==========
 
     function loadSection(sectionKey) {
         if (loadedSections[sectionKey]) return;

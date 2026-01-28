@@ -25,7 +25,7 @@ public class ContactUs extends AId implements Serializable {
 
     }
     public ContactUs(int id, String fullName, String email, String messageBody, LocalDateTime receivedAt, String statusMessage) {
-        this.setId(id); // Gọi hàm setter từ lớp cha
+        this.setId(id);
         this.fullName = fullName;
         this.email = email;
         this.messageBody = messageBody;

@@ -15,20 +15,19 @@ import java.io.IOException;
 public class ReplyContactController extends HttpServlet {
 
     private EmailService emailService;
-    private ContactDao contactDao; // 1. Khai báo DAO
+    private ContactDao contactDao;
 
     @Override
     public void init() throws ServletException {
         super.init();
         this.emailService = new EmailService();
-        this.contactDao = new ContactDao(); // 2. Khởi tạo DAO
+        this.contactDao = new ContactDao();
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
 
-        // 3. Lấy ID từ form (Quan trọng)
         String idStr = request.getParameter("id");
         String recipientEmail = request.getParameter("email");
         String subject = request.getParameter("subject");

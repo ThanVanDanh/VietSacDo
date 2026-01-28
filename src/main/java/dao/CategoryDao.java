@@ -138,7 +138,6 @@ public class CategoryDao extends BaseDao {
             }
         }
 
-        // CẬP NHẬT: Thêm dòng lấy discounted_price bên dưới
         String sql = "SELECT p.id, p.name_product, " +
                 "(SELECT current_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS price, " +
                 "(SELECT discounted_price FROM Product_variants WHERE product_id = p.id LIMIT 1) AS discountedPrice, " + // THÊM DÒNG NÀY
@@ -171,7 +170,7 @@ public class CategoryDao extends BaseDao {
         return jdbi.withHandle(handle -> {
             Integer parentId = category.getParentId();
             if (parentId != null && parentId == 0) {
-                parentId = null; // Convert 0 → null
+                parentId = null;
             }
             int affected = handle.createUpdate(sql)
                     .bind("id", category.getId())
@@ -223,7 +222,6 @@ public class CategoryDao extends BaseDao {
         int childCount = countChildCategories(id);
         int productCount = countProducts(id);
 
-        // Validation
         if (childCount > 0 || productCount > 0) {
             StringBuilder msg = new StringBuilder("Không thể xóa danh mục này vì:\n");
             if (childCount > 0) {
@@ -245,7 +243,6 @@ public class CategoryDao extends BaseDao {
             throw new IllegalStateException(msg.toString());
         }
 
-        // Thực hiện xóa
         String sql = "DELETE FROM Categories WHERE id = :id";
         return jdbi.withHandle(handle -> {
             int affected = handle.createUpdate(sql).bind("id", id).execute();

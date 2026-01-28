@@ -13,7 +13,6 @@ public class AdminAuthenticationFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        // Initialization code if needed
     }
 
     @Override
@@ -35,18 +34,9 @@ public class AdminAuthenticationFilter implements Filter {
         }
 
         if (isLoggedIn && isAdmin) {
-            // User is logged in and is an admin, allow request to proceed
             chain.doFilter(request, response);
         } else {
-            // User is not authorized, redirect to login page
-            // Save the requested URL to redirect back after login (optional, but good UX)
-            // For security, just redirect to login for now
             httpResponse.sendRedirect(httpRequest.getContextPath() + "/login.jsp");
         }
-    }
-
-    @Override
-    public void destroy() {
-        // Cleanup code if needed
     }
 }

@@ -14,7 +14,6 @@ public class VoucherDao extends BaseDao {
     }
 
     public List<Voucher> getAll() {
-        // Tự động deactivate các voucher đã hết hạn
         deactivateExpiredVouchers();
 
         String sql = "SELECT * FROM Vouchers ORDER BY created_at DESC";
@@ -128,9 +127,6 @@ public class VoucherDao extends BaseDao {
                 .execute() > 0);
     }
 
-    /**
-     * Tự động cập nhật is_active = 0 cho các voucher đã hết hạn hoặc hết lượt sử dụng
-     */
     public int deactivateExpiredVouchers() {
         String sql = "UPDATE Vouchers SET is_active = 0 " +
                 "WHERE is_active = 1 AND (valid_to < NOW() OR current_usage >= max_usage)";

@@ -19,31 +19,23 @@ public class AccountController extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
 
-        // 1. Kiểm tra session với key "account" (khớp với LoginController)
         if (session == null || session.getAttribute("account") == null) {
             resp.sendRedirect("login.jsp");
             return;
         }
 
-        // 2. Lấy User từ Session ra
         User user = (User) session.getAttribute("account");
-
-        // 3. Đẩy user vào request để file JSP hiển thị (VD: ${user.fullName})
         req.setAttribute("user", user);
 
-        // 4. Lấy danh sách địa chỉ dựa trên ID của user trong session
         AddressDao addressDao = new AddressDao();
         java.util.List<Address> addresses = addressDao.findByUserId(user.getId());
 
-        // 5. Đẩy danh sách địa chỉ vào request
         req.setAttribute("addresses", addresses);
 
-        // 6. Lấy danh sách đơn hàng
         dao.OrderDao orderDao = new dao.OrderDao();
         java.util.List<model.order.Order> orders = orderDao.getOrdersByUserId(user.getId());
         req.setAttribute("orders", orders);
 
-        // 7. Forward sang trang JSP hiển thị
         req.getRequestDispatcher("account.jsp").forward(req, resp);
     }
 }

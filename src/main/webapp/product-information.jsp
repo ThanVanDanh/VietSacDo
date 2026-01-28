@@ -31,7 +31,6 @@
             <body>
                 <c:set var="pageTitle" value="${currentCategory.nameCategory}" scope="request" />
                 <jsp:include page="header.jsp" />
-                <!--breadcrumb-->
 
                 <div class="product-container">
                     <div class="product-image-gallery">
@@ -65,7 +64,6 @@
         <div class="product-price">
             <c:set var="v" value="${p.variants[0]}" />
             <c:choose>
-                <%-- Trường hợp CÓ giảm giá --%>
                 <c:when test="${v.discountedPrice > 0 && v.discountedPrice < v.currentPrice}">
                     <span class="old-price"><fmt:formatNumber value="${v.currentPrice}" pattern="#,###"/>₫</span>
                     <span class="current-price" id="display-price"><fmt:formatNumber value="${v.discountedPrice}" pattern="#,###"/>₫</span>
@@ -73,10 +71,8 @@
                             <span class="discount-tag">${percent}%</span>
                     <p class="saving">(<span class="save">Tiết kiệm </span><span class="price"><fmt:formatNumber value="${v.currentPrice - v.discountedPrice}" pattern="#,###"/>₫</span>)</p>
                 </c:when>
-                <%-- Trường hợp KHÔNG giảm giá (giảm giá bằng 0) --%>
                 <c:otherwise>
                     <span class="current-price" id="display-price"><fmt:formatNumber value="${v.currentPrice}" pattern="#,###"/>₫</span>
-                    <%-- Ẩn các cột khác --%>
                         <span class="old-price" style="display: none;"></span>
                         <span class="discount-tag" style="display: none;"></span>
                         <p class="saving" style="display: none;"></p>
@@ -160,7 +156,6 @@
                                 <div class="product-card">
                                     <div class="product-image-wrapper">
                                         <div class="product-image">
-                                            <%-- Link đến chi tiết sản phẩm --%>
                                                 <a href="${pageContext.request.contextPath}/product-detail?id=${rp.id}">
                                                     <img src="${rp.thumbnail}" alt="${rp.nameProduct}">
                                                 </a>
@@ -179,7 +174,6 @@
                                         </a>
                                         <div class="product-price">
                                             <c:choose>
-                                                <%-- CÓ GIẢM GIÁ --%>
                                                     <c:when
                                                         test="${rp.discountedPrice > 0 && rp.discountedPrice < rp.price}">
                                                         <div class="current-price">
@@ -200,7 +194,6 @@
                                                         </div>
                                                     </c:when>
 
-                                                    <%-- KHÔNG GIẢM GIÁ --%>
                                                         <c:otherwise>
                                                             <div class="current-price">
                                                                 <fmt:formatNumber value="${rp.price}" pattern="#,###" />
@@ -250,7 +243,6 @@
                                             </a>
                                             <div class="product-price">
                                                 <c:choose>
-                                                    <%-- CÓ GIẢM GIÁ --%>
                                                         <c:when
                                                             test="${vp.discountedPrice > 0 && vp.discountedPrice < vp.price}">
                                                             <div class="current-price">
@@ -271,7 +263,6 @@
                                                             </div>
                                                         </c:when>
 
-                                                        <%-- KHÔNG GIẢM GIÁ --%>
                                                             <c:otherwise>
                                                                 <div class="current-price">
                                                                     <fmt:formatNumber value="${vp.price}"

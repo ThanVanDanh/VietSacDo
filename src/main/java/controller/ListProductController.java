@@ -16,7 +16,6 @@ import java.util.List;
 public class ListProductController extends HttpServlet {
 
     private ProductDao productDao;
-    // Không cần ProductService cho việc get list đơn thuần nếu đã gọi DAO trực tiếp như CategoryController
 
     @Override
     public void init() throws ServletException {
@@ -31,9 +30,8 @@ public class ListProductController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            // 1. XỬ LÝ THAM SỐ
             int page = 1;
-            int pageSize = 10; // Số lượng sản phẩm 1 trang
+            int pageSize = 10;
             if (request.getParameter("page") != null) {
                 try {
                     page = Integer.parseInt(request.getParameter("page"));
@@ -44,23 +42,18 @@ public class ListProductController extends HttpServlet {
 
             String sortBy = request.getParameter("sort-by");
             
-            // LẤY TỪ KHÓA TÌM KIẾM
             String searchKeyword = request.getParameter("search");
             boolean isSearchMode = (searchKeyword != null && !searchKeyword.trim().isEmpty());
             
-            // Nếu đang search và không có sortBy từ user -> để null để dùng relevance score
-            // Nếu không search và không có sortBy -> dùng mặc định alpha-asc
             if (!isSearchMode && (sortBy == null || sortBy.isEmpty())) {
                 sortBy = "alpha-asc";
             }
 
-            // 2. TÍNH TOÁN PHÂN TRANG
             int totalProducts;
             int totalPages;
             List<ProductListDTO> list;
 
             if (isSearchMode) {
-                // Chế độ tìm kiếm
                 totalProducts = productDao.countSearchResults(searchKeyword);
                 totalPages = (int) Math.ceil((double) totalProducts / pageSize);
                 
@@ -71,7 +64,6 @@ public class ListProductController extends HttpServlet {
                 request.setAttribute("searchKeyword", searchKeyword);
                 request.setAttribute("pageTitle", "Kết quả tìm kiếm: \"" + searchKeyword + "\"");
             } else {
-                // Chế độ hiển thị tất cả
                 totalProducts = productDao.countActiveProducts();
                 totalPages = (int) Math.ceil((double) totalProducts / pageSize);
                 
@@ -82,15 +74,12 @@ public class ListProductController extends HttpServlet {
                 request.setAttribute("pageTitle", "Tất cả sản phẩm");
             }
 
-            // 3. LẤY DỮ LIỆU
-
             request.setAttribute("list", list);
             request.setAttribute("currentPage", page);
             request.setAttribute("totalPages", totalPages);
             request.setAttribute("sortBy", sortBy);
             request.setAttribute("totalProducts", totalProducts);
 
-            // 4. XỬ LÝ SẢN PHẨM ĐÃ XEM (Copy y nguyên từ CategoryController)
             String txt = "";
             Cookie[] cookies = request.getCookies();
             if (cookies != null) {
@@ -112,7 +101,6 @@ public class ListProductController extends HttpServlet {
             }
 
             if (!listIds.isEmpty()) {
-                // Đảo ngược để sản phẩm mới xem lên đầu (Optional)
                 java.util.Collections.reverse(listIds);
                 List<ProductListDTO> viewedList = productDao.getViewedProducts(listIds);
                 request.setAttribute("viewedProducts", viewedList);

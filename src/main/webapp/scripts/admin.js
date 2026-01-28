@@ -1,15 +1,12 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // 1. View Customer Details Modal
     const modal = document.getElementById('customer-modal');
     const closeBtn = document.querySelector('.close-modal');
     const viewButtons = document.querySelectorAll('.btn-view');
 
-    // Tab switching
     const tabLinks = document.querySelectorAll('.tab-link');
     const tabContents = document.querySelectorAll('.tab-content');
 
     function openModal(userData) {
-        // Populate Personal Info
         document.getElementById('modal-fullName').textContent = userData.fullName;
         document.getElementById('modal-email').textContent = userData.email;
         document.getElementById('modal-phone').textContent = userData.phone;
@@ -19,19 +16,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const statusSpan = document.getElementById('modal-status');
         statusSpan.textContent = userData.status === 'active' ? 'Hoạt động' :
             (userData.status === 'banned' ? 'Bị khóa' : 'Chưa kích hoạt');
-        statusSpan.className = ''; // reset class
+        statusSpan.className = '';
         statusSpan.classList.add('status-badge');
         statusSpan.classList.add(userData.status === 'active' ? 'status-active' :
             (userData.status === 'banned' ? 'status-blocked' : 'status-inactive'));
 
-        // Reset to first tab
         document.querySelector('.tab-link[data-tab="tab-info"]').click();
 
-        // Clear and Fetch Order History
         const historyList = document.getElementById('order-history-list');
         historyList.innerHTML = '<li style="text-align:center; padding: 20px;">Đang tải...</li>';
 
-        // AJAX Fetch Orders
         if (userData.id) {
             fetch(APP_CTX + '/admin/get-customer-orders?userId=' + userData.id)
                 .then(response => {
@@ -47,22 +41,18 @@ document.addEventListener('DOMContentLoaded', function () {
                     } else {
                         orders.forEach(o => {
                             const li = document.createElement('li');
-                            li.classList.add('order-history-item'); // Add class for styling
+                            li.classList.add('order-history-item');
                             let statusClass = 'badge-status pending';
-                            let statusText = o.orderStatus; // Use raw status or map it
+                            let statusText = o.orderStatus;
 
-                            // Map status to classes
                             if (o.orderStatus.toLowerCase() === 'hoàn thành') { statusClass = 'badge-status complete'; }
                             else if (o.orderStatus.toLowerCase().includes('hủy')) { statusClass = 'badge-status cancel'; }
                             else if (o.orderStatus.toLowerCase().includes('giao')) { statusClass = 'badge-status shipping'; }
 
-                            // Format currency
                             const total = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(o.totalAmount);
 
-                            // Format date nicely
                             let dateDisplay = o.created_at || o.createdAt || o.formattedCreatedAt;
 
-                            // Timeline HTML Structure (Option 3)
                             let html = `
                                 <div class="timeline-date">${dateDisplay}</div>
                                 <div class="timeline-content">
@@ -79,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 html += `<span class="cancel-reason">Lý do: ${o.cancelReason}</span>`;
                             }
 
-                            html += `</div>`; // Close timeline-content
+                            html += `</div>`;
                             li.innerHTML = html;
                             historyList.appendChild(li);
                         });
@@ -119,20 +109,15 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Tab Logic
     tabLinks.forEach(link => {
         link.addEventListener('click', function () {
-            // Remove active class
             tabLinks.forEach(l => l.classList.remove('active'));
             tabContents.forEach(c => c.classList.remove('active'));
 
-            // Add active
             this.classList.add('active');
             const tabId = this.dataset.tab;
             document.getElementById(tabId).classList.add('active');
         });
     });
 
-    // 2. Block/Unlock/Delete User Interactions (Keep existing simple confirms if needed)
-    // ... Additional logic for other buttons if they were there ...
 });
