@@ -11,8 +11,9 @@ function updateVariant(element, sizeName) {
     const sizeInput = document.getElementById('selectedVariantSize');
     if (sizeInput) sizeInput.value = sizeName;
 
-    const discountedPrice = parseFloat(element.getAttribute('data-price')) || 0;
-    const currentPrice = parseFloat(element.getAttribute('data-old-price')) || 0;
+    // 2. Lấy dữ liệu từ data attributes
+    const discountedPrice = parseFloat(element.getAttribute('data-price')) || 0; // Giá sau giảm
+    const currentPrice = parseFloat(element.getAttribute('data-old-price')) || 0; // Giá gốc
 
     const priceDisplay = document.getElementById('display-price');
     const oldPriceDisplay = document.querySelector('.old-price');
@@ -45,6 +46,11 @@ function updateVariant(element, sizeName) {
     const sku = element.getAttribute('data-sku');
     const skuDisplay = document.getElementById('sku-value');
     if (skuDisplay && sku) skuDisplay.innerText = sku;
+
+    // Cập nhật màu sắc
+    const color = element.getAttribute('data-color');
+    const colorDisplay = document.getElementById('selected-color');
+    if (colorDisplay && color) colorDisplay.innerText = color;
 
     const skuInput = document.getElementById('selectedVariantSku');
     if (skuInput && sku) skuInput.value = sku;

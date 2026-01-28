@@ -107,12 +107,9 @@
                                 <div class="product-overlay">
                                     <a href="${pageContext.request.contextPath}/product-detail?id=${product.id}" 
                                        class="icon-button" title="Xem chi tiết">
-                                        <i class="fa-solid fa-cart-shopping"></i>
+                                        Xem chi tiết
                                     </a>
-                                    <a href="#" class="icon-button quick-view-btn" 
-                                       data-id="${product.id}" title="Xem nhanh">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </a>
+
                                 </div>
                             </div>
                             <div class="product-info">
@@ -120,9 +117,28 @@
                                     <p class="product-name">${product.nameProduct}</p>
                                 </a>
                                 <div class="product-price">
-                                    <span class="current-price">
-                                        <fmt:formatNumber value="${product.price}" pattern="#,###"/>₫
-                                    </span>
+                                    <c:choose>
+                                        <c:when test="${product.discountedPrice > 0 && product.discountedPrice < product.price}">
+                                            <div class="current-price">
+                                                <fmt:formatNumber value="${product.discountedPrice}" pattern="#,###"/>₫
+                                            </div>
+                                            <div class="price-meta">
+                                        <span class="old-price">
+                                            <fmt:formatNumber value="${product.price}" pattern="#,###"/>₫
+                                        </span>
+                                                <c:if test="${product.price > 0 && product.discountedPrice < product.price}">
+                                                    <c:set var="rawPercent" value="${(1 - product.discountedPrice / product.price) * 100}" />
+                                                    <span class="discount-tag">-<fmt:formatNumber value="${rawPercent}" maxFractionDigits="0"/>%</span>
+                                                </c:if>
+                                            </div>
+                                        </c:when>
+
+                                        <c:otherwise>
+                                            <div class="current-price">
+                                                <fmt:formatNumber value="${product.price}" pattern="#,###"/>₫
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
                             </div>
                         </div>
@@ -150,55 +166,6 @@
         </section>
     </c:if>
 </main>
-<div id="quick-view-model" class="model-overlay">
-    <div class="quick-content-model">
-        <div class="model-image">
-            <img class="large-image" src="${pageContext.request.contextPath}/image/truyenthong1.png" alt="Áo dài">
-            <div class="model-group-img swiper">
-                <div class="swiper-wrapper">
-                    <c:forEach var="i" begin="1" end="6">
-                        <div class="swiper-slide">
-                            <img src="${pageContext.request.contextPath}/image/truyenthong1.png">
-                        </div>
-                    </c:forEach>
-                </div>
-            </div>
-        </div>
-        <div class="model-content">
-            <h2>Áo dài truyền thống Quỳnh Hân</h2>
-            <div class="model-info">
-                <p>Thương hiệu: <a href="${pageContext.request.contextPath}/home">Việt Sắc Đỏ</a>
-                    <span>|</span>
-                    Mã sản phẩm: <span>ADTT2326A</span>
-                </p>
-            </div>
-            <div class="product-price">
-                <span class="current-price">671,500₫</span>
-                <span class="old-price">790,000₫</span>
-                <span class="discount-tag">15%</span>
-            </div>
-            <div class="model-size">
-                <label>Kích thước:</label>
-                <div class="group-size">
-                    <c:forTokens items="S,M,L,XL,XXL" delims="," var="size">
-                        <input type="radio" name="size" id="size-${size}">
-                        <label for="size-${size}">${size}</label>
-                    </c:forTokens>
-                </div>
-            </div>
-            <div class="model-footer">
-                <div class="quantity">
-                    <button type="button" class="btn-minus"><i class="fa-solid fa-minus"></i></button>
-                    <input type="text" value="1" class="quantity-input">
-                    <button type="button" class="btn-plus"><i class="fa-solid fa-plus"></i></button>
-                </div>
-                <button class="add-shopping"><span>Thêm vào giỏ</span></button>
-            </div>
-        </div>
-        <button id="close-model" class="model-remove-item"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-</div>
-
 <div id="success-add-shopping" class="model-success-overlay">
     <div class="success-content-model">
         <button id="close-success-popup" class="model-remove-item"><i class="fa-solid fa-xmark"></i></button>

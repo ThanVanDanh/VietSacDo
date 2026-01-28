@@ -17,17 +17,16 @@
     <jsp:include page="sidebar.jsp" />
     <main class="main-content">
         <header class="admin-header">
-            <h2><i class="fas fa-home"></i> Quản lý Trang chủ</h2>
+            <h2> Quản lý Trang chủ</h2>
             <div class="header-actions">
                 <a href="${pageContext.request.contextPath}/home" target="_blank" class="btn-preview">
-                    <i class="fas fa-eye"></i> Xem trang chủ
+                    Xem trang chủ
                 </a>
             </div>
         </header>
         <div class="home-config-container">
             <div id="alert-container"></div>
-            
-            <!-- Banner Management Section -->
+
             <div class="banner-management-section">
                 <div class="section-card">
                     <div class="section-header">
@@ -48,7 +47,7 @@
             </div>
             
             <hr class="section-divider">
-            
+
             <button class="btn-add-section" onclick="addNewSection()">
                 <i class="fas fa-plus-circle"></i> Thêm Section Mới
             </button>
@@ -118,7 +117,6 @@
         </c:forEach>
     ];
 
-    var DEFAULT_SECTIONS = ['section_1', 'section_2'];
     var loadedSections = {};
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -128,13 +126,32 @@
         if (ALL_CATEGORIES.length === 0) {
             showAlert('Chưa có danh mục nào. Vui lòng tạo danh mục trước.', 'danger');
         }
-        
+
         loadBanners();
-        
-        DEFAULT_SECTIONS.forEach(function(key) {
-            loadSection(key);
-        });
+        loadAllSections();
     });
+
+    function loadAllSections() {
+        fetch(CTX + '/admin/home/api')
+            .then(function(response) {
+                if (!response.ok) throw new Error('HTTP ' + response.status);
+                return response.json();
+            })
+            .then(function(data) {
+                console.log('All sections from DB:', data);
+                if (data.success && data.sections && data.sections.length > 0) {
+                    data.sections.forEach(function(key) {
+                        loadSection(key);
+                    });
+                } else {
+                    showEmptyState();
+                }
+            })
+            .catch(function(error) {
+                console.error('Error loading sections list:', error);
+                showEmptyState();
+            });
+    }
 
     function loadBanners() {
         fetch(CTX + '/admin/banner/api')
