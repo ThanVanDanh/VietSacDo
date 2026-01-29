@@ -345,7 +345,7 @@
     border-radius: 8px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     /*width: 80%;*/
-    /*max-width: 700px;*/
+    max-width: 750px;
     position: relative;
     animation: slide-down 0.3s ease-out;
 }
@@ -520,4 +520,14 @@
         transform: translateY(0);
         opacity: 1;
     }
+}
+.table-toolbar .btn-secondary {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
 }

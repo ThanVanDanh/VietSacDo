@@ -34,22 +34,19 @@
                             <h1>Quản lý Đơn hàng</h1>
                             <section class="table-container">
                                 <div class="table-toolbar">
-                                    <div class="filters">
-                                        <select id="filter-status">
+                                    <form action="" method="GET" class="filters">
+                                        <select id="filter-status" onchange="location.href='?page=1&status='+this.value">
                                             <option value="">Tất cả Trạng thái</option>
-                                            <option value="processing">Đang xử lý</option>
-                                            <option value="shipping">Đang vận chuyển</option>
-                                            <option value="completed">Hoàn thành</option>
-                                            <option value="canceled">Đã hủy</option>
+                                            <option value="chờ xử lý" ${statusFilter == 'chờ xử lý' ? 'selected' : ''}>Chờ xử lý</option>
+                                            <option value="đang xử lý" ${statusFilter == 'đang xử lý' ? 'selected' : ''}>Đang xử lý</option>
+                                            <option value="đang giao" ${statusFilter == 'đang giao' ? 'selected' : ''}>Đang vận chuyển</option>
+                                            <option value="hoàn thành" ${statusFilter == 'hoàn thành' ? 'selected' : ''}>Hoàn thành</option>
+                                            <option value="đã hủy" ${statusFilter == 'đã hủy' ? 'selected' : ''}>Đã hủy</option>
                                         </select>
-                                        <input type="date" id="filter-date">
-                                        <input type="text" placeholder="Tìm theo tên khách..." class="table-search">
-                                    </div>
-                                    <div class="toolbar-buttons">
-                                        <button class="btn-secondary"><i class="fas fa-file-excel"></i> Xuất
-                                            Excel</button>
-                                        <button class="btn-secondary"><i class="fas fa-file-pdf"></i> Xuất PDF</button>
-                                    </div>
+                                        <input type="text" name="search"
+                                               value="${searchKeyword}" placeholder="Tìm theo tên khách..." class="table-search">
+                                        <button type="submit" class="btn-secondary"><i class="fas fa-search"></i></button>
+                                    </form>
                                 </div>
                                 <table class="table-general order-table">
                                     <thead>
@@ -126,13 +123,20 @@
                                         </c:choose>
                                     </tbody>
                                 </table>
+                                <c:if test="${totalPages > 1}">
                                 <div class="pagination">
-                                    <a href="#">Trước</a>
-                                    <a href="#" class="active">1</a>
-                                    <a href="#">2</a>
-                                    <a href="#">3</a>
-                                    <a href="#">Sau</a>
+                                    <c:if test="${currentPage > 1}">
+                                        <a href="?page=${currentPage - 1}&status=${statusFilter}&search=${searchKeyword}">Trước</a>
+                                    </c:if>
+                                    <c:forEach begin="1" end="${totalPages}" var="i">
+                                        <a href="?page=${i}&status=${statusFilter}&search=${searchKeyword}"
+                                           class="${currentPage == i ? 'active' : ''}">${i}</a>
+                                    </c:forEach>
+                                    <c:if test="${currentPage < totalPages}">
+                                        <a href="?page=${currentPage + 1}&status=${statusFilter}&search=${searchKeyword}">Sau</a>
+                                    </c:if>
                                 </div>
+                                </c:if>
                             </section>
                         </main>
                     </div>
@@ -159,8 +163,7 @@
                                                 <select id="modal-status-select" class="update-status-select">
                                                     <option value="chờ xử lý">Chờ xử lý</option>
                                                     <option value="đang xử lý">Đang xử lý</option>
-                                                    <option value="đang vận chuyển">Đang vận chuyển</option>
-                                                    <option value="đã giao hàng">Đã giao hàng</option>
+                                                    <option value="đang giao">Đang vận chuyển</option>
                                                     <option value="hoàn thành">Hoàn thành</option>
                                                     <option value="đã hủy">Đã hủy</option>
                                                 </select>
