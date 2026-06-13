@@ -3,21 +3,40 @@ document.addEventListener('DOMContentLoaded', function () {
     const address = document.getElementById('nav-addresses');
     const contentInfo = document.getElementById('account-details');
     const contentAddress = document.getElementById('account-addresses');
+    const tabKey = document.getElementById('nav-key');
+    const contentKey = document.getElementById('account-key');
 
     if (accountInfo && address && contentInfo && contentAddress) {
         accountInfo.addEventListener('click', e => {
             contentInfo.style.display = 'block';
             contentAddress.style.display = 'none';
+            if (contentKey) contentKey.style.display = 'none';
             accountInfo.classList.add('active');
             address.classList.remove('active');
+            if (tabKey) tabKey.classList.remove('active');
         });
 
         address.addEventListener('click', e => {
             contentInfo.style.display = 'none';
             contentAddress.style.display = 'block';
+            if (contentKey) contentKey.style.display = 'none';
             accountInfo.classList.remove('active');
             address.classList.add('active');
+            if (tabKey) tabKey.classList.remove('active');
         });
+
+        if (tabKey && contentKey) {
+            tabKey.addEventListener('click', e => {
+                e.preventDefault();
+                contentInfo.style.display = 'none';
+                contentAddress.style.display = 'none';
+                contentKey.style.display = 'block';
+
+                accountInfo.classList.remove('active');
+                address.classList.remove('active');
+                tabKey.classList.add('active');
+            });
+        }
     }
 
     const addModal = document.getElementById('add-address-modal');
@@ -88,6 +107,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+    const revokeKeyModal = document.getElementById('revoke-key-modal'); // Nhận diện thêm modal báo mất key
 
     window.addEventListener('click', (e) => {
         if (e.target === addModal) addModal.style.display = 'none';
@@ -200,7 +220,7 @@ window.viewOrderDetails = function (orderId) {
                 document.getElementById('modal-order-status').textContent = order.orderStatus;
                 document.getElementById('modal-order-address').textContent = order.shippingAddress;
 
-                const fmt = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' });
+                const fmt = new Intl.NumberFormat('vi-VN', {style: 'currency', currency: 'VND'});
 
                 document.getElementById('modal-subtotal').textContent = fmt.format(order.subtotalAmount);
                 document.getElementById('modal-shipping').textContent = fmt.format(order.shippingFee);
@@ -249,4 +269,32 @@ window.viewOrderDetails = function (orderId) {
             modal.style.display = 'none';
         }
     }
+}
+
+window.openRevokeKeyModal = function () {
+    const modal = document.getElementById('revoke-key-modal');
+    if (modal) modal.style.display = 'flex';
+};
+
+window.closeRevokeKeyModal = function () {
+    const modal = document.getElementById('revoke-key-modal');
+    if (modal) modal.style.display = 'none';
+};
+
+window.confirmRevokeKey = function () {
+    fetch('manage-key?action=revoke', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Đã báo mất và đóng băng khóa thành công tại mốc thời gian này!');
+                window.closeRevokeKeyModal();
+                location.reload();
+            } else {
+                alert('Lỗi xử lý: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Lỗi kết nối khi gửi yêu cầu báo mất khóa.');
+        });
 };
