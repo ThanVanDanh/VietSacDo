@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-        <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
             <!DOCTYPE html>
             <html lang="en">
 
@@ -14,6 +15,7 @@
                     crossorigin="anonymous" referrerpolicy="no-referrer" />
                 <link rel="stylesheet" href="style/account.css">
                 <script src="scripts/account.js"></script>
+                <script src="scripts/genKey.js"></script>
                 <link rel="stylesheet" href="style/style-header.css">
                 <link rel="stylesheet" href="style/footer.css">
                 <link rel="stylesheet" href="style/breadcrumb.css">
@@ -120,6 +122,9 @@
                                 </li>
                                 <li>
                                     <a class="tab-btn" id="nav-addresses">Địa chỉ</a>
+                                </li>
+                                <li>
+                                    <a class="tab-btn" id="nav-key">Tạo key</a>
                                 </li>
                                 <li>
                                     <a href="Logout">Đăng xuất</a>
@@ -246,6 +251,50 @@
                                         </a>
                                     </div>
                                 </c:forEach>
+                            </div>
+
+                            <div class="content-section" id="account-key" style="display: none;">
+                                <h3>QUẢN LÝ KHÓA BẢO MẬT</h3>
+
+                                <c:if test="${empty currentPublicKey}">
+                                    <div class="key-status-alert info">
+                                        <p><i class="fas fa-info-circle"></i> Tài khoản của bạn chưa cấu hình Chữ ký số. Để đảm bảo đơn hàng không bị thay đổi trái phép, hãy khởi tạo khóa.</p>
+                                        <button type="button" class="btn-primary" id="btn-generate-key" onclick="generateAndDownloadKeyPair()">Khởi tạo cặp khóa mới</button>
+                                    </div>
+                                </c:if>
+
+                                <c:if test="${not empty currentPublicKey}">
+                                    <div class="key-card active-key">
+                                        <div class="key-info">
+                                            <p><strong>Trạng thái:</strong> <span class="status-badge status-shipping">Đang hoạt động</span></p>
+                                            <p><strong>Mã khóa (Key ID):</strong> #${currentKeyId}</p>
+                                            <p><strong>Ngày kích hoạt:</strong> ${currentKeyCreatedAt}</p>
+<%--                                            <p><strong>Public Key (Rút gọn):</strong> <code class="text-muted">...${fn:substring(currentPublicKey, 0, 20)}...</code></p>--%>
+                                        </div>
+                                        <button type="button" class="action-btn-cancel" style="background-color: #d32f2f; color: white;" onclick="openRevokeKeyModal()">Báo Mất / Hủy Khóa Này</button>
+                                    </div>
+                                </c:if>
+
+                                <div id="key-download-container" style="display: none; margin-top: 20px; padding: 15px; border: 1px dashed #d32f2f; background: #fff5f5; border-radius: 5px;">
+                                    <h4 style="color: #d32f2f;"><i class="fas fa-exclamation-triangle"></i> TẢI XUỐNG PRIVATE KEY</h4>
+                                    <p style="font-size: 13px; color: #555;">Hệ thống đã lưu Public Key. File Private Key dưới đây thuộc quyền sở hữu cá nhân của bạn, trang web không sao lưu dữ liệu này.</p>
+                                    <div style="margin-top: 10px; display: flex; gap: 10px;">
+                                        <a href="#" id="download-key-link" class="btn-primary" style="text-decoration: none; text-align: center; line-height: 35px;">Tải xuống File .pem</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="modal-overlay" id="revoke-key-modal" style="display: none;">
+                                <div class="modal-content confirm-modal">
+                                    <button class="modal-close" onclick="closeRevokeKeyModal()">&times;</button>
+                                    <h4 class="text-danger">XÁC NHẬN BÁO MẤT KHÓA</h4>
+                                    <p>Hệ thống sẽ tiến hành <strong>đóng băng khóa hiện tại</strong> ngay tại thời điểm này.</p>
+                                    <p class="text-muted" style="font-size: 12px;">Các đơn hàng phát sinh sau thời gian này dùng khóa cũ sẽ bị từ chối. Các đơn hàng cũ trước đó vẫn được bảo toàn để đối chiếu.</p>
+                                    <div class="modal-actions center">
+                                        <button type="button" class="btn-secondary" onclick="closeRevokeKeyModal()">Hủy bỏ</button>
+                                        <button type="button" class="btn-danger" onclick="confirmRevokeKey()">Xác nhận hủy khóa</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -445,12 +494,11 @@
                                 style="width: 100%; height: 80px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; resize: none;"></textarea>
                         </div>
 
-                        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <div style="display: flex; justify-content: center; justify-content: end;">
                             <button id="cancel-modal-close-btn" class="btn-secondary"
                                 style="padding: 10px 20px; border: 1px solid #ddd; background: #f5f5f5; border-radius: 5px; cursor: pointer;">Đóng</button>
                             <button id="confirm-cancel-btn" class="btn-primary"
-                                style="padding: 10px 20px; background: #8B0000; color: white; border: none; border-radius: 5px; cursor: pointer;">Xác
-                                nhận hủy</button>
+                                style="padding: 10px 20px; background: #8B0000; color: white; border: none; border-radius: 5px; cursor: pointer;">Xác nhận hủy</button>
                         </div>
                     </div>
                 </div>
