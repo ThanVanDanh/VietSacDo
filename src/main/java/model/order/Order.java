@@ -44,6 +44,22 @@ public class Order extends AId implements Serializable {
     @ColumnName("updated_at")
     private LocalDateTime updatedAt;
 
+    // --- Digital Signature Fields ---
+    @ColumnName("key_id")
+    private Integer keyId;
+    @ColumnName("signed_order_data")
+    private String signedOrderData;
+    @ColumnName("order_hash")
+    private String orderHash;
+    @ColumnName("order_signature")
+    private String orderSignature;
+    @ColumnName("signature_status")
+    private String signatureStatus;
+    @ColumnName("signed_at")
+    private LocalDateTime signedAt;
+    @ColumnName("signature_checked_at")
+    private LocalDateTime signatureCheckedAt;
+
     private String formattedCreatedAt;
 
     public Order() {
@@ -229,5 +245,70 @@ public class Order extends AId implements Serializable {
         java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter
                 .ofPattern("dd-MM-yyyy HH:mm:ss");
         return updatedAt.format(formatter);
+    }
+
+    // --- Digital Signature Getters/Setters ---
+
+    public Integer getKeyId() {
+        return keyId;
+    }
+
+    @ColumnName("key_id")
+    public void setKeyId(Integer keyId) {
+        this.keyId = keyId;
+    }
+
+    public String getSignedOrderData() {
+        return signedOrderData;
+    }
+
+    @ColumnName("signed_order_data")
+    public void setSignedOrderData(String signedOrderData) {
+        this.signedOrderData = signedOrderData;
+    }
+
+    public String getOrderHash() {
+        return orderHash;
+    }
+
+    @ColumnName("order_hash")
+    public void setOrderHash(String orderHash) {
+        this.orderHash = orderHash;
+    }
+
+    public String getOrderSignature() {
+        return orderSignature;
+    }
+
+    @ColumnName("order_signature")
+    public void setOrderSignature(String orderSignature) {
+        this.orderSignature = orderSignature;
+    }
+
+    public String getSignatureStatus() {
+        return signatureStatus;
+    }
+
+    @ColumnName("signature_status")
+    public void setSignatureStatus(String signatureStatus) {
+        this.signatureStatus = signatureStatus;
+    }
+
+    public LocalDateTime getSignedAt() {
+        return signedAt;
+    }
+
+    @ColumnName("signed_at")
+    public void setSignedAt(LocalDateTime signedAt) {
+        this.signedAt = signedAt;
+    }
+
+    public LocalDateTime getSignatureCheckedAt() {
+        return signatureCheckedAt;
+    }
+
+    @ColumnName("signature_checked_at")
+    public void setSignatureCheckedAt(LocalDateTime signatureCheckedAt) {
+        this.signatureCheckedAt = signatureCheckedAt;
     }
 }

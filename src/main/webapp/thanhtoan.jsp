@@ -346,52 +346,164 @@
                         const form = document.getElementById('checkoutForm');
                         const formData = new URLSearchParams(new FormData(form));
 
-                        formData.append('ajax', 'true');
-
                         Swal.fire({
-                            title: 'Đang xử lý...',
+                            title: 'Đang chuẩn bị đơn hàng...',
                             text: 'Vui lòng chờ trong giây lát',
                             allowOutsideClick: false,
-                            didOpen: () => {
-                                Swal.showLoading();
-                            }
+                            didOpen: () => { Swal.showLoading(); }
                         });
 
-                        fetch('checkout', {
+                        fetch('${pageContext.request.contextPath}/checkout/prepare-signature', {
                             method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
-                            },
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
                             body: formData
                         })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Thanh toán thành công!',
-                                        text: 'Cảm ơn bạn đã mua hàng. Chuyển hướng đến trang tài khoản...',
-                                        timer: 2000,
-                                        showConfirmButton: false
-                                    }).then(() => {
-                                        window.location.href = '${pageContext.request.contextPath}/account';
-                                    });
-                                } else {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Thanh toán thất bại',
-                                        text: data.message || 'Có lỗi xảy ra, vui lòng thử lại.'
-                                    });
+                        .then(response => response.json())
+                        .then(data => {
+                            Swal.close();
+                            if (!data.success) {
+                                Swal.fire({ icon: 'error', title: 'Lỗi', text: data.message || 'Không thể chuẩn bị đơn hàng.' });
+                                return;
+                            }
+                            showSignaturePopup(data);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire({ icon: 'error', title: 'Lỗi', text: 'Không thể kết nối đến máy chủ.' });
+                        });
+                    }
+
+                    function showSignaturePopup(data) {
+                        let itemsHtml = '';
+                        if (data.items && data.items.length > 0) {
+                            itemsHtml = '<div class="sig-items-list">';
+                            data.items.forEach(item => {
+                                const lineTotal = (item.quantity * item.price).toLocaleString('vi-VN');
+                                itemsHtml += '<div class="sig-item-row">' +
+                                    '<span class="sig-item-name">' + item.productName + ' (' + item.sku + ')</span>' +
+                                    '<span class="sig-item-detail">SL: ' + item.quantity + ' × ' + item.price.toLocaleString('vi-VN') + '₫ = ' + lineTotal + '₫</span>' +
+                                    '</div>';
+                            });
+                            itemsHtml += '</div>';
+                        }
+
+                        const popupHtml =
+                            '<div class="sig-popup-content">' +
+                                '<div class="sig-order-summary">' +
+                                    '<div class="sig-summary-row"><span>Mã đơn hàng:</span><strong>' + data.orderCode + '</strong></div>' +
+                                    '<div class="sig-summary-row"><span>Tổng tiền hàng:</span><span>' + data.subtotal.toLocaleString('vi-VN') + '₫</span></div>' +
+                                    '<div class="sig-summary-row"><span>Phí vận chuyển:</span><span>' + data.shippingFee.toLocaleString('vi-VN') + '₫</span></div>' +
+                                    '<div class="sig-summary-row"><span>Giảm giá:</span><span>-' + data.discount.toLocaleString('vi-VN') + '₫</span></div>' +
+                                    '<div class="sig-summary-row sig-total"><span>Tổng thanh toán:</span><strong>' + data.total.toLocaleString('vi-VN') + '₫</strong></div>' +
+                                '</div>' +
+                                '<div class="sig-items-section">' +
+                                    '<p class="sig-section-title">Sản phẩm đặt mua</p>' +
+                                    itemsHtml +
+                                '</div>' +
+                                '<div class="sig-hash-section">' +
+                                    '<p class="sig-section-title"><i class="fa-solid fa-fingerprint"></i> Mã Hash đơn hàng (SHA-256)</p>' +
+                                    '<div class="sig-hash-display">' +
+                                        '<code id="orderHashValue">' + data.orderHash + '</code>' +
+                                    '</div>' +
+                                    '<div class="sig-hash-actions">' +
+                                        '<button type="button" class="sig-btn sig-btn-copy" onclick="copyOrderHash()"><i class="fa-solid fa-copy"></i> Sao chép Hash</button>' +
+                                        '<button type="button" class="sig-btn sig-btn-download" onclick="downloadHashFile(\'' + data.orderCode + '\', \'' + data.orderHash + '\')"><i class="fa-solid fa-download"></i> Tải file Hash</button>' +
+                                    '</div>' +
+                                '</div>' +
+                                '<div class="sig-input-section">' +
+                                    '<p class="sig-section-title"><i class="fa-solid fa-pen-nib"></i> Chữ ký điện tử (Base64)</p>' +
+                                    '<textarea id="signatureInput" class="sig-textarea" rows="4" placeholder="Dán chữ ký Base64 từ Java Swing Tool vào đây..."></textarea>' +
+                                '</div>' +
+                            '</div>';
+
+                        Swal.fire({
+                            title: '<i class="fa-solid fa-shield-halved"></i> Xác nhận & Ký đơn hàng',
+                            html: popupHtml,
+                            width: 680,
+                            showCancelButton: true,
+                            confirmButtonText: '<i class="fa-solid fa-paper-plane"></i> Xác nhận đặt hàng',
+                            cancelButtonText: 'Hủy',
+                            confirmButtonColor: '#c0392b',
+                            cancelButtonColor: '#7f8c8d',
+                            customClass: { popup: 'sig-swal-popup' },
+                            preConfirm: () => {
+                                const signature = document.getElementById('signatureInput').value.trim();
+                                if (!signature) {
+                                    Swal.showValidationMessage('Vui lòng nhập chữ ký điện tử!');
+                                    return false;
                                 }
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
+                                return signature;
+                            }
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                submitSignedOrder(result.value);
+                            }
+                        });
+                    }
+
+                    function copyOrderHash() {
+                        const hashEl = document.getElementById('orderHashValue');
+                        if (hashEl) {
+                            navigator.clipboard.writeText(hashEl.textContent).then(() => {
+                                const btns = document.querySelectorAll('.sig-btn-copy');
+                                if (btns.length > 0) {
+                                    btns[0].innerHTML = '<i class="fa-solid fa-check"></i> Đã sao chép!';
+                                    setTimeout(() => { btns[0].innerHTML = '<i class="fa-solid fa-copy"></i> Sao chép Hash'; }, 2000);
+                                }
+                            });
+                        }
+                    }
+
+                    function downloadHashFile(orderCode, orderHash) {
+                        const content = 'ORDER_CODE=' + orderCode + '\nHASH_ALGORITHM=SHA-256\nORDER_HASH=' + orderHash;
+                        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'order_hash_' + orderCode + '.txt';
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                    }
+
+                    function submitSignedOrder(signature) {
+                        Swal.fire({
+                            title: 'Đang xác minh chữ ký...',
+                            text: 'Vui lòng chờ',
+                            allowOutsideClick: false,
+                            didOpen: () => { Swal.showLoading(); }
+                        });
+
+                        fetch('${pageContext.request.contextPath}/checkout/submit-signed-order', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+                            body: 'orderSignature=' + encodeURIComponent(signature)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Đặt hàng thành công!',
+                                    html: '<p>Chữ ký điện tử hợp lệ.</p><p>Cảm ơn bạn đã mua hàng!</p>',
+                                    timer: 2500,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    window.location.href = '${pageContext.request.contextPath}/account';
+                                });
+                            } else {
                                 Swal.fire({
                                     icon: 'error',
-                                    title: 'Lỗi',
-                                    text: 'Không thể kết nối đến máy chủ.'
+                                    title: 'Chữ ký không hợp lệ',
+                                    text: data.message || 'Chữ ký điện tử không khớp. Vui lòng kiểm tra lại.'
                                 });
-                            });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire({ icon: 'error', title: 'Lỗi', text: 'Không thể kết nối đến máy chủ.' });
+                        });
                     }
 
                     const popupOverlay = document.getElementById("popupOverlay");
