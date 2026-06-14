@@ -53,6 +53,64 @@ public class OrderDao extends BaseDao {
         });
     }
 
+    //tạo đơn với chữ ký
+    public int createSignedOrder(Order order, List<CartItem> cartItems) {
+        return jdbi.inTransaction(handle -> {
+            String orderSql = "INSERT INTO Orders (user_id, key_id, order_code, customer_fullname, customer_email, " +
+                    "customer_phone, shipping_address, customer_note, subtotal_amount, shipping_fee, " +
+                    "discount_amount, total_amount, voucher_id, order_status, payment_method, payment_status, " +
+                    "signed_order_data, order_hash, order_signature, signature_status, signed_at, signature_checked_at, created_at) " +
+                    "VALUES (:userId, :keyId, :orderCode, :customerFullname, :customerEmail, " +
+                    ":customerPhone, :shippingAddress, :customerNote, :subtotalAmount, :shippingFee, " +
+                    ":discountAmount, :totalAmount, :voucherId, :orderStatus, :paymentMethod, :paymentStatus, " +
+                    ":signedOrderData, :orderHash, :orderSignature, :signatureStatus, NOW(), NOW(), NOW())";
+
+            int orderId = handle.createUpdate(orderSql)
+                    .bindBean(order)
+                    .executeAndReturnGeneratedKeys("id")
+                    .mapTo(int.class)
+                    .one();
+
+            String itemSql = "INSERT INTO Order_items (order_id, variant_id, quantity, price_at_purchase, " +
+                    "product_name_at_purchase, product_code_at_purchase, variant_sku_at_purchase, " +
+                    "size_at_purchase, color_at_purchase, line_total_at_purchase) " +
+                    "VALUES (:orderId, :variantId, :quantity, :priceAtPurchase, " +
+                    ":productName, :productCode, :sku, :size, :color, :lineTotal)";
+
+            for (CartItem item : cartItems) {
+                Integer variantId = getVariantIdByProductAndSku(handle, item.getProduct().getId(), item.getSku(), item.getSize());
+
+                String productName = item.getProduct() != null ? item.getProduct().getNameProduct() : "";
+                String productCode = item.getProduct() != null ? item.getProduct().getProductCode() : "";
+                String color = "";
+                if (item.getProduct() != null && item.getProduct().getVariants() != null) {
+                    for (model.product.ProductVariant v : item.getProduct().getVariants()) {
+                        if (v.getSku() != null && v.getSku().equals(item.getSku())) {
+                            color = v.getColor() != null ? v.getColor() : "";
+                            break;
+                        }
+                    }
+                }
+                double lineTotal = item.getQuantity() * item.getPrice();
+
+                handle.createUpdate(itemSql)
+                        .bind("orderId", orderId)
+                        .bind("variantId", variantId)
+                        .bind("quantity", item.getQuantity())
+                        .bind("priceAtPurchase", item.getPrice())
+                        .bind("productName", productName)
+                        .bind("productCode", productCode)
+                        .bind("sku", item.getSku() != null ? item.getSku() : "")
+                        .bind("size", item.getSize() != null ? item.getSize() : "")
+                        .bind("color", color)
+                        .bind("lineTotal", lineTotal)
+                        .execute();
+            }
+
+            return orderId;
+        });
+    }
+
     private Integer getVariantIdByProductAndSku(Handle handle, int productId, String sku, String size) {
         if (sku != null && !sku.isEmpty()) {
             return handle.createQuery("SELECT id FROM Product_variants WHERE sku = :sku")

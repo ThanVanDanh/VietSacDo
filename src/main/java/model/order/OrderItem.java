@@ -61,6 +61,20 @@ public class OrderItem extends AId implements Serializable {
     private String productImage;
     private String size;
 
+    //Snapshot fields
+    @ColumnName("product_name_at_purchase")
+    private String productNameAtPurchase;
+    @ColumnName("product_code_at_purchase")
+    private String productCodeAtPurchase;
+    @ColumnName("variant_sku_at_purchase")
+    private String variantSkuAtPurchase;
+    @ColumnName("size_at_purchase")
+    private String sizeAtPurchase;
+    @ColumnName("color_at_purchase")
+    private String colorAtPurchase;
+    @ColumnName("line_total_at_purchase")
+    private double lineTotalAtPurchase;
+
     public String getProductName() {
         return productName;
     }
@@ -83,5 +97,59 @@ public class OrderItem extends AId implements Serializable {
 
     public void setSize(String size) {
         this.size = size;
+    }
+
+    public String getProductNameAtPurchase() {
+        return productNameAtPurchase;
+    }
+
+    @ColumnName("product_name_at_purchase")
+    public void setProductNameAtPurchase(String productNameAtPurchase) {
+        this.productNameAtPurchase = productNameAtPurchase;
+    }
+
+    public String getProductCodeAtPurchase() {
+        return productCodeAtPurchase;
+    }
+
+    @ColumnName("product_code_at_purchase")
+    public void setProductCodeAtPurchase(String productCodeAtPurchase) {
+        this.productCodeAtPurchase = productCodeAtPurchase;
+    }
+
+    public String getVariantSkuAtPurchase() {
+        return variantSkuAtPurchase;
+    }
+
+    @ColumnName("variant_sku_at_purchase")
+    public void setVariantSkuAtPurchase(String variantSkuAtPurchase) {
+        this.variantSkuAtPurchase = variantSkuAtPurchase;
+    }
+
+    public String getSizeAtPurchase() {
+        return sizeAtPurchase;
+    }
+
+    @ColumnName("size_at_purchase")
+    public void setSizeAtPurchase(String sizeAtPurchase) {
+        this.sizeAtPurchase = sizeAtPurchase;
+    }
+
+    public String getColorAtPurchase() {
+        return colorAtPurchase;
+    }
+
+    @ColumnName("color_at_purchase")
+    public void setColorAtPurchase(String colorAtPurchase) {
+        this.colorAtPurchase = colorAtPurchase;
+    }
+
+    public double getLineTotalAtPurchase() {
+        return lineTotalAtPurchase;
+    }
+
+    @ColumnName("line_total_at_purchase")
+    public void setLineTotalAtPurchase(double lineTotalAtPurchase) {
+        this.lineTotalAtPurchase = lineTotalAtPurchase;
     }
 }

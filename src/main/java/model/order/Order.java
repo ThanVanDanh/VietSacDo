@@ -44,7 +44,7 @@ public class Order extends AId implements Serializable {
     @ColumnName("updated_at")
     private LocalDateTime updatedAt;
 
-    // --- Digital Signature Fields ---
+    //Signature Fields
     @ColumnName("key_id")
     private Integer keyId;
     @ColumnName("signed_order_data")
@@ -246,8 +246,6 @@ public class Order extends AId implements Serializable {
                 .ofPattern("dd-MM-yyyy HH:mm:ss");
         return updatedAt.format(formatter);
     }
-
-    // --- Digital Signature Getters/Setters ---
 
     public Integer getKeyId() {
         return keyId;

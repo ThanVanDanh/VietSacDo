@@ -36,4 +36,26 @@ public class KeyDao extends BaseDao {
                         .orElse(null)
         );
     }
+
+    //lấy public key đang active
+    public String getActivePublicKey(int userId) {
+        return get().withHandle(handle ->
+                handle.createQuery("SELECT public_key FROM user_keys WHERE user_id = :userId AND status = 'active' ORDER BY created_at DESC LIMIT 1")
+                        .bind("userId", userId)
+                        .mapTo(String.class)
+                        .findFirst()
+                        .orElse(null)
+        );
+    }
+
+    //lấy id public key active
+    public Integer getActiveKeyId(int userId) {
+        return get().withHandle(handle ->
+                handle.createQuery("SELECT id FROM user_keys WHERE user_id = :userId AND status = 'active' ORDER BY created_at DESC LIMIT 1")
+                        .bind("userId", userId)
+                        .mapTo(Integer.class)
+                        .findFirst()
+                        .orElse(null)
+        );
+    }
 }
